@@ -27,18 +27,18 @@ body:
     validations:
       required: false
 
-  - type: textarea
+  - type: input
     attributes:
       label: ⏰ 추정 시간
-      description: "환경설정을 추가하기 위한 추정 시간에 대해 작성해주세요."
+      description: "설정 작업에 예상되는 소요 시간을 입력해주세요."
       placeholder: "예: 1시간"
     validations:
       required: true
 
-  - type: textarea
+  - type: input
     attributes:
       label: ⏰ 소요 시간
-      description: "환경설정 추가 소요 시간에 대해 작성해주세요."
+      description: "설정 작업에 실제로 소요된 시간을 입력해주세요."
       placeholder: "예: 1.5시간"
     validations:
       required: false

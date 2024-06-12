@@ -35,7 +35,7 @@ body:
   - type: input
     attributes:
       label: ⏰ 추정 시간
-      description: "작업에 예상되는 소요 시간을 입력해주세요."
+      description: "배포 작업에 예상되는 소요 시간을 입력해주세요."
       placeholder: "예: 1시간"
     validations:
       required: true
@@ -43,7 +43,7 @@ body:
   - type: input
     attributes:
       label: ⏰ 소요 시간
-      description: "작업에 실제로 소요된 시간을 입력해주세요."
+      description: "배포 작업에 실제로 소요된 시간을 입력해주세요."
       placeholder: "예: 1.5시간"
     validations:
       required: false
