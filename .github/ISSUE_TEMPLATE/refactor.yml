@@ -1,34 +1,44 @@
-name: "🛠️ Refactor"
-description: "리팩터링을 해야할 부분이 있나요?"
-labels: "🛠️ Refactor"
+name: 🛠️ 리팩터링
+description: 리팩터링을 해야할 부분이 있나요?
+labels: ["🛠️ 리팩터링"]
+projects: ["GU-99/1"]
 body:
   - type: textarea
     attributes:
       label: 🛠️ 설명
-      description: 리팩터링에 대한 필요성을 설명해 주세요.
-      placeholder: 자세히 적을수록 좋습니다!
+      description: "리팩터링에 대한 필요성을 설명해 주세요."
+      placeholder: "자세히 적을수록 좋습니다!"
     validations:
       required: true
+
   - type: textarea
     attributes:
       label: ✅ 작업할 내용
-      description: 리팩터링을 할 부분에 대한 Tasks를 작성해 주세요.
-      placeholder: 최대한 세분화 해서 적어주세요!
+      description: "리팩터링을 할 부분에 대한 Tasks를 작성해 주세요."
+      placeholder: "최대한 세분화 해서 적어주세요!"
     validations:
       required: true
+
   - type: textarea
     attributes:
-      label: 🙋🏻 참고 자료
-      description: 리팩터링에 대한 참고 자료가 있다면 작성해 주세요.
+      label: 📚 참고 자료
+      description: "작업과 관련해서 참고할 만한 자료나 링크가 있다면 제공해주세요."
+      placeholder: "참고할 자료나 링크를 입력해주세요."
+    validations:
+      required: false
+
   - type: textarea
     attributes:
       label: ⏰ 추정 시간
-      description: 리펙토링을 위한 추정 시간에 대해 작성해주세요.
+      description: "리펙토링을 위한 추정 시간에 대해 작성해주세요."
+      placeholder: "예: 1시간"
     validations:
       required: true
+
   - type: textarea
     attributes:
       label: ⏰ 소요 시간
-      description: 리펙토링 소요 시간에 대해 작성해주세요.
+      description: "리펙토링 소요 시간에 대해 작성해주세요."
+      placeholder: "예: 1.5시간"
     validations:
       required: true
