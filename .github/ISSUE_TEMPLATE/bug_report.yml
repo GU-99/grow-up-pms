@@ -37,9 +37,8 @@ body:
   - type: textarea
     attributes:
       label: 🌏 버그 발생 환경
-      description: "버그가 발생한 환경에 대해 작성해 주세요."
-      placeholder: |
-        OS: macOS
+      description: "버그가 발생한 환경에 대한 정보를 제공해주세요. 운영체제, 개발 도구, 브라우저, 브라우저 버전 등을 포함해주세요."
+      placeholder: "예: Windows 10, IntelliJ IDEA, Chrome 89, Node.js 14.16"
     validations:
       required: false
 
