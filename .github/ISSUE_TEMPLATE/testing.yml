@@ -1,0 +1,57 @@
+name: 🧪 테스트
+description: 테스트와 관련된 작업이 필요한가요?
+labels: ["🧪 테스트"]
+projects: ["GU-99/1"]
+body:
+  - type: textarea
+    attributes:
+      label: 🎯 작업 목표
+      description: "이 작업의 목표와 기대 결과를 설명해주세요."
+      placeholder: "예: 특정 모듈의 유닛 테스트 커버리지 90% 달성, 새로운 기능에 대한 통합 테스트 작성 등"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ✅ 작업할 내용
+      description: "작업을 수행하기 위한 단계를 간단히 설명해주세요."
+      placeholder: |
+        1. `UserService` 모듈 테스트 성능 분석
+        2. 느린 테스트 케이스 식별 및 개선
+        3. Mock 객체로 외부 서비스 대체
+        4. `@BeforeAll` 및 `@AfterAll`로 공통 설정 최소화
+        5. 테스트 실행 시간 측정 및 비교
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 🌏 테스트 환경 정보
+      description: "테스트가 수행된 환경에 대한 정보를 제공해주세요. 운영체제, 테스트 도구 등을 포함해주세요."
+      placeholder: "예: Windows 10, IntelliJ IDEA, JUnit 5"
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: 📚 참고 자료
+      description: "작업과 관련해서 참고할 만한 자료나 링크가 있다면 제공해주세요."
+      placeholder: "참고할 자료나 링크를 입력해주세요."
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: ⏰ 추정 시간
+      description: "새로운 기능을 추가하기 위한 추정 시간에 대해 작성해주세요."
+      placeholder: "예: 1시간"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ⏰ 소요 시간
+      description: "새로운 기능 추가 소요 시간에 대해 작성해주세요."
+      placeholder: "예: 1.5시간"
+    validations:
+      required: false
