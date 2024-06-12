@@ -57,4 +57,4 @@ body:
       description: "버그 해결 소요 시간에 대해 작성해주세요."
       placeholder: "예: 1.5시간"
     validations:
-      required: true
+      required: false
