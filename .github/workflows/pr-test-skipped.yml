@@ -1,0 +1,17 @@
+name: Skipped PR Test Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - '.github/**'
+      - 'styleguide/**'
+      - '.editorconfig'
+
+jobs:
+  pr-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No Test Required"'
