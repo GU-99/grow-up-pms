@@ -1,50 +1,65 @@
-name: "\U0001F41E Bug"
-description: "개발 도중 버그가 발생했나요?"
-labels: "\U0001F41E Bug"
+name: 🐞 버그
+description: 개발 도중 버그가 발생했나요?
+labels: ["🐞 버그"]
+projects: ["GU-99/1"]
 body:
   - type: textarea
     attributes:
       label: 🐞 설명
-      description: 버그에 대한 설명을 작성해 주세요.
-      placeholder: 자세히 적을수록 좋습니다!
+      description: "버그에 대한 설명을 작성해 주세요."
+      placeholder: "예: 특정 API 엔드포인트에서 500 내부 서버 오류가 발생합니다. 오류 메시지는 'NullPointerException'입니다. 해당 엔드포인트는 /api/v1/users입니다."
     validations:
       required: true
+
   - type: textarea
     attributes:
       label: 📄 버그 로그
-      description: 로그가 있으면 복붙해 주세요.
+      description: "로그가 있으면 복붙해 주세요."
+      placeholder: "로그를 여기에 붙여넣어 주세요."
       render: shell
     validations:
       required: false
+
   - type: textarea
     attributes:
       label: 🌏 버그 발생 환경
-      description: 버그가 발생한 환경에 대해 작성해 주세요.
-      placeholder: |
-        OS: macOS
+      description: "버그가 발생한 환경에 대한 정보를 제공해주세요. 운영체제, 개발 도구, 브라우저, 브라우저 버전 등을 포함해주세요."
+      placeholder: "예: Windows 10, IntelliJ IDEA, Chrome 89, Node.js 14.16"
     validations:
       required: true
+
   - type: textarea
     attributes:
       label: 🙋🏻 버그 재현 방법
-      description: Given-When-Then 형식으로 버그를 재현할 수 있는 방법에 대해 작성해 주세요.
+      description: "Given-When-Then 형식으로 버그를 재현할 수 있는 방법에 대해 작성해 주세요."
+      placeholder: |
+        예:
+        Given: 사용자가 유효한 요청 본문을 사용하여 /api/v1/users 엔드포인트에 POST 요청을 보냅니다.
+        When: 서버가 요청을 처리합니다.
+        Then: 'NullPointerException'이 발생하고 500 상태 코드가 반환됩니다.
     validations:
       required: false
+
   - type: textarea
     attributes:
-      label: 🙋🏻 참고 자료
-      description: 발생한 버그에 대한 참고 자료가 있다면 작성해 주세요.
+      label: 📚 참고 자료
+      description: "작업과 관련해서 참고할 만한 자료나 링크가 있다면 제공해주세요."
+      placeholder: "참고할 자료나 링크를 입력해주세요."
     validations:
       required: false
-  - type: textarea
+
+  - type: input
     attributes:
       label: ⏰ 추정 시간
-      description: 버그를 해결하기 위한 추정 시간에 대해 작성해주세요.
+      description: "버그 해결 작업에 예상되는 소요 시간을 입력해주세요."
+      placeholder: "예: 1시간"
     validations:
       required: true
-  - type: textarea
+
+  - type: input
     attributes:
       label: ⏰ 소요 시간
-      description: 버그 해결 소요 시간에 대해 작성해주세요.
+      description: "버그 해결 작업에 실제로 소요된 시간을 입력해주세요."
+      placeholder: "예: 1.5시간"
     validations:
-      required: true
+      required: false
