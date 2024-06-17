@@ -13,6 +13,8 @@ on:
 jobs:
   pr-test:
     runs-on: ubuntu-latest
+    env:
+      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
