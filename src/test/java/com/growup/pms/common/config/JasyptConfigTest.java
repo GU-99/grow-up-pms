@@ -2,37 +2,33 @@ package com.growup.pms.common.config;
 
 import org.assertj.core.api.Assertions;
 import org.jasypt.encryption.StringEncryptor;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@SpringBootTest(classes = {JasyptConfig.class})
+@Import(JasyptConfig.class)
+@ExtendWith(SpringExtension.class)
 class JasyptConfigTest {
 
-    private final StringEncryptor stringEncryptor;
-
-    public JasyptConfigTest(@Qualifier("jasyptEncryptorAES") StringEncryptor stringEncryptor) {
-        this.stringEncryptor = stringEncryptor;
-    }
-
+    @Autowired
+    @Qualifier("jasyptEncryptorAES")
+    private StringEncryptor stringEncryptor;
 
     @Test
     @DisplayName("Jasypt를 활용한 암호화를 확인한다.")
-    public void Encrypt(){
-        //given
-        String password = System.getenv("JASYPT_PASSWORD");
+    void encrypt(){
+        // given
         String plainText = "grow-up-pms";
 
-        //when
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        standardPBEStringEncryptor.setPassword(password);
-
-        //then
+        // when
         String encryptText = stringEncryptor.encrypt(plainText);
-        String decryptText = this.stringEncryptor.decrypt(encryptText);
+        String decryptText = stringEncryptor.decrypt(encryptText);
 
+        // then
         Assertions.assertThat(decryptText).isEqualTo(plainText);
     }
 

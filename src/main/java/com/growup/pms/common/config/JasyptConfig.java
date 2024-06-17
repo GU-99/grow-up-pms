@@ -1,6 +1,7 @@
 package com.growup.pms.common.config;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import java.util.Objects;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -22,10 +23,7 @@ public class JasyptConfig {
     private static final String STRING_OUTPUT_TYPE = "base64";
 
     static {
-        PASSWORD = System.getenv("JASYPT_PASSWORD");
-        if (PASSWORD == null) {
-            throw new IllegalStateException();
-        }
+        PASSWORD = Objects.requireNonNull(System.getenv("JASYPT_PASSWORD"), "JASYPT_PASSWORD 환경 변수가 설정되지 않았습니다.");
     }
 
     @Bean("jasyptEncryptorAES")
