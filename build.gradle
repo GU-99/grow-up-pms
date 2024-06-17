@@ -38,6 +38,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
+    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
 }
 
 tasks.named('test') {
