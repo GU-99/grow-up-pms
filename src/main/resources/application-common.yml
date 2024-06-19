@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: grow-up-pms
+  jpa:
+    open-in-view: false
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+    password: ${JASYPT_PASSWORD}
+
