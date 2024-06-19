@@ -1,34 +1,49 @@
-name: "✨ Feature"
-description: "새로운 기능이 있나요?"
-labels: "✨ Feature"
+name: ✨ 기능
+description: 새로운 기능이 있나요?
+labels: ["✨ 기능"]
+projects: ["GU-99/1"]
 body:
   - type: textarea
     attributes:
       label: 📄 설명
-      description: 새로운 기능에 대한 설명을 작성해 주세요.
-      placeholder: 자세히 적을수록 좋습니다!
+      description: "추가하고자 하는 새로운 기능에 대해 설명해주세요."
+      placeholder: "제안하시는 기능을 자세히 설명해주세요."
     validations:
       required: true
+
   - type: textarea
     attributes:
       label: ✅ 작업할 내용
-      description: 해야 하는 일에 대한 Tasks를 작성해 주세요.
-      placeholder: 최대한 세분화 해서 적어주세요!
+      description: "해당 기능을 구현하기 위해 필요한 작업 내용을 구체적으로 작성해주세요."
+      placeholder: |
+        - [ ] 로그인 엔드포인트 추가 (POST /api/v1/login)
+        - [ ] UserService.java에 로그인 로직 추가
+        - [ ] UserRepository.java에 사용자 인증 쿼리 추가
+        - [ ] JWT 토큰 생성 및 검증 로직 추가
+        - [ ] 로그인 요청 및 응답 DTO 작성
     validations:
       required: true
+
   - type: textarea
     attributes:
-      label: 🙋🏻 참고 자료
-      description: 새로운 기능에 대한 참고 자료가 있다면 작성해 주세요.
-  - type: textarea
+      label: 📚 참고 자료
+      description: "작업과 관련해서 참고할 만한 자료나 링크가 있다면 제공해주세요."
+      placeholder: "참고할 자료나 링크를 입력해주세요."
+    validations:
+      required: false
+
+  - type: input
     attributes:
       label: ⏰ 추정 시간
-      description: 새로운 기능을 추가하기 위한 추정 시간에 대해 작성해주세요.
+      description: "기능 추가에 예상되는 소요 시간을 입력해주세요."
+      placeholder: "예: 1시간"
     validations:
       required: true
-  - type: textarea
+
+  - type: input
     attributes:
       label: ⏰ 소요 시간
-      description: 새로운 기능 추가 소요 시간에 대해 작성해주세요.
+      description: "기능 추가에 실제로 소요된 시간을 입력해주세요."
+      placeholder: "예: 1.5시간"
     validations:
-      required: true
+      required: false
