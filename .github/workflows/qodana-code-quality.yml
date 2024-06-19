@@ -6,6 +6,10 @@ on:
     branches:
       - main
       - develop
+    paths-ignore:
+      - '.github/**'
+      - 'styleguide/**'
+      - '.editorconfig'
 
 jobs:
   qodana:
