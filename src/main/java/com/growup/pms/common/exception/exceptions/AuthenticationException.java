@@ -1,13 +1,13 @@
-package com.growup.pms.common.exception;
+package com.growup.pms.common.exception.exceptions;
 
 import lombok.Getter;
 
 @Getter
-public class AuthenticationException extends RuntimeException {
+public class AuthenticationException extends BusinessException {
     private final ErrorCode errorCode;
 
     public AuthenticationException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode);
         this.errorCode = errorCode;
     }
 }

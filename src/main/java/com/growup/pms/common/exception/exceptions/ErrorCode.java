@@ -1,4 +1,4 @@
-package com.growup.pms.common.exception;
+package com.growup.pms.common.exception.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
