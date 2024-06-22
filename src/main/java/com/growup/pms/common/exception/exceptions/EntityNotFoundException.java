@@ -1,10 +1,9 @@
 package com.growup.pms.common.exception.exceptions;
 
-public class EntityNotFoundException extends BusinessException {
-    private final ErrorCode errorCode;
+import com.growup.pms.common.exception.code.ErrorCode;
 
+public class EntityNotFoundException extends BusinessException {
     public EntityNotFoundException(ErrorCode errorCode) {
         super(errorCode);
-        this.errorCode = errorCode;
     }
 }

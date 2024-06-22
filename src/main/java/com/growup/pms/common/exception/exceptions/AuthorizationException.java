@@ -1,10 +1,9 @@
 package com.growup.pms.common.exception.exceptions;
 
-public class AuthorizationException extends BusinessException {
-    private final ErrorCode errorCode;
+import com.growup.pms.common.exception.code.ErrorCode;
 
+public class AuthorizationException extends BusinessException {
     public AuthorizationException(ErrorCode errorCode) {
         super(errorCode);
-        this.errorCode = errorCode;
     }
 }
