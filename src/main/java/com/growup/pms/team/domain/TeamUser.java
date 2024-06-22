@@ -1,6 +1,6 @@
 package com.growup.pms.team.domain;
 
-import com.growup.pms.role.Role;
+import com.growup.pms.role.domain.Role;
 import com.growup.pms.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

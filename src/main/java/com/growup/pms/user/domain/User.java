@@ -4,6 +4,8 @@ import com.growup.pms.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,10 +27,14 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Provider provider;
 
     @Embedded
     private UserProfile profile;
@@ -36,12 +42,14 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime passwordChangeDate;
 
+    @Column(nullable = false)
     private int passwordFailureCount;
 
     @Builder
-    public User(String username, String password, UserProfile profile) {
+    public User(String username, String password, Provider provider, UserProfile profile) {
         this.username = username;
         this.password = password;
+        this.provider = provider;
         this.profile = profile;
         this.passwordFailureCount = 0;
         this.passwordChangeDate = LocalDateTime.now();
