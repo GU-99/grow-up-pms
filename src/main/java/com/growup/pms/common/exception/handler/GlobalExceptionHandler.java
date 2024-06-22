@@ -13,25 +13,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({EntityNotFoundException.class})
+    @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException entityNotFoundException) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(entityNotFoundException.getErrorResponse());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(entityNotFoundException.getErrorCode()));
     }
 
-    @ExceptionHandler({AuthenticationException.class})
+    @ExceptionHandler(AuthenticationException.class)
     protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException authenticationException) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(authenticationException.getErrorResponse());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponse.of(authenticationException.getErrorCode()));
     }
 
-    @ExceptionHandler({AuthorizationException.class})
+    @ExceptionHandler(AuthorizationException.class)
     protected ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException authorizationException) {
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(authorizationException.getErrorResponse());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(authorizationException.getErrorCode()));
     }
 
     /**`
@@ -40,10 +37,9 @@ public class GlobalExceptionHandler {
      * @param  exception   the exception to handle
      * @return             the response entity with the error response
      */
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception exception) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 
