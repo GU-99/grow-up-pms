@@ -9,3 +9,8 @@ jasypt:
     bean: jasyptEncryptorAES
     password: ${JASYPT_PASSWORD}
 
+security:
+  jwt:
+    base64-secret: ENC(IAOzDB87WA/evdFrSSzDsmgtpFC+fIev+ckx+Qb3+KFwLpCPInk8oPxILwE33IdUchcesVhpzuO1PjKaIqFAOZINbJniiuuzr/PZ0FSDhYM=)
+    access-expiration-time: 86400000
+    refresh-expiration-time: 604800000
