@@ -6,6 +6,7 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@WithUserDetails
+@AutoKoreanDisplayName
+@SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(GlobalExceptionHandlerTest.class)
 class GlobalExceptionHandlerTest {
 
@@ -30,6 +34,7 @@ class GlobalExceptionHandlerTest {
         @RestController
         @RequestMapping("/test")
         public static class TestController {
+
             @GetMapping("/entity")
             public String testEntityNotFoundException() {
                 throw new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND);
@@ -53,7 +58,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @WithUserDetails
     void EntityNotFoundException_테스트를_한다() throws Exception {
         // given
         String url = "/test/entity";
@@ -66,7 +70,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @WithUserDetails
     void AuthenticationException_테스트를_한다() throws Exception {
         // given
         String url = "/test/auth";
@@ -79,7 +82,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @WithUserDetails
     void AuthorizationException_테스트를_한다() throws Exception {
         // given
         String url = "/test/authz";
@@ -87,12 +89,11 @@ class GlobalExceptionHandlerTest {
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get(url))
             .andExpect(status().isForbidden())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Authorization error: 접근권한이 없습니다."))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Authorization error: 접근 권한이 없습니다."))
             .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ATZ_001"));
     }
 
     @Test
-    @WithUserDetails
     void InternalServerError_테스트를_한다() throws Exception {
         // given
         String url = "/test/internal";
