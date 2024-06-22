@@ -9,9 +9,9 @@ public enum ErrorCode {
 
     ENTITY_NOT_FOUND(ErrorCategory.ENTITY_ERROR, "001", "ENTITY가 없습니다."),
 
-    AUTH_AUTHENTICATION_ERROR(ErrorCategory.AUTHENTICATION_ERROR, "001","인증을 실패했습니다."),
+    AUTH_AUTHENTICATION_ERROR(ErrorCategory.AUTHENTICATION_ERROR, "001", "인증을 실패했습니다."),
 
-    AUTHZ_ACCESS_DENIED(ErrorCategory.AUTHORIZATION_ERROR, "001","접근권한이 없습니다."),
+    AUTHZ_ACCESS_DENIED(ErrorCategory.AUTHORIZATION_ERROR, "001", "접근 권한이 없습니다."),
 
     INTERNAL_SERVER_ERROR(ErrorCategory.INTERNAL_SERVER_ERROR, "001", "예상치 못한 서버 에러가 발생했습니다.");
 
