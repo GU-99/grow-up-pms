@@ -31,16 +31,9 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.of(authorizationException.getErrorCode()));
     }
 
-    /**`
-     * Exception handler for handling general exceptions.
-     *
-     * @param  exception   the exception to handle
-     * @return             the response entity with the error response
-     */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR));
     }
-
 }
