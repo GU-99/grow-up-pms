@@ -1,4 +1,4 @@
-package com.growup.pms.role;
+package com.growup.pms.role.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
