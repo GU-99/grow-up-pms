@@ -25,7 +25,6 @@ import org.springframework.http.MediaType;
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
 class AuthenticationControllerV1Test extends CommonControllerSliceTest {
-
     @Autowired
     private JwtLoginService loginService;
 

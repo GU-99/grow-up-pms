@@ -13,6 +13,10 @@ public class TokenDtoFixture {
     public static final String NEW_ACCESS_TOKEN = "newAccessToken";
     public static final String NEW_REFRESH_TOKEN = "newRefreshToken";
 
+    public static TokenDto createDefaultDto() {
+        return createDefaultDtoBuilder().build();
+    }
+
     public static TokenDto.TokenDtoBuilder createDefaultDtoBuilder() {
         return TokenDto.builder()
                 .accessToken(VALID_ACCESS_TOKEN)
