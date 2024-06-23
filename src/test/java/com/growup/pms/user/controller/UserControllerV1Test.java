@@ -19,7 +19,7 @@ import org.springframework.http.MediaType;
 @SuppressWarnings("NonAsciiCharacters")
 class UserControllerV1Test extends CommonControllerSliceTest {
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @Test
     void 사용자가_계정을_생성한다() throws Exception {
