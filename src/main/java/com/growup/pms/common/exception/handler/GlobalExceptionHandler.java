@@ -5,6 +5,7 @@ import com.growup.pms.common.exception.dto.ErrorResponse;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
         logInfo(entityNotFoundException, request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(entityNotFoundException.getErrorCode()));
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    protected ResponseEntity<ErrorResponse> handleEntityNotFoundException(DuplicateException duplicateException, HttpServletRequest request) {
+        logInfo(duplicateException, request);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(duplicateException.getErrorCode()));
     }
 
     @ExceptionHandler(AuthenticationException.class)
