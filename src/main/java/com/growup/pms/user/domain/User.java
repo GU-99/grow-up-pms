@@ -59,6 +59,10 @@ public class User extends BaseTimeEntity {
         passwordFailureCount++;
     }
 
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
     public void changePassword(PasswordEncoder passwordEncoder, String newPassword) {
         password = passwordEncoder.encode(newPassword);
         passwordChangeDate = LocalDateTime.now();
