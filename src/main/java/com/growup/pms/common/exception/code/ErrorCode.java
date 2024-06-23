@@ -14,7 +14,9 @@ public enum ErrorCode {
 
     AUTHZ_ACCESS_DENIED(ErrorCategory.AUTHORIZATION_ERROR, "001", "접근 권한이 없습니다."),
 
-    INTERNAL_SERVER_ERROR(ErrorCategory.INTERNAL_SERVER_ERROR, "001", "예상치 못한 서버 에러가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(ErrorCategory.INTERNAL_SERVER_ERROR, "001", "예상치 못한 서버 에러가 발생했습니다."),
+
+    DATA_FORMAT_INVALID(ErrorCategory.DATA_FORMAT_ERROR, "001", "데이터 형식이 잘못되었습니다.");
 
     private final ErrorCategory errorCategory;
     private final String code;

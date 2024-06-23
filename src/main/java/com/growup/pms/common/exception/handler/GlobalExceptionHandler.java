@@ -11,50 +11,52 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final String LOG_MESSAGE_FORMAT = "[{}] ({} {}) {}";
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException entityNotFoundException, HttpServletRequest request) {
-        logInfo(entityNotFoundException, request);
+    @ExceptionHandler({EntityNotFoundException.class, DuplicateException.class})
+    protected ResponseEntity<ErrorResponse> handleBadRequestException(BusinessException ex, HttpServletRequest request) {
+        logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.of(entityNotFoundException.getErrorCode()));
+                .body(ErrorResponse.of(ex.getErrorCode()));
     }
 
-    @ExceptionHandler(DuplicateException.class)
-    protected ResponseEntity<ErrorResponse> handleEntityNotFoundException(DuplicateException duplicateException, HttpServletRequest request) {
-        logInfo(duplicateException, request);
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class})
+    public ResponseEntity<ErrorResponse> handleDataFormatException(Exception ex, HttpServletRequest request) {
+        logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.of(duplicateException.getErrorCode()));
+                .body(ErrorResponse.of(ErrorCode.DATA_FORMAT_INVALID));
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException authenticationException, HttpServletRequest request) {
-        logInfo(authenticationException, request);
+    protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {
+        logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ErrorResponse.of(authenticationException.getErrorCode()));
+                .body(ErrorResponse.of(ex.getErrorCode()));
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    protected ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException authorizationException, HttpServletRequest request) {
-        logInfo(authorizationException, request);
+    protected ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException ex, HttpServletRequest request) {
+        logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(ErrorResponse.of(authorizationException.getErrorCode()));
+                .body(ErrorResponse.of(ex.getErrorCode()));
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception exception, HttpServletRequest request) {
-        logError(exception, request);
+    protected ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
+        logError(ex, request);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 
-    private void logInfo(BusinessException ex, HttpServletRequest request) {
+    private void logInfo(Exception ex, HttpServletRequest request) {
         log.info(LOG_MESSAGE_FORMAT, "INFO", request.getMethod(), request.getRequestURI(), ex.getMessage());
     }
 
