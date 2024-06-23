@@ -1,5 +1,6 @@
 package com.growup.pms.user.dto;
 
+import com.growup.pms.common.validation.constraint.FieldMatch;
 import com.growup.pms.user.domain.Provider;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.domain.UserProfile;
@@ -13,6 +14,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldMatch(first = "password", second = "passwordConfirm")
 public class UserCreateRequest {
     @Email
     private String username;
