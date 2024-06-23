@@ -26,11 +26,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String USER_ID_KEY = "id";
 
     private SecretKey key;
     private final String base64Secret;
-    private final long refreshTokenExpirationTime;
-    private final long accessTokenExpirationTime;
+    public final long refreshTokenExpirationTime;
+    public final long accessTokenExpirationTime;
 
     public JwtTokenProvider(
             @Value("${security.jwt.base64-secret}") String base64Secret,
@@ -42,12 +43,13 @@ public class JwtTokenProvider {
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
 
-    public String createToken(Authentication authentication, long expirationTime) {
+    public String createToken(Long userId, Authentication authentication, long expirationTime) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         return Jwts.builder()
                 .subject(authentication.getName())
+                .claim(USER_ID_KEY, userId)
                 .claim(AUTHORITIES_KEY, authorities)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
@@ -55,12 +57,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String createAccessToken(Authentication authentication) {
-        return createToken(authentication, accessTokenExpirationTime);
+    public String createAccessToken(Long userId, Authentication authentication) {
+        return createToken(userId, authentication, accessTokenExpirationTime);
     }
 
-    public String createRefreshToken(Authentication authentication) {
-        return createToken(authentication, refreshTokenExpirationTime);
+    public String createRefreshToken(Long userId, Authentication authentication) {
+        return createToken(userId, authentication, refreshTokenExpirationTime);
     }
 
     private Jws<Claims> getAllClaimsFromToken(String token) {
@@ -74,6 +76,12 @@ public class JwtTokenProvider {
         return getAllClaimsFromToken(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        return getAllClaimsFromToken(token)
+                .getPayload()
+                .get(USER_ID_KEY, Long.class);
     }
 
     @PostConstruct
