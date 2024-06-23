@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
 
     ENTITY_NOT_FOUND(ErrorCategory.ENTITY_ERROR, "001", "ENTITY가 없습니다."),
+    ENTITY_ALREADY_EXIST(ErrorCategory.ENTITY_ERROR, "002", "ENTITY가 이미 존재합니다."),
 
     AUTH_AUTHENTICATION_ERROR(ErrorCategory.AUTHENTICATION_ERROR, "001", "인증을 실패했습니다."),
 
