@@ -15,6 +15,7 @@ public class UserCreateRequestFixture {
         return UserCreateRequest.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .passwordConfirm(user.getPassword())
                 .nickname(user.getProfile().getNickname())
                 .content(user.getProfile().getContent())
                 .profileImage(user.getProfile().getProfileImage())
@@ -25,6 +26,7 @@ public class UserCreateRequestFixture {
         return UserCreateRequest.builder()
                 .username(DEFAULT_USERNAME)
                 .password(DEFAULT_PASSWORD)
+                .passwordConfirm(DEFAULT_PASSWORD)
                 .nickname(DEFAULT_NICKNAME)
                 .content(DEFAULT_CONTENT)
                 .profileImage(DEFAULT_PROFILE_IMAGE);
