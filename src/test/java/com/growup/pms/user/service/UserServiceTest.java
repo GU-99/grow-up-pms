@@ -36,7 +36,7 @@ class UserServiceTest {
     PasswordEncoder passwordEncoder;
 
     @Nested
-    class 사용자가 {
+    class 사용자가_회원가입_시에 {
 
         @Test
         void 성공적으로_계정을_생성한다() {
