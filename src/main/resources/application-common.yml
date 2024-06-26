@@ -11,6 +11,6 @@ jasypt:
 
 security:
   jwt:
-    base64-secret: ENC(IAOzDB87WA/evdFrSSzDsmgtpFC+fIev+ckx+Qb3+KFwLpCPInk8oPxILwE33IdUchcesVhpzuO1PjKaIqFAOZINbJniiuuzr/PZ0FSDhYM=)
+    base64-secret: ENC(GsF8xZqjhZEphkvkgkKHDS23D6xo73+8iBGBJH1zSm1L9YBsHth1HdjMBivz3ljMSNTLDl+ZzlEw9UClhNemX+AmN0eVomJfo93VX6tZk5KWqAGhGk9X8hrCJnZluFFsjjMBd2+tJ13NHHigXpGxT+OxeziTgJWz0OP+vHLoNgQ=)
     access-expiration-time: 86400000
     refresh-expiration-time: 604800000
