@@ -1,7 +1,7 @@
 name: 📝 문서화
 description: 프로젝트 문서화 작업이 필요한가요?
 labels: ["📚 문서화"]
-projects: ["GU-99/1"]
+projects: ["GU-99/2"]
 body:
   - type: textarea
     attributes:

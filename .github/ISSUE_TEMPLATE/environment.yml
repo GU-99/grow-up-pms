@@ -1,7 +1,7 @@
 name: 🛠️ 환경설정
 description: 추가적인 환경설정이 필요한가요?
 labels: ["🛠️ 설정"]
-projects: ["GU-99/1"]
+projects: ["GU-99/2"]
 body:
   - type: textarea
     attributes:

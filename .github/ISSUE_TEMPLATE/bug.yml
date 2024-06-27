@@ -1,7 +1,7 @@
 name: 🐞 버그
 description: 개발 도중 버그가 발생했나요?
 labels: ["🐞 버그"]
-projects: ["GU-99/1"]
+projects: ["GU-99/2"]
 body:
   - type: textarea
     attributes:

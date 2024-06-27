@@ -1,7 +1,7 @@
 name: 🛠️ 리팩터링
 description: 리팩터링을 해야할 부분이 있나요?
 labels: ["🛠️ 리팩터링"]
-projects: ["GU-99/1"]
+projects: ["GU-99/2"]
 body:
   - type: textarea
     attributes:
