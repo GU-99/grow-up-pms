@@ -1,5 +1,6 @@
 package com.growup.pms.common.security.jwt;
 
+import com.growup.pms.auth.domain.SecurityUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -19,7 +20,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -101,7 +101,7 @@ public class JwtTokenProvider {
                         .filter(auth -> !auth.isEmpty())
                         .map(SimpleGrantedAuthority::new)
                         .toList();
-        User principal = new User(claims.getSubject(), "", authorities);
+        SecurityUser principal = new SecurityUser(claims.get(USER_ID_KEY, Long.class), claims.getSubject(), "");
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
