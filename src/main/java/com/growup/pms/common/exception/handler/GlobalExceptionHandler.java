@@ -7,6 +7,7 @@ import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.StorageException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,13 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException ex, HttpServletRequest request) {
         logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(ex.getErrorCode()));
+    }
+
+    @ExceptionHandler(StorageException.class)
+    protected ResponseEntity<ErrorResponse> handleStorageException(StorageException ex, HttpServletRequest request) {
+        logInfo(ex, request);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(ex.getErrorCode()));
     }
 
