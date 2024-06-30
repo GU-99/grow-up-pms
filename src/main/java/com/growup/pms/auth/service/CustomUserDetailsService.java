@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         var user = userRepository.findByUsernameOrThrow(username);
         return SecurityUser.builder()
                 .id(user.getId())
-                .username(user.getUsername())
+                .email(user.getEmail())
                 .password(user.getPassword())
                 .build();
     }

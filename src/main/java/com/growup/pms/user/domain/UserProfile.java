@@ -14,14 +14,14 @@ public class UserProfile {
     @Column(nullable = false)
     private String nickname;
 
-    private String content;
+    private String bio;
 
-    private String profileImage;
+    private String image;
 
     @Builder
-    public UserProfile(String nickname, String content, String profileImage) {
+    public UserProfile(String nickname, String content, String image) {
         this.nickname = nickname;
-        this.content = content;
-        this.profileImage = profileImage;
+        this.bio = content;
+        this.image = image;
     }
 }

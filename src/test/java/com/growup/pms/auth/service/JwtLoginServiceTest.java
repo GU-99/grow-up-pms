@@ -59,7 +59,7 @@ class JwtLoginServiceTest {
             // given
             Long userId = 1L;
             LoginRequest validRequest = LoginRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(validRequest.getUsername(), validRequest.getPassword());
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(validRequest.getEmail(), validRequest.getPassword());
             TokenDto expectedToken = TokenDtoFixture.createDefaultDto();
 
             when(authenticationManager.authenticate(token)).thenReturn(authentication);
@@ -83,7 +83,7 @@ class JwtLoginServiceTest {
         void 실패하면_예외가_발생한다() {
             // given
             LoginRequest badRequest = LoginRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(badRequest.getUsername(), badRequest.getPassword());
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(badRequest.getEmail(), badRequest.getPassword());
 
             doThrow(new RuntimeException()).when(authenticationManager).authenticate(token);
 

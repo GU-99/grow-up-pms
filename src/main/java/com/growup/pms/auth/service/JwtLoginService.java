@@ -16,7 +16,7 @@ public class JwtLoginService {
     private final JwtTokenService jwtTokenService;
 
     public TokenDto authenticateUser(LoginRequest request) {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+        var authenticationToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
         return jwtTokenService.generateJwtTokens(((SecurityUser) authentication.getPrincipal()).getId(), authentication);

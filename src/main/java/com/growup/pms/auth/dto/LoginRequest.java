@@ -8,13 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginRequest {
-    private String username;
-
+    private String email;
     private String password;
 
     @Builder
-    public LoginRequest(String username, String password) {
-        this.username = username;
+    public LoginRequest(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 }

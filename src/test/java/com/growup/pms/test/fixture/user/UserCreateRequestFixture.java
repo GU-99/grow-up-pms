@@ -13,12 +13,12 @@ public class UserCreateRequestFixture {
 
     public static UserCreateRequest createRequestFromUser(User user) {
         return UserCreateRequest.builder()
-                .username(user.getUsername())
+                .username(user.getEmail())
                 .password(user.getPassword())
                 .passwordConfirm(user.getPassword())
                 .nickname(user.getProfile().getNickname())
-                .content(user.getProfile().getContent())
-                .profileImage(user.getProfile().getProfileImage())
+                .content(user.getProfile().getBio())
+                .profileImage(user.getProfile().getImage())
                 .build();
     }
 
