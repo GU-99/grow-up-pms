@@ -19,9 +19,9 @@ public class UserProfile {
     private String image;
 
     @Builder
-    public UserProfile(String nickname, String content, String image) {
+    public UserProfile(String nickname, String bio, String image) {
         this.nickname = nickname;
-        this.bio = content;
+        this.bio = bio;
         this.image = image;
     }
 }

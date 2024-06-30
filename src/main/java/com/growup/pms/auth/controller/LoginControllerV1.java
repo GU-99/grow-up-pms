@@ -30,14 +30,14 @@ public class LoginControllerV1 {
         TokenDto tokenDto = loginService.authenticateUser(request);
         setRefreshTokenCookie(response, tokenDto.getRefreshToken());
         return ResponseEntity.ok()
-                .body(new AccessTokenResponse(tokenDto.getAccessToken()));
+                .body(AccessTokenResponse.builder().accessToken(tokenDto.getAccessToken()).build());
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<AccessTokenResponse> refresh(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
         TokenDto tokenDto = tokenService.refreshJwtTokens(refreshToken);
         setRefreshTokenCookie(response, tokenDto.getRefreshToken());
-        return ResponseEntity.ok().body(new AccessTokenResponse(tokenDto.getAccessToken()));
+        return ResponseEntity.ok().body(AccessTokenResponse.builder().accessToken(tokenDto.getAccessToken()).build());
     }
 
     private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {

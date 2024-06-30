@@ -43,12 +43,12 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
             when(loginService.authenticateUser(any(LoginRequest.class))).thenReturn(expectedValidToken);
 
             // when & then
-            mockMvc.perform(post("/api/v1/auth/login")
+            mockMvc.perform(post("/api/v1/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(validRequest)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.access_token").value(TokenDtoFixture.VALID_ACCESS_TOKEN))
-                    .andExpect(cookie().value("refresh_token", TokenDtoFixture.VALID_REFRESH_TOKEN));
+                    .andExpect(jsonPath("$.accessToken").value(TokenDtoFixture.VALID_ACCESS_TOKEN))
+                    .andExpect(cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN));
         }
 
         @Test
@@ -60,12 +60,12 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
                     LoginRequest.class));
 
             // when & then
-            mockMvc.perform(post("/api/v1/auth/login")
+            mockMvc.perform(post("/api/v1/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(badRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.access_token").doesNotExist())
-                    .andExpect(cookie().doesNotExist("refresh_token"));
+                    .andExpect(jsonPath("$.accessToken").doesNotExist())
+                    .andExpect(cookie().doesNotExist("refreshToken"));
         }
     }
 }
