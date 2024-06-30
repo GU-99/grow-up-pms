@@ -3,16 +3,16 @@ package com.growup.pms.test.fixture.auth;
 import static com.growup.pms.test.fixture.user.UserFixture.DEFAULT_PASSWORD;
 import static com.growup.pms.test.fixture.user.UserFixture.DEFAULT_USERNAME;
 
-import com.growup.pms.auth.dto.SignInRequest;
+import com.growup.pms.auth.dto.LoginRequest;
 
-public class SignInRequestFixture {
+public class LoginRequestFixture {
 
-    public static SignInRequest createDefaultRequest() {
+    public static LoginRequest createDefaultRequest() {
         return createDefaultRequestBuilder().build();
     }
 
-    public static SignInRequest.SignInRequestBuilder createDefaultRequestBuilder() {
-        return SignInRequest.builder()
+    public static LoginRequest.LoginRequestBuilder createDefaultRequestBuilder() {
+        return LoginRequest.builder()
                 .username(DEFAULT_USERNAME)
                 .password(DEFAULT_PASSWORD);
     }

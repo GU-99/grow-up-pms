@@ -1,7 +1,7 @@
 package com.growup.pms.auth.controller;
 
 import com.growup.pms.auth.dto.AccessTokenResponse;
-import com.growup.pms.auth.dto.SignInRequest;
+import com.growup.pms.auth.dto.LoginRequest;
 import com.growup.pms.auth.dto.TokenDto;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
@@ -23,7 +23,7 @@ public class AuthenticationControllerV1 {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(@Valid @RequestBody SignInRequest request, HttpServletResponse response) {
+    public ResponseEntity<AccessTokenResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         TokenDto tokenDto = loginService.authenticateUser(request);
         setRefreshTokenCookie(response, tokenDto.getRefreshToken());
         return ResponseEntity.ok()
