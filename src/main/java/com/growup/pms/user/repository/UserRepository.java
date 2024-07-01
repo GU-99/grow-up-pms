@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUsername(String email);
+    Optional<User> findByEmail(String email);
 
     default User findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
-    default User findByUsernameOrThrow(String username) {
-        return findByUsername(username).orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+    default User findByEmailOrThrow(String email) {
+        return findByEmail(email).orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
     }
 }
