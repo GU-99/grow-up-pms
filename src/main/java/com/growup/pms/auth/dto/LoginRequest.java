@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SignInRequest {
-    private String username;
-
+public class LoginRequest {
+    private String email;
     private String password;
 
     @Builder
-    public SignInRequest(String username, String password) {
-        this.username = username;
+    public LoginRequest(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 }

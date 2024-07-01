@@ -1,7 +1,7 @@
 package com.growup.pms.auth.service;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.auth.dto.SignInRequest;
+import com.growup.pms.auth.dto.LoginRequest;
 import com.growup.pms.auth.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +15,8 @@ public class JwtLoginService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenService jwtTokenService;
 
-    public TokenDto authenticateUser(SignInRequest request) {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+    public TokenDto authenticateUser(LoginRequest request) {
+        var authenticationToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
         return jwtTokenService.generateJwtTokens(((SecurityUser) authentication.getPrincipal()).getId(), authentication);

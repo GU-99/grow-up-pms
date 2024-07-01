@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.Length;
 @FieldMatch(first = "password", second = "passwordConfirm")
 public class UserCreateRequest {
     @Email
-    private String username;
+    private String email;
 
     @Length(min = 8, max = 20)
     private String password;
@@ -28,30 +28,30 @@ public class UserCreateRequest {
     @Length(max = 20)
     private String nickname;
 
-    private String content;
+    private String bio;
 
-    private String profileImage;
+    private String image;
 
     @Builder
-    public UserCreateRequest(String username, String password, String passwordConfirm, String nickname, String content,
-                             String profileImage) {
-        this.username = username;
+    public UserCreateRequest(String email, String password, String passwordConfirm, String nickname, String bio,
+                             String image) {
+        this.email = email;
         this.password = password;
         this.passwordConfirm = passwordConfirm;
         this.nickname = nickname;
-        this.content = content;
-        this.profileImage = profileImage;
+        this.bio = bio;
+        this.image = image;
     }
 
     public static User toEntity(UserCreateRequest request) {
         return User.builder()
-                .username(request.getUsername())
+                .email(request.getEmail())
                 .password(request.getPassword())
                 .provider(Provider.LOCAL)
                 .profile(UserProfile.builder()
                         .nickname(request.getNickname())
-                        .content(request.getContent())
-                        .profileImage(request.getProfileImage())
+                        .bio(request.getBio())
+                        .image(request.getImage())
                         .build())
                 .build();
     }

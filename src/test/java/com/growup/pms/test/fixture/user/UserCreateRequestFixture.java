@@ -13,22 +13,22 @@ public class UserCreateRequestFixture {
 
     public static UserCreateRequest createRequestFromUser(User user) {
         return UserCreateRequest.builder()
-                .username(user.getUsername())
+                .email(user.getEmail())
                 .password(user.getPassword())
                 .passwordConfirm(user.getPassword())
                 .nickname(user.getProfile().getNickname())
-                .content(user.getProfile().getContent())
-                .profileImage(user.getProfile().getProfileImage())
+                .bio(user.getProfile().getBio())
+                .image(user.getProfile().getImage())
                 .build();
     }
 
     public static UserCreateRequest.UserCreateRequestBuilder createDefaultRequestBuilder() {
         return UserCreateRequest.builder()
-                .username(DEFAULT_USERNAME)
+                .email(DEFAULT_EMAIL)
                 .password(DEFAULT_PASSWORD)
                 .passwordConfirm(DEFAULT_PASSWORD)
                 .nickname(DEFAULT_NICKNAME)
-                .content(DEFAULT_CONTENT)
-                .profileImage(DEFAULT_PROFILE_IMAGE);
+                .bio(DEFAULT_BIO)
+                .image(DEFAULT_IMAGE);
     }
 }

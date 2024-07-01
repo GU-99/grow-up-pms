@@ -33,7 +33,7 @@ class JwtTokenServiceTest {
     void 토큰을_새롭게_생성한다() {
         // given
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                UserFixture.DEFAULT_USERNAME, UserFixture.DEFAULT_PASSWORD, Collections.emptyList());
+                UserFixture.DEFAULT_EMAIL, UserFixture.DEFAULT_PASSWORD, Collections.emptyList());
         TokenDto expectedTokenDto = TokenDtoFixture.createDefaultDtoBuilder()
                         .accessToken(TokenDtoFixture.NEW_ACCESS_TOKEN)
                         .refreshToken(TokenDtoFixture.NEW_REFRESH_TOKEN)
