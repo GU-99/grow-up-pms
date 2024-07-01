@@ -49,12 +49,11 @@ public class RefreshTokenService {
     }
 
     private Optional<RefreshToken> getStoredRefreshToken(String token) {
-        String username = tokenProvider.getUsernameFromToken(token);
-        User user = userRepository.findByUsernameOrThrow(username);
+        User user = userRepository.findByIdOrThrow(tokenProvider.getUserIdFromToken(token));
         return refreshTokenRepository.findByUserIdAndToken(user.getId(), HashingUtil.generateHash(token));
     }
 
-    public boolean isTokenExpired(RefreshToken token) {
+    private boolean isTokenExpired(RefreshToken token) {
         return token.getExpiryDate().isBefore(Instant.now());
     }
 }
