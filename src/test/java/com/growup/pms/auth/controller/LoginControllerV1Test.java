@@ -11,12 +11,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.growup.pms.auth.dto.LoginRequest;
 import com.growup.pms.auth.dto.TokenDto;
 import com.growup.pms.auth.service.JwtLoginService;
+import com.growup.pms.auth.service.JwtTokenService;
 import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.test.CommonControllerSliceTest;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.auth.LoginRequestFixture;
 import com.growup.pms.test.fixture.auth.TokenDtoFixture;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ import org.springframework.http.MediaType;
 class LoginControllerV1Test extends CommonControllerSliceTest {
     @Autowired
     private JwtLoginService loginService;
+
+    @Autowired
+    private JwtTokenService tokenService;
 
     @Nested
     class 사용자가_로그인_시에 {
@@ -66,6 +72,40 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.accessToken").doesNotExist())
                     .andExpect(cookie().doesNotExist("refreshToken"));
+        }
+    }
+
+    @Nested
+    class 사용자가_토큰_재발급_시에 {
+
+        @Test
+        void 성공한다() throws Exception {
+            // given
+            String validRefreshToken = TokenDtoFixture.VALID_REFRESH_TOKEN;
+            TokenDto newTokens = TokenDtoFixture.createDefaultDto();
+
+            when(tokenService.refreshJwtTokens(validRefreshToken)).thenReturn(newTokens);
+
+            // when & then
+            mockMvc.perform(post("/api/v1/user/login/refresh")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .cookie(new Cookie("refreshToken", validRefreshToken)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.accessToken").value(newTokens.getAccessToken()))
+                    .andExpect(cookie().value("refreshToken", newTokens.getRefreshToken()));
+        }
+
+        @Test
+        void 리프레시_토큰이_유효하지_않으면_오류코드를_반환한다() throws Exception {
+            // given
+            doThrow(new AuthenticationException(ErrorCode.INVALID_REFRESH_TOKEN_ERROR)).when(tokenService).refreshJwtTokens(any(String.class));
+
+            // when & then
+            mockMvc.perform(post("/api/v1/user/login/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .cookie(new Cookie("refreshToken", TokenDtoFixture.INVALID_REFRESH_TOKEN)))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.accessToken").doesNotExist());
         }
     }
 }
