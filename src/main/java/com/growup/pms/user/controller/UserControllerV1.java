@@ -1,6 +1,7 @@
 package com.growup.pms.user.controller;
 
 import com.growup.pms.user.dto.UserCreateRequest;
+import com.growup.pms.user.dto.UserUploadRequest;
 import com.growup.pms.user.service.UserService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -20,5 +21,11 @@ public class UserControllerV1 {
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request) {
         return ResponseEntity.created(URI.create("/api/v1/users/" + userService.save(request))).build();
+    }
+
+    @PostMapping("/file")
+    public ResponseEntity<Void> upload(UserUploadRequest request) {
+        userService.profileUpload(request);
+        return ResponseEntity.ok().build();
     }
 }
