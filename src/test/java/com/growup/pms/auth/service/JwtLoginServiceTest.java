@@ -7,10 +7,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.auth.dto.SignInRequest;
+import com.growup.pms.auth.dto.LoginRequest;
 import com.growup.pms.auth.dto.TokenDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.auth.SignInRequestFixture;
+import com.growup.pms.test.fixture.auth.LoginRequestFixture;
 import com.growup.pms.test.fixture.auth.TokenDtoFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -58,8 +58,8 @@ class JwtLoginServiceTest {
         void 성공한다() {
             // given
             Long userId = 1L;
-            SignInRequest validRequest = SignInRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(validRequest.getUsername(), validRequest.getPassword());
+            LoginRequest validRequest = LoginRequestFixture.createDefaultRequest();
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(validRequest.getEmail(), validRequest.getPassword());
             TokenDto expectedToken = TokenDtoFixture.createDefaultDto();
 
             when(authenticationManager.authenticate(token)).thenReturn(authentication);
@@ -82,8 +82,8 @@ class JwtLoginServiceTest {
         @Test
         void 실패하면_예외가_발생한다() {
             // given
-            SignInRequest badRequest = SignInRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(badRequest.getUsername(), badRequest.getPassword());
+            LoginRequest badRequest = LoginRequestFixture.createDefaultRequest();
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(badRequest.getEmail(), badRequest.getPassword());
 
             doThrow(new RuntimeException()).when(authenticationManager).authenticate(token);
 
