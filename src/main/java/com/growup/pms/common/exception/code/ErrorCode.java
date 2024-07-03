@@ -20,7 +20,8 @@ public enum ErrorCode {
     DATA_FORMAT_INVALID(ErrorCategory.DATA_FORMAT_ERROR, "001", "데이터 형식이 잘못되었습니다."),
 
     STORAGE_STORE_ERROR(ErrorCategory.STORAGE_ERROR, "001", "파일을 저장할 수 없습니다."),
-    STORAGE_EMPTY_FILE_ERROR(ErrorCategory.STORAGE_ERROR, "002", "비어있는 파일입니다.");
+    STORAGE_EMPTY_FILE_ERROR(ErrorCategory.STORAGE_ERROR, "002", "비어있는 파일입니다."),
+    STORAGE_CREATE_FOLDER_ERROR(ErrorCategory.STORAGE_ERROR, "003", "저장할 폴더를 생성하지 못 했습니다."),;
 
     private final ErrorCategory errorCategory;
     private final String code;
