@@ -2,10 +2,13 @@ name: PR Test Validation
 
 on:
   pull_request:
-  push:
     branches:
       - main
       - develop
+    paths-ignore:
+      - '.github/**'
+      - 'styleguide/**'
+      - '.editorconfig'
 
 jobs:
   pr-test:
@@ -35,12 +38,16 @@ jobs:
       - name: Run tests with Gradle
         run: ./gradlew test --no-daemon
 
-      - name: 'Qodana Scan'
+      # Temporarily resolve inefficient caching of Qodana's Gradle dependencies
+      # by manually copying the .gradle directory to a designated cache directory.
+      - name: Copy .gradle directory
+        run: |
+          mkdir -p ${{ runner.temp }}/qodana/caches/gradle
+          cp -r ~/.gradle/* ${{ runner.temp }}/qodana/caches/gradle/
+
+      - name: Perform qodana analysis
         uses: JetBrains/qodana-action@v2024.1
         with:
-          cache-default-branch-only: true
-          # NOTE: Temporary workaround for inefficient caching.
-          # Using a generic cache key to reduce redundant downloads across PRs.
-          additional-cache-key: qodana-2024.1-
+          use-caches: false
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
