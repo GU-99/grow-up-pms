@@ -1,4 +1,4 @@
-name: Update Cache
+name: Update Gradle Cache
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
       - '.editorconfig'
 
 jobs:
-  update-cache:
+  update-gradle-cache:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

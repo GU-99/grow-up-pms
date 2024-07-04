@@ -17,8 +17,6 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
-    env:
-      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,6 +35,8 @@ jobs:
 
       - name: Run tests with Gradle
         run: ./gradlew test --no-daemon
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
       # Temporarily resolve inefficient caching of Qodana's Gradle dependencies
       # by manually copying the .gradle directory to a designated cache directory.
