@@ -2,23 +2,22 @@ name: PR Test Validation
 
 on:
   pull_request:
+  push:
     branches:
       - main
       - develop
-    paths-ignore:
-      - '.github/**'
-      - 'styleguide/**'
-      - '.editorconfig'
 
 jobs:
   pr-test:
     runs-on: ubuntu-latest
-    env:
-      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
     steps:
       - uses: actions/checkout@v4
         with:
-          # Fetch only the commits related to the pull request to optimize the workflow
+          # Limiting history to PR commits only; full history scan seems excessive for Qodana
           fetch-depth: ${{ github.event.pull_request.commits }}
 
       - name: Set up JDK 21
@@ -36,5 +35,10 @@ jobs:
 
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.1
+        with:
+          cache-default-branch-only: true
+          # NOTE: Temporary workaround for inefficient caching.
+          # Using a generic cache key to reduce redundant downloads across PRs.
+          additional-cache-key: qodana-2024.1-
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
