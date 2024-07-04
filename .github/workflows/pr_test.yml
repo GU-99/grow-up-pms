@@ -18,6 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Fetch only the commits related to the pull request to optimize the workflow
           fetch-depth: ${{ github.event.pull_request.commits }}
 
       - name: Set up JDK 21

@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableEncryptableProperties
 public class JasyptConfig {
-    
     // https://github.com/ulisesbocchio/jasypt-spring-boot?tab=readme-ov-file#password-based-encryption-configuration
     private static final String PASSWORD;
     private static final String ALGORITHM = "PBEWITHHMACSHA512ANDAES_256";
