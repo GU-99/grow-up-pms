@@ -19,11 +19,6 @@ public class RefreshTokenService {
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
 
-    public void deleteTokenByUserId(Long userId) {
-        refreshTokenRepository.deleteById(userId);
-        refreshTokenRepository.flush();
-    }
-
     public Long save(Long userId, String token) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(userRepository.findByIdOrThrow(userId))
@@ -34,9 +29,13 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public void updateRefreshToken(Long userId, String refreshToken) {
-        deleteTokenByUserId(userId);
-        save(userId, refreshToken);
+    public Long renewRefreshToken(Long userId, String newRefreshToken) {
+        return refreshTokenRepository.findByUserId(userId)
+                .map(token -> {
+                    token.updateToken(newRefreshToken, Instant.now().plusMillis(tokenProvider.refreshTokenExpirationTime));
+                    return token.getId();
+                })
+                .orElseGet(() -> save(userId, newRefreshToken));
     }
 
     public boolean validateToken(String token) {
