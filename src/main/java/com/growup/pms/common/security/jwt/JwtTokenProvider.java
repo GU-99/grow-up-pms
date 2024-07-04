@@ -1,6 +1,7 @@
 package com.growup.pms.common.security.jwt;
 
 import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.common.security.jwt.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -43,13 +44,13 @@ public class JwtTokenProvider {
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
 
-    public String createToken(Long userId, Authentication authentication, long expirationTime) {
-        String authorities = authentication.getAuthorities().stream()
+    public String createToken(SecurityUser user, long expirationTime) {
+        String authorities = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         return Jwts.builder()
-                .subject(authentication.getName())
-                .claim(USER_ID_KEY, userId)
+                .subject(user.getUsername())
+                .claim(USER_ID_KEY, user.getId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
@@ -57,12 +58,11 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String createAccessToken(Long userId, Authentication authentication) {
-        return createToken(userId, authentication, accessTokenExpirationTime);
-    }
-
-    public String createRefreshToken(Long userId, Authentication authentication) {
-        return createToken(userId, authentication, refreshTokenExpirationTime);
+    public TokenDto generateToken(SecurityUser user) {
+        return TokenDto.builder()
+                .accessToken(createToken(user, accessTokenExpirationTime))
+                .refreshToken(createToken(user, refreshTokenExpirationTime))
+                .build();
     }
 
     private Jws<Claims> getAllClaimsFromToken(String token) {
