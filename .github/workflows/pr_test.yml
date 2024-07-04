@@ -38,6 +38,12 @@ jobs:
         env:
           JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
+      - name: Archive coverage data
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-coverage-data
+          path: .qodana/code-coverage
+
       # Temporarily resolve inefficient caching of Qodana's Gradle dependencies
       # by manually copying the .gradle directory to a designated cache directory.
       - name: Copy .gradle directory
