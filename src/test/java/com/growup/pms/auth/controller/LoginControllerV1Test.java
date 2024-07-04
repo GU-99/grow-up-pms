@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.growup.pms.auth.dto.LoginRequest;
-import com.growup.pms.auth.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenDto;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.JwtTokenService;
 import com.growup.pms.common.exception.code.ErrorCode;

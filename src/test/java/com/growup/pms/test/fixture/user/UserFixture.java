@@ -6,6 +6,7 @@ import com.growup.pms.user.domain.UserProfile;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class UserFixture {
+    public static final Long DEFAULT_ID = 1L;
     public static final String DEFAULT_EMAIL = "ryan@example.com";
     public static final String DEFAULT_PASSWORD = "!test1234";
     public static final String DEFAULT_NICKNAME = "라이언";
