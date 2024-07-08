@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.domain.RefreshToken;
@@ -14,6 +15,7 @@ import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.auth.RefreshTokenFixture;
+import com.growup.pms.test.fixture.auth.TokenDtoFixture;
 import com.growup.pms.test.fixture.user.UserFixture;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
@@ -59,8 +61,6 @@ class RefreshTokenServiceTest {
 
             // then
             assertThat(actualId).isEqualTo(expectedId);
-
-            verify(refreshTokenRepository).save(any(RefreshToken.class));
         }
 
         @Test
@@ -78,19 +78,43 @@ class RefreshTokenServiceTest {
     }
 
     @Nested
-    class 리프레시_토큰을_제거_시에 {
+    class 리프레시_토큰을_갱신_시에 {
 
         @Test
-        void 성공한다() {
+        void 기존_토큰이_있으면_갱신한다() {
             // given
-            User user = UserFixture.createUserWithId(1L);
+            Long userId = 1L;
+            String newRefreshToken = TokenDtoFixture.NEW_REFRESH_TOKEN;
+            Long existingRefreshTokenId = 1L;
+            RefreshToken existingRefreshToken = mock(RefreshToken.class);
+
+            when(refreshTokenRepository.findByUserId(userId)).thenReturn(Optional.of(existingRefreshToken));
+            when(existingRefreshToken.getId()).thenReturn(existingRefreshTokenId);
+            doNothing().when(existingRefreshToken).updateToken(eq(newRefreshToken), any(Instant.class));
 
             // when
-            refreshTokenService.deleteTokenByUserId(user.getId());
+            Long actualId = refreshTokenService.renewRefreshToken(userId, newRefreshToken);
 
             // then
-            verify(refreshTokenRepository).deleteById(user.getId());
-            verify(refreshTokenRepository).flush();
+            assertThat(actualId).isEqualTo(existingRefreshTokenId);
+        }
+
+        @Test
+        void 기존_토큰이_없으면_새로_저장한다() {
+            // given
+            Long userId = 1L;
+            User user = UserFixture.createUserWithId(userId);
+            String newRefreshToken = TokenDtoFixture.NEW_REFRESH_TOKEN;
+            RefreshToken newToken = RefreshTokenFixture.createRefreshTokenWithUser(user);
+
+            when(refreshTokenRepository.findByUserId(userId)).thenReturn(Optional.empty());
+            when(refreshTokenRepository.save(any(RefreshToken.class))).thenReturn(newToken);
+
+            // when
+            Long actualId = refreshTokenService.renewRefreshToken(userId, newRefreshToken);
+
+            // then
+            assertThat(actualId).isEqualTo(newToken.getId());
         }
     }
 

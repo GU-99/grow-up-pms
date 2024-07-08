@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.auth;
 
-import com.growup.pms.auth.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenDto;
 
 public class TokenDtoFixture {
 

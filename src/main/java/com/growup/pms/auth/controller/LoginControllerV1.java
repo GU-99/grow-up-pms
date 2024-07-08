@@ -2,10 +2,10 @@ package com.growup.pms.auth.controller;
 
 import com.growup.pms.auth.dto.AccessTokenResponse;
 import com.growup.pms.auth.dto.LoginRequest;
-import com.growup.pms.auth.dto.TokenDto;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.JwtTokenService;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
+import com.growup.pms.common.security.jwt.dto.TokenDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
