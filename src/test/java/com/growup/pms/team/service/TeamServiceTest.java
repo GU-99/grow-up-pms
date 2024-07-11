@@ -1,6 +1,7 @@
 package com.growup.pms.team.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -74,9 +75,8 @@ class TeamServiceTest {
             doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(userRepository).findByIdOrThrow(creatorId);
 
             // when & then
-            assertThrows(EntityNotFoundException.class, () -> teamService.createTeam(creatorId, request));
-
-
+            assertThatThrownBy(() -> teamService.createTeam(creatorId, request))
+                    .isInstanceOf(EntityNotFoundException.class);
         }
     }
 
