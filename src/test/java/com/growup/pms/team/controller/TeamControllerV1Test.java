@@ -22,6 +22,7 @@ import com.growup.pms.team.dto.TeamUpdateRequest;
 import com.growup.pms.team.service.TeamService;
 import com.growup.pms.test.CommonControllerSliceTest;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.team.TeamFixture;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -77,12 +78,14 @@ class TeamControllerV1Test extends CommonControllerSliceTest {
     class 사용자가_팀을_생성_시에 {
 
         @Test
+        @WithMockSecurityUser(id = 1L)
         void 성공한다() throws Exception {
             // given
+            Long creatorId = 1L;
             Long expectedTeamId = TeamFixture.DEFAULT_TEAM_ID;
             TeamCreateRequest request = TeamFixture.createDefaultTeamCreateRequest();
 
-            when(teamService.createTeam(any(TeamCreateRequest.class))).thenReturn(expectedTeamId);
+            when(teamService.createTeam(eq(creatorId), any(TeamCreateRequest.class))).thenReturn(expectedTeamId);
 
             // when & then
             mockMvc.perform(post("/api/v1/team")
