@@ -1,9 +1,7 @@
 package com.growup.pms.team.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.user.domain.User;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
