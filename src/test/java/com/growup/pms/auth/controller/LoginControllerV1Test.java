@@ -69,7 +69,7 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
             mockMvc.perform(post("/api/v1/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(badRequest)))
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.accessToken").doesNotExist())
                     .andExpect(cookie().doesNotExist("refreshToken"));
         }
