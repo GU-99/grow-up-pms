@@ -35,8 +35,17 @@ public class TeamFixture {
     public static TeamCreateRequest.TeamCreateRequestBuilder createDefaultTeamCreateRequestBuilder() {
         return TeamCreateRequest.builder()
                 .name(DEFAULT_TEAM_NAME)
-                .content(DEFAULT_TEAM_CONTENT)
-                .creatorId(DEFAULT_TEAM_ID);
+                .content(DEFAULT_TEAM_CONTENT);
+    }
+
+    public static TeamUpdateRequest createDefaultTeamUpdateRequest() {
+        return createDefaultTeamUpdateRequestBuilder().build();
+    }
+
+    public static TeamUpdateRequest.TeamUpdateRequestBuilder createDefaultTeamUpdateRequestBuilder() {
+        return TeamUpdateRequest.builder()
+                .name(JsonNullable.of(DEFAULT_TEAM_NAME))
+                .content(JsonNullable.of(DEFAULT_TEAM_CONTENT));
     }
 
     public static TeamResponse createDefaultTeamResponse() {
@@ -47,11 +56,5 @@ public class TeamFixture {
         return TeamResponse.builder()
                 .name(DEFAULT_TEAM_NAME)
                 .content(DEFAULT_TEAM_CONTENT);
-    }
-
-    public static TeamUpdateRequest.TeamUpdateRequestBuilder createDefaultTeamUpdateRequestBuilder() {
-        return TeamUpdateRequest.builder()
-                .name(JsonNullable.of(DEFAULT_TEAM_NAME))
-                .content(JsonNullable.of(DEFAULT_TEAM_CONTENT));
     }
 }

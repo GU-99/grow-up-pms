@@ -1,5 +1,6 @@
 package com.growup.pms.team.controller;
 
+import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.team.dto.TeamCreateRequest;
 import com.growup.pms.team.dto.TeamResponse;
 import com.growup.pms.team.dto.TeamUpdateRequest;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,8 +33,8 @@ public class TeamControllerV1 {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTeam(@Valid @RequestBody TeamCreateRequest request) {
-        return ResponseEntity.created(URI.create("/api/v1/team/" + teamService.createTeam(request)))
+    public ResponseEntity<Void> createTeam(@AuthenticationPrincipal SecurityUser user, @Valid @RequestBody TeamCreateRequest request) {
+        return ResponseEntity.created(URI.create("/api/v1/team/" + teamService.createTeam(user.getId(), request)))
                 .build();
     }
 

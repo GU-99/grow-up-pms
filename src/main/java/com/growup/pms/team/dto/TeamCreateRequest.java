@@ -19,15 +19,10 @@ public class TeamCreateRequest {
 
     private String content;
 
-    @NotNull
-    @JsonProperty("creator")
-    private Long creatorId;
-
     @Builder
-    public TeamCreateRequest(String name, String content, Long creatorId) {
+    public TeamCreateRequest(String name, String content) {
         this.name = name;
         this.content = content;
-        this.creatorId = creatorId;
     }
 
     public static Team toEntity(TeamCreateRequest request, User creator) {
