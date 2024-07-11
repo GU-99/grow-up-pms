@@ -8,6 +8,7 @@ import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class TeamService {
         teamRepository.deleteById(teamId);
     }
 
+    @Transactional
     public void updateTeam(Long teamId, TeamUpdateRequest request) {
         Team team = teamRepository.findByIdOrThrow(teamId);
         if (request.getName().isPresent()) {
@@ -37,6 +39,5 @@ public class TeamService {
         if (request.getContent().isPresent()) {
             team.updateContent(request.getContent().get());
         }
-        teamRepository.save(team);
     }
 }
