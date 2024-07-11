@@ -42,4 +42,12 @@ public class Team extends BaseTimeEntity {
         this.name = name;
         this.content = content;
     }
+
+    public void updateName(String newName) {
+        this.name = newName;
+    }
+
+    public void updateContent(String newContent) {
+        this.content = newContent;
+    }
 }

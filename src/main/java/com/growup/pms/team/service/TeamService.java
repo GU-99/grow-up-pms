@@ -1,7 +1,9 @@
 package com.growup.pms.team.service;
 
+import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.dto.TeamCreateRequest;
 import com.growup.pms.team.dto.TeamResponse;
+import com.growup.pms.team.dto.TeamUpdateRequest;
 import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +26,16 @@ public class TeamService {
 
     public void deleteTeam(Long teamId) {
         teamRepository.deleteById(teamId);
+    }
+
+    public void updateTeam(Long teamId, TeamUpdateRequest request) {
+        Team team = teamRepository.findByIdOrThrow(teamId);
+        if (request.getName().isPresent()) {
+            team.updateName(request.getName().get());
+        }
+        if (request.getContent().isPresent()) {
+            team.updateContent(request.getContent().get());
+        }
+        teamRepository.save(team);
     }
 }
