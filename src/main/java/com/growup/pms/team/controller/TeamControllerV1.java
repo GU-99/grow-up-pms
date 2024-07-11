@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/team")
+// TODO: 향후 권한 인가가 구현되면 각 요청이 올바른 사용자로부터 온 요청인지 검사해야 함
 public class TeamControllerV1 {
     private final TeamService teamService;
 

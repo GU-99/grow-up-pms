@@ -19,6 +19,7 @@ public class TeamService {
         return TeamResponse.from(teamRepository.findByIdOrThrow(teamId));
     }
 
+    // TODO: 권한이나 역할이 구현되면 팀 생성 시 coworker 필드에 있는 팀원들을 팀 멤버 테이블에 추가해야 함
     public Long createTeam(TeamCreateRequest request) {
         return teamRepository.save(TeamCreateRequest.toEntity(request, userRepository.findByIdOrThrow(request.getCreatorId())))
                 .getId();
