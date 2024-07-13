@@ -2,7 +2,7 @@ package com.growup.pms.team.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -96,8 +96,10 @@ class TeamServiceTest {
             TeamResponse actualResponse = teamService.getTeam(teamId);
 
             // then
-            assertThat(actualResponse.getName()).isEqualTo(expectedResponse.getName());
-            assertThat(actualResponse.getContent()).isEqualTo(expectedResponse.getContent());
+            assertSoftly(softly -> {
+                softly.assertThat(actualResponse.getName()).isEqualTo(expectedResponse.getName());
+                softly.assertThat(actualResponse.getContent()).isEqualTo(expectedResponse.getContent());
+            });
         }
 
         @Test
@@ -108,7 +110,8 @@ class TeamServiceTest {
             doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(teamRepository).findByIdOrThrow(teamId);
 
             // when & then
-            assertThrows(EntityNotFoundException.class, () -> teamService.getTeam(teamId));
+            assertThatThrownBy(() -> teamService.getTeam(teamId))
+                    .isInstanceOf(EntityNotFoundException.class);
         }
     }
 
@@ -133,8 +136,10 @@ class TeamServiceTest {
             teamService.updateTeam(teamId, request);
 
             // then
-            assertThat(team.getName()).isEqualTo(newTeamName);
-            assertThat(team.getContent()).isEqualTo(newTeamContent);
+            assertSoftly(softly -> {
+                softly.assertThat(team.getName()).isEqualTo(newTeamName);
+                softly.assertThat(team.getContent()).isEqualTo(newTeamContent);
+            });
         }
     }
 

@@ -56,9 +56,11 @@ class TeamControllerV1Test extends CommonControllerSliceTest {
 
             // when & then
             mockMvc.perform(get("/api/v1/team/" + teamId))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name").value(expectedResult.getName()))
-                    .andExpect(jsonPath("$.content").value(expectedResult.getContent()));
+                    .andExpectAll(
+                            status().isOk(),
+                            jsonPath("$.name").value(expectedResult.getName()),
+                            jsonPath("$.content").value(expectedResult.getContent())
+                    );
         }
 
         @Test
@@ -92,8 +94,10 @@ class TeamControllerV1Test extends CommonControllerSliceTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request))
                             .with(csrf()))
-                    .andExpect(status().isCreated())
-                    .andExpect(header().string(HttpHeaders.LOCATION, "/api/v1/team/" + expectedTeamId));
+                    .andExpectAll(
+                            status().isCreated(),
+                            header().string(HttpHeaders.LOCATION, "/api/v1/team/" + expectedTeamId)
+                    );
         }
 
         @Test

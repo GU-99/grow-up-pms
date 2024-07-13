@@ -1,7 +1,7 @@
 package com.growup.pms.auth.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -76,8 +76,10 @@ class JwtLoginServiceTest {
             TokenDto actualNewToken = loginService.authenticateUser(validRequest);
 
             // then
-            assertThat(actualNewToken).isNotNull();
-            assertThat(expectedNewToken).isEqualTo(actualNewToken);
+            assertSoftly(softly -> {
+                softly.assertThat(actualNewToken).isNotNull();
+                softly.assertThat(expectedNewToken).isEqualTo(actualNewToken);
+            });
         }
 
         @Test

@@ -13,6 +13,7 @@ import com.growup.pms.user.dto.UserCreateRequest;
 import com.growup.pms.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 @AutoKoreanDisplayName
@@ -33,7 +34,9 @@ class UserControllerV1Test extends CommonControllerSliceTest {
         mockMvc.perform(post("/api/v1/users")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/v1/users/" + userId));
+                .andExpectAll(
+                        status().isCreated(),
+                        header().string(HttpHeaders.LOCATION, "/api/v1/users/" + userId)
+                );
     }
 }
