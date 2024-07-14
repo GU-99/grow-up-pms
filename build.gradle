@@ -57,8 +57,21 @@ jacoco {
 
 jacocoTestReport {
     dependsOn test
+
     reports {
         xml.required = true
         html.required = false
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/*Request.class',
+                    '**/*Response.class',
+                    '**/*Dto.class',
+                    '**/*Exception.class',
+                    '**/*Config.class',
+                    '**/*Application.class',
+            ])
+        }))
     }
 }
