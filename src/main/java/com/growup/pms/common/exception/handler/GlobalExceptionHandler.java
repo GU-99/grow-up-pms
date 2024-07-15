@@ -21,7 +21,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalExceptionHandler {
     private static final String LOG_MESSAGE_FORMAT = "[{}] ({} {}) {}";
 
-    @ExceptionHandler({EntityNotFoundException.class, DuplicateException.class})
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<ErrorResponse> handleNotFoundException(BusinessException ex, HttpServletRequest request) {
+        logInfo(ex, request);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.of(ex.getErrorCode()));
+    }
+
+    @ExceptionHandler(DuplicateException.class)
     protected ResponseEntity<ErrorResponse> handleBadRequestException(BusinessException ex, HttpServletRequest request) {
         logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

@@ -52,9 +52,11 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
             mockMvc.perform(post("/api/v1/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(validRequest)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.accessToken").value(TokenDtoFixture.VALID_ACCESS_TOKEN))
-                    .andExpect(cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN));
+                    .andExpectAll(
+                            status().isOk(),
+                            jsonPath("$.accessToken").value(TokenDtoFixture.VALID_ACCESS_TOKEN),
+                            cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN)
+                    );
         }
 
         @Test
@@ -69,9 +71,11 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
             mockMvc.perform(post("/api/v1/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(badRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.accessToken").doesNotExist())
-                    .andExpect(cookie().doesNotExist("refreshToken"));
+                    .andExpectAll(
+                            status().isNotFound(),
+                            jsonPath("$.accessToken").doesNotExist(),
+                            cookie().doesNotExist("refreshToken")
+                    );
         }
     }
 
@@ -90,9 +94,11 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
             mockMvc.perform(post("/api/v1/user/login/refresh")
                             .contentType(MediaType.APPLICATION_JSON)
                             .cookie(new Cookie("refreshToken", validRefreshToken)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.accessToken").value(newTokens.getAccessToken()))
-                    .andExpect(cookie().value("refreshToken", newTokens.getRefreshToken()));
+                    .andExpectAll(
+                            status().isOk(),
+                            jsonPath("$.accessToken").value(newTokens.getAccessToken()),
+                            cookie().value("refreshToken", newTokens.getRefreshToken())
+                    );
         }
 
         @Test
@@ -104,8 +110,10 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
             mockMvc.perform(post("/api/v1/user/login/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .cookie(new Cookie("refreshToken", TokenDtoFixture.INVALID_REFRESH_TOKEN)))
-                    .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.accessToken").doesNotExist());
+                    .andExpectAll(
+                            status().isUnauthorized(),
+                            jsonPath("$.accessToken").doesNotExist()
+                    );
         }
     }
 }
