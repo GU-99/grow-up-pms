@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,6 +24,7 @@ import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 @AutoKoreanDisplayName
@@ -54,7 +56,7 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
                             .content(objectMapper.writeValueAsString(validRequest)))
                     .andExpectAll(
                             status().isOk(),
-                            jsonPath("$.accessToken").value(TokenDtoFixture.VALID_ACCESS_TOKEN),
+                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + TokenDtoFixture.VALID_ACCESS_TOKEN),
                             cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN)
                     );
         }
@@ -96,7 +98,7 @@ class LoginControllerV1Test extends CommonControllerSliceTest {
                             .cookie(new Cookie("refreshToken", validRefreshToken)))
                     .andExpectAll(
                             status().isOk(),
-                            jsonPath("$.accessToken").value(newTokens.getAccessToken()),
+                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + newTokens.getAccessToken()),
                             cookie().value("refreshToken", newTokens.getRefreshToken())
                     );
         }
