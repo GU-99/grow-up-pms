@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,14 +31,17 @@ public class LoginControllerV1 {
         TokenDto tokenDto = loginService.authenticateUser(request);
         setRefreshTokenCookie(response, tokenDto.getRefreshToken());
         return ResponseEntity.ok()
-                .body(AccessTokenResponse.builder().accessToken(tokenDto.getAccessToken()).build());
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
+                .build();
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<AccessTokenResponse> refresh(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
         TokenDto tokenDto = tokenService.refreshJwtTokens(refreshToken);
         setRefreshTokenCookie(response, tokenDto.getRefreshToken());
-        return ResponseEntity.ok().body(AccessTokenResponse.builder().accessToken(tokenDto.getAccessToken()).build());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
+                .build();
     }
 
     private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
