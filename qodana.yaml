@@ -13,3 +13,4 @@ exclude:
       - build.gradle
       - settings.gradle
   - name: CheckDependencyLicenses
+  - name: JvmCoverageInspection
