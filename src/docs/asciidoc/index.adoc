@@ -1,0 +1,15 @@
+= REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:operation-http-request-title: HTTP 요청
+:operation-http-response-title: HTTP 응답
+:operation-request-headers-title: 요청 헤더
+:operation-request-body-title: 요청 본문
+:operation-response-headers-title: 응답 헤더
+
+= 멤버 API
+== 멤버 생성

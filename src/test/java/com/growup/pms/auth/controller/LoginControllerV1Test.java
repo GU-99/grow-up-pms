@@ -15,7 +15,7 @@ import com.growup.pms.auth.service.JwtTokenService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.test.CommonControllerSliceTest;
+import com.growup.pms.test.DefaultControllerSliceTest;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.auth.LoginRequestFixture;
 import com.growup.pms.test.fixture.auth.TokenDtoFixture;
@@ -27,7 +27,7 @@ import org.springframework.http.MediaType;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
-class LoginControllerV1Test extends CommonControllerSliceTest {
+class LoginControllerV1Test extends DefaultControllerSliceTest {
     @Autowired
     private JwtLoginService loginService;
 
