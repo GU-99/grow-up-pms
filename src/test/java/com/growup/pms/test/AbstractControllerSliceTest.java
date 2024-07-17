@@ -5,7 +5,6 @@ import com.growup.pms.common.config.ObjectMapperConfig;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.test.annotation.AutoServiceMockBeans;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -16,6 +15,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Import(ObjectMapperConfig.class)
 @AutoServiceMockBeans(basePackage = "com.growup.pms")
 @WebMvcTest(includeFilters = @Filter(type = FilterType.ANNOTATION, classes = RestController.class))
-public abstract class CommonControllerSliceTest {
+public abstract class AbstractControllerSliceTest {
     @Autowired
     protected MockMvc mockMvc;
 
@@ -36,14 +37,13 @@ public abstract class CommonControllerSliceTest {
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
 
-    @BeforeEach
-    void setUpEach(WebApplicationContext context) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .build();
+    protected DefaultMockMvcBuilder configureMockMvc(WebApplicationContext context) {
+        return MockMvcBuilders.webAppContextSetup(context)
+                .alwaysDo(MockMvcResultHandlers.print());
     }
 
     @AfterEach
-    void resetMocks() {
+    protected void resetMocks() {
         String[] mockBeanNames = beanFactory.getBeanNamesForAnnotation(Service.class);
         for (String beanName : mockBeanNames) {
             Object bean = beanFactory.getBean(beanName);
