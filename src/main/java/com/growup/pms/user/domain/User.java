@@ -68,11 +68,11 @@ public class User extends BaseTimeEntity {
         passwordChangeDate = LocalDateTime.now();
     }
 
-    public void updateProfileImage(String profileImage) {
+    public void updateImage(String image) {
         this.profile = UserProfile.builder()
                 .nickname(this.profile.getNickname())
-                .content(this.profile.getContent())
-                .profileImage(profileImage)
+                .bio(this.profile.getBio())
+                .image(image)
                 .build();
     }
 }

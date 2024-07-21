@@ -33,12 +33,12 @@ public class UserService {
         }
     }
 
-    public void profileUpload(UserUploadRequest userUploadRequest) {
+    public void imageUpload(UserUploadRequest userUploadRequest) {
         User user = userRepository.findByIdOrThrow(userUploadRequest.getUserId());
 
         String path = "users";
-        String profileImage = storageService.upload(userUploadRequest.getFile(), path);
-        user.updateProfileImage(path + "/" + profileImage);
+        String image = storageService.upload(userUploadRequest.getFile(), path);
+        user.updateImage(path + "/" + image);
 
         userRepository.save(user);
     }
