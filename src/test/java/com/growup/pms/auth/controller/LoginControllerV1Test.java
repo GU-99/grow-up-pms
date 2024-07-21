@@ -3,6 +3,13 @@ package com.growup.pms.auth.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.cookies.CookieDocumentation.cookieWithName;
+import static org.springframework.restdocs.cookies.CookieDocumentation.requestCookies;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -57,8 +64,15 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                     .andExpectAll(
                             status().isOk(),
                             header().string(HttpHeaders.AUTHORIZATION, "Bearer " + TokenDtoFixture.VALID_ACCESS_TOKEN),
-                            cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN)
-                    );
+                            cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN))
+                    .andDo(docs.document(
+                            requestFields(
+                                    fieldWithPath("email").description("이메일"),
+                                    fieldWithPath("password").description("비밀번호")),
+                            requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)),
+                            responseHeaders(
+                                    headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰"),
+                                    headerWithName("Set-Cookie").description("리프레시 토큰"))));
         }
 
         @Test
@@ -76,8 +90,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                     .andExpectAll(
                             status().isNotFound(),
                             jsonPath("$.accessToken").doesNotExist(),
-                            cookie().doesNotExist("refreshToken")
-                    );
+                            cookie().doesNotExist("refreshToken"));
         }
     }
 
@@ -99,8 +112,13 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                     .andExpectAll(
                             status().isOk(),
                             header().string(HttpHeaders.AUTHORIZATION, "Bearer " + newTokens.getAccessToken()),
-                            cookie().value("refreshToken", newTokens.getRefreshToken())
-                    );
+                            cookie().value("refreshToken", newTokens.getRefreshToken()))
+                    .andDo(docs.document(
+                            requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)),
+                            requestCookies(cookieWithName("refreshToken").description("리프레시 토큰")),
+                            responseHeaders(
+                                    headerWithName(HttpHeaders.AUTHORIZATION).description("새 액세스 토큰"),
+                                    headerWithName(HttpHeaders.SET_COOKIE).description("새 리프레시 토큰"))));
         }
 
         @Test
@@ -114,8 +132,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                         .cookie(new Cookie("refreshToken", TokenDtoFixture.INVALID_REFRESH_TOKEN)))
                     .andExpectAll(
                             status().isUnauthorized(),
-                            jsonPath("$.accessToken").doesNotExist()
-                    );
+                            jsonPath("$.accessToken").doesNotExist());
         }
     }
 }

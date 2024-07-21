@@ -5,11 +5,19 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,10 +28,10 @@ import com.growup.pms.team.dto.TeamCreateRequest;
 import com.growup.pms.team.dto.TeamResponse;
 import com.growup.pms.team.dto.TeamUpdateRequest;
 import com.growup.pms.team.service.TeamService;
-import com.growup.pms.test.support.ControllerSliceTestSupport;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.team.TeamFixture;
+import com.growup.pms.test.support.ControllerSliceTestSupport;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -31,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
@@ -39,9 +46,6 @@ import org.springframework.test.web.servlet.MockMvc;
 class TeamControllerV1Test extends ControllerSliceTestSupport {
     @Autowired
     TeamService teamService;
-
-    @Autowired
-    MockMvc mockMvc;
 
     @Nested
     class 사용자가_팀을_조회_시에 {
@@ -55,12 +59,17 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             when(teamService.getTeam(teamId)).thenReturn(expectedResult);
 
             // when & then
-            mockMvc.perform(get("/api/v1/team/" + teamId))
+            mockMvc.perform(get("/api/v1/team/{id}", teamId))
                     .andExpectAll(
                             status().isOk(),
                             jsonPath("$.name").value(expectedResult.getName()),
-                            jsonPath("$.content").value(expectedResult.getContent())
-                    );
+                            jsonPath("$.content").value(expectedResult.getContent()))
+                    .andDo(docs.document(
+                            pathParameters(parameterWithName("id").description("팀 아이디")),
+                            responseFields(
+                                    fieldWithPath("name").description("팀 이름"),
+                                    fieldWithPath("content").description("팀 소개")),
+                            responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))));
         }
 
         @Test
@@ -96,8 +105,13 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
                             .with(csrf()))
                     .andExpectAll(
                             status().isCreated(),
-                            header().string(HttpHeaders.LOCATION, "/api/v1/team/" + expectedTeamId)
-                    );
+                            header().string(HttpHeaders.LOCATION, "/api/v1/team/" + expectedTeamId))
+                    .andDo(docs.document(
+                            requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)),
+                            requestFields(
+                                    fieldWithPath("name").description("팀 이름"),
+                                    fieldWithPath("content").description("팀 소개")),
+                            responseHeaders(headerWithName(HttpHeaders.LOCATION).description("생성된 팀의 URL"))));
         }
 
         @Test
@@ -129,11 +143,17 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             doNothing().when(teamService).updateTeam(eq(teamId), any(TeamUpdateRequest.class));
 
             // when & then
-            mockMvc.perform(patch("/api/v1/team/" + teamId)
+            mockMvc.perform(patch("/api/v1/team/{id}", teamId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                     .with(csrf()))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(
+                        pathParameters(parameterWithName("id").description("팀 아이디")),
+                        requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)),
+                        requestFields(
+                                fieldWithPath("name").description("팀 이름"),
+                                fieldWithPath("content").description("팀 소개"))));
         }
 
         @Test
@@ -167,8 +187,9 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             doNothing().when(teamService).deleteTeam(teamId);
 
             // when & then
-            mockMvc.perform(delete("/api/v1/team/" + teamId).with(csrf()))
-                    .andExpect(status().isNoContent());
+            mockMvc.perform(delete("/api/v1/team/{id}", teamId).with(csrf()))
+                    .andExpect(status().isNoContent())
+                    .andDo(docs.document(pathParameters(parameterWithName("id").description("제거할 팀 ID"))));
         }
 
         @Test
