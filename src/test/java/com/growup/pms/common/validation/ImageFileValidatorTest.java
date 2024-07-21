@@ -40,19 +40,19 @@ class ImageFileValidatorTest {
 
         final String rootPath = "src/test/resources/images";
         final String fileName = "testImage.jpg";
-        FileInputStream fileInputStream = new FileInputStream(rootPath + "/" + fileName);
-        MockMultipartFile file = new MockMultipartFile(
-                "test",
-                fileName,
-                MediaType.IMAGE_JPEG_VALUE,
-                fileInputStream
-        );
+        try(FileInputStream fileInputStream = new FileInputStream(rootPath + "/" + fileName)) {
+            MockMultipartFile file = new MockMultipartFile(
+                    "test",
+                    fileName,
+                    MediaType.IMAGE_JPEG_VALUE,
+                    fileInputStream
+            );
+            // when
+            boolean actualResult = validator.isValid(file, null);
 
-        // when
-        boolean actualResult = validator.isValid(file, null);
-
-        // then
-        assertThat(actualResult).isEqualTo(expectedResult);
+            // then
+            assertThat(actualResult).isEqualTo(expectedResult);
+        };
     }
 
     @Test
@@ -62,18 +62,19 @@ class ImageFileValidatorTest {
 
         final String rootPath = "src/test/resources/images";
         final String fileName = "testImage.jpg";
-        FileInputStream fileInputStream = new FileInputStream(rootPath + "/" + fileName);
-        MockMultipartFile file = new MockMultipartFile(
-                "test",
-                fileName,
-                MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                fileInputStream
-        );
+        try(FileInputStream fileInputStream = new FileInputStream(rootPath + "/" + fileName)) {
+            MockMultipartFile file = new MockMultipartFile(
+                    "test",
+                    fileName,
+                    MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                    fileInputStream
+            );
 
-        // when
-        boolean actualResult = validator.isValid(file, null);
+            // when
+            boolean actualResult = validator.isValid(file, null);
 
-        // then
-        assertThat(actualResult).isEqualTo(expectedResult);
+            // then
+            assertThat(actualResult).isEqualTo(expectedResult);
+        };
     }
 }
