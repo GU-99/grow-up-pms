@@ -10,4 +10,4 @@ security:
     refresh-expiration-time: 604800000
 
 storage:
-  root-path: src\test\resources\
+  root-path: src/test/resources/
