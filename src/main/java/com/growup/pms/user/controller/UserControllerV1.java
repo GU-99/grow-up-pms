@@ -24,7 +24,7 @@ public class UserControllerV1 {
     }
 
     @PostMapping("/file")
-    public ResponseEntity<Void> upload(@Valid @RequestBody UserUploadRequest request) {
+    public ResponseEntity<Void> upload(@Valid UserUploadRequest request) {
         userService.imageUpload(request);
         return ResponseEntity.ok().build();
     }

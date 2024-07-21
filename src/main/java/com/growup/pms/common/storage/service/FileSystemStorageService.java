@@ -26,10 +26,6 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public String upload(MultipartFile file, String path) {
-        if (file.isEmpty()) {
-            throw new StorageException(ErrorCode.STORAGE_EMPTY_FILE_ERROR);
-        }
-
         UUID uploadFileName = UUID.randomUUID();
         Path filePath = Paths.get(path).resolve(uploadFileName.toString());
         Path destinationPath = this.rootPath.resolve(filePath).normalize().toAbsolutePath();
