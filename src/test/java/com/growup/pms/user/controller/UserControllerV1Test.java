@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.growup.pms.test.DefaultControllerSliceTest;
+import com.growup.pms.test.support.ControllerSliceTestSupport;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.user.UserCreateRequestFixture;
@@ -22,7 +22,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
-class UserControllerV1Test extends DefaultControllerSliceTest {
+class UserControllerV1Test extends ControllerSliceTestSupport {
     @Autowired
     UserService userService;
 
