@@ -69,10 +69,6 @@ public class User extends BaseTimeEntity {
     }
 
     public void updateImage(String image) {
-        this.profile = UserProfile.builder()
-                .nickname(this.profile.getNickname())
-                .bio(this.profile.getBio())
-                .image(image)
-                .build();
+        this.profile.setImage(image);
     }
 }

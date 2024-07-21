@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Embeddable
 @Getter
@@ -16,6 +17,7 @@ public class UserProfile {
 
     private String bio;
 
+    @Setter
     private String image;
 
     @Builder
