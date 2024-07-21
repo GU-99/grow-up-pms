@@ -20,7 +20,7 @@ import com.growup.pms.team.dto.TeamCreateRequest;
 import com.growup.pms.team.dto.TeamResponse;
 import com.growup.pms.team.dto.TeamUpdateRequest;
 import com.growup.pms.team.service.TeamService;
-import com.growup.pms.test.DefaultControllerSliceTest;
+import com.growup.pms.test.support.DefaultControllerSliceTest;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.team.TeamFixture;

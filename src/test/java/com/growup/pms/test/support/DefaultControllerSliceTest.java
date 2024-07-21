@@ -1,4 +1,4 @@
-package com.growup.pms.test;
+package com.growup.pms.test.support;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

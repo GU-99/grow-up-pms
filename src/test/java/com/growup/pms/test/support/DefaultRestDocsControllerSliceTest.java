@@ -1,4 +1,4 @@
-package com.growup.pms.test;
+package com.growup.pms.test.support;
 
 import com.growup.pms.test.config.RestDocsConfig;
 import org.junit.jupiter.api.BeforeEach;

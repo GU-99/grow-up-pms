@@ -1,5 +1,6 @@
 package com.growup.pms.test.annotation;
 
+import com.growup.pms.test.support.WithMockSecurityUserSecurityContextFactory;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

@@ -1,4 +1,4 @@
-package com.growup.pms.test;
+package com.growup.pms.test.support;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.growup.pms.common.config.ObjectMapperConfig;

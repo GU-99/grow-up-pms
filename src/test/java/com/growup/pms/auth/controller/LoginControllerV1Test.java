@@ -16,7 +16,7 @@ import com.growup.pms.auth.service.JwtTokenService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.test.DefaultControllerSliceTest;
+import com.growup.pms.test.support.DefaultControllerSliceTest;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.auth.LoginRequestFixture;
 import com.growup.pms.test.fixture.auth.TokenDtoFixture;
