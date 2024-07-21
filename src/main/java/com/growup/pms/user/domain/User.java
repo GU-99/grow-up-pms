@@ -67,4 +67,8 @@ public class User extends BaseTimeEntity {
         password = passwordEncoder.encode(newPassword);
         passwordChangeDate = LocalDateTime.now();
     }
+
+    public void updateImage(String image) {
+        this.profile.setImage(image);
+    }
 }

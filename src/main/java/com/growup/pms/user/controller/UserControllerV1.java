@@ -1,11 +1,14 @@
 package com.growup.pms.user.controller;
 
+import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.user.dto.UserCreateRequest;
+import com.growup.pms.user.dto.UserUploadRequest;
 import com.growup.pms.user.service.UserService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,5 +23,11 @@ public class UserControllerV1 {
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request) {
         return ResponseEntity.created(URI.create("/api/v1/users/" + userService.save(request))).build();
+    }
+
+    @PostMapping("/file")
+    public ResponseEntity<Void> upload(@AuthenticationPrincipal SecurityUser user, @Valid UserUploadRequest request) {
+        userService.imageUpload(user.getId(), request);
+        return ResponseEntity.ok().build();
     }
 }
