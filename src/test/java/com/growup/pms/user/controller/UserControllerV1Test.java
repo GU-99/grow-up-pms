@@ -36,12 +36,11 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
 
         // when & then
         mockMvc.perform(post("/api/v1/users")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(
                         status().isCreated(),
-                        header().string(HttpHeaders.LOCATION, "/api/v1/users/" + userId)
-                );
+                        header().string(HttpHeaders.LOCATION, "/api/v1/users/" + userId));
     }
 
     @Test
