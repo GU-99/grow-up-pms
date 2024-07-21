@@ -11,15 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserUploadRequest {
-    private Long userId;
-
     @NotNull
     @ImageFile
     private MultipartFile file;
 
     @Builder
     public UserUploadRequest(Long userId, MultipartFile file) {
-        this.userId = userId;
         this.file = file;
     }
 }

@@ -33,8 +33,8 @@ public class UserService {
         }
     }
 
-    public void imageUpload(UserUploadRequest userUploadRequest) {
-        User user = userRepository.findByIdOrThrow(userUploadRequest.getUserId());
+    public void imageUpload(Long userId, UserUploadRequest userUploadRequest) {
+        User user = userRepository.findByIdOrThrow(userId);
 
         String path = "users";
         String image = storageService.upload(userUploadRequest.getFile(), path);

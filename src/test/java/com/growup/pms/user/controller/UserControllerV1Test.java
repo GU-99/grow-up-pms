@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.growup.pms.test.DefaultControllerSliceTest;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.user.UserCreateRequestFixture;
 import com.growup.pms.user.dto.UserCreateRequest;
 import com.growup.pms.user.service.UserService;
@@ -44,29 +45,24 @@ class UserControllerV1Test extends DefaultControllerSliceTest {
     }
 
     @Test
+    @WithMockSecurityUser(id = 1L)
     void 사용자_프로필_이미지를_업로드한다() throws Exception {
         // given
-        // 1. 사용자
-        UserCreateRequest request = UserCreateRequestFixture.createDefaultRequest();
-
-        // 2. 사용자 프로필
         final String rootPath = "src/test/resources/images";
         final String fileName = "testImage.jpg";
-        FileInputStream fileInputStream = new FileInputStream(rootPath + "/" + fileName);
+        try (FileInputStream fileInputStream = new FileInputStream(rootPath + "/" + fileName)) {
+            MockMultipartFile file = new MockMultipartFile(
+                    "file",
+                    fileName,
+                    MediaType.IMAGE_JPEG_VALUE,
+                    fileInputStream
+            );
 
-        MockMultipartFile file = new MockMultipartFile(
-                "test",
-                fileName,
-                MediaType.IMAGE_JPEG_VALUE,
-                fileInputStream
-        );
-        
-        // when & then
-        Long userId = userService.save(request);
-        mockMvc.perform(
-                multipart("/api/v1/users/file")
-                    .file(file)
-                    .param("userId", String.valueOf(userId))
-                ).andExpect(status().isOk());
+            // when & then
+            mockMvc.perform(
+                    multipart("/api/v1/users/file")
+                            .file(file)
+            ).andExpect(status().isOk());
+        }
     }
 }
