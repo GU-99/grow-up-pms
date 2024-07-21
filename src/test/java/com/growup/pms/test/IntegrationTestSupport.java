@@ -1,4 +1,4 @@
-package com.growup.pms;
+package com.growup.pms.test;
 
 import jakarta.transaction.Transactional;
 import org.springframework.boot.test.context.SpringBootTest;
