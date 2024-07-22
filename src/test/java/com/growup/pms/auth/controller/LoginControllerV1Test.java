@@ -1,32 +1,29 @@
 package com.growup.pms.auth.controller;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.cookies.CookieDocumentation.cookieWithName;
-import static org.springframework.restdocs.cookies.CookieDocumentation.requestCookies;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.auth.dto.LoginRequest;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.JwtTokenService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.test.support.ControllerSliceTestSupport;
+import com.growup.pms.common.security.jwt.dto.TokenDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.auth.LoginRequestFixture;
 import com.growup.pms.test.fixture.auth.TokenDtoFixture;
+import com.growup.pms.test.support.ControllerSliceTestSupport;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,11 +34,13 @@ import org.springframework.http.MediaType;
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
 class LoginControllerV1Test extends ControllerSliceTestSupport {
-    @Autowired
-    private JwtLoginService loginService;
+    static final String TAG = "Auth";
 
     @Autowired
-    private JwtTokenService tokenService;
+    JwtLoginService loginService;
+
+    @Autowired
+    JwtTokenService tokenService;
 
     @Nested
     class 사용자가_로그인_시에 {
@@ -65,14 +64,18 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                             status().isOk(),
                             header().string(HttpHeaders.AUTHORIZATION, "Bearer " + TokenDtoFixture.VALID_ACCESS_TOKEN),
                             cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN))
-                    .andDo(docs.document(
-                            requestFields(
-                                    fieldWithPath("email").description("이메일"),
-                                    fieldWithPath("password").description("비밀번호")),
-                            requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)),
-                            responseHeaders(
-                                    headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰"),
-                                    headerWithName("Set-Cookie").description("리프레시 토큰"))));
+                    .andDo(docs.document(resource(
+                            ResourceSnippetParameters.builder()
+                                    .tag(TAG)
+                                    .summary("일반 로그인")
+                                    .description("아이디와 비밀번호를 통해 로그인합니다.")
+                                    .requestFields(
+                                            fieldWithPath("email").description("이메일"),
+                                            fieldWithPath("password").description("비밀번호"))
+                                    .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                    .responseHeaders(
+                                            headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰"),
+                                            headerWithName("Set-Cookie").description("리프레시 토큰")).build())));
         }
 
         @Test
@@ -113,12 +116,15 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                             status().isOk(),
                             header().string(HttpHeaders.AUTHORIZATION, "Bearer " + newTokens.getAccessToken()),
                             cookie().value("refreshToken", newTokens.getRefreshToken()))
-                    .andDo(docs.document(
-                            requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)),
-                            requestCookies(cookieWithName("refreshToken").description("리프레시 토큰")),
-                            responseHeaders(
-                                    headerWithName(HttpHeaders.AUTHORIZATION).description("새 액세스 토큰"),
-                                    headerWithName(HttpHeaders.SET_COOKIE).description("새 리프레시 토큰"))));
+                    .andDo(docs.document(resource(
+                            ResourceSnippetParameters.builder()
+                                    .tag(TAG)
+                                    .summary("토큰 재발급")
+                                    .description("쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.")
+                                    .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                    .responseHeaders(
+                                            headerWithName(HttpHeaders.AUTHORIZATION).description("새 액세스 토큰"),
+                                            headerWithName(HttpHeaders.SET_COOKIE).description("새 리프레시 토큰")).build())));
         }
 
         @Test
