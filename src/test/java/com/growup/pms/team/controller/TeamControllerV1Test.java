@@ -13,7 +13,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -104,8 +103,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             // when & then
             mockMvc.perform(post("/api/v1/team")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request))
-                            .with(csrf()))
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpectAll(
                             status().isCreated(),
                             header().string(HttpHeaders.LOCATION, "/api/v1/team/" + expectedTeamId))
@@ -132,8 +130,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             // when & then
             mockMvc.perform(post("/api/v1/team")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request))
-                            .with(csrf()))
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest());
         }
     }
@@ -152,8 +149,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             // when & then
             mockMvc.perform(patch("/api/v1/team/{id}", teamId)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request))
-                    .with(csrf()))
+                    .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNoContent())
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
@@ -181,8 +177,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             // when & then
             mockMvc.perform(patch("/api/v1/team/" + teamId)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request))
-                            .with(csrf()))
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest());
         }
     }
@@ -198,7 +193,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             doNothing().when(teamService).deleteTeam(teamId);
 
             // when & then
-            mockMvc.perform(delete("/api/v1/team/{id}", teamId).with(csrf()))
+            mockMvc.perform(delete("/api/v1/team/{id}", teamId))
                     .andExpect(status().isNoContent())
                     .andDo(docs.document(resource(
                             ResourceSnippetParameters.builder()
@@ -216,7 +211,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(teamService).deleteTeam(teamId);
 
             // when & then
-            mockMvc.perform(delete("/api/v1/team/" + teamId).with(csrf()))
+            mockMvc.perform(delete("/api/v1/team/" + teamId))
                     .andExpect(status().isNotFound());
         }
     }
