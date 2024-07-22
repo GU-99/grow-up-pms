@@ -38,6 +38,12 @@ jobs:
         env:
           JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
       - name: Archive coverage data
         uses: actions/upload-artifact@v2
         with:
