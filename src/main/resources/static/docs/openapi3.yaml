@@ -1,0 +1,218 @@
+openapi: 3.0.1
+info:
+  title: GU-99 API
+  description: GU-99 API 명세 페이지입니다.
+  version: 0.0.1
+servers:
+- url: http://localhost:8080
+tags:
+- name: Auth
+  description: 인증
+- name: Team
+  description: 팀
+paths:
+  /api/v1/team:
+    post:
+      tags:
+      - Team
+      summary: 팀 생성
+      description: 팀을 생성합니다.
+      operationId: 사용자가_팀을_생성_시에/성공한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-id666486821'
+            examples:
+              사용자가_팀을_생성_시에/성공한다:
+                value: |-
+                  {
+                    "name" : "구구구",
+                    "content" : "안녕하세요, 구구구입니다!"
+                  }
+      responses:
+        "201":
+          description: "201"
+          headers:
+            Location:
+              description: 생성된 팀의 URL
+              schema:
+                type: string
+  /api/v1/team/{id}:
+    get:
+      tags:
+      - Team
+      summary: 팀 조회
+      description: 팀 정보를 조회합니다.
+      operationId: 사용자가_팀을_조회_시에/성공한다
+      parameters:
+      - name: id
+        in: path
+        description: 팀 아이디
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Content-Type:
+              description: application/json
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-team-id666486821'
+              examples:
+                사용자가_팀을_조회_시에/성공한다:
+                  value: |-
+                    {
+                      "name" : "구구구",
+                      "content" : "안녕하세요, 구구구입니다!"
+                    }
+    delete:
+      tags:
+      - Team
+      summary: 팀 제거
+      description: 팀을 제거합니다.
+      operationId: 사용자가_팀을_제거_시에/성공한다
+      parameters:
+      - name: id
+        in: path
+        description: 제거할 팀 ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: "204"
+    patch:
+      tags:
+      - Team
+      summary: 팀 변경
+      description: 팀의 정보를 변경합니다.
+      operationId: 사용자가_팀을_변경_시에/성공한다
+      parameters:
+      - name: id
+        in: path
+        description: 팀 아이디
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-id666486821'
+            examples:
+              사용자가_팀을_변경_시에/성공한다:
+                value: |-
+                  {
+                    "name" : "구구구",
+                    "content" : "안녕하세요, 구구구입니다!"
+                  }
+      responses:
+        "204":
+          description: "204"
+  /api/v1/user/login:
+    post:
+      tags:
+      - Auth
+      summary: 일반 로그인
+      description: 아이디와 비밀번호를 통해 로그인합니다.
+      operationId: 사용자가_로그인_시에/성공한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-user-login-74814376'
+            examples:
+              사용자가_로그인_시에/성공한다:
+                value: |-
+                  {
+                    "email" : "ryan@example.com",
+                    "password" : "!test1234"
+                  }
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Authorization:
+              description: 액세스 토큰
+              schema:
+                type: string
+            Set-Cookie:
+              description: 리프레시 토큰
+              schema:
+                type: string
+  /api/v1/user/login/refresh:
+    post:
+      tags:
+      - Auth
+      summary: 토큰 재발급
+      description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.
+      operationId: 사용자가_토큰_재발급_시에/성공한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Authorization:
+              description: 새 액세스 토큰
+              schema:
+                type: string
+            Set-Cookie:
+              description: 새 리프레시 토큰
+              schema:
+                type: string
+components:
+  schemas:
+    api-v1-user-login-74814376:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        email:
+          type: string
+          description: 이메일
+    api-v1-team-id666486821:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 팀 이름
+        content:
+          type: string
+          description: 팀 소개

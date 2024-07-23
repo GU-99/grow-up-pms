@@ -22,3 +22,6 @@ security:
     access-expiration-time: 86400000
     refresh-expiration-time: 604800000
 
+springdoc:
+  swagger-ui:
+    url: /docs/openapi3.yaml

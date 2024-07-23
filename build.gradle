@@ -3,7 +3,7 @@ plugins {
     id 'jacoco'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'com.epages.restdocs-api-spec' version '0.18.2'
 }
 
 group = 'com.growup'
@@ -19,7 +19,6 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-    asciidoctorExt
 }
 
 repositories {
@@ -49,7 +48,8 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
     implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.18.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 }
 
 ext {
@@ -62,33 +62,12 @@ tasks.named('test') {
     finalizedBy 'jacocoTestReport'
 }
 
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    configurations 'asciidoctorExt'
-    dependsOn test
-}
-
-tasks.register('copyDocument', Copy) {
-    dependsOn asciidoctor
-    from file('build/docs/asciidoc')
-    into file('src/main/resources/static/docs')
-}
-
-asciidoctor.doFirst {
-    delete file('src/main/resources/static/docs')
-}
-
-build {
-    dependsOn copyDocument
-}
-
 jacoco {
     reportsDirectory = layout.projectDirectory.dir('.qodana/code-coverage')
 }
 
 jacocoTestReport {
     dependsOn test
-
     reports {
         xml.required = true
         html.required = false
@@ -105,4 +84,15 @@ jacocoTestReport {
             ])
         }))
     }
+    finalizedBy 'openapi3'
+}
+
+openapi3 {
+    server = 'http://localhost:8080'
+    title = 'GU-99 API'
+    description = 'GU-99 API 명세 페이지입니다.'
+    version = '0.0.1'
+    outputDirectory = 'src/main/resources/static/docs'
+    tagDescriptionsPropertiesFile = 'src/docs/tag-descriptions.yaml'
+    format = 'yaml'
 }

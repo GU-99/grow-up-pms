@@ -38,6 +38,3 @@ out/
 
 ### Qodana ###
 .qodana/
-
-### Docs ###
-/src/main/resources/static/docs/
