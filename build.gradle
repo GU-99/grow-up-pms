@@ -1,7 +1,9 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'com.epages.restdocs-api-spec' version '0.18.2'
 }
 
 group = 'com.growup'
@@ -37,14 +39,60 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
     compileOnly 'io.jsonwebtoken:jjwt-api:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.18.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
 }
 
 tasks.named('test') {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+jacoco {
+    reportsDirectory = layout.projectDirectory.dir('.qodana/code-coverage')
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = false
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/*Request.class',
+                    '**/*Response.class',
+                    '**/*Dto.class',
+                    '**/*Exception.class',
+                    '**/*Config.class',
+                    '**/*Application.class',
+            ])
+        }))
+    }
+    finalizedBy 'openapi3'
+}
+
+openapi3 {
+    server = 'http://localhost:8080'
+    title = 'GU-99 API'
+    description = 'GU-99 API 명세 페이지입니다.'
+    version = '0.0.1'
+    outputDirectory = 'src/main/resources/static/docs'
+    tagDescriptionsPropertiesFile = 'src/docs/tag-descriptions.yaml'
+    format = 'yaml'
 }

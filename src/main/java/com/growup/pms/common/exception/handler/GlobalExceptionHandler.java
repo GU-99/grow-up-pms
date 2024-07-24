@@ -7,6 +7,7 @@ import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.StorageException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalExceptionHandler {
     private static final String LOG_MESSAGE_FORMAT = "[{}] ({} {}) {}";
 
-    @ExceptionHandler({EntityNotFoundException.class, DuplicateException.class})
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<ErrorResponse> handleNotFoundException(BusinessException ex, HttpServletRequest request) {
+        logInfo(ex, request);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.of(ex.getErrorCode()));
+    }
+
+    @ExceptionHandler(DuplicateException.class)
     protected ResponseEntity<ErrorResponse> handleBadRequestException(BusinessException ex, HttpServletRequest request) {
         logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -46,6 +54,13 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException ex, HttpServletRequest request) {
         logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.of(ex.getErrorCode()));
+    }
+
+    @ExceptionHandler(StorageException.class)
+    protected ResponseEntity<ErrorResponse> handleStorageException(StorageException ex, HttpServletRequest request) {
+        logInfo(ex, request);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(ex.getErrorCode()));
     }
 

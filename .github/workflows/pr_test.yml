@@ -1,0 +1,65 @@
+name: PR Test Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - '.github/**'
+      - 'styleguide/**'
+      - '.editorconfig'
+
+jobs:
+  pr-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Limiting history to PR commits only; full history scan seems excessive for Qodana
+          fetch-depth: ${{ github.event.pull_request.commits }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run tests with Gradle
+        run: ./gradlew test --no-daemon
+        env:
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
+      - name: Archive coverage data
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-coverage-data
+          path: .qodana/code-coverage
+
+      # Temporarily resolve inefficient caching of Qodana's Gradle dependencies
+      # by manually copying the .gradle directory to a designated cache directory.
+      - name: Copy .gradle directory
+        run: |
+          mkdir -p ${{ runner.temp }}/qodana/caches/gradle
+          cp -r ~/.gradle/* ${{ runner.temp }}/qodana/caches/gradle/
+
+      - name: Perform qodana analysis
+        uses: JetBrains/qodana-action@v2024.1
+        with:
+          use-caches: false
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}

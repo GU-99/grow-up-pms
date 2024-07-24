@@ -1,7 +1,7 @@
-name: PR Test Validation
+name: Update Gradle Cache
 
 on:
-  pull_request:
+  push:
     branches:
       - main
       - develop
@@ -11,10 +11,8 @@ on:
       - '.editorconfig'
 
 jobs:
-  pr-test:
+  update-gradle-cache:
     runs-on: ubuntu-latest
-    env:
-      JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
@@ -23,9 +21,3 @@ jobs:
           java-version: '21'
           distribution: 'corretto'
           cache: 'gradle'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Run tests with Gradle
-        run: ./gradlew test --no-daemon

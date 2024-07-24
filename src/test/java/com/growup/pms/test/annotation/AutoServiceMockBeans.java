@@ -1,5 +1,6 @@
 package com.growup.pms.test.annotation;
 
+import com.growup.pms.test.support.ServiceMockBeanRegistrar;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

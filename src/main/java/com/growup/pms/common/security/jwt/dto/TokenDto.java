@@ -1,4 +1,4 @@
-package com.growup.pms.auth.dto;
+package com.growup.pms.common.security.jwt.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

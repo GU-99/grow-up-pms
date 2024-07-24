@@ -11,14 +11,14 @@ public class SecurityUser implements UserDetails {
     @Getter
     private final Long id;
 
-    private final String username;
+    private final String email;
 
     private final String password;
 
     @Builder
-    public SecurityUser(Long id, String username, String password) {
+    public SecurityUser(Long id, String email, String password) {
         this.id = id;
-        this.username = username;
+        this.email = email;
         this.password = password;
     }
 
@@ -34,6 +34,6 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 }

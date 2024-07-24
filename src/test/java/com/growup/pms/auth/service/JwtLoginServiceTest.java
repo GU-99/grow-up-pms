@@ -1,16 +1,16 @@
 package com.growup.pms.auth.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.auth.dto.SignInRequest;
-import com.growup.pms.auth.dto.TokenDto;
+import com.growup.pms.auth.dto.LoginRequest;
+import com.growup.pms.common.security.jwt.JwtTokenProvider;
+import com.growup.pms.common.security.jwt.dto.TokenDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.auth.SignInRequestFixture;
+import com.growup.pms.test.fixture.auth.LoginRequestFixture;
 import com.growup.pms.test.fixture.auth.TokenDtoFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -41,7 +41,10 @@ class JwtLoginServiceTest {
     SecurityUser securityUser;
 
     @Mock
-    JwtTokenService tokenService;
+    RefreshTokenService refreshTokenService;
+
+    @Mock
+    JwtTokenProvider tokenProvider;
 
     @InjectMocks
     JwtLoginService loginService;
@@ -58,40 +61,38 @@ class JwtLoginServiceTest {
         void 성공한다() {
             // given
             Long userId = 1L;
-            SignInRequest validRequest = SignInRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(validRequest.getUsername(), validRequest.getPassword());
-            TokenDto expectedToken = TokenDtoFixture.createDefaultDto();
+            Long newRefreshTokenId = 1L;
+            LoginRequest validRequest = LoginRequestFixture.createDefaultRequest();
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(validRequest.getEmail(), validRequest.getPassword());
+            TokenDto expectedNewToken = TokenDtoFixture.createDefaultDto();
 
             when(authenticationManager.authenticate(token)).thenReturn(authentication);
             when(authentication.getPrincipal()).thenReturn(securityUser);
+            when(tokenProvider.generateToken(securityUser)).thenReturn(expectedNewToken);
             when(securityUser.getId()).thenReturn(userId);
-            when(tokenService.generateJwtTokens(userId, authentication)).thenReturn(expectedToken);
+            when(refreshTokenService.renewRefreshToken(userId, expectedNewToken.getRefreshToken())).thenReturn(newRefreshTokenId);
 
             // when
-            TokenDto actualToken = loginService.authenticateUser(validRequest);
+            TokenDto actualNewToken = loginService.authenticateUser(validRequest);
 
             // then
-            assertThat(actualToken).isNotNull();
-            assertThat(expectedToken.getAccessToken()).isEqualTo(actualToken.getAccessToken());
-            assertThat(expectedToken.getRefreshToken()).isEqualTo(actualToken.getRefreshToken());
-
-            verify(authenticationManager).authenticate(token);
-            verify(tokenService).generateJwtTokens(userId, authentication);
+            assertSoftly(softly -> {
+                softly.assertThat(actualNewToken).isNotNull();
+                softly.assertThat(expectedNewToken).isEqualTo(actualNewToken);
+            });
         }
 
         @Test
         void 실패하면_예외가_발생한다() {
             // given
-            SignInRequest badRequest = SignInRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(badRequest.getUsername(), badRequest.getPassword());
+            LoginRequest badRequest = LoginRequestFixture.createDefaultRequest();
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(badRequest.getEmail(), badRequest.getPassword());
 
             doThrow(new RuntimeException()).when(authenticationManager).authenticate(token);
 
             // when & then
             assertThatThrownBy(() -> loginService.authenticateUser(badRequest))
                     .isInstanceOf(RuntimeException.class);
-
-            verify(authenticationManager).authenticate(token);
         }
     }
 }

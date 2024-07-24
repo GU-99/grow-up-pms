@@ -68,7 +68,7 @@ class GlobalExceptionHandlerTest {
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get(url))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Entity error: ENTITY가 없습니다."))
             .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ET_001"));
     }

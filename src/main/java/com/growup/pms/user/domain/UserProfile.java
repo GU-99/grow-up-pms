@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Embeddable
 @Getter
@@ -14,14 +15,15 @@ public class UserProfile {
     @Column(nullable = false)
     private String nickname;
 
-    private String content;
+    private String bio;
 
-    private String profileImage;
+    @Setter
+    private String image;
 
     @Builder
-    public UserProfile(String nickname, String content, String profileImage) {
+    public UserProfile(String nickname, String bio, String image) {
         this.nickname = nickname;
-        this.content = content;
-        this.profileImage = profileImage;
+        this.bio = bio;
+        this.image = image;
     }
 }

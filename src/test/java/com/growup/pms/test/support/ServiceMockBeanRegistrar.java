@@ -1,7 +1,8 @@
-package com.growup.pms.test.annotation;
+package com.growup.pms.test.support;
 
 import static org.mockito.Mockito.mock;
 
+import com.growup.pms.test.annotation.AutoServiceMockBeans;
 import java.util.Objects;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
