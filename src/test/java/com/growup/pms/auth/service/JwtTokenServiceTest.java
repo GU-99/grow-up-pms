@@ -1,5 +1,7 @@
 package com.growup.pms.auth.service;
 
+import static com.growup.pms.test.fixture.auth.SecurityUserTestBuilder.인증된_사용자는;
+import static com.growup.pms.test.fixture.auth.TokenDtoTestBuilder.발급된_토큰은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
@@ -11,8 +13,6 @@ import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.auth.TokenDtoFixture;
-import com.growup.pms.test.fixture.common.SecurityUserFixture;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,42 +36,38 @@ class JwtTokenServiceTest {
 
     @Nested
     class 토큰을_갱신_시에 {
-
         @Test
         void 성공한다() {
             // given
-            Long userId = 1L;
-            Long newRefreshTokenId = 1L;
-            Authentication authentication = mock(Authentication.class);
-            SecurityUser user = SecurityUserFixture.createUserWithUserId(userId);
-            String oldRefreshToken = "oldRefreshToken";
-            TokenDto expectedNewToken = TokenDtoFixture.createDefaultDtoBuilder()
-                    .accessToken(TokenDtoFixture.NEW_ACCESS_TOKEN)
-                    .refreshToken(TokenDtoFixture.NEW_REFRESH_TOKEN)
-                    .build();
+            Long 기존_사용자_ID = 1L;
+            Long 새_리프레시_토큰_ID = 1L;
+            Authentication 인증_정보 = mock(Authentication.class);
+            SecurityUser 인증된_사용자 = 인증된_사용자는().식별자가(기존_사용자_ID).이다();
+            String 예전_리프레시_토큰 = "예전 리프레시 토큰";
+            TokenDto 예상하는_새_토큰 = 발급된_토큰은().액세스_토큰이("새 액세스 토큰").리프레시_토큰이("새 리프레시 토큰").이다();
 
-            when(authentication.getPrincipal()).thenReturn(user);
-            when(tokenProvider.getAuthentication(oldRefreshToken)).thenReturn(authentication);
-            when(tokenProvider.generateToken(user)).thenReturn(expectedNewToken);
-            when(refreshTokenService.validateToken(oldRefreshToken)).thenReturn(true);
-            when(refreshTokenService.renewRefreshToken(userId, expectedNewToken.getRefreshToken())).thenReturn(newRefreshTokenId);
+            when(인증_정보.getPrincipal()).thenReturn(인증된_사용자);
+            when(tokenProvider.getAuthentication(예전_리프레시_토큰)).thenReturn(인증_정보);
+            when(tokenProvider.generateToken(인증된_사용자)).thenReturn(예상하는_새_토큰);
+            when(refreshTokenService.validateToken(예전_리프레시_토큰)).thenReturn(true);
+            when(refreshTokenService.renewRefreshToken(기존_사용자_ID, 예상하는_새_토큰.getRefreshToken())).thenReturn(새_리프레시_토큰_ID);
 
             // when
-            TokenDto actualNewToken = tokenService.refreshJwtTokens(oldRefreshToken);
+            TokenDto 실제_토큰 = tokenService.refreshJwtTokens(예전_리프레시_토큰);
 
             // then
-            assertThat(actualNewToken).isEqualTo(expectedNewToken);
+            assertThat(실제_토큰).isEqualTo(예상하는_새_토큰);
         }
 
         @Test
         void 토큰이_유효하지_않은_경우_예외가_발생한다() {
             // given
-            String invalidRefreshToken = "invalidRefreshToken";
+            String 유효하지_않은_리프레시_토큰 = "유효하지 않은 리프레시 토큰";
 
-            doThrow(AuthenticationException.class).when(refreshTokenService).validateToken(invalidRefreshToken);
+            doThrow(AuthenticationException.class).when(refreshTokenService).validateToken(유효하지_않은_리프레시_토큰);
 
             // when & then
-            assertThatThrownBy(() -> tokenService.refreshJwtTokens(invalidRefreshToken))
+            assertThatThrownBy(() -> tokenService.refreshJwtTokens(유효하지_않은_리프레시_토큰))
                     .isInstanceOf(AuthenticationException.class);
         }
     }
