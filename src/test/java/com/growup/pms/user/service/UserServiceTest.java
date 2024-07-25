@@ -1,5 +1,7 @@
 package com.growup.pms.user.service;
 
+import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
+import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,8 +10,6 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.user.UserCreateRequestFixture;
-import com.growup.pms.test.fixture.user.UserFixture;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.dto.UserCreateRequest;
 import com.growup.pms.user.repository.UserRepository;
@@ -37,33 +37,32 @@ class UserServiceTest {
 
     @Nested
     class 사용자가_회원가입_시에 {
-
         @Test
         void 성공적으로_계정을_생성한다() {
             // given
-            Long expectedUserId = 1L;
-            User user = UserFixture.createUserWithId(expectedUserId);
-            UserCreateRequest request = UserCreateRequestFixture.createRequestFromUser(user);
+            Long 예상하는_새_사용자_ID = 1L;
+            User 새_사용자 = 사용자는().식별자가(예상하는_새_사용자_ID).이다();
+            UserCreateRequest 사용자_생성_요청 = 가입하는_사용자는(새_사용자).이다();
 
-            when(userRepository.save(any(User.class))).thenReturn(user);
+            when(userRepository.save(any(User.class))).thenReturn(새_사용자);
 
             // when
-            Long actualUserId = userService.save(request);
+            Long 실제_새_사용자_ID = userService.save(사용자_생성_요청);
 
             // then
-            assertThat(actualUserId).isEqualTo(expectedUserId);
+            assertThat(실제_새_사용자_ID).isEqualTo(예상하는_새_사용자_ID);
         }
 
         @Test
         void 중복된_아이디를_사용하면_예외가_발생한다() {
             // given
-            User user = UserFixture.createDefaultUserBuilder().build();
-            UserCreateRequest request = UserCreateRequestFixture.createRequestFromUser(user);
+            User 새_사용자 = 사용자는().이메일이("중복된 이메일").이다();
+            UserCreateRequest 사용자_생성_요청 = 가입하는_사용자는(새_사용자).이다();
 
             doThrow(DataIntegrityViolationException.class).when(userRepository).save(any(User.class));
 
             // when & then
-            assertThatThrownBy(() -> userService.save(request))
+            assertThatThrownBy(() -> userService.save(사용자_생성_요청))
                     .isInstanceOf(DuplicateException.class);
         }
     }
