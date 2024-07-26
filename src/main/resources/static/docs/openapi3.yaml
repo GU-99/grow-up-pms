@@ -11,6 +11,51 @@ tags:
 - name: Team
   description: 팀
 paths:
+  /api/v1/status:
+    post:
+      tags:
+      - Status
+      summary: 프로젝트 상태 생성
+      description: "프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다."
+      operationId: status-controller-v1-docs-test/상태등록_api_문서를_생성한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-status-838570364'
+            examples:
+              status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                value: |-
+                  {
+                    "projectId" : 1,
+                    "name" : "대기중",
+                    "colorCode" : "FFFFFF",
+                    "sortOrder" : 0
+                  }
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-status-248210810'
+              examples:
+                status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "code" : 201,
+                      "status" : "CREATED",
+                      "message" : "CREATED",
+                      "data" : 1
+                    }
   /api/v1/team:
     post:
       tags:
@@ -198,6 +243,36 @@ paths:
                 type: string
 components:
   schemas:
+    api-v1-status-838570364:
+      type: object
+      properties:
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
+        projectId:
+          type: number
+          description: 프로젝트 식별자
+    api-v1-status-248210810:
+      type: object
+      properties:
+        code:
+          type: number
+          description: 코드
+        data:
+          type: number
+          description: 생성된 상태 ID
+        message:
+          type: string
+          description: 메시지
+        status:
+          type: string
+          description: 상태
     api-v1-user-login-74814376:
       type: object
       properties:
