@@ -154,8 +154,8 @@ paths:
               사용자가_로그인_시에/성공한다:
                 value: |-
                   {
-                    "email" : "ryan@example.com",
-                    "password" : "!test1234"
+                    "email" : "brown@gu99.com",
+                    "password" : "test1234!@#$"
                   }
       responses:
         "200":

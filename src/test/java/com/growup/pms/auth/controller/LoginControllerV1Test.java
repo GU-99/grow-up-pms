@@ -1,6 +1,8 @@
 package com.growup.pms.auth.controller;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.growup.pms.test.fixture.auth.LoginRequestTestBuilder.로그인_하는_사용자는;
+import static com.growup.pms.test.fixture.auth.TokenDtoTestBuilder.발급된_토큰은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -21,8 +23,6 @@ import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.common.security.jwt.dto.TokenDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.auth.LoginRequestFixture;
-import com.growup.pms.test.fixture.auth.TokenDtoFixture;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Nested;
@@ -44,26 +44,22 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
 
     @Nested
     class 사용자가_로그인_시에 {
-
         @Test
         void 성공한다() throws Exception {
             // given
-            LoginRequest validRequest = LoginRequestFixture.createDefaultRequest();
-            TokenDto expectedValidToken = TokenDtoFixture.createDefaultDtoBuilder()
-                    .accessToken(TokenDtoFixture.VALID_ACCESS_TOKEN)
-                    .refreshToken(TokenDtoFixture.VALID_REFRESH_TOKEN)
-                    .build();
+            LoginRequest 유효한_요청 = 로그인_하는_사용자는().이다();
+            TokenDto 예상하는_발급된_토큰 = 발급된_토큰은().이다();
 
-            when(loginService.authenticateUser(any(LoginRequest.class))).thenReturn(expectedValidToken);
+            when(loginService.authenticateUser(any(LoginRequest.class))).thenReturn(예상하는_발급된_토큰);
 
             // when & then
             mockMvc.perform(post("/api/v1/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(validRequest)))
+                            .content(objectMapper.writeValueAsString(유효한_요청)))
                     .andExpectAll(
                             status().isOk(),
-                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + TokenDtoFixture.VALID_ACCESS_TOKEN),
-                            cookie().value("refreshToken", TokenDtoFixture.VALID_REFRESH_TOKEN))
+                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 예상하는_발급된_토큰.getAccessToken()),
+                            cookie().value("refreshToken", 예상하는_발급된_토큰.getRefreshToken()))
                     .andDo(docs.document(resource(
                             ResourceSnippetParameters.builder()
                                     .tag(TAG)
@@ -81,7 +77,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
         @Test
         void 매치되는_정보가_없으면_예외가_발생한다() throws Exception {
             // given
-            LoginRequest badRequest = LoginRequestFixture.createDefaultRequest();
+            LoginRequest 잘못된_요청 = 로그인_하는_사용자는().이메일이("존재하지 않는 이메일").이다();
 
             doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(loginService).authenticateUser(any(
                     LoginRequest.class));
@@ -89,7 +85,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
             // when & then
             mockMvc.perform(post("/api/v1/user/login")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(badRequest)))
+                            .content(objectMapper.writeValueAsString(잘못된_요청)))
                     .andExpectAll(
                             status().isNotFound(),
                             jsonPath("$.accessToken").doesNotExist(),
@@ -99,23 +95,22 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
 
     @Nested
     class 사용자가_토큰_재발급_시에 {
-
         @Test
         void 성공한다() throws Exception {
             // given
-            String validRefreshToken = TokenDtoFixture.VALID_REFRESH_TOKEN;
-            TokenDto newTokens = TokenDtoFixture.createDefaultDto();
+            String 유효한_리프레시_토큰 = "유효한 리프레시 토큰";
+            TokenDto 발급된_새_토큰 = 발급된_토큰은().이다();
 
-            when(tokenService.refreshJwtTokens(validRefreshToken)).thenReturn(newTokens);
+            when(tokenService.refreshJwtTokens(유효한_리프레시_토큰)).thenReturn(발급된_새_토큰);
 
             // when & then
             mockMvc.perform(post("/api/v1/user/login/refresh")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .cookie(new Cookie("refreshToken", validRefreshToken)))
+                            .cookie(new Cookie("refreshToken", 유효한_리프레시_토큰)))
                     .andExpectAll(
                             status().isOk(),
-                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + newTokens.getAccessToken()),
-                            cookie().value("refreshToken", newTokens.getRefreshToken()))
+                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 발급된_새_토큰.getAccessToken()),
+                            cookie().value("refreshToken", 발급된_새_토큰.getRefreshToken()))
                     .andDo(docs.document(resource(
                             ResourceSnippetParameters.builder()
                                     .tag(TAG)
@@ -130,12 +125,14 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
         @Test
         void 리프레시_토큰이_유효하지_않으면_오류코드를_반환한다() throws Exception {
             // given
+            String 유효하지_않은_리프레시_토큰 = "유효하지 않은 리프레시 토큰";
+
             doThrow(new AuthenticationException(ErrorCode.INVALID_REFRESH_TOKEN_ERROR)).when(tokenService).refreshJwtTokens(any(String.class));
 
             // when & then
             mockMvc.perform(post("/api/v1/user/login/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .cookie(new Cookie("refreshToken", TokenDtoFixture.INVALID_REFRESH_TOKEN)))
+                        .cookie(new Cookie("refreshToken", 유효하지_않은_리프레시_토큰)))
                     .andExpectAll(
                             status().isUnauthorized(),
                             jsonPath("$.accessToken").doesNotExist());
