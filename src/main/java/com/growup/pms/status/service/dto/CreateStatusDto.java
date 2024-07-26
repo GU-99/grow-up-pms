@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 public class CreateStatusDto {
 
     private Long projectId;
-    private Long name;
-    private Long colorCode;
-    private Long sortOrder;
+    private String name;
+    private String colorCode;
+    private Short sortOrder;
 
     @Builder
-    public CreateStatusDto(Long projectId, Long name, Long colorCode, Long sortOrder) {
+    public CreateStatusDto(Long projectId, String name, String colorCode, Short sortOrder) {
         this.projectId = projectId;
         this.name = name;
         this.colorCode = colorCode;

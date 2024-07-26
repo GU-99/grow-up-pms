@@ -26,7 +26,6 @@ public class CreateStatusRequest {
     private String colorCode;
 
     @NotNull
-    @Positive
     private Short sortOrder;
 
     @Builder
@@ -38,6 +37,11 @@ public class CreateStatusRequest {
     }
 
     public CreateStatusDto toServiceDto() {
-        return null;
+        return CreateStatusDto.builder()
+                .projectId(projectId)
+                .name(name)
+                .colorCode(colorCode)
+                .sortOrder(sortOrder)
+                .build();
     }
 }
