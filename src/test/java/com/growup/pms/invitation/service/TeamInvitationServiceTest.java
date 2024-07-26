@@ -13,20 +13,27 @@ import com.growup.pms.invitation.domian.TeamInvitation;
 import com.growup.pms.invitation.dto.TeamInvitationCreateRequest;
 import com.growup.pms.invitation.repository.TeamInvitationRepository;
 import com.growup.pms.team.domain.TeamUserId;
+import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.team.repository.TeamUserRepository;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.user.repository.UserRepository;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class TeamInvitationServiceTest {
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
+    TeamRepository teamRepository;
+
     @Mock
     TeamUserRepository teamUserRepository;
 
@@ -81,12 +88,11 @@ class TeamInvitationServiceTest {
             TeamInvitationCreateRequest 팀_초대_요청 = new TeamInvitationCreateRequest(초대할_팀_ID);
 
             when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(false);
-            doThrow(DataIntegrityViolationException.class).when(teamInvitationRepository).save(any(TeamInvitation.class));
+            doThrow(EntityNotFoundException.class).when(userRepository).findByIdOrThrow(any(Long.class));
 
             // when & then
             assertThatThrownBy(() -> teamInvitationService.sendInvitation(초대할_팀_ID, 팀_초대_요청))
-                    .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage("ENTITY가 없습니다.");
+                    .isInstanceOf(EntityNotFoundException.class);
         }
     }
 }
