@@ -34,11 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
-@WithMockUser
 class TeamControllerV1Test extends ControllerSliceTestSupport {
     static final String TAG = "Team";
 
