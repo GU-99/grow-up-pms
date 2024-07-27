@@ -20,12 +20,15 @@ public enum ErrorCode {
     DATA_FORMAT_INVALID(ErrorCategory.DATA_FORMAT_ERROR, "001", "데이터 형식이 잘못되었습니다."),
 
     STORAGE_STORE_ERROR(ErrorCategory.STORAGE_ERROR, "001", "파일을 저장할 수 없습니다."),
-    STORAGE_EMPTY_FILE_ERROR(ErrorCategory.STORAGE_ERROR, "002", "비어있는 파일입니다."),
-    STORAGE_CREATE_FOLDER_ERROR(ErrorCategory.STORAGE_ERROR, "003", "저장할 폴더를 생성하지 못 했습니다."),
+    STORAGE_CREATE_FOLDER_ERROR(ErrorCategory.STORAGE_ERROR, "002", "저장할 폴더를 생성하지 못 했습니다."),
+    STORAGE_NOT_FOUND_ERROR(ErrorCategory.STORAGE_ERROR, "003", "파일을 찾을 수 없습니다."),
+    STORAGE_READE_FILE_ERROR(ErrorCategory.STORAGE_ERROR, "004", "저장된 파일을 읽을 수 없습니다."),
 
     USER_ALREADY_IN_TEAM(ErrorCategory.TEAM_ERROR, "001", "사용자가 이미 팀에 존재합니다."),
     TEAM_NOT_FOUND(ErrorCategory.TEAM_ERROR, "002", "팀을 찾을 수 없습니다."),
     ;
+
+
 
     private final ErrorCategory errorCategory;
     private final String code;
