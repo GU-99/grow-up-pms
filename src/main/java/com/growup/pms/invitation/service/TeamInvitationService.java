@@ -2,9 +2,13 @@ package com.growup.pms.invitation.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
+import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.invitation.domian.TeamInvitation;
 import com.growup.pms.invitation.dto.TeamInvitationCreateRequest;
 import com.growup.pms.invitation.repository.TeamInvitationRepository;
+import com.growup.pms.role.domain.TeamRole;
+import com.growup.pms.role.repository.RoleRepository;
+import com.growup.pms.team.domain.TeamUser;
 import com.growup.pms.team.domain.TeamUserId;
 import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.team.repository.TeamUserRepository;
@@ -18,23 +22,46 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class TeamInvitationService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
     private final TeamInvitationRepository teamInvitationRepository;
 
     @Transactional
-    public Long sendInvitation(Long teamIdToInvite, TeamInvitationCreateRequest request) {
-        if (isUserAlreadyInTeam(teamIdToInvite, request.getUserId())) {
+    public Long sendInvitation(Long teamId, TeamInvitationCreateRequest request) {
+        if (isUserAlreadyInTeam(teamId, request.getUserId())) {
             throw new DuplicateException(ErrorCode.USER_ALREADY_IN_TEAM);
         }
 
         TeamInvitation invitation = TeamInvitationCreateRequest.toEntity(
                 userRepository.findByIdOrThrow(request.getUserId()),
-                teamRepository.findByIdOrThrow(teamIdToInvite));
+                teamRepository.findByIdOrThrow(teamId));
         return teamInvitationRepository.save(invitation).getId();
     }
 
-    private boolean isUserAlreadyInTeam(Long teamIdToInvite, Long userIdToInvite) {
-        return teamUserRepository.existsById(new TeamUserId(teamIdToInvite, userIdToInvite));
+    @Transactional
+    public void acceptInvitation(Long teamId, Long userId) {
+        TeamInvitation invitation = teamInvitationRepository.findUserInvitationForTeam(teamId, userId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+        TeamUser newTeamUser = createTeamUser(invitation);
+        teamInvitationRepository.delete(invitation);
+        teamUserRepository.save(newTeamUser);
+    }
+
+    @Transactional
+    public void declineInvitation(Long teamId, Long userId) {
+        teamInvitationRepository.declineUserInvitationForTeam(teamId, userId);
+    }
+
+    private boolean isUserAlreadyInTeam(Long teamId, Long userId) {
+        return teamUserRepository.existsById(new TeamUserId(teamId, userId));
+    }
+
+    private TeamUser createTeamUser(TeamInvitation invitation) {
+        return TeamUser.builder()
+                .team(invitation.getTeam())
+                .role(roleRepository.findByNameOrThrow(TeamRole.MATE.getRoleName()))
+                .user(invitation.getUser())
+                .build();
     }
 }

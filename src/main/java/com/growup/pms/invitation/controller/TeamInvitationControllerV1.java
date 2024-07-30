@@ -1,11 +1,13 @@
 package com.growup.pms.invitation.controller;
 
+import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.invitation.dto.TeamInvitationCreateRequest;
 import com.growup.pms.invitation.service.TeamInvitationService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,5 +26,17 @@ public class TeamInvitationControllerV1 {
         return ResponseEntity.created(
                 URI.create("/api/v1/team/" + teamId + "/invitation/" + teamInvitationService.sendInvitation(teamId, request)))
                 .build();
+    }
+
+    @PostMapping("/accept")
+    public ResponseEntity<Void> accept(@AuthenticationPrincipal SecurityUser user, @PathVariable Long teamId) {
+        teamInvitationService.acceptInvitation(teamId, user.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/decline")
+    public ResponseEntity<Void> decline(@AuthenticationPrincipal SecurityUser user, @PathVariable Long teamId) {
+        teamInvitationService.declineInvitation(teamId, user.getId());
+        return ResponseEntity.noContent().build();
     }
 }
