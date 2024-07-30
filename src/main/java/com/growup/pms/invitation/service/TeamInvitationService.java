@@ -36,6 +36,7 @@ public class TeamInvitationService {
         TeamInvitation invitation = TeamInvitationCreateRequest.toEntity(
                 userRepository.findByIdOrThrow(request.getUserId()),
                 teamRepository.findByIdOrThrow(teamId));
+
         return teamInvitationRepository.save(invitation).getId();
     }
 
@@ -44,6 +45,7 @@ public class TeamInvitationService {
         TeamInvitation invitation = teamInvitationRepository.findUserInvitationForTeam(teamId, userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
         TeamUser newTeamUser = createTeamUser(invitation);
+
         teamInvitationRepository.delete(invitation);
         teamUserRepository.save(newTeamUser);
     }
