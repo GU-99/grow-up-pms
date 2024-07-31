@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final StorageService storageService;
 
     @Transactional
@@ -33,6 +32,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void imageUpload(Long userId, UserUploadRequest userUploadRequest) {
         User user = userRepository.findByIdOrThrow(userId);
 

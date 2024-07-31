@@ -21,7 +21,11 @@ public enum ErrorCode {
 
     STORAGE_STORE_ERROR(ErrorCategory.STORAGE_ERROR, "001", "파일을 저장할 수 없습니다."),
     STORAGE_EMPTY_FILE_ERROR(ErrorCategory.STORAGE_ERROR, "002", "비어있는 파일입니다."),
-    STORAGE_CREATE_FOLDER_ERROR(ErrorCategory.STORAGE_ERROR, "003", "저장할 폴더를 생성하지 못 했습니다."),;
+    STORAGE_CREATE_FOLDER_ERROR(ErrorCategory.STORAGE_ERROR, "003", "저장할 폴더를 생성하지 못 했습니다."),
+
+    USER_ALREADY_IN_TEAM(ErrorCategory.TEAM_ERROR, "001", "사용자가 이미 팀에 존재합니다."),
+    TEAM_NOT_FOUND(ErrorCategory.TEAM_ERROR, "002", "팀을 찾을 수 없습니다."),
+    ;
 
     private final ErrorCategory errorCategory;
     private final String code;

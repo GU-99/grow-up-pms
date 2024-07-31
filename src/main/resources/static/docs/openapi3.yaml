@@ -10,6 +10,10 @@ tags:
   description: 인증
 - name: Team
   description: 팀
+- name: Status
+  description: 상태
+- name: Team Invitation
+  description: 팀 초대
 paths:
   /api/v1/status:
     post:
@@ -220,6 +224,48 @@ paths:
               description: 리프레시 토큰
               schema:
                 type: string
+  /api/v1/team/{teamId}/invitation:
+    post:
+      tags:
+      - Team Invitation
+      summary: 팀 초대
+      description: 해당 사용자를 특정 팀에 초대합니다.
+      operationId: team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 초대할 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: Bearer 액세스 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer 액세스 토큰
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-teamId-invitation-1361275252'
+            examples:
+              team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다:
+                value: |-
+                  {
+                    "userId" : 1
+                  }
+      responses:
+        "201":
+          description: "201"
   /api/v1/user/login/refresh:
     post:
       tags:
@@ -247,6 +293,54 @@ paths:
               description: 새 리프레시 토큰
               schema:
                 type: string
+  /api/v1/team/{teamId}/invitation/accept:
+    post:
+      tags:
+      - Team Invitation
+      summary: 팀 초대 승낙
+      description: 사용자가 팀 초대를 승낙합니다.
+      operationId: team-invitation-controller-v1-docs-test/팀_초대_승낙_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 초대된 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Authorization
+        in: header
+        description: Bearer 액세스 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer 액세스 토큰
+      responses:
+        "204":
+          description: "204"
+  /api/v1/team/{teamId}/invitation/decline:
+    post:
+      tags:
+      - Team Invitation
+      summary: 팀 초대 거절
+      description: 사용자가 팀 초대를 거절합니다.
+      operationId: team-invitation-controller-v1-docs-test/팀_초대_거절_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 초대된 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Authorization
+        in: header
+        description: Bearer 액세스 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer 액세스 토큰
+      responses:
+        "204":
+          description: "204"
 components:
   schemas:
     api-v1-status-838570364:
@@ -282,6 +376,12 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
+    api-v1-team-teamId-invitation-1361275252:
+      type: object
+      properties:
+        userId:
+          type: number
+          description: 초대할 사용자 ID
     api-v1-user-login-74814376:
       type: object
       properties:
