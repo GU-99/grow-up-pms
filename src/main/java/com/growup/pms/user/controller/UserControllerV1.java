@@ -7,8 +7,11 @@ import com.growup.pms.user.service.UserService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +32,13 @@ public class UserControllerV1 {
     public ResponseEntity<Void> upload(@AuthenticationPrincipal SecurityUser user, @Valid UserUploadRequest request) {
         userService.uploadImage(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/file")
+    public ResponseEntity<Resource> download(@AuthenticationPrincipal SecurityUser user) {
+        Resource resource = userService.imageDownload(user.getId());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }

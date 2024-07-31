@@ -8,6 +8,7 @@ import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,14 @@ public class UserService {
         user.updateImage(path + "/" + image);
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public Resource imageDownload(Long userId) {
+        User user = userRepository.findByIdOrThrow(userId);
+
+        String path = user.getProfile().getImage();
+        return storageService.getFileResource(path);
     }
 }
 
