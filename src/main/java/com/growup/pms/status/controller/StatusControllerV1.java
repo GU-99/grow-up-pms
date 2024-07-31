@@ -26,7 +26,6 @@ public class StatusControllerV1 {
     private final StatusService statusService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StatusResponse> createStatus(@Valid @RequestBody StatusCreateRequest request) {
         log.debug("StatusControllerV1#createStatus called.");
         log.debug("StatusCreateRequest={}", request);
