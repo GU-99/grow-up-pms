@@ -9,11 +9,13 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.growup.pms.status.controller.dto.request.CreateStatusRequest;
+import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
+import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
-import com.growup.pms.status.service.dto.CreateStatusDto;
+import com.growup.pms.status.service.dto.StatusCreateDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.status.CreateStatusRequestTestBuilder;
+import com.growup.pms.test.fixture.status.StatusCreateRequestTestBuilder;
+import com.growup.pms.test.fixture.status.StatusResponseTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,11 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태등록_API_문서를_생성한다() throws Exception {
         // given
-        CreateStatusRequest 상태_생성_요청 = CreateStatusRequestTestBuilder.상태_생성_요청은().이다();
-        Long 예상_상태_ID = 1L;
+        StatusCreateRequest 상태_생성_요청 = StatusCreateRequestTestBuilder.상태_생성_요청은().이다();
+        StatusResponse 예상_상태_응답 = StatusResponseTestBuilder.상태_응답은().이다();
 
-        when(statusService.createStatus(any(CreateStatusDto.class)))
-                .thenReturn(예상_상태_ID);
+        when(statusService.createStatus(any(StatusCreateDto.class)))
+                .thenReturn(예상_상태_응답);
 
         // when & then
         mockMvc.perform(post("/api/v1/status")
@@ -62,15 +64,18 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
                                 .responseFields(
-                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                                .description("코드"),
-                                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                                .description("상태"),
-                                        fieldWithPath("message").type(JsonFieldType.STRING)
-                                                .description("메시지"),
-                                        fieldWithPath("data").type(JsonFieldType.NUMBER)
-                                                .description("생성된 상태 ID")
+                                        fieldWithPath("statusId").type(JsonFieldType.NUMBER)
+                                                .description("생성퇸 상태 식별자"),
+                                        fieldWithPath("projectId").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트 식별자"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING)
+                                                .description("상태 이름"),
+                                        fieldWithPath("colorCode").type(JsonFieldType.STRING)
+                                                .description("색상 코드"),
+                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
+                                                .description("정렬순서")
                                 )
+                                .responseHeaders(headerWithName(HttpHeaders.LOCATION).description("생성된 상태의 URL"))
                                 .build())));
     }
 }

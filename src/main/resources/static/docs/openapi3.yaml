@@ -43,18 +43,24 @@ paths:
       responses:
         "201":
           description: "201"
+          headers:
+            Location:
+              description: 생성된 상태의 URL
+              schema:
+                type: string
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-status-248210810'
+                $ref: '#/components/schemas/api-v1-status1214003116'
               examples:
                 status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
                   value: |-
                     {
-                      "code" : 201,
-                      "status" : "CREATED",
-                      "message" : "CREATED",
-                      "data" : 1
+                      "statusId" : 1,
+                      "projectId" : 1,
+                      "name" : "대기중",
+                      "colorCode" : "FFFFFF",
+                      "sortOrder" : 0
                     }
   /api/v1/team:
     post:
@@ -258,21 +264,24 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
-    api-v1-status-248210810:
+    api-v1-status1214003116:
       type: object
       properties:
-        code:
+        statusId:
           type: number
-          description: 코드
-        data:
+          description: 생성퇸 상태 식별자
+        sortOrder:
           type: number
-          description: 생성된 상태 ID
-        message:
+          description: 정렬순서
+        name:
           type: string
-          description: 메시지
-        status:
+          description: 상태 이름
+        colorCode:
           type: string
-          description: 상태
+          description: 색상 코드
+        projectId:
+          type: number
+          description: 프로젝트 식별자
     api-v1-user-login-74814376:
       type: object
       properties:

@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.status;
 
-import com.growup.pms.status.controller.dto.request.CreateStatusRequest;
+import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -8,39 +8,39 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("NonAsciiCharacters")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CreateStatusRequestTestBuilder {
+public class StatusCreateRequestTestBuilder {
 
     private Long projectId = 1L;
     private String name = "대기중";
     private String colorCode = "FFFFFF";
     private Short sortOrder = 0;
 
-    public static CreateStatusRequestTestBuilder 상태_생성_요청은() {
-        return new CreateStatusRequestTestBuilder();
+    public static StatusCreateRequestTestBuilder 상태_생성_요청은() {
+        return new StatusCreateRequestTestBuilder();
     }
 
-    public CreateStatusRequestTestBuilder 프로젝트_식별자는(Long projectId) {
+    public StatusCreateRequestTestBuilder 프로젝트_식별자는(Long projectId) {
         this.projectId = projectId;
         return this;
     }
 
-    public CreateStatusRequestTestBuilder 이름은(String name) {
+    public StatusCreateRequestTestBuilder 이름은(String name) {
         this.name = name;
         return this;
     }
 
-    public CreateStatusRequestTestBuilder 색상코드는(String colorCode) {
+    public StatusCreateRequestTestBuilder 색상코드는(String colorCode) {
         this.colorCode = colorCode;
         return this;
     }
 
-    public CreateStatusRequestTestBuilder 정렬순서는(Short sortOrder) {
+    public StatusCreateRequestTestBuilder 정렬순서는(Short sortOrder) {
         this.sortOrder = sortOrder;
         return this;
     }
 
-    public CreateStatusRequest 이다() {
-        return CreateStatusRequest.builder()
+    public StatusCreateRequest 이다() {
+        return StatusCreateRequest.builder()
                 .projectId(projectId)
                 .name(name)
                 .colorCode(colorCode)
