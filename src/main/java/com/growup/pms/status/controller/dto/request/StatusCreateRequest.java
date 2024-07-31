@@ -1,6 +1,6 @@
 package com.growup.pms.status.controller.dto.request;
 
-import com.growup.pms.status.service.dto.CreateStatusDto;
+import com.growup.pms.status.service.dto.StatusCreateDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateStatusRequest {
+public class StatusCreateRequest {
 
     @NotNull
     @Positive
@@ -29,15 +29,15 @@ public class CreateStatusRequest {
     private Short sortOrder;
 
     @Builder
-    public CreateStatusRequest(Long projectId, String name, String colorCode, Short sortOrder) {
+    public StatusCreateRequest(Long projectId, String name, String colorCode, Short sortOrder) {
         this.projectId = projectId;
         this.name = name;
         this.colorCode = colorCode;
         this.sortOrder = sortOrder;
     }
 
-    public CreateStatusDto toServiceDto() {
-        return CreateStatusDto.builder()
+    public StatusCreateDto toServiceDto() {
+        return StatusCreateDto.builder()
                 .projectId(projectId)
                 .name(name)
                 .colorCode(colorCode)

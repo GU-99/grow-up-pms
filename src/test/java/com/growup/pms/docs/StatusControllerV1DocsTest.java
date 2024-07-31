@@ -9,11 +9,11 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.growup.pms.status.controller.dto.request.CreateStatusRequest;
+import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import com.growup.pms.status.service.StatusService;
-import com.growup.pms.status.service.dto.CreateStatusDto;
+import com.growup.pms.status.service.dto.StatusCreateDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.status.CreateStatusRequestTestBuilder;
+import com.growup.pms.test.fixture.status.StatusCreateRequestTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +33,10 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태등록_API_문서를_생성한다() throws Exception {
         // given
-        CreateStatusRequest 상태_생성_요청 = CreateStatusRequestTestBuilder.상태_생성_요청은().이다();
+        StatusCreateRequest 상태_생성_요청 = StatusCreateRequestTestBuilder.상태_생성_요청은().이다();
         Long 예상_상태_ID = 1L;
 
-        when(statusService.createStatus(any(CreateStatusDto.class)))
+        when(statusService.createStatus(any(StatusCreateDto.class)))
                 .thenReturn(예상_상태_ID);
 
         // when & then
@@ -71,6 +71,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("data").type(JsonFieldType.NUMBER)
                                                 .description("생성된 상태 ID")
                                 )
+                                .responseHeaders(headerWithName(HttpHeaders.LOCATION).description("생성된 상태의 정보"))
                                 .build())));
     }
 }
