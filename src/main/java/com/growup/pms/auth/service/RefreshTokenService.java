@@ -14,11 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
 
+    @Transactional
     public Long save(Long userId, String token) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(userRepository.findByIdOrThrow(userId))

@@ -1,5 +1,7 @@
 package com.growup.pms.auth.service;
 
+import static com.growup.pms.test.fixture.auth.LoginRequestTestBuilder.로그인_하는_사용자는;
+import static com.growup.pms.test.fixture.auth.TokenDtoTestBuilder.발급된_토큰은;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.doThrow;
@@ -10,8 +12,6 @@ import com.growup.pms.auth.dto.LoginRequest;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.auth.LoginRequestFixture;
-import com.growup.pms.test.fixture.auth.TokenDtoFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,42 +56,41 @@ class JwtLoginServiceTest {
 
     @Nested
     class 사용자가_인증에 {
-
         @Test
         void 성공한다() {
             // given
-            Long userId = 1L;
-            Long newRefreshTokenId = 1L;
-            LoginRequest validRequest = LoginRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(validRequest.getEmail(), validRequest.getPassword());
-            TokenDto expectedNewToken = TokenDtoFixture.createDefaultDto();
+            Long 기존_사용자_ID = 1L;
+            Long 새_리프레시_토큰_ID = 1L;
+            LoginRequest 유효한_로그인_요청 = 로그인_하는_사용자는().이다();
+            UsernamePasswordAuthenticationToken 인증_토큰 = new UsernamePasswordAuthenticationToken(유효한_로그인_요청.getEmail(), 유효한_로그인_요청.getPassword());
+            TokenDto 예상하는_새_토큰 = 발급된_토큰은().이다();
 
-            when(authenticationManager.authenticate(token)).thenReturn(authentication);
+            when(authenticationManager.authenticate(인증_토큰)).thenReturn(authentication);
             when(authentication.getPrincipal()).thenReturn(securityUser);
-            when(tokenProvider.generateToken(securityUser)).thenReturn(expectedNewToken);
-            when(securityUser.getId()).thenReturn(userId);
-            when(refreshTokenService.renewRefreshToken(userId, expectedNewToken.getRefreshToken())).thenReturn(newRefreshTokenId);
+            when(tokenProvider.generateToken(securityUser)).thenReturn(예상하는_새_토큰);
+            when(securityUser.getId()).thenReturn(기존_사용자_ID);
+            when(refreshTokenService.renewRefreshToken(기존_사용자_ID, 예상하는_새_토큰.getRefreshToken())).thenReturn(새_리프레시_토큰_ID);
 
             // when
-            TokenDto actualNewToken = loginService.authenticateUser(validRequest);
+            TokenDto 실제_새_토큰 = loginService.authenticateUser(유효한_로그인_요청);
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(actualNewToken).isNotNull();
-                softly.assertThat(expectedNewToken).isEqualTo(actualNewToken);
+                softly.assertThat(실제_새_토큰).isNotNull();
+                softly.assertThat(실제_새_토큰).isEqualTo(예상하는_새_토큰);
             });
         }
 
         @Test
         void 실패하면_예외가_발생한다() {
             // given
-            LoginRequest badRequest = LoginRequestFixture.createDefaultRequest();
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(badRequest.getEmail(), badRequest.getPassword());
+            LoginRequest 잘못된_요청 = 로그인_하는_사용자는().이메일이("존재하지 않는 이메일").이다();
+            UsernamePasswordAuthenticationToken 인증_토큰 = new UsernamePasswordAuthenticationToken(잘못된_요청.getEmail(), 잘못된_요청.getPassword());
 
-            doThrow(new RuntimeException()).when(authenticationManager).authenticate(token);
+            doThrow(new RuntimeException()).when(authenticationManager).authenticate(인증_토큰);
 
             // when & then
-            assertThatThrownBy(() -> loginService.authenticateUser(badRequest))
+            assertThatThrownBy(() -> loginService.authenticateUser(잘못된_요청))
                     .isInstanceOf(RuntimeException.class);
         }
     }

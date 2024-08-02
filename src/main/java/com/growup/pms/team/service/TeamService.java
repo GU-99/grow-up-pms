@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
@@ -20,12 +21,14 @@ public class TeamService {
         return TeamResponse.from(teamRepository.findByIdOrThrow(teamId));
     }
 
+    @Transactional
     // TODO: 권한이나 역할이 구현되면 팀 생성 시 coworker 필드에 있는 팀원들을 팀 멤버 테이블에 추가해야 함
     public Long createTeam(Long creatorId, TeamCreateRequest request) {
         return teamRepository.save(TeamCreateRequest.toEntity(request, userRepository.findByIdOrThrow(creatorId)))
                 .getId();
     }
 
+    @Transactional
     public void deleteTeam(Long teamId) {
         teamRepository.deleteById(teamId);
     }

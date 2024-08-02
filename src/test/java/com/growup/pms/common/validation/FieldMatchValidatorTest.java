@@ -1,13 +1,12 @@
 package com.growup.pms.common.validation;
 
+import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.validation.constraint.FieldMatch;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.user.UserCreateRequestFixture;
-import com.growup.pms.test.fixture.user.UserFixture;
 import com.growup.pms.user.dto.UserCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,32 +33,26 @@ class FieldMatchValidatorTest {
     @Test
     void 서로_일치하면_유효성_검사가_성공한다() {
         // given
-        boolean expectedResult = true;
-        UserCreateRequest request = UserCreateRequestFixture.createDefaultRequestBuilder()
-                .password(UserFixture.DEFAULT_PASSWORD)
-                .passwordConfirm(UserFixture.DEFAULT_PASSWORD)
-                .build();
+        boolean 예상하는_결과 = true;
+        UserCreateRequest 사용자_생성_요청 = 가입하는_사용자는().비밀번호가("12345678").비밀번호_확인이("12345678").이다();
 
         // when
-        boolean actualResult = validator.isValid(request, null);
+        boolean 실제_결과 = validator.isValid(사용자_생성_요청, null);
 
         // then
-        assertThat(actualResult).isEqualTo(expectedResult);
+        assertThat(실제_결과).isEqualTo(예상하는_결과);
     }
 
     @Test
     void 서로_일치하지_않으면_유효성_검사가_실패한다() {
         // given
-        boolean expectedResult = false;
-        UserCreateRequest request = UserCreateRequestFixture.createDefaultRequestBuilder()
-                .password(UserFixture.DEFAULT_PASSWORD)
-                .passwordConfirm(UserFixture.INVALID_PASSWORD)
-                .build();
+        boolean 예상하는_결과 = false;
+        UserCreateRequest 사용자_생성_요청 = 가입하는_사용자는().비밀번호가("12345678").비밀번호_확인이("87654321").이다();
 
         // when
-        boolean actualResult = validator.isValid(request, null);
+        boolean 실제_결과 = validator.isValid(사용자_생성_요청, null);
 
         // then
-        assertThat(actualResult).isEqualTo(expectedResult);
+        assertThat(실제_결과).isEqualTo(예상하는_결과);
     }
 }

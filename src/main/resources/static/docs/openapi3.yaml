@@ -10,7 +10,101 @@ tags:
   description: 인증
 - name: Team
   description: 팀
+- name: Status
+  description: 상태
+- name: Team Invitation
+  description: 팀 초대
 paths:
+  /api/v1/status:
+    get:
+      tags:
+      - Status
+      summary: 프로젝트 상태 목록 조회
+      description: 프로젝트 내의 모든 상태를 조회합니다.
+      operationId: status-controller-v1-docs-test/상태_목록조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: query
+        description: 조회할 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-status1840086195'
+              examples:
+                status-controller-v1-docs-test/상태_목록조회_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "hasNext" : false,
+                      "items" : [ {
+                        "statusId" : 1,
+                        "projectId" : 1,
+                        "name" : "대기중",
+                        "colorCode" : "FFFFFF",
+                        "sortOrder" : 0
+                      }, {
+                        "statusId" : 2,
+                        "projectId" : 1,
+                        "name" : "진행중",
+                        "colorCode" : "FFFFF0",
+                        "sortOrder" : 1
+                      } ]
+                    }
+    post:
+      tags:
+      - Status
+      summary: 프로젝트 상태 생성
+      description: "프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다."
+      operationId: status-controller-v1-docs-test/상태등록_api_문서를_생성한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-status-838570364'
+            examples:
+              status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                value: |-
+                  {
+                    "projectId" : 1,
+                    "name" : "대기중",
+                    "colorCode" : "FFFFFF",
+                    "sortOrder" : 0
+                  }
+      responses:
+        "201":
+          description: "201"
+          headers:
+            Location:
+              description: 생성된 상태의 URL
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-status1214003116'
+              examples:
+                status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "statusId" : 1,
+                      "projectId" : 1,
+                      "name" : "대기중",
+                      "colorCode" : "FFFFFF",
+                      "sortOrder" : 0
+                    }
   /api/v1/team:
     post:
       tags:
@@ -154,8 +248,8 @@ paths:
               사용자가_로그인_시에/성공한다:
                 value: |-
                   {
-                    "email" : "ryan@example.com",
-                    "password" : "!test1234"
+                    "email" : "brown@gu99.com",
+                    "password" : "test1234!@#$"
                   }
       responses:
         "200":
@@ -169,6 +263,48 @@ paths:
               description: 리프레시 토큰
               schema:
                 type: string
+  /api/v1/team/{teamId}/invitation:
+    post:
+      tags:
+      - Team Invitation
+      summary: 팀 초대
+      description: 해당 사용자를 특정 팀에 초대합니다.
+      operationId: team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 초대할 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: Bearer 액세스 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer 액세스 토큰
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-teamId-invitation-1361275252'
+            examples:
+              team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다:
+                value: |-
+                  {
+                    "userId" : 1
+                  }
+      responses:
+        "201":
+          description: "201"
   /api/v1/user/login/refresh:
     post:
       tags:
@@ -196,8 +332,95 @@ paths:
               description: 새 리프레시 토큰
               schema:
                 type: string
+  /api/v1/team/{teamId}/invitation/accept:
+    post:
+      tags:
+      - Team Invitation
+      summary: 팀 초대 승낙
+      description: 사용자가 팀 초대를 승낙합니다.
+      operationId: team-invitation-controller-v1-docs-test/팀_초대_승낙_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 초대된 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Authorization
+        in: header
+        description: Bearer 액세스 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer 액세스 토큰
+      responses:
+        "204":
+          description: "204"
+  /api/v1/team/{teamId}/invitation/decline:
+    post:
+      tags:
+      - Team Invitation
+      summary: 팀 초대 거절
+      description: 사용자가 팀 초대를 거절합니다.
+      operationId: team-invitation-controller-v1-docs-test/팀_초대_거절_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 초대된 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Authorization
+        in: header
+        description: Bearer 액세스 토큰
+        required: true
+        schema:
+          type: string
+        example: Bearer 액세스 토큰
+      responses:
+        "204":
+          description: "204"
 components:
   schemas:
+    api-v1-status-838570364:
+      type: object
+      properties:
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
+        projectId:
+          type: number
+          description: 프로젝트 식별자
+    api-v1-status1214003116:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 생성퇸 상태 식별자
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
+        projectId:
+          type: number
+          description: 프로젝트 식별자
+    api-v1-team-teamId-invitation-1361275252:
+      type: object
+      properties:
+        userId:
+          type: number
+          description: 초대할 사용자 ID
     api-v1-user-login-74814376:
       type: object
       properties:
@@ -216,3 +439,30 @@ components:
         content:
           type: string
           description: 팀 소개
+    api-v1-status1840086195:
+      type: object
+      properties:
+        hasNext:
+          type: boolean
+          description: 다음 페이지 존재 여부
+        items:
+          type: array
+          description: 프로젝트 내에 존재하는 상태 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 상태 식별자
+              sortOrder:
+                type: number
+                description: 정렬 순서
+              name:
+                type: string
+                description: 상태 이름
+              colorCode:
+                type: string
+                description: 색상 코드
+              projectId:
+                type: number
+                description: 프로젝트 식별자

@@ -1,19 +1,25 @@
 package com.growup.pms.task.domain;
 
+import com.growup.pms.status.domain.Status;
+import com.growup.pms.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "tasks")
+@Table(name = "status_tasks")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Task {
     @Id
@@ -21,10 +27,36 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_status_id")
+    private Status status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
+
+    @Column(nullable = false, length = 128)
     private String name;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String content;
+
+    @Column(nullable = false)
+    private Short sortOrder;
 
     private LocalDate startDate;
 
     private LocalDate endDate;
+
+    @Builder
+    public Task(Status status, User user, String name, String content, Short sortOrder, LocalDate startDate,
+                LocalDate endDate) {
+        this.status = status;
+        this.user = user;
+        this.name = name;
+        this.content = content;
+        this.sortOrder = sortOrder;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
