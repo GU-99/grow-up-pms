@@ -22,22 +22,22 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class PermissionAspect {
+public class AuthorizationAspect {
     private final TeamUserRepository teamUserRepository;
     private final ProjectUserRepository projectUserRepository;
 
     @Before("@annotation(requirePermission) && args(teamId, ..)")
     public void checkTeamPermission(RequirePermission requirePermission, Long teamId) {
-        checkPermission(requirePermission, teamUserRepository.getPermissions(teamId, getCurrentUser().getId()));
+        checkPermission(requirePermission, teamUserRepository.getPermissionsForTeamUser(teamId, getCurrentUser().getId()));
     }
 
     @Before("@annotation(requirePermission) && args(projectId, ..)")
     public void checkProjectPermission(RequirePermission requirePermission, Long projectId) {
-        checkPermission(requirePermission, projectUserRepository.getPermissions(projectId, getCurrentUser().getId()));
+        checkPermission(requirePermission, projectUserRepository.getPermissionsForProjectUser(projectId, getCurrentUser().getId()));
     }
 
-    private void checkPermission(RequirePermission requirePermission, List<Permission> permissions) {
-        Set<String> permissionNames = permissions.stream()
+    private void checkPermission(RequirePermission requirePermission, List<Permission> grantedPermissions) {
+        Set<String> permissionNames = grantedPermissions.stream()
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
 

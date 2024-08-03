@@ -16,5 +16,5 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Projec
             JOIN rp.permission p
             WHERE pu.project.id = :teamId AND pu.user.id = :userId
             """)
-    List<Permission> getPermissions(@Param("projectId") Long projectId, @Param("userId") Long userId);
+    List<Permission> getPermissionsForProjectUser(@Param("projectId") Long projectId, @Param("userId") Long userId);
 }

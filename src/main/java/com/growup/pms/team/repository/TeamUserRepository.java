@@ -16,5 +16,5 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> 
             JOIN rp.permission p
             WHERE tu.team.id = :teamId AND tu.user.id = :userId
             """)
-    List<Permission> getPermissions(@Param("teamId") Long teamId, @Param("userId") Long userId);
+    List<Permission> getPermissionsForTeamUser(@Param("teamId") Long teamId, @Param("userId") Long userId);
 }
