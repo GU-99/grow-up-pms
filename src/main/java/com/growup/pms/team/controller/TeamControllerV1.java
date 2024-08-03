@@ -1,6 +1,8 @@
 package com.growup.pms.team.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.team.dto.TeamCreateRequest;
 import com.growup.pms.team.dto.TeamResponse;
 import com.growup.pms.team.dto.TeamUpdateRequest;
@@ -22,15 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/team")
-// TODO: 향후 권한 인가가 구현되면 각 요청이 올바른 사용자로부터 온 요청인지 검사해야 함
 public class TeamControllerV1 {
     private final TeamService teamService;
-
-    @GetMapping("/{teamId}")
-    public ResponseEntity<TeamResponse> getTeam(@PathVariable Long teamId) {
-        return ResponseEntity.ok()
-                .body(teamService.getTeam(teamId));
-    }
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@AuthenticationPrincipal SecurityUser user, @Valid @RequestBody TeamCreateRequest request) {
@@ -38,15 +33,23 @@ public class TeamControllerV1 {
                 .build();
     }
 
-    @DeleteMapping("/{teamId}")
-    public ResponseEntity<Void> deleteTeam(@PathVariable Long teamId) {
-        teamService.deleteTeam(teamId);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{teamId}")
+    public ResponseEntity<TeamResponse> getTeam(@PathVariable Long teamId) {
+        return ResponseEntity.ok()
+                .body(teamService.getTeam(teamId));
     }
 
     @PatchMapping("/{teamId}")
+    @RequirePermission(PermissionType.TEAM_UPDATE)
     public ResponseEntity<Void> updateTeam(@PathVariable Long teamId, @Valid @RequestBody TeamUpdateRequest request) {
         teamService.updateTeam(teamId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{teamId}")
+    @RequirePermission(PermissionType.TEAM_DELETE)
+    public ResponseEntity<Void> deleteTeam(@PathVariable Long teamId) {
+        teamService.deleteTeam(teamId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -5,40 +5,56 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.role.domain.Permission;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.team.repository.TeamUserRepository;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
 public class PermissionAspect {
+    private final TeamUserRepository teamUserRepository;
 
     @Before("@annotation(requirePermission) && args(teamId, ..)")
     public void checkTeamPermission(RequirePermission requirePermission, Long teamId) {
-        Long userId = ((SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        PermissionType[] requiredPermissions = requirePermission.permissions();
-        // FIXME: 향후 팀 유저 기능이 구현되면 우항을 변경해야 함
-        List<Permission> teamUserPermissions = Collections.emptyList();
+        checkPermission(requirePermission, teamUserRepository.getPermissions(teamId, getCurrentUser().getId()));
+    }
 
-        Set<String> userPermissionNames = teamUserPermissions.stream()
+    @Before("@annotation(requirePermission) && args(projectId, ..)")
+    public void checkProjectPermission(RequirePermission requirePermission, Long projectId) {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    private void checkPermission(RequirePermission requirePermission, List<Permission> permissions) {
+        Set<String> permissionNames = permissions.stream()
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
 
-        boolean hasAllPermissions = Arrays.stream(requiredPermissions)
+        boolean hasAllPermissions = Arrays.stream(requirePermission.value())
                 .map(Enum::name)
-                .allMatch(userPermissionNames::contains);
+                .allMatch(permissionNames::contains);
 
         if (!hasAllPermissions) {
             throw new AuthorizationException(ErrorCode.AUTHZ_ACCESS_DENIED);
         }
+    }
+
+    private SecurityUser getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            throw new AuthorizationException(ErrorCode.AUTHZ_ACCESS_DENIED);
+        }
+        return (SecurityUser) authentication.getPrincipal();
     }
 }

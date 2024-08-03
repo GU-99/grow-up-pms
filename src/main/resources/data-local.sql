@@ -1,7 +1,7 @@
 -- 역할 삽입
-INSERT INTO roles(name) VALUES('TEAM_HEAD');
-INSERT INTO roles(name) VALUES('TEAM_LEADER');
-INSERT INTO roles(name) VALUES('TEAM_MATE');
+INSERT INTO roles(type, name) VALUES('TEAM', 'HEAD');
+INSERT INTO roles(type, name) VALUES('TEAM', 'LEADER');
+INSERT INTO roles(type, name) VALUES('TEAM', 'MATE');
 
 -- 사용자 삽입 (테스트 시 사용되는 계정 비밀번호는 123으로 모두 동일)
 INSERT INTO users (email, password, provider, nickname, bio, image, password_change_date, password_failure_count) VALUES
