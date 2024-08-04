@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.invitation.domian.TeamInvitation;
-import com.growup.pms.invitation.dto.TeamInvitationCreateRequest;
+import com.growup.pms.invitation.dto.TeamInvitationCreateDto;
 import com.growup.pms.invitation.repository.TeamInvitationRepository;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
@@ -71,7 +71,7 @@ class TeamInvitationServiceTest {
             when(teamInvitationRepository.save(any(TeamInvitation.class))).thenReturn(팀_초대);
 
             // when
-            Long 실제_생성된_초대_ID = teamInvitationService.sendInvitation(초대할_팀_ID, new TeamInvitationCreateRequest(초대할_사용자_ID));
+            Long 실제_생성된_초대_ID = teamInvitationService.sendInvitation(초대할_팀_ID, new TeamInvitationCreateDto(초대할_사용자_ID));
 
             // then
             assertThat(실제_생성된_초대_ID).isEqualTo(예상하는_생성된_초대_ID);
@@ -82,7 +82,7 @@ class TeamInvitationServiceTest {
             // given
             Long 초대할_팀_ID = 1L;
             Long 초대할_사용자_ID = 2L;
-            TeamInvitationCreateRequest 팀_초대_요청 = new TeamInvitationCreateRequest(초대할_사용자_ID);
+            TeamInvitationCreateDto 팀_초대_요청 = new TeamInvitationCreateDto(초대할_사용자_ID);
 
             when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(true);
 
@@ -96,7 +96,7 @@ class TeamInvitationServiceTest {
         void 초대할_사용자가_존재하지_않으면_예외가_발생한다() {
             // given
             Long 초대할_팀_ID = 1L;
-            TeamInvitationCreateRequest 팀_초대_요청 = new TeamInvitationCreateRequest(초대할_팀_ID);
+            TeamInvitationCreateDto 팀_초대_요청 = new TeamInvitationCreateDto(초대할_팀_ID);
 
             when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(false);
             doThrow(EntityNotFoundException.class).when(userRepository).findByIdOrThrow(any(Long.class));

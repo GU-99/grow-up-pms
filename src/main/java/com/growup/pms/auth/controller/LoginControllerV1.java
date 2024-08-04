@@ -28,7 +28,7 @@ public class LoginControllerV1 {
 
     @PostMapping
     public ResponseEntity<AccessTokenResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
-        TokenDto tokenDto = loginService.authenticateUser(request);
+        TokenDto tokenDto = loginService.authenticateUser(LoginRequest.toServiceDto(request));
         setRefreshTokenCookie(response, tokenDto.getRefreshToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())

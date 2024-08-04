@@ -34,7 +34,8 @@ public class TeamControllerV1 {
 
     @PostMapping
     public ResponseEntity<Void> createTeam(@AuthenticationPrincipal SecurityUser user, @Valid @RequestBody TeamCreateRequest request) {
-        return ResponseEntity.created(URI.create("/api/v1/team/" + teamService.createTeam(user.getId(), request)))
+        return ResponseEntity.created(URI.create("/api/v1/team/"
+                        + teamService.createTeam(user.getId(), TeamCreateRequest.toServiceDto(request))))
                 .build();
     }
 
@@ -46,7 +47,7 @@ public class TeamControllerV1 {
 
     @PatchMapping("/{teamId}")
     public ResponseEntity<Void> updateTeam(@PathVariable Long teamId, @Valid @RequestBody TeamUpdateRequest request) {
-        teamService.updateTeam(teamId, request);
+        teamService.updateTeam(teamId, TeamUpdateRequest.toServiceDto(request));
         return ResponseEntity.noContent().build();
     }
 }

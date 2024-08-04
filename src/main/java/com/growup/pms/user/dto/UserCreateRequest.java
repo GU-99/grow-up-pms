@@ -1,9 +1,6 @@
 package com.growup.pms.user.dto;
 
 import com.growup.pms.common.validation.constraint.FieldMatch;
-import com.growup.pms.user.domain.Provider;
-import com.growup.pms.user.domain.User;
-import com.growup.pms.user.domain.UserProfile;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -43,16 +40,13 @@ public class UserCreateRequest {
         this.image = image;
     }
 
-    public static User toEntity(UserCreateRequest request) {
-        return User.builder()
+    public static UserCreateDto toServiceDto(UserCreateRequest request) {
+        return UserCreateDto.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
-                .provider(Provider.LOCAL)
-                .profile(UserProfile.builder()
-                        .nickname(request.getNickname())
-                        .bio(request.getBio())
-                        .image(request.getImage())
-                        .build())
+                .nickname(request.getNickname())
+                .bio(request.getBio())
+                .image(request.getImage())
                 .build();
     }
 }

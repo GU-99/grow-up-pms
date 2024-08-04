@@ -1,7 +1,5 @@
 package com.growup.pms.team.dto;
 
-import com.growup.pms.team.domain.Team;
-import com.growup.pms.user.domain.User;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,11 +21,10 @@ public class TeamCreateRequest {
         this.content = content;
     }
 
-    public static Team toEntity(TeamCreateRequest request, User creator) {
-        return Team.builder()
+    public static TeamCreateDto toServiceDto(TeamCreateRequest request) {
+        return TeamCreateDto.builder()
                 .name(request.getName())
                 .content(request.getContent())
-                .creator(creator)
                 .build();
     }
 }
