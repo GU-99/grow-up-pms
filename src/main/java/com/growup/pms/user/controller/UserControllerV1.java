@@ -22,12 +22,12 @@ public class UserControllerV1 {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request) {
-        return ResponseEntity.created(URI.create("/api/v1/users/" + userService.save(request))).build();
+        return ResponseEntity.created(URI.create("/api/v1/users/" + userService.save(UserCreateRequest.toServiceDto(request)))).build();
     }
 
     @PostMapping("/file")
     public ResponseEntity<Void> upload(@AuthenticationPrincipal SecurityUser user, @Valid UserUploadRequest request) {
-        userService.imageUpload(user.getId(), request);
+        userService.uploadImage(user.getId(), UserUploadRequest.toServiceDto(request));
         return ResponseEntity.ok().build();
     }
 }

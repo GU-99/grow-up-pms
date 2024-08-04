@@ -24,7 +24,8 @@ public class TeamInvitationControllerV1 {
     @PostMapping
     public ResponseEntity<Void> invite(@PathVariable Long teamId, @Valid @RequestBody TeamInvitationCreateRequest request) {
         return ResponseEntity.created(
-                URI.create("/api/v1/team/" + teamId + "/invitation/" + teamInvitationService.sendInvitation(teamId, request)))
+                URI.create("/api/v1/team/" + teamId + "/invitation/"
+                        + teamInvitationService.sendInvitation(teamId, TeamInvitationCreateRequest.toServiceDto(request))))
                 .build();
     }
 

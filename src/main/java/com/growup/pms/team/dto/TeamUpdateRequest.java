@@ -20,4 +20,11 @@ public class TeamUpdateRequest {
         this.name = name;
         this.content = content;
     }
+
+    public static TeamUpdateDto toServiceDto(TeamUpdateRequest request) {
+        return TeamUpdateDto.builder()
+                .name(request.getName())
+                .content(request.getContent())
+                .build();
+    }
 }

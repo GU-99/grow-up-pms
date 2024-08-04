@@ -3,6 +3,7 @@ package com.growup.pms.auth.domain;
 import com.growup.pms.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,11 +27,13 @@ public class RefreshToken {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_refresh_token_user"))
     private User user;
 
+    @Column(nullable = false)
     private String token;
 
+    @Column(nullable = false)
     private Instant expiryDate;
 
     @Builder

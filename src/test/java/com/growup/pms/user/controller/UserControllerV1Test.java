@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
+import com.growup.pms.user.dto.UserCreateDto;
 import com.growup.pms.user.dto.UserCreateRequest;
 import com.growup.pms.user.service.UserService;
 import java.io.FileInputStream;
@@ -35,7 +36,7 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
             Long 새_사용자_ID = 1L;
             UserCreateRequest 사용자_생성_요청 = 가입하는_사용자는().이다();
 
-            when(userService.save(any(UserCreateRequest.class))).thenReturn(새_사용자_ID);
+            when(userService.save(any(UserCreateDto.class))).thenReturn(새_사용자_ID);
 
             // when & then
             mockMvc.perform(post("/api/v1/users")
@@ -55,6 +56,7 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
             // given
             final String 루트_경로 = "src/test/resources/images";
             final String 업로드하는_파일_이름 = "testImage.jpg";
+
             try (FileInputStream 파일_입력_스트림 = new FileInputStream(루트_경로 + "/" + 업로드하는_파일_이름)) {
                 MockMultipartFile 업로드되는_파일 = new MockMultipartFile(
                         "file",
@@ -64,8 +66,7 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
                 );
 
                 // when & then
-                mockMvc.perform(
-                        multipart("/api/v1/users/file")
+                mockMvc.perform(multipart("/api/v1/users/file")
                                 .file(업로드되는_파일)
                 ).andExpect(status().isOk());
             }

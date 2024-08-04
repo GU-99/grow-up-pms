@@ -22,8 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.team.dto.TeamCreateDto;
 import com.growup.pms.team.dto.TeamCreateRequest;
 import com.growup.pms.team.dto.TeamResponse;
+import com.growup.pms.team.dto.TeamUpdateDto;
 import com.growup.pms.team.dto.TeamUpdateRequest;
 import com.growup.pms.team.service.TeamService;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -97,7 +99,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             Long 예상_팀_ID = 1L;
             TeamCreateRequest 팀_생성_요청 = 팀_생성_요청은().이다();
 
-            when(teamService.createTeam(eq(팀장_ID), any(TeamCreateRequest.class))).thenReturn(예상_팀_ID);
+            when(teamService.createTeam(eq(팀장_ID), any(TeamCreateDto.class))).thenReturn(예상_팀_ID);
 
             // when & then
             mockMvc.perform(post("/api/v1/team")
@@ -140,7 +142,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             Long 기존_팀_ID = 1L;
             TeamCreateRequest 팀_생성_요청 = 팀_생성_요청은().이다();
 
-            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateRequest.class));
+            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateDto.class));
 
             // when & then
             mockMvc.perform(patch("/api/v1/team/{id}", 기존_팀_ID)
@@ -166,7 +168,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             String 유효하지_않은_팀_이름 = "!#$&-_이름";
             TeamUpdateRequest 팀_수정_요청 = 팀_수정_요청은().이름이(유효하지_않은_팀_이름).이다();
 
-            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateRequest.class));
+            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateDto.class));
 
             // when & then
             mockMvc.perform(patch("/api/v1/team/" + 기존_팀_ID)

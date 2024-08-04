@@ -1,7 +1,7 @@
 package com.growup.pms.auth.service;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.auth.dto.LoginRequest;
+import com.growup.pms.auth.dto.LoginDto;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class JwtLoginService {
     private final RefreshTokenService refreshTokenService;
 
     @Transactional
-    public TokenDto authenticateUser(LoginRequest request) {
+    public TokenDto authenticateUser(LoginDto request) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityUser principal = (SecurityUser) authentication.getPrincipal();

@@ -7,20 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LoginRequest {
+public class LoginDto {
     private String email;
     private String password;
 
     @Builder
-    public LoginRequest(String email, String password) {
+    public LoginDto(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public static LoginDto toServiceDto(LoginRequest request) {
-        return LoginDto.builder()
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .build();
     }
 }
