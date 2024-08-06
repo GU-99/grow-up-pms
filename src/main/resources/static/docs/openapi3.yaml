@@ -141,6 +141,22 @@ paths:
               schema:
                 type: string
   /api/v1/status/{statusId}:
+    delete:
+      tags:
+      - Status
+      summary: 프로젝트 상태 삭제
+      description: 프로젝트에 존재하는 상태를 삭제합니다.
+      operationId: status-controller-v1-docs-test/상태_삭제_api_문서를_생성한다
+      parameters:
+      - name: statusId
+        in: path
+        description: 삭제할 상태 PK
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: "204"
     patch:
       tags:
       - Status

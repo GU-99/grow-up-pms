@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyShort;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -203,6 +204,28 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                         parameterWithName("sortOrder").type(SimpleType.NUMBER)
                                                 .description("변경할 정렬 순서")
                                 )
+                                .build()
+                )));
+    }
+
+    @Test
+    void 상태_삭제_API_문서를_생성한다() throws Exception {
+        // given
+        Long 삭제할_상태_ID = 1L;
+
+        // when
+        doNothing().when(statusService).deleteStatus(anyLong());
+
+        // then
+        mockMvc.perform(delete("/api/v1/status/{statusId}", 삭제할_상태_ID)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 상태 삭제")
+                                .description("프로젝트에 존재하는 상태를 삭제합니다.")
+                                .pathParameters(parameterWithName("statusId").description("삭제할 상태 PK"))
                                 .build()
                 )));
     }
