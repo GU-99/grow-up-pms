@@ -4,7 +4,6 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithNam
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyShort;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -48,6 +47,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태등록_API_문서를_생성한다() throws Exception {
         // given
+        Long 예상_프로젝트_식별자 = 1L;
         StatusCreateRequest 상태_생성_요청 = StatusCreateRequestTestBuilder.상태_생성_요청은().이다();
         StatusResponse 예상_상태_응답 = StatusResponseTestBuilder.상태_응답은().이다();
 
@@ -55,7 +55,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                 .thenReturn(예상_상태_응답);
 
         // when & then
-        mockMvc.perform(post("/api/v1/project/status")
+        mockMvc.perform(post("/api/v1/project/{projectId}/status", 예상_프로젝트_식별자)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(상태_생성_요청)))
                 .andExpectAll(
@@ -65,9 +65,11 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .tag(TAG)
                                 .summary("프로젝트 상태 생성")
                                 .description("프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 식별자")
+                                )
                                 .requestFields(
-                                        fieldWithPath("projectId").type(JsonFieldType.NUMBER)
-                                                .description("프로젝트 식별자"),
                                         fieldWithPath("name").type(JsonFieldType.STRING)
                                                 .description("상태 이름"),
                                         fieldWithPath("colorCode").type(JsonFieldType.STRING)
@@ -147,6 +149,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태_변경_API_문서를_생성한다() throws Exception {
         // given
+        Long 예상_프로젝트_식별자 = 2L;
         Long 변경할_상태_ID = 1L;
         StatusEditRequest 상태_변경_요청 = StatusEditRequestTestBuilder.상태_변경_요청은().이다();
 
@@ -154,7 +157,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         doNothing().when(statusService).editStatus(any(StatusEditDto.class));
 
         // then
-        mockMvc.perform(patch("/api/v1/project/status/{statusId}", 변경할_상태_ID)
+        mockMvc.perform(patch("/api/v1/project/{projectId}/status/{statusId}", 예상_프로젝트_식별자, 변경할_상태_ID)
                         .content(objectMapper.writeValueAsString(상태_변경_요청))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
@@ -163,44 +166,19 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("프로젝트 상태 변경")
-                                .description("프로젝트 상태의 이름, 색상 코드를 변경합니다.")
-                                .pathParameters(parameterWithName("statusId").description("변경할 상태 PK"))
+                                .description("프로젝트 상태의 이름, 색상 코드, 정렬 순서를 변경합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").description("프로젝트 식별자"),
+                                        parameterWithName("statusId").description("변경할 상태 식별자")
+                                )
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
                                 .requestFields(
                                         fieldWithPath("statusName").type(JsonFieldType.STRING)
                                                 .description("변경할 상태의 이름"),
                                         fieldWithPath("colorCode").type(JsonFieldType.STRING)
-                                                .description("변경할 색상 코드")
-                                )
-                                .build()
-                )));
-    }
-
-    @Test
-    void 상태_순서변경_API_문서를_생성한다() throws Exception {
-        // given
-        Long 변경할_상태_ID = 1L;
-        Short 변경할_정렬순서 = 2;
-
-        // when
-        doNothing().when(statusService).editStatusOrder(anyLong(), anyShort());
-
-        // then
-        mockMvc.perform(patch("/api/v1/project/status/{statusId}/order", 변경할_상태_ID)
-                        .queryParam("sortOrder", String.valueOf(변경할_정렬순서))
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
-                .andExpect(status().isNoContent())
-                .andDo(docs.document(resource(
-                        ResourceSnippetParameters.builder()
-                                .tag(TAG)
-                                .summary("프로젝트 상태 정렬 순서 변경")
-                                .description("프로젝트 상태의 정렬 순서를 변경합니다.")
-                                .pathParameters(parameterWithName("statusId").description("변경할 상태 PK"))
-                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
-                                        MediaType.APPLICATION_JSON_VALUE))
-                                .queryParameters(
-                                        parameterWithName("sortOrder").type(SimpleType.NUMBER)
+                                                .description("변경할 색상 코드"),
+                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
                                                 .description("변경할 정렬 순서")
                                 )
                                 .build()
@@ -210,13 +188,14 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태_삭제_API_문서를_생성한다() throws Exception {
         // given
+        Long 예상_프로젝트_식별자 = 2L;
         Long 삭제할_상태_ID = 1L;
 
         // when
         doNothing().when(statusService).deleteStatus(anyLong());
 
         // then
-        mockMvc.perform(delete("/api/v1/project/status/{statusId}", 삭제할_상태_ID)
+        mockMvc.perform(delete("/api/v1/project/{projectId}/status/{statusId}", 예상_프로젝트_식별자, 삭제할_상태_ID)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
                 .andExpect(status().isNoContent())
                 .andDo(docs.document(resource(
@@ -224,7 +203,10 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .tag(TAG)
                                 .summary("프로젝트 상태 삭제")
                                 .description("프로젝트에 존재하는 상태를 삭제합니다.")
-                                .pathParameters(parameterWithName("statusId").description("삭제할 상태 PK"))
+                                .pathParameters(
+                                        parameterWithName("projectId").description("프로젝트 식별자"),
+                                        parameterWithName("statusId").description("삭제할 상태 식별자")
+                                )
                                 .build()
                 )));
     }

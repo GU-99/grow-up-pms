@@ -1,29 +1,31 @@
 package com.growup.pms.status.controller.dto.request;
 
 import com.growup.pms.status.service.dto.StatusEditDto;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StatusEditRequest {
 
-    @NotBlank
     @Size(min = 1, max = 32)
-    private String statusName;
+    private JsonNullable<String> statusName = JsonNullable.undefined();
 
-    @NotBlank
     @Size(min = 1, max = 6)
-    private String colorCode;
+    private JsonNullable<String> colorCode = JsonNullable.undefined();
+
+    private JsonNullable<Short> sortOrder = JsonNullable.undefined();
 
     @Builder
-    public StatusEditRequest(String statusName, String colorCode) {
+    public StatusEditRequest(JsonNullable<String> statusName, JsonNullable<String> colorCode,
+                             JsonNullable<Short> sortOrder) {
         this.statusName = statusName;
         this.colorCode = colorCode;
+        this.sortOrder = sortOrder;
     }
 
     public StatusEditDto toServiceDto(Long statusId) {
@@ -31,6 +33,7 @@ public class StatusEditRequest {
                 .statusId(statusId)
                 .statusName(statusName)
                 .colorCode(colorCode)
+                .sortOrder(sortOrder)
                 .build();
     }
 }
