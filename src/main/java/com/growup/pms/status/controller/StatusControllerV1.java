@@ -1,6 +1,8 @@
 package com.growup.pms.status.controller;
 
 
+import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import com.growup.pms.status.controller.dto.request.StatusEditRequest;
 import com.growup.pms.status.controller.dto.response.PageResponse;
@@ -25,13 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/status")
+@RequestMapping("/api/v1/project")
 // TODO: 향후 권한 인가가 구현되면 각 요청이 올바른 사용자로부터 온 요청인지 검사해야 함
 public class StatusControllerV1 {
 
     private final StatusService statusService;
 
-    @PostMapping
+    @PostMapping("/status")
+    @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
     public ResponseEntity<StatusResponse> createStatus(@Valid @RequestBody StatusCreateRequest request) {
         log.debug("StatusControllerV1#createStatus called.");
         log.debug("StatusCreateRequest={}", request);
@@ -44,8 +47,8 @@ public class StatusControllerV1 {
     }
 
 
-    @GetMapping
-    public ResponseEntity<PageResponse<List<StatusResponse>>> getStatuses(@RequestParam Long projectId) {
+    @GetMapping("/{projectId}/status")
+    public ResponseEntity<PageResponse<List<StatusResponse>>> getStatuses(@PathVariable Long projectId) {
         log.debug("StatusControllerV1#getStatuses called.");
         log.debug("projectId={}", projectId);
 
@@ -55,7 +58,8 @@ public class StatusControllerV1 {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{statusId}")
+    @PatchMapping("/status/{statusId}")
+    @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
     public ResponseEntity<Void> editStatus(@PathVariable Long statusId, @Valid @RequestBody StatusEditRequest request) {
         log.debug("StatusControllerV1#editStatus called.");
         log.debug("statusId={}", statusId);
@@ -66,7 +70,8 @@ public class StatusControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{statusId}/order")
+    @PatchMapping("/status/{statusId}/order")
+    @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
     public ResponseEntity<Void> editStatusOrder(@PathVariable Long statusId, @RequestParam Short sortOrder) {
         log.debug("StatusControllerV1#editStatusOrder called.");
         log.debug("statusId={}", statusId);
@@ -77,7 +82,8 @@ public class StatusControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{statusId}")
+    @DeleteMapping("/status/{statusId}")
+    @RequirePermission(PermissionType.PROJECT_STATUS_DELETE)
     public ResponseEntity<Void> deleteStatus(@PathVariable Long statusId) {
         log.debug("StatusControllerV1#deleteStatus called.");
         log.debug("statusId={}", statusId);
