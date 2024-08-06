@@ -50,57 +50,6 @@ paths:
               description: 생성된 팀의 URL
               schema:
                 type: string
-  /api/v1/project/status:
-    post:
-      tags:
-      - Status
-      summary: 프로젝트 상태 생성
-      description: "프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다."
-      operationId: status-controller-v1-docs-test/상태등록_api_문서를_생성한다
-      parameters:
-      - name: Content-Type
-        in: header
-        description: application/json
-        required: true
-        schema:
-          type: string
-        example: application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-project-status-838570364'
-            examples:
-              status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
-                value: |-
-                  {
-                    "projectId" : 1,
-                    "name" : "대기중",
-                    "colorCode" : "FFFFFF",
-                    "sortOrder" : 0
-                  }
-      responses:
-        "201":
-          description: "201"
-          headers:
-            Location:
-              description: 생성된 상태의 URL
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api-v1-project-status1214003116'
-              examples:
-                status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
-                  value: |-
-                    {
-                      "statusId" : 1,
-                      "projectId" : 1,
-                      "name" : "대기중",
-                      "colorCode" : "FFFFFF",
-                      "sortOrder" : 0
-                    }
   /api/v1/team/{id}:
     get:
       tags:
@@ -224,58 +173,6 @@ paths:
               description: 리프레시 토큰
               schema:
                 type: string
-  /api/v1/project/status/{statusId}:
-    delete:
-      tags:
-      - Status
-      summary: 프로젝트 상태 삭제
-      description: 프로젝트에 존재하는 상태를 삭제합니다.
-      operationId: status-controller-v1-docs-test/상태_삭제_api_문서를_생성한다
-      parameters:
-      - name: statusId
-        in: path
-        description: 삭제할 상태 PK
-        required: true
-        schema:
-          type: string
-      responses:
-        "204":
-          description: "204"
-    patch:
-      tags:
-      - Status
-      summary: 프로젝트 상태 변경
-      description: "프로젝트 상태의 이름, 색상 코드를 변경합니다."
-      operationId: status-controller-v1-docs-test/상태_변경_api_문서를_생성한다
-      parameters:
-      - name: statusId
-        in: path
-        description: 변경할 상태 PK
-        required: true
-        schema:
-          type: string
-      - name: Content-Type
-        in: header
-        description: application/json
-        required: true
-        schema:
-          type: string
-        example: application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-project-status-statusId75349813'
-            examples:
-              status-controller-v1-docs-test/상태_변경_api_문서를_생성한다:
-                value: |-
-                  {
-                    "statusName" : "대기중",
-                    "colorCode" : "FFFFFF"
-                  }
-      responses:
-        "204":
-          description: "204"
   /api/v1/project/{projectId}/status:
     get:
       tags:
@@ -315,6 +212,61 @@ paths:
                         "colorCode" : "FFFFF0",
                         "sortOrder" : 1
                       } ]
+                    }
+    post:
+      tags:
+      - Status
+      summary: 프로젝트 상태 생성
+      description: "프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다."
+      operationId: status-controller-v1-docs-test/상태등록_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-status816001105'
+            examples:
+              status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                value: |-
+                  {
+                    "name" : "대기중",
+                    "colorCode" : "FFFFFF",
+                    "sortOrder" : 0
+                  }
+      responses:
+        "201":
+          description: "201"
+          headers:
+            Location:
+              description: 생성된 상태의 URL
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-status1214003116'
+              examples:
+                status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "statusId" : 1,
+                      "projectId" : 1,
+                      "name" : "대기중",
+                      "colorCode" : "FFFFFF",
+                      "sortOrder" : 0
                     }
   /api/v1/team/{teamId}/invitation:
     post:
@@ -385,33 +337,68 @@ paths:
               description: 새 리프레시 토큰
               schema:
                 type: string
-  /api/v1/project/status/{statusId}/order:
-    patch:
+  /api/v1/project/{projectId}/status/{statusId}:
+    delete:
       tags:
       - Status
-      summary: 프로젝트 상태 정렬 순서 변경
-      description: 프로젝트 상태의 정렬 순서를 변경합니다.
-      operationId: status-controller-v1-docs-test/상태_순서변경_api_문서를_생성한다
+      summary: 프로젝트 상태 삭제
+      description: 프로젝트에 존재하는 상태를 삭제합니다.
+      operationId: status-controller-v1-docs-test/상태_삭제_api_문서를_생성한다
       parameters:
-      - name: statusId
+      - name: projectId
         in: path
-        description: 변경할 상태 PK
+        description: 프로젝트 식별자
         required: true
         schema:
           type: string
-      - name: sortOrder
-        in: query
-        description: 변경할 정렬 순서
+      - name: statusId
+        in: path
+        description: 삭제할 상태 식별자
         required: true
         schema:
-          type: number
+          type: string
+      responses:
+        "204":
+          description: "204"
+    patch:
+      tags:
+      - Status
+      summary: 프로젝트 상태 변경
+      description: "프로젝트 상태의 이름, 색상 코드, 정렬 순서를 변경합니다."
+      operationId: status-controller-v1-docs-test/상태_변경_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: statusId
+        in: path
+        description: 변경할 상태 식별자
+        required: true
+        schema:
+          type: string
       - name: Content-Type
         in: header
         description: application/json
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-status-statusId-1514376740'
+            examples:
+              status-controller-v1-docs-test/상태_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "statusName" : "대기중",
+                    "colorCode" : "FFFFFF",
+                    "sortOrder" : 3
+                  }
       responses:
         "204":
           description: "204"
@@ -471,22 +458,19 @@ components:
         userId:
           type: number
           description: 초대할 사용자 ID
-    api-v1-project-status-838570364:
+    api-v1-project-projectId-status-statusId-1514376740:
       type: object
       properties:
         sortOrder:
           type: number
-          description: 정렬순서
-        name:
+          description: 변경할 정렬 순서
+        statusName:
           type: string
-          description: 상태 이름
+          description: 변경할 상태의 이름
         colorCode:
           type: string
-          description: 색상 코드
-        projectId:
-          type: number
-          description: 프로젝트 식별자
-    api-v1-project-status1214003116:
+          description: 변경할 색상 코드
+    api-v1-project-projectId-status1214003116:
       type: object
       properties:
         statusId:
@@ -513,15 +497,18 @@ components:
         email:
           type: string
           description: 이메일
-    api-v1-project-status-statusId75349813:
+    api-v1-project-projectId-status816001105:
       type: object
       properties:
-        statusName:
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
           type: string
-          description: 변경할 상태의 이름
+          description: 상태 이름
         colorCode:
           type: string
-          description: 변경할 색상 코드
+          description: 색상 코드
     api-v1-team-id666486821:
       type: object
       properties:
