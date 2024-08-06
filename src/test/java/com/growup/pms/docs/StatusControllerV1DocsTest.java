@@ -3,9 +3,13 @@ package com.growup.pms.docs;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyShort;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,12 +17,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
+import com.growup.pms.status.controller.dto.request.StatusEditRequest;
 import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
 import com.growup.pms.status.service.dto.StatusCreateDto;
+import com.growup.pms.status.service.dto.StatusEditDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.status.StatusCreateRequestTestBuilder;
+import com.growup.pms.test.fixture.status.StatusEditRequestTestBuilder;
 import com.growup.pms.test.fixture.status.StatusResponseTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
@@ -135,5 +142,68 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .build()
                 )));
 
+    }
+
+    @Test
+    void 상태_변경_API_문서를_생성한다() throws Exception {
+        // given
+        Long 변경할_상태_ID = 1L;
+        StatusEditRequest 상태_변경_요청 = StatusEditRequestTestBuilder.상태_변경_요청은().이다();
+
+        // when
+        doNothing().when(statusService).editStatus(any(StatusEditDto.class));
+
+        // then
+        mockMvc.perform(patch("/api/v1/status/{statusId}", 변경할_상태_ID)
+                        .content(objectMapper.writeValueAsString(상태_변경_요청))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 상태 변경")
+                                .description("프로젝트 상태의 이름, 색상 코드를 변경합니다.")
+                                .pathParameters(parameterWithName("statusId").description("변경할 상태 PK"))
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
+                                        MediaType.APPLICATION_JSON_VALUE))
+                                .requestFields(
+                                        fieldWithPath("statusName").type(JsonFieldType.STRING)
+                                                .description("변경할 상태의 이름"),
+                                        fieldWithPath("colorCode").type(JsonFieldType.STRING)
+                                                .description("변경할 색상 코드")
+                                )
+                                .build()
+                )));
+    }
+
+    @Test
+    void 상태_순서변경_API_문서를_생성한다() throws Exception {
+        // given
+        Long 변경할_상태_ID = 1L;
+        Short 변경할_정렬순서 = 2;
+
+        // when
+        doNothing().when(statusService).editStatusOrder(anyLong(), anyShort());
+
+        // then
+        mockMvc.perform(patch("/api/v1/status/{statusId}/order", 변경할_상태_ID)
+                        .queryParam("sortOrder", String.valueOf(변경할_정렬순서))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 상태 변경")
+                                .description("프로젝트 상태의 이름, 색상 코드를 변경합니다.")
+                                .pathParameters(parameterWithName("statusId").description("변경할 상태 PK"))
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
+                                        MediaType.APPLICATION_JSON_VALUE))
+                                .queryParameters(
+                                        parameterWithName("sortOrder").type(SimpleType.NUMBER)
+                                                .description("변경할 정렬 순서")
+                                )
+                                .build()
+                )));
     }
 }

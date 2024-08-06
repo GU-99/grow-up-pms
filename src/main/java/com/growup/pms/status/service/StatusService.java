@@ -4,6 +4,7 @@ import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.status.service.dto.StatusCreateDto;
+import com.growup.pms.status.service.dto.StatusEditDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +26,11 @@ public class StatusService {
 
     public PageResponse<List<StatusResponse>> getStatuses(Long projectId) {
         return null;
+    }
+
+    public void editStatus(StatusEditDto dto) {
+    }
+
+    public void editStatusOrder(Long statusId, Short sortOrder) {
     }
 }
