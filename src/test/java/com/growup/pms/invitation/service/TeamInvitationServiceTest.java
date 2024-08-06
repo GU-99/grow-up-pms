@@ -14,6 +14,7 @@ import com.growup.pms.invitation.domian.TeamInvitation;
 import com.growup.pms.invitation.dto.TeamInvitationCreateDto;
 import com.growup.pms.invitation.repository.TeamInvitationRepository;
 import com.growup.pms.role.domain.Role;
+import com.growup.pms.role.domain.RoleType;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.team.domain.TeamUser;
@@ -114,7 +115,7 @@ class TeamInvitationServiceTest {
             // given
             Long 초대된_팀_ID = 1L;
             Long 초대된_사용자_ID = 2L;
-            Role 초대시_기본_역할 = new Role(TeamRole.MATE.getRoleName());
+            Role 초대시_기본_역할 = new Role(RoleType.TEAM, TeamRole.MATE.getRoleName());
             TeamInvitation 팀_초대 = TeamInvitationTestBuilder.팀_초대는()
                     .초대할_사용자_식별자가(초대된_사용자_ID)
                     .팀_식별자가(초대된_사용자_ID)
