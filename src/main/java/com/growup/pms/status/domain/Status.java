@@ -45,4 +45,13 @@ public class Status {
         this.color = color;
         this.sortOrder = sortOrder;
     }
+
+    // Business Logics //
+    public void editStatus(String statusName, String colorCode) {
+
+    }
+
+    public void editSortOrder(Short sortOrder) {
+
+    }
 }
