@@ -33,4 +33,7 @@ public class StatusService {
 
     public void editStatusOrder(Long statusId, Short sortOrder) {
     }
+
+    public void deleteStatus(Long statusId) {
+    }
 }
