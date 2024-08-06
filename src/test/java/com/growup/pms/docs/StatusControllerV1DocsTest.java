@@ -195,8 +195,8 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .summary("프로젝트 상태 변경")
-                                .description("프로젝트 상태의 이름, 색상 코드를 변경합니다.")
+                                .summary("프로젝트 상태 정렬 순서 변경")
+                                .description("프로젝트 상태의 정렬 순서를 변경합니다.")
                                 .pathParameters(parameterWithName("statusId").description("변경할 상태 PK"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
