@@ -58,4 +58,18 @@ public class TaskControllerV1 {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{taskId}")
+    @RequirePermission(PermissionType.PROJECT_TASK_READ)
+    public ResponseEntity<TaskDetailResponse> getTask(@PathVariable Long projectId,
+                                                      @PathVariable Long taskId) {
+        log.debug("TaskControllerV1#getTask called.");
+        log.debug("projectId={}", projectId);
+        log.debug("taskId={}", taskId);
+
+        TaskDetailResponse response = taskService.getTask(projectId, taskId);
+        log.debug("response={}", response);
+
+        return ResponseEntity.ok(response);
+    }
 }

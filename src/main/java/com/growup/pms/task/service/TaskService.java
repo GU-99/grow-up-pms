@@ -23,4 +23,8 @@ public class TaskService {
     public PageResponse<List<TaskResponse>> getTasks(Long projectId, Long userId) {
         return null;
     }
+
+    public TaskDetailResponse getTask(Long projectId, Long taskId) {
+        return null;
+    }
 }
