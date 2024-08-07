@@ -5,8 +5,10 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithNam
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -14,16 +16,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
+import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.service.TaskService;
 import com.growup.pms.task.service.dto.TaskCreateDto;
+import com.growup.pms.task.service.dto.TaskEditDto;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder;
 import com.growup.pms.test.fixture.task.TaskDetailResponseTestBuilder;
+import com.growup.pms.test.fixture.task.TaskEditRequestTestBuilder;
 import com.growup.pms.test.fixture.task.TaskResponseTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
@@ -31,6 +38,7 @@ import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @AutoKoreanDisplayName
@@ -53,6 +61,9 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         // when
         when(taskService.createTask(any(TaskCreateDto.class)))
                 .thenReturn(예상_일정_응답);
+
+        objectMapper.registerModule(new JavaTimeModule())
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         // then
         mockMvc.perform(post("/api/v1/project/{projectId}/task", 예상_프로젝트_식별자)
@@ -209,5 +220,53 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .build()
                 )));
 
+    }
+
+    @Test
+    @WithMockSecurityUser
+    void 일정_변경_API_문서를_작성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_식별자 = 1L;
+        Long 예상_일정_식별자 = 1L;
+        TaskEditRequest 일정_변경_요청 = TaskEditRequestTestBuilder.일정_수정_요청은().이다();
+
+        // when
+        doNothing().when(taskService).editTask(any(TaskEditDto.class));
+
+        // then
+        mockMvc.perform(patch("/api/v1/project/{projectId}/task/{taskId}", 예상_프로젝트_식별자, 예상_일정_식별자)
+                        .content(objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(일정_변경_요청))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 일정 내용 변경")
+                                .description("프로젝트 일정의 상태 식별자, 일정 이름, 일정 본문내용, 정렬 순서, 시작일자, 종료일자를 변경합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").description("프로젝트 식별자"),
+                                        parameterWithName("taskId").description("변경할 일정 식별자")
+                                )
+                                .requestHeaders(HeaderDocumentation.headerWithName(
+                                        org.springframework.http.HttpHeaders.CONTENT_TYPE).description(
+                                        MediaType.APPLICATION_JSON_VALUE))
+                                .requestFields(
+                                        fieldWithPath("statusId").type(JsonFieldType.NUMBER)
+                                                .optional()
+                                                .description("프로젝트 상태 식별자"),
+                                        fieldWithPath("taskName").type(JsonFieldType.STRING)
+                                                .description("일정 이름"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING)
+                                                .description("일정 내용"),
+                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
+                                                .description("정렬 순서"),
+                                        fieldWithPath("startDate").type(JsonFieldType.STRING)
+                                                .description("시작일자"),
+                                        fieldWithPath("endDate").type(JsonFieldType.STRING)
+                                                .description("종료일자")
+                                )
+                                .build()
+                )));
     }
 }
