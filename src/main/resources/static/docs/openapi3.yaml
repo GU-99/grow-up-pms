@@ -268,6 +268,68 @@ paths:
                       "colorCode" : "FFFFFF",
                       "sortOrder" : 0
                     }
+  /api/v1/project/{projectId}/task:
+    post:
+      tags:
+      - Task
+      summary: 프로젝트 일정 생성
+      description: "프로젝트의 상태 식별자와 일정 이름, 일정 내용, 정렬 순서, 시작일자, 종료일자를 입력 받습니다."
+      operationId: task-controller-v1-docs-test/일정등록_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-task581167037'
+            examples:
+              task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
+                value: |-
+                  {
+                    "statusId" : 1,
+                    "taskName" : "환경설정 마치기",
+                    "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
+                    "sortOrder" : 1,
+                    "startDate" : "2023-01-01",
+                    "endDate" : "2023-12-31"
+                  }
+      responses:
+        "201":
+          description: "201"
+          headers:
+            Location:
+              description: 생성된 일정의 URL
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+              examples:
+                task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "taskId" : 1,
+                      "statusId" : 1,
+                      "userNickname" : "Hello나는팀원1",
+                      "taskName" : "환경설정 마치기",
+                      "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
+                      "sortOrder" : 1,
+                      "startDate" : "2023-01-01",
+                      "endDate" : "2023-12-31"
+                    }
   /api/v1/team/{teamId}/invitation:
     post:
       tags:
@@ -545,3 +607,51 @@ components:
               projectId:
                 type: number
                 description: 프로젝트 식별자
+    api-v1-project-projectId-task581167037:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+    api-v1-project-projectId-task-106941217:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        userNickname:
+          type: string
+          description: 회원 이름
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+        taskId:
+          type: number
+          description: 프로젝트 일정 식별자
