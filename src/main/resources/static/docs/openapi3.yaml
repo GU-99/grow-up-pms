@@ -359,6 +359,45 @@ paths:
                       "sortOrder" : 0
                     }
   /api/v1/project/{projectId}/task:
+    get:
+      tags:
+      - Task
+      summary: 프로젝트 일정 전체 조회
+      description: 프로젝트 내의 모든 일정을 조회합니다.
+      operationId: task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 조회할 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-task1816323921'
+              examples:
+                task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "hasNext" : false,
+                      "items" : [ {
+                        "taskId" : 1,
+                        "statusId" : 1,
+                        "taskName" : "환경설정 마치기",
+                        "userNickname" : "Hello나는팀원1",
+                        "sortOrder" : 1
+                      }, {
+                        "taskId" : 2,
+                        "statusId" : 1,
+                        "taskName" : "프로젝트 일정 등록 기능 구현",
+                        "userNickname" : "Hello2",
+                        "sortOrder" : 1
+                      } ]
+                    }
     post:
       tags:
       - Task
@@ -489,6 +528,111 @@ paths:
               description: 새 리프레시 토큰
               schema:
                 type: string
+  /api/v1/project/{projectId}/status/{statusId}:
+    delete:
+      tags:
+      - Status
+      summary: 프로젝트 상태 삭제
+      description: 프로젝트에 존재하는 상태를 삭제합니다.
+      operationId: status-controller-v1-docs-test/상태_삭제_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: statusId
+        in: path
+        description: 삭제할 상태 식별자
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: "204"
+    patch:
+      tags:
+      - Status
+      summary: 프로젝트 상태 변경
+      description: "프로젝트 상태의 이름, 색상 코드, 정렬 순서를 변경합니다."
+      operationId: status-controller-v1-docs-test/상태_변경_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: statusId
+        in: path
+        description: 변경할 상태 식별자
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-status-statusId-1514376740'
+            examples:
+              status-controller-v1-docs-test/상태_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "statusName" : "대기중",
+                    "colorCode" : "FFFFFF",
+                    "sortOrder" : 3
+                  }
+      responses:
+        "204":
+          description: "204"
+  /api/v1/project/{projectId}/task/{taskId}:
+    get:
+      tags:
+      - Task
+      summary: 프로젝트 일정 상세 조회
+      description: 프로젝트 내에서 선택한 일정을 조회합니다.
+      operationId: task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 조회할 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: taskId
+        in: path
+        description: 조회할 일정 식별자
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+              examples:
+                task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "taskId" : 1,
+                      "statusId" : 1,
+                      "userNickname" : "Hello나는팀원1",
+                      "taskName" : "환경설정 마치기",
+                      "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
+                      "sortOrder" : 1,
+                      "startDate" : "2023-01-01",
+                      "endDate" : "2023-12-31"
+                    }
   /api/v1/team/{teamId}/invitation/accept:
     post:
       tags:
@@ -587,6 +731,45 @@ components:
         email:
           type: string
           description: 이메일
+    api-v1-project-projectId-status816001105:
+      type: object
+      properties:
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
+    api-v1-project-projectId-task1816323921:
+      type: object
+      properties:
+        hasNext:
+          type: boolean
+          description: 다음 페이지 존재 여부
+        items:
+          type: array
+          description: 프로젝트 내에 존재하는 일정 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 프로젝트 상태 식별자
+              sortOrder:
+                type: number
+                description: 정렬 순서
+              userNickname:
+                type: string
+                description: 회원 이름
+              taskName:
+                type: string
+                description: 일정 이름
+              taskId:
+                type: number
+                description: 프로젝트 일정 식별자
     api-v1-team-id666486821:
       type: object
       properties:
