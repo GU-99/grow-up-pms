@@ -37,7 +37,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
     TaskService taskService;
 
     @Test
-    @WithMockSecurityUser(id = 1L)
+    @WithMockSecurityUser
     void 일정등록_API_문서를_생성한다() throws Exception {
         // given
         Long 예상_프로젝트_식별자 = 1L;

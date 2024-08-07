@@ -12,6 +12,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -57,9 +58,12 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         // when & then
         mockMvc.perform(post("/api/v1/project/{projectId}/status", 예상_프로젝트_식별자)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(상태_생성_요청)))
+                        .content(objectMapper.writeValueAsString(상태_생성_요청))
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
                 .andExpectAll(
-                        status().isCreated())
+                        status().isCreated(),
+                        header().string(org.apache.http.HttpHeaders.LOCATION, "/api/v1/project/1/status/1")
+                )
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
