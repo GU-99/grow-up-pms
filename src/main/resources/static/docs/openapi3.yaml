@@ -263,6 +263,163 @@ paths:
               description: 리프레시 토큰
               schema:
                 type: string
+  /api/v1/project/{projectId}/status:
+    get:
+      tags:
+      - Status
+      summary: 프로젝트 상태 목록 조회
+      description: 프로젝트 내의 모든 상태를 조회합니다.
+      operationId: status-controller-v1-docs-test/상태_목록조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 조회할 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-status1840086195'
+              examples:
+                status-controller-v1-docs-test/상태_목록조회_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "hasNext" : false,
+                      "items" : [ {
+                        "statusId" : 1,
+                        "projectId" : 1,
+                        "name" : "대기중",
+                        "colorCode" : "FFFFFF",
+                        "sortOrder" : 0
+                      }, {
+                        "statusId" : 2,
+                        "projectId" : 1,
+                        "name" : "진행중",
+                        "colorCode" : "FFFFF0",
+                        "sortOrder" : 1
+                      } ]
+                    }
+    post:
+      tags:
+      - Status
+      summary: 프로젝트 상태 생성
+      description: "프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다."
+      operationId: status-controller-v1-docs-test/상태등록_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-status816001105'
+            examples:
+              status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                value: |-
+                  {
+                    "name" : "대기중",
+                    "colorCode" : "FFFFFF",
+                    "sortOrder" : 0
+                  }
+      responses:
+        "201":
+          description: "201"
+          headers:
+            Location:
+              description: 생성된 상태의 URL
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-status1214003116'
+              examples:
+                status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "statusId" : 1,
+                      "projectId" : 1,
+                      "name" : "대기중",
+                      "colorCode" : "FFFFFF",
+                      "sortOrder" : 0
+                    }
+  /api/v1/project/{projectId}/task:
+    post:
+      tags:
+      - Task
+      summary: 프로젝트 일정 생성
+      description: "프로젝트의 상태 식별자와 일정 이름, 일정 내용, 정렬 순서, 시작일자, 종료일자를 입력 받습니다."
+      operationId: task-controller-v1-docs-test/일정등록_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-task581167037'
+            examples:
+              task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
+                value: |-
+                  {
+                    "statusId" : 1,
+                    "taskName" : "환경설정 마치기",
+                    "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
+                    "sortOrder" : 1,
+                    "startDate" : "2023-01-01",
+                    "endDate" : "2023-12-31"
+                  }
+      responses:
+        "201":
+          description: "201"
+          headers:
+            Location:
+              description: 생성된 일정의 URL
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+              examples:
+                task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "taskId" : 1,
+                      "statusId" : 1,
+                      "userNickname" : "Hello나는팀원1",
+                      "taskName" : "환경설정 마치기",
+                      "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
+                      "sortOrder" : 1,
+                      "startDate" : "2023-01-01",
+                      "endDate" : "2023-12-31"
+                    }
   /api/v1/team/{teamId}/invitation:
     post:
       tags:
@@ -466,3 +623,51 @@ components:
               projectId:
                 type: number
                 description: 프로젝트 식별자
+    api-v1-project-projectId-task581167037:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+    api-v1-project-projectId-task-106941217:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        userNickname:
+          type: string
+          description: 회원 이름
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+        taskId:
+          type: number
+          description: 프로젝트 일정 식별자
