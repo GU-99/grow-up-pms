@@ -1,6 +1,7 @@
 package com.growup.pms.test.fixture.task;
 
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,8 @@ public class TaskCreateRequestTestBuilder {
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
-    private String startDate = "2023-01-01";
-    private String endDate = "2023-12-31";
+    private LocalDate startDate = LocalDate.of(2023, 1, 1);
+    private LocalDate endDate = LocalDate.of(2023, 12, 31);
 
     public static TaskCreateRequestTestBuilder 일정_생성_요청은() {
         return new TaskCreateRequestTestBuilder();
@@ -41,12 +42,12 @@ public class TaskCreateRequestTestBuilder {
         return this;
     }
 
-    public TaskCreateRequestTestBuilder 시작일자는(String startDate) {
+    public TaskCreateRequestTestBuilder 시작일자는(LocalDate startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public TaskCreateRequestTestBuilder 종료일자는(String endDate) {
+    public TaskCreateRequestTestBuilder 종료일자는(LocalDate endDate) {
         this.endDate = endDate;
         return this;
     }

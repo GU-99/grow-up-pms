@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,17 +31,15 @@ public class TaskCreateRequest {
     @Positive
     private Short sortOrder;
 
-    @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String startDate;
+    private LocalDate startDate;
 
-    @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String endDate;
+    private LocalDate endDate;
 
     @Builder
-    public TaskCreateRequest(Long statusId, String taskName, String content, Short sortOrder, String startDate,
-                             String endDate) {
+    public TaskCreateRequest(Long statusId, String taskName, String content, Short sortOrder, LocalDate startDate,
+                             LocalDate endDate) {
         this.statusId = statusId;
         this.taskName = taskName;
         this.content = content;

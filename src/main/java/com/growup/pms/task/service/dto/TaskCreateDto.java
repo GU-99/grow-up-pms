@@ -1,5 +1,6 @@
 package com.growup.pms.task.service.dto;
 
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,12 +16,12 @@ public class TaskCreateDto {
     private String taskName;
     private String content;
     private Short sortOrder;
-    private String startDate;
-    private String endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @Builder
-    public TaskCreateDto(Long statusId, Long userId, String taskName, String content, Short sortOrder, String startDate,
-                         String endDate) {
+    public TaskCreateDto(Long statusId, Long userId, String taskName, String content, Short sortOrder,
+                         LocalDate startDate, LocalDate endDate) {
         this.statusId = statusId;
         this.userId = userId;
         this.taskName = taskName;
