@@ -4,6 +4,7 @@ import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.status.controller.dto.response.PageResponse;
+import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,5 +72,20 @@ public class TaskControllerV1 {
         log.debug("response={}", response);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{taskId}")
+    @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
+    public ResponseEntity<Void> editTask(@PathVariable Long projectId, @PathVariable Long taskId,
+                                         @AuthenticationPrincipal SecurityUser user,
+                                         @Valid @RequestBody TaskEditRequest request) {
+        log.debug("TaskControllerV1#editTask called.");
+        log.debug("projectId={}", projectId);
+        log.debug("taskId={}", taskId);
+        log.debug("request={}", request);
+
+        taskService.editTask(request.toServiceDto(user.getId()));
+
+        return ResponseEntity.noContent().build();
     }
 }
