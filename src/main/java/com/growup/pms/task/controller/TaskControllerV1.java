@@ -28,7 +28,7 @@ public class TaskControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<TaskDetailResponse> createTask(@PathVariable("projectId") Integer projectId,
+    public ResponseEntity<TaskDetailResponse> createTask(@PathVariable Long projectId,
                                                          @AuthenticationPrincipal SecurityUser user,
                                                          @Valid @RequestBody TaskCreateRequest request) {
         log.debug("TaskControllerV1#createTask called.");
