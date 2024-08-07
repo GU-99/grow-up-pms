@@ -163,4 +163,52 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                 )));
 
     }
+
+    @Test
+    void 일정_상세조회_API_문서를_생성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_식별자 = 1L;
+        Long 예상_일정_식별자 = 1L;
+        TaskDetailResponse 예상_상세조회_응답 = TaskDetailResponseTestBuilder.일정_상세조회_응답은().이다();
+
+        // when
+        when(taskService.getTask(anyLong(), anyLong())).thenReturn(예상_상세조회_응답);
+
+        // then
+        mockMvc.perform(get(("/api/v1/project/{projectId}/task/{taskId}"), 예상_프로젝트_식별자, 예상_일정_식별자)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 일정 전체 조회")
+                                .description("프로젝트 내의 모든 일정을 조회합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("조회할 프로젝트 식별자"),
+                                        parameterWithName("taskId").type(SimpleType.NUMBER)
+                                                .description("조회할 일정 식별자")
+                                )
+                                .responseFields(
+                                        fieldWithPath("taskId").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트 일정 식별자"),
+                                        fieldWithPath("statusId").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트 상태 식별자"),
+                                        fieldWithPath("userNickname").type(JsonFieldType.STRING)
+                                                .description("회원 이름"),
+                                        fieldWithPath("taskName").type(JsonFieldType.STRING)
+                                                .description("일정 이름"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING)
+                                                .description("일정 내용"),
+                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
+                                                .description("정렬 순서"),
+                                        fieldWithPath("startDate").type(JsonFieldType.STRING)
+                                                .description("시작일자"),
+                                        fieldWithPath("endDate").type(JsonFieldType.STRING)
+                                                .description("종료일자")
+                                )
+                                .build()
+                )));
+
+    }
 }

@@ -503,6 +503,46 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/project/{projectId}/task/{taskId}:
+    get:
+      tags:
+      - Task
+      summary: 프로젝트 일정 전체 조회
+      description: 프로젝트 내의 모든 일정을 조회합니다.
+      operationId: task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 조회할 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: taskId
+        in: path
+        description: 조회할 일정 식별자
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+              examples:
+                task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "taskId" : 1,
+                      "statusId" : 1,
+                      "userNickname" : "Hello나는팀원1",
+                      "taskName" : "환경설정 마치기",
+                      "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
+                      "sortOrder" : 1,
+                      "startDate" : "2023-01-01",
+                      "endDate" : "2023-12-31"
+                    }
   /api/v1/team/{teamId}/invitation/accept:
     post:
       tags:
