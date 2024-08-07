@@ -11,7 +11,6 @@ import lombok.ToString;
 @ToString
 public class TaskResponse {
 
-    // 일정 PK, 상태 PK, 수행 회원 이름, 순서
     private Long taskId;
     private Long statusId;
     private String taskName;
