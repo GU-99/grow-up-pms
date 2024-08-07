@@ -1,8 +1,6 @@
 package com.growup.pms.task.controller.dto.request;
 
-import com.growup.pms.task.service.dto.TaskCreateDto;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.growup.pms.task.service.dto.TaskEditDto;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -11,35 +9,34 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-public class TaskCreateRequest {
+public class TaskEditRequest {
 
-    private Long statusId;
+    private JsonNullable<Long> statusId = JsonNullable.undefined();
 
-    @NotBlank
     @Size(max = 128)
-    private String taskName;
+    private JsonNullable<String> taskName = JsonNullable.undefined();
 
-    @NotBlank
-    private String content;
+    private JsonNullable<String> content = JsonNullable.undefined();
 
-    @NotNull
     @Positive
-    private Short sortOrder;
+    private JsonNullable<Short> sortOrder = JsonNullable.undefined();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    private JsonNullable<LocalDate> startDate = JsonNullable.undefined();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+    private JsonNullable<LocalDate> endDate = JsonNullable.undefined();
 
     @Builder
-    public TaskCreateRequest(Long statusId, String taskName, String content, Short sortOrder, LocalDate startDate,
-                             LocalDate endDate) {
+    public TaskEditRequest(JsonNullable<Long> statusId, JsonNullable<String> taskName, JsonNullable<String> content,
+                           JsonNullable<Short> sortOrder, JsonNullable<LocalDate> startDate,
+                           JsonNullable<LocalDate> endDate) {
         this.statusId = statusId;
         this.taskName = taskName;
         this.content = content;
@@ -48,12 +45,12 @@ public class TaskCreateRequest {
         this.endDate = endDate;
     }
 
-    public TaskCreateDto toServiceDto(Long userId) {
-        return TaskCreateDto.builder()
+    public TaskEditDto toServiceDto(Long userId) {
+        return TaskEditDto.builder()
                 .userId(userId)
                 .statusId(statusId)
-                .taskName(taskName)
                 .content(content)
+                .taskName(taskName)
                 .sortOrder(sortOrder)
                 .startDate(startDate)
                 .endDate(endDate)

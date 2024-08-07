@@ -15,96 +15,6 @@ tags:
 - name: Team Invitation
   description: 팀 초대
 paths:
-  /api/v1/status:
-    get:
-      tags:
-      - Status
-      summary: 프로젝트 상태 목록 조회
-      description: 프로젝트 내의 모든 상태를 조회합니다.
-      operationId: status-controller-v1-docs-test/상태_목록조회_api_문서를_생성한다
-      parameters:
-      - name: projectId
-        in: query
-        description: 조회할 프로젝트 식별자
-        required: true
-        schema:
-          type: number
-      responses:
-        "200":
-          description: "200"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api-v1-status1840086195'
-              examples:
-                status-controller-v1-docs-test/상태_목록조회_api_문서를_생성한다:
-                  value: |-
-                    {
-                      "hasNext" : false,
-                      "items" : [ {
-                        "statusId" : 1,
-                        "projectId" : 1,
-                        "name" : "대기중",
-                        "colorCode" : "FFFFFF",
-                        "sortOrder" : 0
-                      }, {
-                        "statusId" : 2,
-                        "projectId" : 1,
-                        "name" : "진행중",
-                        "colorCode" : "FFFFF0",
-                        "sortOrder" : 1
-                      } ]
-                    }
-    post:
-      tags:
-      - Status
-      summary: 프로젝트 상태 생성
-      description: "프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다."
-      operationId: status-controller-v1-docs-test/상태등록_api_문서를_생성한다
-      parameters:
-      - name: Content-Type
-        in: header
-        description: application/json
-        required: true
-        schema:
-          type: string
-        example: application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-status-838570364'
-            examples:
-              status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
-                value: |-
-                  {
-                    "projectId" : 1,
-                    "name" : "대기중",
-                    "colorCode" : "FFFFFF",
-                    "sortOrder" : 0
-                  }
-      responses:
-        "201":
-          description: "201"
-          headers:
-            Location:
-              description: 생성된 상태의 URL
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api-v1-status1214003116'
-              examples:
-                status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
-                  value: |-
-                    {
-                      "statusId" : 1,
-                      "projectId" : 1,
-                      "name" : "대기중",
-                      "colorCode" : "FFFFFF",
-                      "sortOrder" : 0
-                    }
   /api/v1/team:
     post:
       tags:
@@ -422,7 +332,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-task581167037'
+              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId581167037'
             examples:
               task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                 value: |-
@@ -633,6 +543,51 @@ paths:
                       "startDate" : "2023-01-01",
                       "endDate" : "2023-12-31"
                     }
+    patch:
+      tags:
+      - Task
+      summary: 프로젝트 일정 내용 변경
+      description: "프로젝트 일정의 상태 식별자, 일정 이름, 일정 본문내용, 정렬 순서, 시작일자, 종료일자를 변경합니다."
+      operationId: task-controller-v1-docs-test/일정_변경_api_문서를_작성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: taskId
+        in: path
+        description: 변경할 일정 식별자
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId581167037'
+            examples:
+              task-controller-v1-docs-test/일정_변경_api_문서를_작성한다:
+                value: |-
+                  {
+                    "statusId" : 1,
+                    "taskName" : "환경설정 마치기",
+                    "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
+                    "sortOrder" : 1,
+                    "startDate" : "2023-01-01",
+                    "endDate" : "2023-12-31"
+                  }
+      responses:
+        "204":
+          description: "204"
   /api/v1/team/{teamId}/invitation/accept:
     post:
       tags:
@@ -683,22 +638,25 @@ paths:
           description: "204"
 components:
   schemas:
-    api-v1-status-838570364:
+    api-v1-team-teamId-invitation-1361275252:
+      type: object
+      properties:
+        userId:
+          type: number
+          description: 초대할 사용자 ID
+    api-v1-project-projectId-status-statusId-1514376740:
       type: object
       properties:
         sortOrder:
           type: number
-          description: 정렬순서
-        name:
+          description: 변경할 정렬 순서
+        statusName:
           type: string
-          description: 상태 이름
+          description: 변경할 상태의 이름
         colorCode:
           type: string
-          description: 색상 코드
-        projectId:
-          type: number
-          description: 프로젝트 식별자
-    api-v1-status1214003116:
+          description: 변경할 색상 코드
+    api-v1-project-projectId-status1214003116:
       type: object
       properties:
         statusId:
@@ -716,12 +674,6 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
-    api-v1-team-teamId-invitation-1361275252:
-      type: object
-      properties:
-        userId:
-          type: number
-          description: 초대할 사용자 ID
     api-v1-user-login-74814376:
       type: object
       properties:
@@ -779,7 +731,7 @@ components:
         content:
           type: string
           description: 팀 소개
-    api-v1-status1840086195:
+    api-v1-project-projectId-status1840086195:
       type: object
       properties:
         hasNext:
@@ -806,7 +758,7 @@ components:
               projectId:
                 type: number
                 description: 프로젝트 식별자
-    api-v1-project-projectId-task581167037:
+    api-v1-project-projectId-task-taskId581167037:
       type: object
       properties:
         statusId:
