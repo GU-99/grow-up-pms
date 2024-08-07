@@ -4,8 +4,8 @@ import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.status.controller.dto.response.PageResponse;
-import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
+import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.service.TaskService;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @RestController
@@ -43,7 +44,9 @@ public class TaskControllerV1 {
 
         TaskDetailResponse response = taskService.createTask(request.toServiceDto(user.getId()));
         log.debug("response={}", response);
-        String uri = "/api/v1/project/" + projectId + "/task/" + response.getTaskId();
+        String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}/task/{taskId}")
+                .buildAndExpand(projectId, response.getTaskId())
+                .toUriString();
 
         return ResponseEntity.created(URI.create(uri)).body(response);
     }
