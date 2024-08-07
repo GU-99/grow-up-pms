@@ -114,7 +114,6 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
     }
 
     @Test
-    @WithMockSecurityUser
     void 일정_전체조회_API_문서를_생성한다() throws Exception {
         // given
         Long 예상_프로젝트_식별자 = 1L;
@@ -128,7 +127,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         PageResponse<List<TaskResponse>> response = PageResponse.of(false, List.of(response1, response2));
 
         // when
-        when(taskService.getTasks(anyLong(), anyLong())).thenReturn(response);
+        when(taskService.getTasks(anyLong())).thenReturn(response);
 
         // then
         mockMvc.perform(get(("/api/v1/project/{projectId}/task"), 예상_프로젝트_식별자)
@@ -181,8 +180,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .summary("프로젝트 일정 전체 조회")
-                                .description("프로젝트 내의 모든 일정을 조회합니다.")
+                                .summary("프로젝트 일정 상세 조회")
+                                .description("프로젝트 내에서 선택한 일정을 조회합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").type(SimpleType.NUMBER)
                                                 .description("조회할 프로젝트 식별자"),

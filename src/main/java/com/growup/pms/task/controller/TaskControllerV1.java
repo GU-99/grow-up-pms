@@ -48,12 +48,11 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<PageResponse<List<TaskResponse>>> getTasks(@PathVariable Long projectId,
-                                                                     @AuthenticationPrincipal SecurityUser user) {
+    public ResponseEntity<PageResponse<List<TaskResponse>>> getTasks(@PathVariable Long projectId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("projectId={}", projectId);
 
-        PageResponse<List<TaskResponse>> response = taskService.getTasks(projectId, user.getId());
+        PageResponse<List<TaskResponse>> response = taskService.getTasks(projectId);
         log.debug("PageResponse={}", response);
 
         return ResponseEntity.ok(response);

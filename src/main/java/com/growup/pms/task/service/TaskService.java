@@ -20,7 +20,7 @@ public class TaskService {
         return null;
     }
 
-    public PageResponse<List<TaskResponse>> getTasks(Long projectId, Long userId) {
+    public PageResponse<List<TaskResponse>> getTasks(Long projectId) {
         return null;
     }
 
