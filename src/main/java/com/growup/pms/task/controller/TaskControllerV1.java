@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -88,6 +89,18 @@ public class TaskControllerV1 {
         log.debug("request={}", request);
 
         taskService.editTask(request.toServiceDto(user.getId()));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{taskId}")
+    @RequirePermission(PermissionType.PROJECT_TASK_DELETE)
+    public ResponseEntity<Void> deleteTask(@PathVariable Long projectId, @PathVariable Long taskId) {
+        log.debug("TaskControllerV1#deleteTask called.");
+        log.debug("projectId={}", projectId);
+        log.debug("taskId={}", taskId);
+
+        taskService.deleteTask(taskId);
 
         return ResponseEntity.noContent().build();
     }
