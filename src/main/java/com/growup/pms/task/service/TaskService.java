@@ -32,4 +32,8 @@ public class TaskService {
     public void editTask(TaskEditDto dto) {
 
     }
+
+    public void deleteTask(Long taskId) {
+
+    }
 }
