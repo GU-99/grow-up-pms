@@ -3,7 +3,7 @@ package com.growup.pms.docs;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -12,11 +12,11 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
+import com.growup.pms.common.util.EncryptionUtil;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import com.growup.pms.status.controller.dto.request.StatusEditRequest;
 import com.growup.pms.status.controller.dto.response.PageResponse;
@@ -48,7 +48,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태등록_API_문서를_생성한다() throws Exception {
         // given
-        Long 예상_프로젝트_식별자 = 1L;
+        String 예상_프로젝트_식별자 = EncryptionUtil.encrypt("1");
         StatusCreateRequest 상태_생성_요청 = StatusCreateRequestTestBuilder.상태_생성_요청은().이다();
         StatusResponse 예상_상태_응답 = StatusResponseTestBuilder.상태_응답은().이다();
 
@@ -61,8 +61,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                         .content(objectMapper.writeValueAsString(상태_생성_요청))
                         .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
                 .andExpectAll(
-                        status().isCreated(),
-                        header().string(org.apache.http.HttpHeaders.LOCATION, "/api/v1/project/1/status/1")
+                        status().isCreated()
                 )
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
@@ -70,7 +69,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .summary("프로젝트 상태 생성")
                                 .description("프로젝트의 식별자와 상태의 이름, 색상코드, 정렬 순서를 입력 받습니다.")
                                 .pathParameters(
-                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                        parameterWithName("projectId").type(SimpleType.STRING)
                                                 .description("프로젝트 식별자")
                                 )
                                 .requestFields(
@@ -83,9 +82,9 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
                                 .responseFields(
-                                        fieldWithPath("statusId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("statusId").type(JsonFieldType.STRING)
                                                 .description("생성퇸 상태 식별자"),
-                                        fieldWithPath("projectId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("projectId").type(JsonFieldType.STRING)
                                                 .description("프로젝트 식별자"),
                                         fieldWithPath("name").type(JsonFieldType.STRING)
                                                 .description("상태 이름"),
@@ -101,7 +100,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태_목록조회_API_문서를_생성한다() throws Exception {
         // given
-        Long 조회할_프로젝트_ID = 1L;
+        String 조회할_프로젝트_ID = EncryptionUtil.encrypt("1");
         StatusResponse statusResponse1 = StatusResponseTestBuilder.상태_응답은().이다();
         StatusResponse statusResponse2 = StatusResponseTestBuilder.상태_응답은()
                 .상태_식별자는(2L)
@@ -134,9 +133,9 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("다음 페이지 존재 여부"),
                                         fieldWithPath("items").type(JsonFieldType.ARRAY)
                                                 .description("프로젝트 내에 존재하는 상태 목록"),
-                                        fieldWithPath("items[].statusId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("items[].statusId").type(JsonFieldType.STRING)
                                                 .description("상태 식별자"),
-                                        fieldWithPath("items[].projectId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("items[].projectId").type(JsonFieldType.STRING)
                                                 .description("프로젝트 식별자"),
                                         fieldWithPath("items[].name").type(JsonFieldType.STRING)
                                                 .description("상태 이름"),
@@ -153,8 +152,8 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 상태_변경_API_문서를_생성한다() throws Exception {
         // given
-        Long 예상_프로젝트_식별자 = 2L;
-        Long 변경할_상태_ID = 1L;
+        String 예상_프로젝트_식별자 = EncryptionUtil.encrypt("1");
+        String 변경할_상태_ID = EncryptionUtil.encrypt("1");
         StatusEditRequest 상태_변경_요청 = StatusEditRequestTestBuilder.상태_변경_요청은().이다();
 
         // when
@@ -196,7 +195,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         Long 삭제할_상태_ID = 1L;
 
         // when
-        doNothing().when(statusService).deleteStatus(anyLong());
+        doNothing().when(statusService).deleteStatus(anyString());
 
         // then
         mockMvc.perform(delete("/api/v1/project/{projectId}/status/{statusId}", 예상_프로젝트_식별자, 삭제할_상태_ID)

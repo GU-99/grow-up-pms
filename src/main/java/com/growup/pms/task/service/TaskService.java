@@ -17,23 +17,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class TaskService {
 
-    public TaskDetailResponse createTask(TaskCreateCommand command) {
+    public TaskDetailResponse createTask(Long userId, TaskCreateCommand command) {
         return null;
     }
 
-    public PageResponse<List<TaskResponse>> getTasks(Long projectId) {
+    public PageResponse<List<TaskResponse>> getTasks(String projectId) {
         return null;
     }
 
-    public TaskDetailResponse getTask(Long projectId, Long taskId) {
+    public TaskDetailResponse getTask(String projectId, String taskId) {
         return null;
     }
 
-    public void editTask(TaskEditCommand command) {
+    public void editTask(Long userId, TaskEditCommand command) {
 
     }
 
-    public void deleteTask(Long taskId) {
+    public void deleteTask(String taskId) {
 
     }
 }

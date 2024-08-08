@@ -37,17 +37,17 @@ public class TaskControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<TaskDetailResponse> createTask(@ProjectId @PathVariable Long projectId,
+    public ResponseEntity<TaskDetailResponse> createTask(@ProjectId @PathVariable String projectId,
                                                          @AuthenticationPrincipal SecurityUser user,
                                                          @Valid @RequestBody TaskCreateRequest request) {
         log.debug("TaskControllerV1#createTask called.");
         log.debug("projectId={}", projectId);
         log.debug("request={}", request);
 
-        TaskDetailResponse response = taskService.createTask(request.toCommand(user.getId()));
+        TaskDetailResponse response = taskService.createTask(user.getId(), request.toCommand());
         log.debug("response={}", response);
         String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}/task/{taskId}")
-                .buildAndExpand(projectId, response.taskId())
+                .buildAndExpand(projectId, response.getTaskId())
                 .toUriString();
 
         return ResponseEntity.created(URI.create(uri)).body(response);
@@ -55,7 +55,7 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<PageResponse<List<TaskResponse>>> getTasks(@PathVariable Long projectId) {
+    public ResponseEntity<PageResponse<List<TaskResponse>>> getTasks(@PathVariable String projectId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("projectId={}", projectId);
 
@@ -67,8 +67,8 @@ public class TaskControllerV1 {
 
     @GetMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<TaskDetailResponse> getTask(@ProjectId @PathVariable Long projectId,
-                                                      @PathVariable Long taskId) {
+    public ResponseEntity<TaskDetailResponse> getTask(@ProjectId @PathVariable String projectId,
+                                                      @PathVariable String taskId) {
         log.debug("TaskControllerV1#getTask called.");
         log.debug("projectId={}", projectId);
         log.debug("taskId={}", taskId);
@@ -89,14 +89,14 @@ public class TaskControllerV1 {
         log.debug("taskId={}", taskId);
         log.debug("request={}", request);
 
-        taskService.editTask(request.toCommand(user.getId()));
+        taskService.editTask(user.getId(), request.toCommand());
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_DELETE)
-    public ResponseEntity<Void> deleteTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId) {
+    public ResponseEntity<Void> deleteTask(@ProjectId @PathVariable String projectId, @PathVariable String taskId) {
         log.debug("TaskControllerV1#deleteTask called.");
         log.debug("projectId={}", projectId);
         log.debug("taskId={}", taskId);

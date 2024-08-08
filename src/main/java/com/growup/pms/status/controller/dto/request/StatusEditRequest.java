@@ -1,5 +1,6 @@
 package com.growup.pms.status.controller.dto.request;
 
+import com.growup.pms.common.util.EncryptionUtil;
 import com.growup.pms.status.service.dto.StatusEditCommand;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -28,9 +29,9 @@ public class StatusEditRequest {
         this.sortOrder = sortOrder;
     }
 
-    public StatusEditCommand toCommand(Long statusId) {
+    public StatusEditCommand toCommand(String statusId) {
         return StatusEditCommand.builder()
-                .statusId(statusId)
+                .statusId(EncryptionUtil.decrypt(statusId))
                 .statusName(statusName)
                 .colorCode(colorCode)
                 .sortOrder(sortOrder)

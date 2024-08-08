@@ -1,5 +1,6 @@
 package com.growup.pms.task.controller.dto.request;
 
+import com.growup.pms.common.util.EncryptionUtil;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Builder
 public record TaskCreateRequest(
-        Long statusId,
+        String statusId,
 
         @NotBlank
         @Size(max = 128)
@@ -30,10 +31,9 @@ public record TaskCreateRequest(
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate endDate
 ) {
-    public TaskCreateCommand toCommand(Long userId) {
+    public TaskCreateCommand toCommand() {
         return TaskCreateCommand.builder()
-                .userId(userId)
-                .statusId(statusId)
+                .statusId(EncryptionUtil.decrypt(statusId))
                 .taskName(taskName)
                 .content(content)
                 .sortOrder(sortOrder)

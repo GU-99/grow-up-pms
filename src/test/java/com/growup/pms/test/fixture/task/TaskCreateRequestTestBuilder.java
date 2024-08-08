@@ -1,5 +1,6 @@
 package com.growup.pms.test.fixture.task;
 
+import com.growup.pms.common.util.EncryptionUtil;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import java.time.LocalDate;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TaskCreateRequestTestBuilder {
 
-    private Long statusId = 1L;
+    private String statusId = EncryptionUtil.encrypt("1");
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
@@ -22,7 +23,7 @@ public class TaskCreateRequestTestBuilder {
         return new TaskCreateRequestTestBuilder();
     }
 
-    public TaskCreateRequestTestBuilder 상태_식별자는(Long statusId) {
+    public TaskCreateRequestTestBuilder 상태_식별자는(String statusId) {
         this.statusId = statusId;
         return this;
     }

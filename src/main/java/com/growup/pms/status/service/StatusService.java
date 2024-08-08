@@ -24,7 +24,7 @@ public class StatusService {
         return null;
     }
 
-    public PageResponse<List<StatusResponse>> getStatuses(Long projectId) {
+    public PageResponse<List<StatusResponse>> getStatuses(String projectId) {
         return null;
     }
 
@@ -34,6 +34,6 @@ public class StatusService {
     public void editStatusOrder(Long statusId, Short sortOrder) {
     }
 
-    public void deleteStatus(Long statusId) {
+    public void deleteStatus(String statusId) {
     }
 }

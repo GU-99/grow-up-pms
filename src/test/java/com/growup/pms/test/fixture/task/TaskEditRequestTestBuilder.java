@@ -1,5 +1,6 @@
 package com.growup.pms.test.fixture.task;
 
+import com.growup.pms.common.util.EncryptionUtil;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import java.time.LocalDate;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TaskEditRequestTestBuilder {
 
-    private Long statusId = 1L;
+    private String statusId = EncryptionUtil.encrypt("1");
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
@@ -23,7 +24,7 @@ public class TaskEditRequestTestBuilder {
         return new TaskEditRequestTestBuilder();
     }
 
-    public TaskEditRequestTestBuilder 상태_식별자는(Long statusId) {
+    public TaskEditRequestTestBuilder 상태_식별자는(String statusId) {
         this.statusId = statusId;
         return this;
     }
@@ -50,7 +51,7 @@ public class TaskEditRequestTestBuilder {
 
     public TaskEditRequest 이다() {
         return TaskEditRequest.builder()
-                .statusId(JsonNullable.of(statusId))
+                .statusId(statusId)
                 .taskName(JsonNullable.of(taskName))
                 .content(JsonNullable.of(content))
                 .sortOrder(JsonNullable.of(sortOrder))

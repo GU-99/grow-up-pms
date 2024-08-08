@@ -6,7 +6,6 @@ import lombok.Builder;
 @Builder
 public record TaskCreateCommand(
         Long statusId,
-        Long userId,
         String taskName,
         String content,
         Short sortOrder,

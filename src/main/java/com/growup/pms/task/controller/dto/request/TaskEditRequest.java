@@ -1,5 +1,6 @@
 package com.growup.pms.task.controller.dto.request;
 
+import com.growup.pms.common.util.EncryptionUtil;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -17,7 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @ToString
 public class TaskEditRequest {
 
-    private JsonNullable<Long> statusId = JsonNullable.undefined();
+    private String statusId;
 
     @Size(max = 128)
     private JsonNullable<String> taskName = JsonNullable.undefined();
@@ -34,7 +35,7 @@ public class TaskEditRequest {
     private JsonNullable<LocalDate> endDate = JsonNullable.undefined();
 
     @Builder
-    public TaskEditRequest(JsonNullable<Long> statusId, JsonNullable<String> taskName, JsonNullable<String> content,
+    public TaskEditRequest(String statusId, JsonNullable<String> taskName, JsonNullable<String> content,
                            JsonNullable<Short> sortOrder, JsonNullable<LocalDate> startDate,
                            JsonNullable<LocalDate> endDate) {
         this.statusId = statusId;
@@ -45,10 +46,9 @@ public class TaskEditRequest {
         this.endDate = endDate;
     }
 
-    public TaskEditCommand toCommand(Long userId) {
+    public TaskEditCommand toCommand() {
         return TaskEditCommand.builder()
-                .userId(userId)
-                .statusId(statusId)
+                .statusId(EncryptionUtil.decrypt(statusId))
                 .content(content)
                 .taskName(taskName)
                 .sortOrder(sortOrder)

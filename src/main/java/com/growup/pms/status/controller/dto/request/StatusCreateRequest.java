@@ -1,5 +1,6 @@
 package com.growup.pms.status.controller.dto.request;
 
+import com.growup.pms.common.util.EncryptionUtil;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,9 +20,9 @@ public record StatusCreateRequest(
         @NotNull
         Short sortOrder
 ) {
-    public StatusCreateCommand toCommand(Long projectId) {
+    public StatusCreateCommand toCommand(String projectId) {
         return StatusCreateCommand.builder()
-                .projectId(projectId)
+                .projectId(EncryptionUtil.decrypt(projectId))
                 .name(name)
                 .colorCode(colorCode)
                 .sortOrder(sortOrder)
