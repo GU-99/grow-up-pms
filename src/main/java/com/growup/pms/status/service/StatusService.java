@@ -3,8 +3,8 @@ package com.growup.pms.status.service;
 import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.repository.StatusRepository;
-import com.growup.pms.status.service.dto.StatusCreateDto;
-import com.growup.pms.status.service.dto.StatusEditDto;
+import com.growup.pms.status.service.dto.StatusCreateCommand;
+import com.growup.pms.status.service.dto.StatusEditCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class StatusService {
     private final StatusRepository statusRepository;
 
     @Transactional
-    public StatusResponse createStatus(StatusCreateDto dto) {
+    public StatusResponse createStatus(StatusCreateCommand dto) {
         return null;
     }
 
@@ -28,7 +28,7 @@ public class StatusService {
         return null;
     }
 
-    public void editStatus(StatusEditDto dto) {
+    public void editStatus(StatusEditCommand dto) {
     }
 
     public void editStatusOrder(Long statusId, Short sortOrder) {

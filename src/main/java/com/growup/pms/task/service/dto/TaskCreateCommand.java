@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class TaskCreateDto {
+public class TaskCreateCommand {
 
     private Long statusId;
     private Long userId;
@@ -20,8 +20,8 @@ public class TaskCreateDto {
     private LocalDate endDate;
 
     @Builder
-    public TaskCreateDto(Long statusId, Long userId, String taskName, String content, Short sortOrder,
-                         LocalDate startDate, LocalDate endDate) {
+    public TaskCreateCommand(Long statusId, Long userId, String taskName, String content, Short sortOrder,
+                             LocalDate startDate, LocalDate endDate) {
         this.statusId = statusId;
         this.userId = userId;
         this.taskName = taskName;

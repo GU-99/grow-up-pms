@@ -22,8 +22,8 @@ import com.growup.pms.status.controller.dto.request.StatusEditRequest;
 import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
-import com.growup.pms.status.service.dto.StatusCreateDto;
-import com.growup.pms.status.service.dto.StatusEditDto;
+import com.growup.pms.status.service.dto.StatusCreateCommand;
+import com.growup.pms.status.service.dto.StatusEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.status.StatusCreateRequestTestBuilder;
 import com.growup.pms.test.fixture.status.StatusEditRequestTestBuilder;
@@ -52,7 +52,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         StatusCreateRequest 상태_생성_요청 = StatusCreateRequestTestBuilder.상태_생성_요청은().이다();
         StatusResponse 예상_상태_응답 = StatusResponseTestBuilder.상태_응답은().이다();
 
-        when(statusService.createStatus(any(StatusCreateDto.class)))
+        when(statusService.createStatus(any(StatusCreateCommand.class)))
                 .thenReturn(예상_상태_응답);
 
         // when & then
@@ -158,7 +158,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         StatusEditRequest 상태_변경_요청 = StatusEditRequestTestBuilder.상태_변경_요청은().이다();
 
         // when
-        doNothing().when(statusService).editStatus(any(StatusEditDto.class));
+        doNothing().when(statusService).editStatus(any(StatusEditCommand.class));
 
         // then
         mockMvc.perform(patch("/api/v1/project/{projectId}/status/{statusId}", 예상_프로젝트_식별자, 변경할_상태_ID)

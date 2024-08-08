@@ -25,8 +25,8 @@ import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.service.TaskService;
-import com.growup.pms.task.service.dto.TaskCreateDto;
-import com.growup.pms.task.service.dto.TaskEditDto;
+import com.growup.pms.task.service.dto.TaskCreateCommand;
+import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder;
@@ -60,7 +60,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         TaskDetailResponse 예상_일정_응답 = TaskDetailResponseTestBuilder.일정_상세조회_응답은().이다();
 
         // when
-        when(taskService.createTask(any(TaskCreateDto.class)))
+        when(taskService.createTask(any(TaskCreateCommand.class)))
                 .thenReturn(예상_일정_응답);
 
         objectMapper.registerModule(new JavaTimeModule())
@@ -232,7 +232,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         TaskEditRequest 일정_변경_요청 = TaskEditRequestTestBuilder.일정_수정_요청은().이다();
 
         // when
-        doNothing().when(taskService).editTask(any(TaskEditDto.class));
+        doNothing().when(taskService).editTask(any(TaskEditCommand.class));
 
         // then
         mockMvc.perform(patch("/api/v1/project/{projectId}/task/{taskId}", 예상_프로젝트_식별자, 예상_일정_식별자)
@@ -288,8 +288,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .summary("프로젝트 일정 내용 변경")
-                                .description("프로젝트 일정의 상태 식별자, 일정 이름, 일정 본문내용, 정렬 순서, 시작일자, 종료일자를 변경합니다.")
+                                .summary("프로젝트 일정 삭제")
+                                .description("프로젝트 일정을 삭제합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").description("프로젝트 식별자"),
                                         parameterWithName("taskId").description("변경할 일정 식별자")

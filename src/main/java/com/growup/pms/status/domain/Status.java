@@ -33,16 +33,16 @@ public class Status {
     private String name;
 
     @Column(nullable = false, length = 6)
-    private String color;
+    private String colorCode;
 
     @Column(nullable = false)
     private Short sortOrder;
 
     @Builder
-    public Status(Project project, String name, String color, Short sortOrder) {
+    public Status(Project project, String name, String colorCode, Short sortOrder) {
         this.project = project;
         this.name = name;
-        this.color = color;
+        this.colorCode = colorCode;
         this.sortOrder = sortOrder;
     }
 

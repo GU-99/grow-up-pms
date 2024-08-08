@@ -1,6 +1,6 @@
 package com.growup.pms.task.controller.dto.request;
 
-import com.growup.pms.task.service.dto.TaskEditDto;
+import com.growup.pms.task.service.dto.TaskEditCommand;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -45,8 +45,8 @@ public class TaskEditRequest {
         this.endDate = endDate;
     }
 
-    public TaskEditDto toServiceDto(Long userId) {
-        return TaskEditDto.builder()
+    public TaskEditCommand toCommand(Long userId) {
+        return TaskEditCommand.builder()
                 .userId(userId)
                 .statusId(statusId)
                 .content(content)

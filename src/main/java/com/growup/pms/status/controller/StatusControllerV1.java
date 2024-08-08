@@ -39,7 +39,7 @@ public class StatusControllerV1 {
         log.debug("projectId={}", projectId);
         log.debug("StatusCreateRequest={}", request);
 
-        StatusResponse response = statusService.createStatus(request.toServiceDto(projectId));
+        StatusResponse response = statusService.createStatus(request.toCommand(projectId));
         log.debug("response={}", response);
 
         return ResponseEntity.created(URI.create("/api/v1/project/" + projectId + "/status/" + response.getStatusId()))
@@ -66,7 +66,7 @@ public class StatusControllerV1 {
         log.debug("statusId={}", statusId);
         log.debug("request={}", request);
 
-        statusService.editStatus(request.toServiceDto(statusId));
+        statusService.editStatus(request.toCommand(statusId));
 
         return ResponseEntity.noContent().build();
     }

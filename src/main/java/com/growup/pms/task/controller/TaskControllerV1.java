@@ -43,7 +43,7 @@ public class TaskControllerV1 {
         log.debug("projectId={}", projectId);
         log.debug("request={}", request);
 
-        TaskDetailResponse response = taskService.createTask(request.toServiceDto(user.getId()));
+        TaskDetailResponse response = taskService.createTask(request.toCommand(user.getId()));
         log.debug("response={}", response);
         String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}/task/{taskId}")
                 .buildAndExpand(projectId, response.getTaskId())
@@ -88,7 +88,7 @@ public class TaskControllerV1 {
         log.debug("taskId={}", taskId);
         log.debug("request={}", request);
 
-        taskService.editTask(request.toServiceDto(user.getId()));
+        taskService.editTask(request.toCommand(user.getId()));
 
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,6 @@
 package com.growup.pms.status.controller.dto.request;
 
-import com.growup.pms.status.service.dto.StatusCreateDto;
+import com.growup.pms.status.service.dto.StatusCreateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,8 +31,8 @@ public class StatusCreateRequest {
         this.sortOrder = sortOrder;
     }
 
-    public StatusCreateDto toServiceDto(Long projectId) {
-        return StatusCreateDto.builder()
+    public StatusCreateCommand toCommand(Long projectId) {
+        return StatusCreateCommand.builder()
                 .projectId(projectId)
                 .name(name)
                 .colorCode(colorCode)
