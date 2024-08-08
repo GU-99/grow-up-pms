@@ -27,4 +27,4 @@ springdoc:
     url: /docs/openapi3.yaml
 
 encryption:
-  key: ENC(GU-PMS-DHJHYH3BE)
+  secret-key: GU1PMS2DHJHYH3BE

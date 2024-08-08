@@ -11,3 +11,6 @@ security:
 
 storage:
   root-path: src/test/resources/
+
+encryption:
+  secret-key: GU1PMS2DHJHYH3BE
