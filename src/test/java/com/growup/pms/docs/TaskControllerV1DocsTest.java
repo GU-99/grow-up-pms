@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -265,6 +266,33 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("시작일자"),
                                         fieldWithPath("endDate").type(JsonFieldType.STRING)
                                                 .description("종료일자")
+                                )
+                                .build()
+                )));
+    }
+
+    @Test
+    @WithMockSecurityUser
+    void 일정_삭제_API_문서를_작성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_식별자 = 1L;
+        Long 예상_일정_식별자 = 1L;
+
+        // when
+        doNothing().when(taskService).deleteTask(anyLong());
+
+        // then
+        mockMvc.perform(delete("/api/v1/project/{projectId}/task/{taskId}", 예상_프로젝트_식별자, 예상_일정_식별자)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 일정 내용 변경")
+                                .description("프로젝트 일정의 상태 식별자, 일정 이름, 일정 본문내용, 정렬 순서, 시작일자, 종료일자를 변경합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").description("프로젝트 식별자"),
+                                        parameterWithName("taskId").description("변경할 일정 식별자")
                                 )
                                 .build()
                 )));

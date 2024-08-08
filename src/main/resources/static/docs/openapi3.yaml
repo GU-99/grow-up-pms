@@ -543,6 +543,28 @@ paths:
                       "startDate" : "2023-01-01",
                       "endDate" : "2023-12-31"
                     }
+    delete:
+      tags:
+      - Task
+      summary: 프로젝트 일정 내용 변경
+      description: "프로젝트 일정의 상태 식별자, 일정 이름, 일정 본문내용, 정렬 순서, 시작일자, 종료일자를 변경합니다."
+      operationId: task-controller-v1-docs-test/일정_삭제_api_문서를_작성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: taskId
+        in: path
+        description: 변경할 일정 식별자
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: "204"
     patch:
       tags:
       - Task
