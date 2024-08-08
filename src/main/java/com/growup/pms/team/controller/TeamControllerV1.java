@@ -3,9 +3,9 @@ package com.growup.pms.team.controller;
 import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
-import com.growup.pms.team.dto.TeamCreateRequest;
-import com.growup.pms.team.dto.TeamResponse;
-import com.growup.pms.team.dto.TeamUpdateRequest;
+import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
+import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
+import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.service.TeamService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -30,7 +30,7 @@ public class TeamControllerV1 {
     @PostMapping
     public ResponseEntity<Void> createTeam(@AuthenticationPrincipal SecurityUser user, @Valid @RequestBody TeamCreateRequest request) {
         return ResponseEntity.created(URI.create("/api/v1/team/"
-                        + teamService.createTeam(user.getId(), TeamCreateRequest.toServiceDto(request))))
+                        + teamService.createTeam(user.getId(), request.toCommand())))
                 .build();
     }
 
@@ -43,7 +43,7 @@ public class TeamControllerV1 {
     @PatchMapping("/{teamId}")
     @RequirePermission(PermissionType.TEAM_UPDATE)
     public ResponseEntity<Void> updateTeam(@PathVariable Long teamId, @Valid @RequestBody TeamUpdateRequest request) {
-        teamService.updateTeam(teamId, TeamUpdateRequest.toServiceDto(request));
+        teamService.updateTeam(teamId, request.toCommand());
         return ResponseEntity.noContent().build();
     }
 

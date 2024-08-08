@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
-import com.growup.pms.invitation.dto.TeamInvitationCreateDto;
-import com.growup.pms.invitation.dto.TeamInvitationCreateRequest;
+import com.growup.pms.invitation.controller.dto.request.TeamInvitationCreateRequest;
+import com.growup.pms.invitation.domian.dto.TeamInvitationCreateCommand;
 import com.growup.pms.invitation.service.TeamInvitationService;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
@@ -43,7 +43,7 @@ class TeamInvitationControllerV1DocsTest extends ControllerSliceTestSupport {
         Long 예상하는_생성된_초대_ID = 1L;
         TeamInvitationCreateRequest 팀_초대_요청 = new TeamInvitationCreateRequest(초대할_사용자_ID);
 
-        when(teamInvitationService.sendInvitation(eq(초대할_팀_ID), any(TeamInvitationCreateDto.class))).thenReturn(예상하는_생성된_초대_ID);
+        when(teamInvitationService.sendInvitation(eq(초대할_팀_ID), any(TeamInvitationCreateCommand.class))).thenReturn(예상하는_생성된_초대_ID);
 
         // when & then
         mockMvc.perform(post("/api/v1/team/{teamId}/invitation", 초대할_팀_ID)

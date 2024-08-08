@@ -16,13 +16,11 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
-import com.growup.pms.team.dto.TeamCreateDto;
-import com.growup.pms.team.dto.TeamCreateRequest;
-import com.growup.pms.team.dto.TeamResponse;
-import com.growup.pms.team.dto.TeamUpdateDto;
-import com.growup.pms.team.dto.TeamUpdateRequest;
 import com.growup.pms.team.repository.TeamRepository;
+import com.growup.pms.team.service.dto.TeamCreateCommand;
+import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.repository.UserRepository;
 import org.junit.jupiter.api.Nested;
@@ -53,7 +51,7 @@ class TeamServiceTest {
             Long 팀장_ID = 1L;
             Long 예상_팀_ID = 1L;
             Team 생성된_팀 = mock(Team.class);
-            TeamCreateDto 팀_생성_요청 = TeamCreateRequest.toServiceDto(팀_생성_요청은().이다());
+            TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은().이다().toCommand();
 
             when(userRepository.findByIdOrThrow(팀장_ID)).thenReturn(사용자는().식별자가(팀장_ID).이다());
             when(teamRepository.save(any(Team.class))).thenReturn(생성된_팀);
@@ -70,7 +68,7 @@ class TeamServiceTest {
         void 사용자가_존재하지_않으면_예외가_발생한다() {
             // given
             Long 팀장_ID = 1L;
-            TeamCreateDto 팀_생성_요청 = TeamCreateRequest.toServiceDto(팀_생성_요청은().이다());
+            TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은().이다().toCommand();
 
             doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(userRepository).findByIdOrThrow(팀장_ID);
 
@@ -96,8 +94,8 @@ class TeamServiceTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(실제_결과.getName()).isEqualTo(예상_결과.getName());
-                softly.assertThat(실제_결과.getContent()).isEqualTo(예상_결과.getContent());
+                softly.assertThat(실제_결과.name()).isEqualTo(예상_결과.name());
+                softly.assertThat(실제_결과.content()).isEqualTo(예상_결과.content());
             });
         }
 
@@ -123,7 +121,7 @@ class TeamServiceTest {
             Team 기존_팀 = 팀은().식별자가(기존_팀_ID).이다();
             String 새로운_팀_이름 = "구구팔";
             String 새로운_팀_소개 = "안녕하세요, 구구팔입니다!";
-            TeamUpdateDto request = TeamUpdateRequest.toServiceDto(팀_수정_요청은().이름이(새로운_팀_이름).소개가(새로운_팀_소개).이다());
+            TeamUpdateCommand request = 팀_수정_요청은().이름이(새로운_팀_이름).소개가(새로운_팀_소개).이다().toCommand();
 
             when(teamRepository.findByIdOrThrow(기존_팀_ID)).thenReturn(기존_팀);
 

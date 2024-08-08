@@ -20,8 +20,10 @@ public class JwtTokenService {
     @Transactional
     public TokenDto refreshJwtTokens(String oldRefreshToken) {
         validateRefreshToken(oldRefreshToken);
+
         SecurityUser currentUser = (SecurityUser) tokenProvider.getAuthentication(oldRefreshToken).getPrincipal();
         TokenDto newToken = tokenProvider.generateToken(currentUser);
+
         refreshTokenService.renewRefreshToken(currentUser.getId(), newToken.getRefreshToken());
         return newToken;
     }

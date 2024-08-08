@@ -46,7 +46,7 @@ public class TaskControllerV1 {
         TaskDetailResponse response = taskService.createTask(request.toCommand(user.getId()));
         log.debug("response={}", response);
         String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}/task/{taskId}")
-                .buildAndExpand(projectId, response.getTaskId())
+                .buildAndExpand(projectId, response.taskId())
                 .toUriString();
 
         return ResponseEntity.created(URI.create(uri)).body(response);

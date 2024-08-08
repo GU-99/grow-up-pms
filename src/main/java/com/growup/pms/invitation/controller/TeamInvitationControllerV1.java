@@ -1,7 +1,7 @@
 package com.growup.pms.invitation.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.invitation.dto.TeamInvitationCreateRequest;
+import com.growup.pms.invitation.controller.dto.request.TeamInvitationCreateRequest;
 import com.growup.pms.invitation.service.TeamInvitationService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -25,7 +25,7 @@ public class TeamInvitationControllerV1 {
     public ResponseEntity<Void> invite(@PathVariable Long teamId, @Valid @RequestBody TeamInvitationCreateRequest request) {
         return ResponseEntity.created(
                 URI.create("/api/v1/team/" + teamId + "/invitation/"
-                        + teamInvitationService.sendInvitation(teamId, TeamInvitationCreateRequest.toServiceDto(request))))
+                        + teamInvitationService.sendInvitation(teamId, request.toCommand())))
                 .build();
     }
 

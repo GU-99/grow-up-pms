@@ -1,7 +1,7 @@
 package com.growup.pms.test.fixture.user;
 
+import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.domain.User;
-import com.growup.pms.user.dto.UserCreateRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
