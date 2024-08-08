@@ -6,48 +6,30 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
-public class TaskCreateRequest {
+@Builder
+public record TaskCreateRequest(
+        Long statusId,
 
-    private Long statusId;
+        @NotBlank
+        @Size(max = 128)
+        String taskName,
 
-    @NotBlank
-    @Size(max = 128)
-    private String taskName;
+        @NotBlank
+        String content,
 
-    @NotBlank
-    private String content;
+        @NotNull
+        @Positive
+        Short sortOrder,
 
-    @NotNull
-    @Positive
-    private Short sortOrder;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        LocalDate startDate,
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
-
-    @Builder
-    public TaskCreateRequest(Long statusId, String taskName, String content, Short sortOrder, LocalDate startDate,
-                             LocalDate endDate) {
-        this.statusId = statusId;
-        this.taskName = taskName;
-        this.content = content;
-        this.sortOrder = sortOrder;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        LocalDate endDate
+) {
     public TaskCreateCommand toCommand(Long userId) {
         return TaskCreateCommand.builder()
                 .userId(userId)

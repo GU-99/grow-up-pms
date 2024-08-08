@@ -1,5 +1,6 @@
-package com.growup.pms.team.dto;
+package com.growup.pms.team.controller.dto.request;
 
+import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,10 +22,10 @@ public class TeamUpdateRequest {
         this.content = content;
     }
 
-    public static TeamUpdateDto toServiceDto(TeamUpdateRequest request) {
-        return TeamUpdateDto.builder()
-                .name(request.getName())
-                .content(request.getContent())
+    public TeamUpdateCommand toCommand() {
+        return TeamUpdateCommand.builder()
+                .name(name)
+                .content(content)
                 .build();
     }
 }

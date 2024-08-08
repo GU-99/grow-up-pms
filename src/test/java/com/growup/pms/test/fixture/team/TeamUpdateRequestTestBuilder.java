@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.team;
 
-import com.growup.pms.team.dto.TeamUpdateRequest;
+import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

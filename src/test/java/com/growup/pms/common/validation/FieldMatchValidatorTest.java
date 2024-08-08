@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.validation.constraint.FieldMatch;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.user.dto.UserCreateRequest;
+import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
