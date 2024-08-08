@@ -53,7 +53,7 @@ public class StatusTestBuilder {
         var build = Status.builder()
                 .project(project)
                 .name(name)
-                .color(color)
+                .colorCode(color)
                 .sortOrder(sortOrder)
                 .build();
 
