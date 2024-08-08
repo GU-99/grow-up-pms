@@ -1,6 +1,7 @@
 package com.growup.pms.task.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.status.controller.dto.response.PageResponse;
@@ -36,7 +37,7 @@ public class TaskControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<TaskDetailResponse> createTask(@PathVariable Long projectId,
+    public ResponseEntity<TaskDetailResponse> createTask(@ProjectId @PathVariable Long projectId,
                                                          @AuthenticationPrincipal SecurityUser user,
                                                          @Valid @RequestBody TaskCreateRequest request) {
         log.debug("TaskControllerV1#createTask called.");
@@ -66,7 +67,7 @@ public class TaskControllerV1 {
 
     @GetMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<TaskDetailResponse> getTask(@PathVariable Long projectId,
+    public ResponseEntity<TaskDetailResponse> getTask(@ProjectId @PathVariable Long projectId,
                                                       @PathVariable Long taskId) {
         log.debug("TaskControllerV1#getTask called.");
         log.debug("projectId={}", projectId);
@@ -80,7 +81,7 @@ public class TaskControllerV1 {
 
     @PatchMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
-    public ResponseEntity<Void> editTask(@PathVariable Long projectId, @PathVariable Long taskId,
+    public ResponseEntity<Void> editTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId,
                                          @AuthenticationPrincipal SecurityUser user,
                                          @Valid @RequestBody TaskEditRequest request) {
         log.debug("TaskControllerV1#editTask called.");
@@ -95,7 +96,7 @@ public class TaskControllerV1 {
 
     @DeleteMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_DELETE)
-    public ResponseEntity<Void> deleteTask(@PathVariable Long projectId, @PathVariable Long taskId) {
+    public ResponseEntity<Void> deleteTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId) {
         log.debug("TaskControllerV1#deleteTask called.");
         log.debug("projectId={}", projectId);
         log.debug("taskId={}", taskId);

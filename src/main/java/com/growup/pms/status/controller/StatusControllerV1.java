@@ -1,6 +1,7 @@
 package com.growup.pms.status.controller;
 
 
+import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
@@ -33,7 +34,7 @@ public class StatusControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<StatusResponse> createStatus(@PathVariable Long projectId,
+    public ResponseEntity<StatusResponse> createStatus(@ProjectId @PathVariable Long projectId,
                                                        @Valid @RequestBody StatusCreateRequest request) {
         log.debug("StatusControllerV1#createStatus called.");
         log.debug("projectId={}", projectId);
@@ -48,7 +49,7 @@ public class StatusControllerV1 {
 
 
     @GetMapping
-    public ResponseEntity<PageResponse<List<StatusResponse>>> getStatuses(@PathVariable Long projectId) {
+    public ResponseEntity<PageResponse<List<StatusResponse>>> getStatuses(@ProjectId @PathVariable Long projectId) {
         log.debug("StatusControllerV1#getStatuses called.");
         log.debug("projectId={}", projectId);
 
@@ -60,9 +61,10 @@ public class StatusControllerV1 {
 
     @PatchMapping("/{statusId}")
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<Void> editStatus(@PathVariable Long projectId, @PathVariable Long statusId,
+    public ResponseEntity<Void> editStatus(@ProjectId @PathVariable Long projectId, @PathVariable Long statusId,
                                            @Valid @RequestBody StatusEditRequest request) {
         log.debug("StatusControllerV1#editStatus called.");
+        log.debug("projectId={}", projectId);
         log.debug("statusId={}", statusId);
         log.debug("request={}", request);
 
@@ -73,8 +75,9 @@ public class StatusControllerV1 {
 
     @DeleteMapping("/{statusId}")
     @RequirePermission(PermissionType.PROJECT_STATUS_DELETE)
-    public ResponseEntity<Void> deleteStatus(@PathVariable Long projectId, @PathVariable Long statusId) {
+    public ResponseEntity<Void> deleteStatus(@ProjectId @PathVariable Long projectId, @PathVariable Long statusId) {
         log.debug("StatusControllerV1#deleteStatus called.");
+        log.debug("projectId={}", projectId);
         log.debug("statusId={}", statusId);
 
         statusService.deleteStatus(statusId);
