@@ -22,12 +22,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.team.dto.TeamCreateDto;
-import com.growup.pms.team.dto.TeamCreateRequest;
-import com.growup.pms.team.dto.TeamResponse;
-import com.growup.pms.team.dto.TeamUpdateDto;
-import com.growup.pms.team.dto.TeamUpdateRequest;
+import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
+import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
+import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.service.TeamService;
+import com.growup.pms.team.service.dto.TeamCreateCommand;
+import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
@@ -62,8 +62,8 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             mockMvc.perform(get("/api/v1/team/{id}", 기존_팀_ID))
                     .andExpectAll(
                             status().isOk(),
-                            jsonPath("$.name").value(예상_응답.getName()),
-                            jsonPath("$.content").value(예상_응답.getContent()))
+                            jsonPath("$.name").value(예상_응답.name()),
+                            jsonPath("$.content").value(예상_응답.content()))
                     .andDo(docs.document(resource(
                             ResourceSnippetParameters.builder()
                                     .tag(TAG)
@@ -99,7 +99,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             Long 예상_팀_ID = 1L;
             TeamCreateRequest 팀_생성_요청 = 팀_생성_요청은().이다();
 
-            when(teamService.createTeam(eq(팀장_ID), any(TeamCreateDto.class))).thenReturn(예상_팀_ID);
+            when(teamService.createTeam(eq(팀장_ID), any(TeamCreateCommand.class))).thenReturn(예상_팀_ID);
 
             // when & then
             mockMvc.perform(post("/api/v1/team")
@@ -142,7 +142,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             Long 기존_팀_ID = 1L;
             TeamCreateRequest 팀_생성_요청 = 팀_생성_요청은().이다();
 
-            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateDto.class));
+            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateCommand.class));
 
             // when & then
             mockMvc.perform(patch("/api/v1/team/{id}", 기존_팀_ID)
@@ -168,7 +168,7 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             String 유효하지_않은_팀_이름 = "!#$&-_이름";
             TeamUpdateRequest 팀_수정_요청 = 팀_수정_요청은().이름이(유효하지_않은_팀_이름).이다();
 
-            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateDto.class));
+            doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateCommand.class));
 
             // when & then
             mockMvc.perform(patch("/api/v1/team/" + 기존_팀_ID)

@@ -4,7 +4,7 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.invitation.domian.TeamInvitation;
-import com.growup.pms.invitation.dto.TeamInvitationCreateDto;
+import com.growup.pms.invitation.domian.dto.TeamInvitationCreateCommand;
 import com.growup.pms.invitation.repository.TeamInvitationRepository;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.role.repository.RoleRepository;
@@ -28,13 +28,13 @@ public class TeamInvitationService {
     private final TeamInvitationRepository teamInvitationRepository;
 
     @Transactional
-    public Long sendInvitation(Long teamId, TeamInvitationCreateDto request) {
-        if (isUserAlreadyInTeam(teamId, request.getUserId())) {
+    public Long sendInvitation(Long teamId, TeamInvitationCreateCommand command) {
+        if (isUserAlreadyInTeam(teamId, command.userId())) {
             throw new DuplicateException(ErrorCode.USER_ALREADY_IN_TEAM);
         }
 
-        TeamInvitation invitation = TeamInvitationCreateDto.toEntity(
-                userRepository.findByIdOrThrow(request.getUserId()),
+        TeamInvitation invitation = TeamInvitationCreateCommand.toEntity(
+                userRepository.findByIdOrThrow(command.userId()),
                 teamRepository.findByIdOrThrow(teamId));
 
         return teamInvitationRepository.save(invitation).getId();

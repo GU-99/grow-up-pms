@@ -4,9 +4,9 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.domain.User;
-import com.growup.pms.user.dto.UserCreateDto;
-import com.growup.pms.user.dto.UserUploadDto;
 import com.growup.pms.user.repository.UserRepository;
+import com.growup.pms.user.service.dto.UserCreateCommand;
+import com.growup.pms.user.service.dto.UserUploadCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,9 +22,9 @@ public class UserService {
     private final StorageService storageService;
 
     @Transactional
-    public Long save(UserCreateDto request) {
+    public Long save(UserCreateCommand command) {
         try {
-            User user = UserCreateDto.toEntity(request);
+            User user = command.toEntity();
             user.encodePassword(passwordEncoder);
             return userRepository.save(user).getId();
         } catch (DataIntegrityViolationException ex) {
@@ -33,11 +33,11 @@ public class UserService {
     }
 
     @Transactional
-    public void uploadImage(Long userId, UserUploadDto request) {
+    public void uploadImage(Long userId, UserUploadCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
 
         String path = "users";
-        String image = storageService.upload(request.getFile(), path);
+        String image = storageService.upload(command.file(), path);
         user.updateImage(path + "/" + image);
 
         userRepository.save(user);

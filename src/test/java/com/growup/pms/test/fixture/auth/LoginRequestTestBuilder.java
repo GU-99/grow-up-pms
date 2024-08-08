@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.auth;
 
-import com.growup.pms.auth.dto.LoginRequest;
+import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

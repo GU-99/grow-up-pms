@@ -11,9 +11,8 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
-import com.growup.pms.user.dto.UserCreateDto;
-import com.growup.pms.user.dto.UserCreateRequest;
 import com.growup.pms.user.repository.UserRepository;
+import com.growup.pms.user.service.dto.UserCreateCommand;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +42,7 @@ class UserServiceTest {
             // given
             Long 예상하는_새_사용자_ID = 1L;
             User 새_사용자 = 사용자는().식별자가(예상하는_새_사용자_ID).이다();
-            UserCreateDto 사용자_생성_요청 = UserCreateRequest.toServiceDto(가입하는_사용자는(새_사용자).이다());
+            UserCreateCommand 사용자_생성_요청 = 가입하는_사용자는(새_사용자).이다().toCommand();
 
             when(userRepository.save(any(User.class))).thenReturn(새_사용자);
 
@@ -58,7 +57,7 @@ class UserServiceTest {
         void 중복된_아이디를_사용하면_예외가_발생한다() {
             // given
             User 새_사용자 = 사용자는().이메일이("중복된 이메일").이다();
-            UserCreateDto 사용자_생성_요청 = UserCreateRequest.toServiceDto(가입하는_사용자는(새_사용자).이다());
+            UserCreateCommand 사용자_생성_요청 = 가입하는_사용자는(새_사용자).이다().toCommand();
 
             doThrow(DataIntegrityViolationException.class).when(userRepository).save(any(User.class));
 

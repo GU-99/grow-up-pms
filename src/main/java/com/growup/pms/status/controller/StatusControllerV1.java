@@ -42,7 +42,7 @@ public class StatusControllerV1 {
         StatusResponse response = statusService.createStatus(request.toCommand(projectId));
         log.debug("response={}", response);
 
-        return ResponseEntity.created(URI.create("/api/v1/project/" + projectId + "/status/" + response.getStatusId()))
+        return ResponseEntity.created(URI.create("/api/v1/project/" + projectId + "/status/" + response.statusId()))
                 .body(response);
     }
 

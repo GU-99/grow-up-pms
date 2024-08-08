@@ -15,10 +15,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.growup.pms.auth.dto.LoginDto;
-import com.growup.pms.auth.dto.LoginRequest;
+import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.JwtTokenService;
+import com.growup.pms.auth.service.dto.LoginCommand;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
@@ -51,7 +51,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
             LoginRequest 유효한_요청 = 로그인_하는_사용자는().이다();
             TokenDto 예상하는_발급된_토큰 = 발급된_토큰은().이다();
 
-            when(loginService.authenticateUser(any(LoginDto.class))).thenReturn(예상하는_발급된_토큰);
+            when(loginService.authenticateUser(any(LoginCommand.class))).thenReturn(예상하는_발급된_토큰);
 
             // when & then
             mockMvc.perform(post("/api/v1/user/login")
@@ -81,7 +81,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
             LoginRequest 잘못된_요청 = 로그인_하는_사용자는().이메일이("존재하지 않는 이메일").이다();
 
             doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(loginService).authenticateUser(any(
-                    LoginDto.class));
+                    LoginCommand.class));
 
             // when & then
             mockMvc.perform(post("/api/v1/user/login")

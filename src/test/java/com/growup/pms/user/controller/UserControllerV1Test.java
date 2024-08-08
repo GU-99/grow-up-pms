@@ -11,9 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
-import com.growup.pms.user.dto.UserCreateDto;
-import com.growup.pms.user.dto.UserCreateRequest;
+import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.service.UserService;
+import com.growup.pms.user.service.dto.UserCreateCommand;
 import java.io.FileInputStream;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
             Long 새_사용자_ID = 1L;
             UserCreateRequest 사용자_생성_요청 = 가입하는_사용자는().이다();
 
-            when(userService.save(any(UserCreateDto.class))).thenReturn(새_사용자_ID);
+            when(userService.save(any(UserCreateCommand.class))).thenReturn(새_사용자_ID);
 
             // when & then
             mockMvc.perform(post("/api/v1/users")

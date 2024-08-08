@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.growup.pms.invitation.dto.TeamInvitationCreateDto;
-import com.growup.pms.invitation.dto.TeamInvitationCreateRequest;
+import com.growup.pms.invitation.controller.dto.request.TeamInvitationCreateRequest;
+import com.growup.pms.invitation.domian.dto.TeamInvitationCreateCommand;
 import com.growup.pms.invitation.service.TeamInvitationService;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
@@ -34,7 +34,7 @@ class TeamInvitationControllerV1Test extends ControllerSliceTestSupport {
             Long 생성된_팀_초대_ID = 1L;
             TeamInvitationCreateRequest 팀_초대_요청 = new TeamInvitationCreateRequest(초대할_사용자_ID);
 
-            when(teamInvitationService.sendInvitation(eq(초대할_팀_ID), any(TeamInvitationCreateDto.class))).thenReturn(생성된_팀_초대_ID);
+            when(teamInvitationService.sendInvitation(eq(초대할_팀_ID), any(TeamInvitationCreateCommand.class))).thenReturn(생성된_팀_초대_ID);
 
             // when & then
             mockMvc.perform(post("/api/v1/team/{teamId}/invitation", 초대할_팀_ID)
