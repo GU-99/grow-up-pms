@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.growup.pms.common.config.ObjectMapperConfig;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.test.annotation.AutoServiceMockBeans;
+import com.growup.pms.test.config.TestEncryptionConfig;
 import com.growup.pms.test.config.TestSecurityConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.mockito.Mockito;
@@ -22,7 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
-@Import({ObjectMapperConfig.class, TestSecurityConfig.class})
+@Import({ObjectMapperConfig.class, TestSecurityConfig.class, TestEncryptionConfig.class})
 @AutoServiceMockBeans(basePackage = "com.growup.pms")
 @WebMvcTest(includeFilters = @Filter(type = FilterType.ANNOTATION, classes = RestController.class))
 public abstract class AbstractControllerSliceTest {
