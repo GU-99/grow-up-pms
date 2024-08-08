@@ -25,3 +25,6 @@ security:
 springdoc:
   swagger-ui:
     url: /docs/openapi3.yaml
+
+encryption:
+  key: ENC(GU-PMS-DHJHYH3BE)
