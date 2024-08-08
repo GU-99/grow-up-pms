@@ -25,6 +25,9 @@ public enum ErrorCode {
 
     USER_ALREADY_IN_TEAM(ErrorCategory.TEAM_ERROR, "001", "사용자가 이미 팀에 존재합니다."),
     TEAM_NOT_FOUND(ErrorCategory.TEAM_ERROR, "002", "팀을 찾을 수 없습니다."),
+
+    ENCRYPTION_ERROR(ErrorCategory.ENCRYPTION_ERROR, "001", "암호화를 실패했습니다."),
+    DECRYPTION_ERROR(ErrorCategory.DECRYPTION_ERROR, "001", "복호화를 실패했습니다.")
     ;
 
     private final ErrorCategory errorCategory;
