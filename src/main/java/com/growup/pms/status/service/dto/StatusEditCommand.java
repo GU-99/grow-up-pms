@@ -8,7 +8,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class StatusEditDto {
+public class StatusEditCommand {
 
     private Long statusId;
     private JsonNullable<String> statusName;
@@ -16,8 +16,8 @@ public class StatusEditDto {
     private JsonNullable<Short> sortOrder;
 
     @Builder
-    public StatusEditDto(Long statusId, JsonNullable<String> statusName, JsonNullable<String> colorCode,
-                         JsonNullable<Short> sortOrder) {
+    public StatusEditCommand(Long statusId, JsonNullable<String> statusName, JsonNullable<String> colorCode,
+                             JsonNullable<Short> sortOrder) {
         this.statusId = statusId;
         this.statusName = statusName;
         this.colorCode = colorCode;

@@ -1,6 +1,6 @@
 package com.growup.pms.status.controller.dto.request;
 
-import com.growup.pms.status.service.dto.StatusEditDto;
+import com.growup.pms.status.service.dto.StatusEditCommand;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,8 +28,8 @@ public class StatusEditRequest {
         this.sortOrder = sortOrder;
     }
 
-    public StatusEditDto toServiceDto(Long statusId) {
-        return StatusEditDto.builder()
+    public StatusEditCommand toCommand(Long statusId) {
+        return StatusEditCommand.builder()
                 .statusId(statusId)
                 .statusName(statusName)
                 .colorCode(colorCode)

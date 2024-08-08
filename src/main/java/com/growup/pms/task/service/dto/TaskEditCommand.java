@@ -11,7 +11,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-public class TaskEditDto {
+public class TaskEditCommand {
 
     private Long userId;
 
@@ -28,9 +28,9 @@ public class TaskEditDto {
     private JsonNullable<LocalDate> endDate;
 
     @Builder
-    public TaskEditDto(Long userId, JsonNullable<Long> statusId, JsonNullable<String> taskName,
-                       JsonNullable<String> content, JsonNullable<Short> sortOrder, JsonNullable<LocalDate> startDate,
-                       JsonNullable<LocalDate> endDate) {
+    public TaskEditCommand(Long userId, JsonNullable<Long> statusId, JsonNullable<String> taskName,
+                           JsonNullable<String> content, JsonNullable<Short> sortOrder, JsonNullable<LocalDate> startDate,
+                           JsonNullable<LocalDate> endDate) {
         this.userId = userId;
         this.statusId = statusId;
         this.taskName = taskName;

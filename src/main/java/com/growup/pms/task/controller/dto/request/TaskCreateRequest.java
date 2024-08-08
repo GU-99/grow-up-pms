@@ -1,6 +1,6 @@
 package com.growup.pms.task.controller.dto.request;
 
-import com.growup.pms.task.service.dto.TaskCreateDto;
+import com.growup.pms.task.service.dto.TaskCreateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -48,8 +48,8 @@ public class TaskCreateRequest {
         this.endDate = endDate;
     }
 
-    public TaskCreateDto toServiceDto(Long userId) {
-        return TaskCreateDto.builder()
+    public TaskCreateCommand toCommand(Long userId) {
+        return TaskCreateCommand.builder()
                 .userId(userId)
                 .statusId(statusId)
                 .taskName(taskName)

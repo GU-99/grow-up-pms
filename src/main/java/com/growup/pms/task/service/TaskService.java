@@ -3,8 +3,8 @@ package com.growup.pms.task.service;
 import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
-import com.growup.pms.task.service.dto.TaskCreateDto;
-import com.growup.pms.task.service.dto.TaskEditDto;
+import com.growup.pms.task.service.dto.TaskCreateCommand;
+import com.growup.pms.task.service.dto.TaskEditCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class TaskService {
 
-    public TaskDetailResponse createTask(TaskCreateDto dto) {
+    public TaskDetailResponse createTask(TaskCreateCommand command) {
         return null;
     }
 
@@ -29,7 +29,7 @@ public class TaskService {
         return null;
     }
 
-    public void editTask(TaskEditDto dto) {
+    public void editTask(TaskEditCommand command) {
 
     }
 

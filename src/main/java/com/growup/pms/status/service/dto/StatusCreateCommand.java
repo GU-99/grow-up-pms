@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class StatusCreateDto {
+public class StatusCreateCommand {
 
     private Long projectId;
     private String name;
@@ -15,7 +15,7 @@ public class StatusCreateDto {
     private Short sortOrder;
 
     @Builder
-    public StatusCreateDto(Long projectId, String name, String colorCode, Short sortOrder) {
+    public StatusCreateCommand(Long projectId, String name, String colorCode, Short sortOrder) {
         this.projectId = projectId;
         this.name = name;
         this.colorCode = colorCode;
