@@ -288,8 +288,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .summary("프로젝트 일정 내용 변경")
-                                .description("프로젝트 일정의 상태 식별자, 일정 이름, 일정 본문내용, 정렬 순서, 시작일자, 종료일자를 변경합니다.")
+                                .summary("프로젝트 일정 삭제")
+                                .description("프로젝트 일정을 삭제합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").description("프로젝트 식별자"),
                                         parameterWithName("taskId").description("변경할 일정 식별자")
