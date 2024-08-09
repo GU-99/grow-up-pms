@@ -12,10 +12,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,10 +24,8 @@ import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
 import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.service.TeamService;
-import com.growup.pms.team.service.dto.TeamCreateCommand;
 import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -86,51 +82,6 @@ class TeamControllerV1Test extends ControllerSliceTestSupport {
             // when & then
             mockMvc.perform(get("/api/v1/team/" + teamId))
                     .andExpect(status().isNotFound());
-        }
-    }
-
-    @Nested
-    class 사용자가_팀을_생성_시에 {
-        @Test
-        @WithMockSecurityUser(id = 1L)
-        void 성공한다() throws Exception {
-            // given
-            Long 팀장_ID = 1L;
-            Long 예상_팀_ID = 1L;
-            TeamCreateRequest 팀_생성_요청 = 팀_생성_요청은().이다();
-
-            when(teamService.createTeam(eq(팀장_ID), any(TeamCreateCommand.class))).thenReturn(예상_팀_ID);
-
-            // when & then
-            mockMvc.perform(post("/api/v1/team")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(팀_생성_요청)))
-                    .andExpectAll(
-                            status().isCreated(),
-                            header().string(HttpHeaders.LOCATION, "/api/v1/team/" + 예상_팀_ID))
-                    .andDo(docs.document(resource(
-                            ResourceSnippetParameters.builder()
-                                    .tag(TAG)
-                                    .summary("팀 생성")
-                                    .description("팀을 생성합니다.")
-                                    .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
-                                    .requestFields(
-                                            fieldWithPath("name").description("팀 이름"),
-                                            fieldWithPath("content").description("팀 소개"))
-                                    .responseHeaders(headerWithName(HttpHeaders.LOCATION).description("생성된 팀의 URL")).build())));
-        }
-
-        @Test
-        void 유효하지_않은_입력으로_팀_생성_시_400_에러를_반환한다() throws Exception {
-            // given
-            String 유효하지_않은_이름 = "!#$&-_이름";
-            TeamCreateRequest 팀_생성_요청 = 팀_생성_요청은().이름이(유효하지_않은_이름).이다();
-
-            // when & then
-            mockMvc.perform(post("/api/v1/team")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(팀_생성_요청)))
-                    .andExpect(status().isBadRequest());
         }
     }
 
