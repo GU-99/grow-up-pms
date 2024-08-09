@@ -2,7 +2,7 @@ package com.growup.pms.team.service;
 
 import static com.growup.pms.test.fixture.team.TeamCreateRequestTestBuilder.팀_생성_요청은;
 import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
-import static com.growup.pms.test.fixture.team.TeamUpdateRequestTestBuilder.팀_수정_요청은;
+import static com.growup.pms.test.fixture.team.TeamUpdateRequestTestBuilder.팀_변경_요청은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -121,7 +121,7 @@ class TeamServiceTest {
             Team 기존_팀 = 팀은().식별자가(기존_팀_ID).이다();
             String 새로운_팀_이름 = "구구팔";
             String 새로운_팀_소개 = "안녕하세요, 구구팔입니다!";
-            TeamUpdateCommand request = 팀_수정_요청은().이름이(새로운_팀_이름).소개가(새로운_팀_소개).이다().toCommand();
+            TeamUpdateCommand request = 팀_변경_요청은().이름이(새로운_팀_이름).소개가(새로운_팀_소개).이다().toCommand();
 
             when(teamRepository.findByIdOrThrow(기존_팀_ID)).thenReturn(기존_팀);
 

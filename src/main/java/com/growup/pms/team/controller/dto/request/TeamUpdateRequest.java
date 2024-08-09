@@ -11,7 +11,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TeamUpdateRequest {
-    @Pattern(regexp = "^[가-힣a-zA-Z0-9]{1,10}$", message = "팀 이름은 한글, 영문, 숫자로 구성된 1~10자리여야 합니다.")
+    @Pattern(regexp = "^[가-힣a-zA-Z0-9]{1,10}$")
     private JsonNullable<String> name = JsonNullable.undefined();
 
     private JsonNullable<String> content = JsonNullable.undefined();

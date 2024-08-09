@@ -3,11 +3,14 @@ package com.growup.pms.docs;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.growup.pms.test.fixture.team.TeamCreateRequestTestBuilder.팀_생성_요청은;
 import static com.growup.pms.test.fixture.team.TeamResponseTestBuilder.팀_생성_응답은;
+import static com.growup.pms.test.fixture.team.TeamUpdateRequestTestBuilder.팀_변경_요청은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -17,9 +20,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
+import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.service.TeamService;
 import com.growup.pms.team.service.dto.TeamCreateCommand;
+import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
@@ -96,5 +101,30 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개"),
                                         fieldWithPath("creatorId").type(JsonFieldType.NUMBER).description("팀 생성자 ID"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)).build())));
+    }
+
+    @Test
+    void 팀_변경_API_문서를_생성한다() throws Exception {
+        // given
+        Long 기존_팀_ID = 1L;
+        TeamUpdateRequest 팀_변경_요청 = 팀_변경_요청은().이다();
+
+        doNothing().when(teamService).updateTeam(eq(기존_팀_ID), any(TeamUpdateCommand.class));
+
+        // when & then
+        mockMvc.perform(patch("/api/v1/team/{id}", 기존_팀_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(팀_변경_요청)))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀 변경")
+                                .description("해당 팀의 정보를 변경합니다.")
+                                .pathParameters(parameterWithName("id").description("팀 아이디"))
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("팀 이름"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개")).build())));
     }
 }
