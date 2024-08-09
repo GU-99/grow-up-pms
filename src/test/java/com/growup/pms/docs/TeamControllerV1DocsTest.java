@@ -2,17 +2,22 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.growup.pms.test.fixture.team.TeamCreateRequestTestBuilder.팀_생성_요청은;
+import static com.growup.pms.test.fixture.team.TeamResponseTestBuilder.팀_생성_응답은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
+import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.service.TeamService;
 import com.growup.pms.team.service.dto.TeamCreateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -63,5 +68,33 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("coworkers[].id").type(JsonFieldType.NUMBER).description("초대된 사용자 ID"),
                                         fieldWithPath("coworkers[].role").type(JsonFieldType.STRING).description("초대된 사용자의 역할"))
                                 .responseHeaders(headerWithName(HttpHeaders.LOCATION).description("생성된 팀의 URL")).build())));
+    }
+
+    @Test
+    void 팀_조회_API_문서를_생성한다() throws Exception {
+        // given
+        Long 기존_팀_ID = 1L;
+        TeamResponse 예상_응답 = 팀_생성_응답은().이다();
+
+        when(teamService.getTeam(기존_팀_ID)).thenReturn(예상_응답);
+
+        // when & then
+        mockMvc.perform(get("/api/v1/team/{id}", 기존_팀_ID))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.name").value(예상_응답.name()),
+                        jsonPath("$.content").value(예상_응답.content()),
+                        jsonPath("$.creatorId").value(예상_응답.creatorId()))
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀 조회")
+                                .description("해당 팀 정보를 조회합니다.")
+                                .pathParameters(parameterWithName("id").description("팀 아이디"))
+                                .responseFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("팀 이름"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개"),
+                                        fieldWithPath("creatorId").type(JsonFieldType.NUMBER).description("팀 생성자 ID"))
+                                .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)).build())));
     }
 }
