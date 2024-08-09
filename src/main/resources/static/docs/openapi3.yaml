@@ -20,8 +20,8 @@ paths:
       tags:
       - Team
       summary: 팀 생성
-      description: 팀을 생성합니다.
-      operationId: 사용자가_팀을_생성_시에/성공한다
+      description: "사용자가 새로운 팀을 생성합니다. 생성 시, 다른 사용자를 함께 팀으로 초대할 수 있습니다."
+      operationId: team-controller-v1-docs-test/팀_생성_api_문서를_생성한다사용자가_팀을_생성_시에/성공한다
       parameters:
       - name: Content-Type
         in: header
@@ -34,8 +34,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-team-id666486821'
+              $ref: '#/components/schemas/api-v1-team2045834793'
             examples:
+              team-controller-v1-docs-test/팀_생성_api_문서를_생성한다:
+                value: |-
+                  {
+                    "name" : "커피러버스",
+                    "content" : "코드 한 줄에 커피 한 잔, 우리는 카페인으로 움직이는 팀입니다!",
+                    "creatorId" : 1,
+                    "coworkers" : [ {
+                      "id" : 2,
+                      "role" : "Mate"
+                    } ]
+                  }
               사용자가_팀을_생성_시에/성공한다:
                 value: |-
                   {
@@ -55,8 +66,8 @@ paths:
       tags:
       - Team
       summary: 팀 조회
-      description: 팀 정보를 조회합니다.
-      operationId: 사용자가_팀을_조회_시에/성공한다
+      description: 해당 팀 정보를 조회합니다.
+      operationId: team-controller-v1-docs-test/팀_조회_api_문서를_생성한다사용자가_팀을_조회_시에/성공한다
       parameters:
       - name: id
         in: path
@@ -75,8 +86,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-team-id666486821'
+                $ref: '#/components/schemas/api-v1-team-id-1408924108'
               examples:
+                team-controller-v1-docs-test/팀_조회_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "name" : "커피러버스",
+                      "content" : "코드 한 줄에 커피 한 잔, 우리는 카페인으로 움직이는 팀입니다!",
+                      "creatorId" : 1
+                    }
                 사용자가_팀을_조회_시에/성공한다:
                   value: |-
                     {
@@ -87,15 +105,16 @@ paths:
       tags:
       - Team
       summary: 팀 제거
-      description: 팀을 제거합니다.
-      operationId: 사용자가_팀을_제거_시에/성공한다
+      description: 해당 팀을 제거합니다.
+      operationId: team-controller-v1-docs-test/팀_제거_api_문서를_생성한다사용자가_팀을_제거_시에/성공한다
       parameters:
       - name: id
         in: path
         description: 제거할 팀 ID
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "204":
           description: "204"
@@ -103,8 +122,8 @@ paths:
       tags:
       - Team
       summary: 팀 변경
-      description: 팀의 정보를 변경합니다.
-      operationId: 사용자가_팀을_변경_시에/성공한다
+      description: 해당 팀의 정보를 변경합니다.
+      operationId: team-controller-v1-docs-test/팀_변경_api_문서를_생성한다사용자가_팀을_변경_시에/성공한다
       parameters:
       - name: id
         in: path
@@ -125,6 +144,12 @@ paths:
             schema:
               $ref: '#/components/schemas/api-v1-team-id666486821'
             examples:
+              team-controller-v1-docs-test/팀_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "name" : "구구구",
+                    "content" : "안녕하세요, 구구구입니다!"
+                  }
               사용자가_팀을_변경_시에/성공한다:
                 value: |-
                   {
@@ -696,6 +721,18 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
+    api-v1-team-id-1408924108:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 팀 이름
+        creatorId:
+          type: number
+          description: 팀 생성자 ID
+        content:
+          type: string
+          description: 팀 소개
     api-v1-user-login-74814376:
       type: object
       properties:
@@ -744,6 +781,30 @@ components:
               taskId:
                 type: number
                 description: 프로젝트 일정 식별자
+    api-v1-team2045834793:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 팀 이름
+        coworkers:
+          type: array
+          description: 초대된 사용자 목록
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                description: 초대된 사용자의 역할
+              id:
+                type: number
+                description: 초대된 사용자 ID
+        creatorId:
+          type: number
+          description: 팀 생성자 ID
+        content:
+          type: string
+          description: 팀 소개
     api-v1-team-id666486821:
       type: object
       properties:
