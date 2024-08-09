@@ -59,7 +59,7 @@ class TeamInvitationControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .summary("팀 초대")
                                 .description("해당 사용자를 특정 팀에 초대합니다.")
                                 .pathParameters(parameterWithName("teamId").type(SimpleType.NUMBER).description("초대할 팀 ID"))
-                                .requestFields(fieldWithPath("id").type(JsonFieldType.NUMBER).description("초대할 사용자 ID"))
+                                .requestFields(fieldWithPath("userId").type(JsonFieldType.NUMBER).description("초대할 사용자 ID"))
                                 .requestHeaders(
                                         headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE),
                                         headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 액세스 토큰"))
