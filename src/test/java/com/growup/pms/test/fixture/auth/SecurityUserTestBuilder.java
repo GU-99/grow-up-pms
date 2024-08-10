@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUserTestBuilder {
     private Long id = 1L;
-    private String email = "brown@gu99.com";
+    private String username = "brown";
     private String password = "test1234!@#$";
 
     public static SecurityUserTestBuilder 인증된_사용자는() {
@@ -22,8 +22,8 @@ public class SecurityUserTestBuilder {
         return this;
     }
 
-    public SecurityUserTestBuilder 이메일이(String 이메일) {
-        this.email = 이메일;
+    public SecurityUserTestBuilder 아이디가(String 아이디) {
+        this.username = 아이디;
         return this;
     }
 
@@ -35,7 +35,7 @@ public class SecurityUserTestBuilder {
     public SecurityUser 이다() {
         return SecurityUser.builder()
                 .id(id)
-                .email(email)
+                .username(username)
                 .password(password)
                 .build();
     }
