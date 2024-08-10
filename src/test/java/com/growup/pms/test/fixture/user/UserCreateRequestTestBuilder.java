@@ -13,7 +13,6 @@ public class UserCreateRequestTestBuilder {
     private String nickname = "브라운";
     private String email = "brown@gu99.com";
     private String password = "test1234!@#$";
-    private String passwordConfirm = "test1234!@#$";
     private String bio = "안녕하세요, 브라운입니다!";
 
     public static UserCreateRequestTestBuilder 가입하는_사용자는() {
@@ -25,7 +24,6 @@ public class UserCreateRequestTestBuilder {
         builder.nickname = 사용자.getProfile().getNickname();
         builder.email = 사용자.getEmail();
         builder.password = 사용자.getPassword();
-        builder.passwordConfirm = 사용자.getPassword();
         builder.bio = 사용자.getProfile().getBio();
         return builder;
     }
@@ -45,11 +43,6 @@ public class UserCreateRequestTestBuilder {
         return this;
     }
 
-    public UserCreateRequestTestBuilder 비밀번호_확인이(String 비밀번호_확인) {
-        this.passwordConfirm = 비밀번호_확인;
-        return this;
-    }
-
     public UserCreateRequestTestBuilder 자기소개가(String 자기소개) {
         this.bio = 자기소개;
         return this;
@@ -59,7 +52,6 @@ public class UserCreateRequestTestBuilder {
         return UserCreateRequest.builder()
                 .email(email)
                 .password(password)
-                .passwordConfirm(passwordConfirm)
                 .bio(bio)
                 .nickname(nickname)
                 .build();
