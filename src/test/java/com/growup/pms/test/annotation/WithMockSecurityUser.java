@@ -19,11 +19,11 @@ import org.springframework.security.test.context.support.WithSecurityContext;
         factory = WithMockSecurityUserSecurityContextFactory.class
 )
 public @interface WithMockSecurityUser {
-    @AliasFor("email")
+    @AliasFor("username")
     String value() default "user@example.com";
 
     @AliasFor("value")
-    String email() default "user@example.com";
+    String username() default "user@example.com";
 
     long id() default 1L;
 

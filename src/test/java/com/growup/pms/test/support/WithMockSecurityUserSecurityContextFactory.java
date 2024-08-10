@@ -15,7 +15,7 @@ public class WithMockSecurityUserSecurityContextFactory implements WithSecurityC
 
         SecurityUser principal = SecurityUser.builder()
                 .id(securityUser.id())
-                .email(securityUser.email())
+                .username(securityUser.username())
                 .password(securityUser.password())
                 .build();
 

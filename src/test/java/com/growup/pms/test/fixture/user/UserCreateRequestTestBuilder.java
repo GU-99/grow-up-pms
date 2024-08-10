@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserCreateRequestTestBuilder {
-    private String nickname = "브라운";
-    private String email = "brown@gu99.com";
+    private String username = "brown";
     private String password = "test1234!@#$";
+    private String email = "brown@example.com";
+    private String nickname = "브라운";
     private String bio = "안녕하세요, 브라운입니다!";
 
     public static UserCreateRequestTestBuilder 가입하는_사용자는() {
@@ -28,8 +29,13 @@ public class UserCreateRequestTestBuilder {
         return builder;
     }
 
-    public UserCreateRequestTestBuilder 닉네임이(String 닉네임) {
-        this.nickname = 닉네임;
+    public UserCreateRequestTestBuilder 아이디가(String 아이디) {
+        this.username = 아이디;
+        return this;
+    }
+
+    public UserCreateRequestTestBuilder 비밀번호가(String 비밀번호) {
+        this.password = 비밀번호;
         return this;
     }
 
@@ -38,8 +44,8 @@ public class UserCreateRequestTestBuilder {
         return this;
     }
 
-    public UserCreateRequestTestBuilder 비밀번호가(String 비밀번호) {
-        this.password = 비밀번호;
+    public UserCreateRequestTestBuilder 닉네임이(String 닉네임) {
+        this.nickname = 닉네임;
         return this;
     }
 
@@ -50,10 +56,11 @@ public class UserCreateRequestTestBuilder {
 
     public UserCreateRequest 이다() {
         return UserCreateRequest.builder()
-                .email(email)
+                .username(username)
                 .password(password)
-                .bio(bio)
+                .email(email)
                 .nickname(nickname)
+                .bio(bio)
                 .build();
     }
 }
