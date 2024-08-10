@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class CustomizedUserRepositoryImpl implements CustomizedUserRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<UserSearchResponse> findUsersByUsernameStartingWith(String nicknamePrefix) {
+    public List<UserSearchResponse> findUsersByNicknameStartingWith(String nicknamePrefix) {
         return buildUserSearchProjection().from(user)
                 .where(user.profile.nickname.startsWithIgnoreCase(nicknamePrefix))
                 .orderBy(user.profile.nickname.asc())

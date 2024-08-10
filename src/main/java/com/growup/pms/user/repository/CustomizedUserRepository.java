@@ -4,5 +4,5 @@ import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import java.util.List;
 
 public interface CustomizedUserRepository {
-    List<UserSearchResponse> findUsersByUsernameStartingWith(String nicknamePrefix);
+    List<UserSearchResponse> findUsersByNicknameStartingWith(String nicknamePrefix);
 }

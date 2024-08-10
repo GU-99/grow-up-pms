@@ -45,8 +45,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<UserSearchResponse> searchUsersByUsernamePrefix(String nicknamePrefix) {
-        return userRepository.findUsersByUsernameStartingWith(nicknamePrefix);
+    public List<UserSearchResponse> searchUsersByNicknamePrefix(String nicknamePrefix) {
+        return userRepository.findUsersByNicknameStartingWith(nicknamePrefix);
     }
 }
 

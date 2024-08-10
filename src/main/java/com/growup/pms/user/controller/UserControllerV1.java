@@ -37,6 +37,6 @@ public class UserControllerV1 {
 
     @GetMapping("/search")
     public ResponseEntity<List<UserSearchResponse>> search(@RequestParam("nickname") String nicknamePrefix) {
-        return ResponseEntity.ok().body(userService.searchUsersByUsernamePrefix(nicknamePrefix));
+        return ResponseEntity.ok().body(userService.searchUsersByNicknamePrefix(nicknamePrefix));
     }
 }
