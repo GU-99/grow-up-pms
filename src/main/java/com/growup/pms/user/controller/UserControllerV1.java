@@ -4,6 +4,7 @@ import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.service.UserService;
+import com.growup.pms.user.service.dto.UserDownloadCommand;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,9 @@ public class UserControllerV1 {
 
     @GetMapping("/file")
     public ResponseEntity<Resource> download(@AuthenticationPrincipal SecurityUser user) {
-        Resource resource = userService.imageDownload(user.getId());
+        UserDownloadCommand command = userService.imageDownload(user.getId());
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + command.imageName() + "\"")
+                .body(command.resource());
     }
 }

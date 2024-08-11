@@ -17,13 +17,13 @@ import com.growup.pms.test.support.ControllerSliceTestSupport;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.service.UserService;
 import com.growup.pms.user.service.dto.UserCreateCommand;
+import com.growup.pms.user.service.dto.UserDownloadCommand;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -87,11 +87,11 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
         void 성공한다() throws Exception {
             // Given: Mock 설정
             Path 다운로드할_파일_경로 = Path.of("src/test/resources/images/testImage.jpg");
-            String 다운로드할_파일_이름 = "testImage.jpg";
+            String 다운로드할_파일_이름 = "download.jpg";
             byte[] 다운로드한_파일의_Bytes = Files.readAllBytes(다운로드할_파일_경로);
-            Resource 다운로드한_파일의_Resource = new UrlResource(다운로드할_파일_경로.toUri());
+            UserDownloadCommand 다운로드할_파일_정보 = new UserDownloadCommand(다운로드할_파일_이름, new UrlResource(다운로드할_파일_경로.toUri()));
 
-            when(userService.imageDownload(anyLong())).thenReturn(다운로드한_파일의_Resource);
+            when(userService.imageDownload(anyLong())).thenReturn(다운로드할_파일_정보);
 
             // when & then
             mockMvc.perform(

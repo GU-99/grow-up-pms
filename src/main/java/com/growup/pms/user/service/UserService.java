@@ -6,9 +6,9 @@ import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
+import com.growup.pms.user.service.dto.UserDownloadCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,11 +49,12 @@ public class UserService {
     }
 
     @Transactional
-    public Resource imageDownload(Long userId) {
+    public UserDownloadCommand imageDownload(Long userId) {
         User user = userRepository.findByIdOrThrow(userId);
 
         String path = user.getProfile().getImage();
-        return storageService.getFileResource(path);
+
+        return new UserDownloadCommand(user.getProfile().getImageName(), storageService.getFileResource(path));
     }
 }
 
