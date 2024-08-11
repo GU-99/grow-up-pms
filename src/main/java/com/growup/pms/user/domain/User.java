@@ -71,4 +71,8 @@ public class User extends BaseTimeEntity {
     public void updateImage(String image) {
         this.profile.setImage(image);
     }
+
+    public void updateImageName(String imageName) {
+        this.profile.setImageName(imageName);
+    }
 }

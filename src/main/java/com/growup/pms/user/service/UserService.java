@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +39,11 @@ public class UserService {
         User user = userRepository.findByIdOrThrow(userId);
 
         String path = "users";
-        String image = storageService.upload(command.file(), path);
-        user.updateImage(path + "/" + image);
+        MultipartFile image = command.file();
+
+        String imagePath = storageService.upload(image, path);
+        user.updateImage(path + "/" + imagePath);
+        user.updateImageName(image.getOriginalFilename());
 
         userRepository.save(user);
     }
