@@ -3,11 +3,11 @@ INSERT INTO roles(type, name) VALUES('TEAM', 'HEAD');
 INSERT INTO roles(type, name) VALUES('TEAM', 'LEADER');
 INSERT INTO roles(type, name) VALUES('TEAM', 'MATE');
 
--- 사용자 삽입 (테스트 시 사용되는 계정 비밀번호는 123으로 모두 동일)
+-- 사용자 삽입 (테스트 시 사용되는 계정 비밀번호는 12345678으로 모두 동일)
 INSERT INTO users (email, password, provider, nickname, bio, image, password_change_date, password_failure_count) VALUES
-    ('brown@example.com', '{noop}123', 'LOCAL', '브라운', '게임을 좋아하는 개발자', 'Image1', '2024-01-01 00:00:00', 0),
-    ('cony@example.com', '{noop}123', 'KAKAO', '코니', '커피와 책을 사랑하는 디자이너', 'Image2', '2024-01-02 00:00:00', 0),
-    ('leonard@example.com', '{noop}123', 'GOOGLE', '레너드', '자연을 사랑하는 사진작가', 'Image3', '2024-01-03 00:00:00', 0);
+    ('brown@example.com', '{noop}12345678', 'LOCAL', '브라운', '게임을 좋아하는 개발자', 'Image1', '2024-01-01 00:00:00', 0),
+    ('cony@example.com', '{noop}12345678', 'KAKAO', '코니', '커피와 책을 사랑하는 디자이너', 'Image2', '2024-01-02 00:00:00', 0),
+    ('leonard@example.com', '{noop}12345678', 'GOOGLE', '레너드', '자연을 사랑하는 사진작가', 'Image3', '2024-01-03 00:00:00', 0);
 
 -- 팀 삽입
 INSERT INTO teams (creator_id, name, content) VALUES
