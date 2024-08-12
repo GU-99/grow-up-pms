@@ -737,6 +737,18 @@ components:
         content:
           type: string
           description: 팀 소개
+    api-v1-user-login-74814376:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 팀 이름
+        creatorId:
+          type: number
+          description: 팀 생성자 ID
+        content:
+          type: string
+          description: 팀 소개
     api-v1-project-projectId-status816001105:
       type: object
       properties:

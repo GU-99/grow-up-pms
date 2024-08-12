@@ -13,7 +13,7 @@ public class TeamUpdateRequestTestBuilder {
     private String name = "구구구";
     private String content = "안녕하세요, 구구구입니다!";
 
-    public static TeamUpdateRequestTestBuilder 팀_수정_요청은() {
+    public static TeamUpdateRequestTestBuilder 팀_변경_요청은() {
         return new TeamUpdateRequestTestBuilder();
     }
 

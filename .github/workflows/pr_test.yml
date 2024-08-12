@@ -2,6 +2,7 @@ name: PR Test Validation
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - main
       - develop
@@ -12,6 +13,7 @@ on:
 
 jobs:
   pr-test:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -63,3 +65,10 @@ jobs:
           use-caches: false
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+  fail_if_pull_request_is_draft:
+    if: github.event.pull_request.draft == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fails in order to indicate that pull request needs to be marked as ready to review and unit tests workflow needs to pass.
+        run: exit 1
