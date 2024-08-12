@@ -25,6 +25,8 @@ public enum ErrorCode {
 
     USER_ALREADY_IN_TEAM(ErrorCategory.TEAM_ERROR, "001", "사용자가 이미 팀에 존재합니다."),
     TEAM_NOT_FOUND(ErrorCategory.TEAM_ERROR, "002", "팀을 찾을 수 없습니다."),
+
+    PROJECT_NOT_FOUND(ErrorCategory.PROJECT_ERROR, "001", "존재하지 않는 프로젝트입니다."),
     ;
 
     private final ErrorCategory errorCategory;
