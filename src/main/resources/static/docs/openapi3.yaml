@@ -78,7 +78,8 @@ paths:
         description: 팀 아이디
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "200":
           description: "200"
@@ -134,7 +135,8 @@ paths:
         description: 팀 아이디
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: Content-Type
         in: header
         description: application/json
@@ -726,18 +728,6 @@ components:
           type: number
           description: 프로젝트 식별자
     api-v1-team-id-1408924108:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 팀 이름
-        creatorId:
-          type: number
-          description: 팀 생성자 ID
-        content:
-          type: string
-          description: 팀 소개
-    api-v1-user-login-74814376:
       type: object
       properties:
         name:

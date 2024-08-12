@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.auth;
 
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -26,8 +26,8 @@ public class TokenDtoTestBuilder {
         return this;
     }
 
-    public TokenDto 이다() {
-        return TokenDto.builder()
+    public TokenResponse 이다() {
+        return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

@@ -22,7 +22,7 @@ import com.growup.pms.auth.service.dto.LoginCommand;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import jakarta.servlet.http.Cookie;
@@ -49,7 +49,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
         void 성공한다() throws Exception {
             // given
             LoginRequest 유효한_요청 = 로그인_하는_사용자는().이다();
-            TokenDto 예상하는_발급된_토큰 = 발급된_토큰은().이다();
+            TokenResponse 예상하는_발급된_토큰 = 발급된_토큰은().이다();
 
             when(loginService.authenticateUser(any(LoginCommand.class))).thenReturn(예상하는_발급된_토큰);
 
@@ -59,8 +59,8 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                             .content(objectMapper.writeValueAsString(유효한_요청)))
                     .andExpectAll(
                             status().isOk(),
-                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 예상하는_발급된_토큰.getAccessToken()),
-                            cookie().value("refreshToken", 예상하는_발급된_토큰.getRefreshToken()))
+                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 예상하는_발급된_토큰.accessToken()),
+                            cookie().value("refreshToken", 예상하는_발급된_토큰.refreshToken()))
                     .andDo(docs.document(resource(
                             ResourceSnippetParameters.builder()
                                     .tag(TAG)
@@ -99,7 +99,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
         void 성공한다() throws Exception {
             // given
             String 유효한_리프레시_토큰 = "유효한 리프레시 토큰";
-            TokenDto 발급된_새_토큰 = 발급된_토큰은().이다();
+            TokenResponse 발급된_새_토큰 = 발급된_토큰은().이다();
 
             when(tokenService.refreshJwtTokens(유효한_리프레시_토큰)).thenReturn(발급된_새_토큰);
 
@@ -109,8 +109,8 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                             .cookie(new Cookie("refreshToken", 유효한_리프레시_토큰)))
                     .andExpectAll(
                             status().isOk(),
-                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 발급된_새_토큰.getAccessToken()),
-                            cookie().value("refreshToken", 발급된_새_토큰.getRefreshToken()))
+                            header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 발급된_새_토큰.accessToken()),
+                            cookie().value("refreshToken", 발급된_새_토큰.refreshToken()))
                     .andDo(docs.document(resource(
                             ResourceSnippetParameters.builder()
                                     .tag(TAG)

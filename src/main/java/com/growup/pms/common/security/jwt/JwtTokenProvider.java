@@ -1,7 +1,7 @@
 package com.growup.pms.common.security.jwt;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -31,17 +31,17 @@ public class JwtTokenProvider {
 
     private SecretKey key;
     private final String base64Secret;
-    public final long refreshTokenExpirationTime;
-    public final long accessTokenExpirationTime;
+    public final long refreshTokenExpirationMillis;
+    public final long accessTokenExpirationMillis;
 
     public JwtTokenProvider(
             @Value("${security.jwt.base64-secret}") String base64Secret,
-            @Value("${security.jwt.refresh-expiration-time}") long refreshTokenExpirationTime,
-            @Value("${security.jwt.access-expiration-time}") long accessTokenExpirationTime
+            @Value("${security.jwt.refresh-token-expiration-millis}") long refreshTokenExpirationMillis,
+            @Value("${security.jwt.access-token-expiration-millis}") long accessTokenExpirationMillis
     ) {
         this.base64Secret = base64Secret;
-        this.refreshTokenExpirationTime = refreshTokenExpirationTime;
-        this.accessTokenExpirationTime = accessTokenExpirationTime;
+        this.refreshTokenExpirationMillis = refreshTokenExpirationMillis;
+        this.accessTokenExpirationMillis = accessTokenExpirationMillis;
     }
 
     public String createToken(SecurityUser user, long expirationTime) {
@@ -58,10 +58,10 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public TokenDto generateToken(SecurityUser user) {
-        return TokenDto.builder()
-                .accessToken(createToken(user, accessTokenExpirationTime))
-                .refreshToken(createToken(user, refreshTokenExpirationTime))
+    public TokenResponse generateToken(SecurityUser user) {
+        return TokenResponse.builder()
+                .accessToken(createToken(user, accessTokenExpirationMillis))
+                .refreshToken(createToken(user, refreshTokenExpirationMillis))
                 .build();
     }
 

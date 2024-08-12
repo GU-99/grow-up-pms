@@ -6,8 +6,8 @@ jasypt:
 security:
   jwt:
     base64-secret: ENC(IAOzDB87WA/evdFrSSzDsmgtpFC+fIev+ckx+Qb3+KFwLpCPInk8oPxILwE33IdUchcesVhpzuO1PjKaIqFAOZINbJniiuuzr/PZ0FSDhYM=)
-    access-expiration-time: 86400000
-    refresh-expiration-time: 604800000
+    access-token-expiration-millis: 86400000
+    refresh-token-expiration-millis: 604800000
 
 storage:
   root-path: src/test/resources/

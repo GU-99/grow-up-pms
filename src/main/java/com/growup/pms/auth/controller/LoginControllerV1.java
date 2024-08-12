@@ -4,8 +4,9 @@ import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import com.growup.pms.auth.controller.dto.response.AccessTokenResponse;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.JwtTokenService;
+import com.growup.pms.common.security.jwt.JwtConstants;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,33 +28,39 @@ public class LoginControllerV1 {
     private final JwtTokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<AccessTokenResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
-        TokenDto tokenDto = loginService.authenticateUser(request.toCommand());
+    public ResponseEntity<AccessTokenResponse> login(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletResponse response
+    ) {
+        TokenResponse authTokens = loginService.authenticateUser(request.toCommand());
 
-        setRefreshTokenCookie(response, tokenDto.getRefreshToken());
+        setRefreshTokenCookie(response, authTokens.refreshToken());
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
+                .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
                 .build();
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AccessTokenResponse> refresh(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
-        TokenDto tokenDto = tokenService.refreshJwtTokens(refreshToken);
+    public ResponseEntity<AccessTokenResponse> refresh(
+            @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
+            HttpServletResponse response
+    ) {
+        TokenResponse authTokens = tokenService.refreshJwtTokens(refreshToken);
 
-        setRefreshTokenCookie(response, tokenDto.getRefreshToken());
+        setRefreshTokenCookie(response, authTokens.refreshToken());
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
+                .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
                 .build();
     }
 
     private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        Cookie refreshTokenCookie = new Cookie(JwtConstants.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
 
         refreshTokenCookie.setHttpOnly(true);
         // TODO: 서비스가 HTTPS로 배포된 후에 보안 강화를 위해 주석을 해제해야 함
         // refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge((int) (tokenProvider.refreshTokenExpirationTime / 1000));
+        refreshTokenCookie.setMaxAge((int) (tokenProvider.refreshTokenExpirationMillis / 1000));
         response.addCookie(refreshTokenCookie);
     }
 }

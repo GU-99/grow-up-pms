@@ -8,6 +8,7 @@ import java.io.IOException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
     private final JwtTokenProvider tokenProvider;
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String TOKEN_TYPE = "Bearer ";
 
     @Override
     protected void doFilterInternal(
@@ -40,14 +38,14 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (isValidHeader(bearerToken)) {
-            return bearerToken.substring(TOKEN_TYPE.length());
+            return bearerToken.substring(JwtConstants.BEARER_PREFIX.length());
         }
         return null;
     }
 
     private boolean isValidHeader(String header) {
-        return header != null && header.startsWith(TOKEN_TYPE);
+        return header != null && header.startsWith(JwtConstants.BEARER_PREFIX);
     }
 }
