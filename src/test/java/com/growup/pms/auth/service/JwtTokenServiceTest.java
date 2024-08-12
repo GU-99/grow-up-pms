@@ -1,7 +1,7 @@
 package com.growup.pms.auth.service;
 
 import static com.growup.pms.test.fixture.auth.SecurityUserTestBuilder.인증된_사용자는;
-import static com.growup.pms.test.fixture.auth.TokenDtoTestBuilder.발급된_토큰은;
+import static com.growup.pms.test.fixture.auth.TokenResponseTestBuilder.발급된_토큰은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
