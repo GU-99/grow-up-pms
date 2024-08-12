@@ -78,7 +78,8 @@ paths:
         description: 팀 아이디
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "200":
           description: "200"
@@ -134,7 +135,8 @@ paths:
         description: 팀 아이디
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: Content-Type
         in: header
         description: application/json
@@ -169,7 +171,7 @@ paths:
       - Auth
       summary: 일반 로그인
       description: 아이디와 비밀번호를 통해 로그인합니다.
-      operationId: 사용자가_로그인_시에/성공한다
+      operationId: login-controller-v1-docs-test/로그인_api_문서를_생성한다사용자가_로그인_시에/성공한다
       parameters:
       - name: Content-Type
         in: header
@@ -185,6 +187,12 @@ paths:
               $ref: '#/components/schemas/api-v1-user-login-434021498'
             examples:
               사용자가_로그인_시에/성공한다:
+                value: |-
+                  {
+                    "username" : "brown",
+                    "password" : "test1234!@#$"
+                  }
+              login-controller-v1-docs-test/로그인_api_문서를_생성한다:
                 value: |-
                   {
                     "username" : "brown",
@@ -446,7 +454,7 @@ paths:
       - Auth
       summary: 토큰 재발급
       description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.
-      operationId: 사용자가_토큰_재발급_시에/성공한다
+      operationId: login-controller-v1-docs-test/토큰_재발급_api_문서를_생성한다사용자가_토큰_재발급_시에/성공한다
       parameters:
       - name: Content-Type
         in: header
@@ -726,18 +734,6 @@ components:
           type: number
           description: 프로젝트 식별자
     api-v1-team-id-1408924108:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 팀 이름
-        creatorId:
-          type: number
-          description: 팀 생성자 ID
-        content:
-          type: string
-          description: 팀 소개
-    api-v1-user-login-74814376:
       type: object
       properties:
         name:

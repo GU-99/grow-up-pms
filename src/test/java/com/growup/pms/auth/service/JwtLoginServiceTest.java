@@ -1,7 +1,7 @@
 package com.growup.pms.auth.service;
 
 import static com.growup.pms.test.fixture.auth.LoginRequestTestBuilder.로그인_하는_사용자는;
-import static com.growup.pms.test.fixture.auth.TokenDtoTestBuilder.발급된_토큰은;
+import static com.growup.pms.test.fixture.auth.TokenResponseTestBuilder.발급된_토큰은;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.doThrow;
@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.auth.service.dto.LoginCommand;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -63,16 +63,16 @@ class JwtLoginServiceTest {
             Long 새_리프레시_토큰_ID = 1L;
             LoginCommand 유효한_로그인_요청 = 로그인_하는_사용자는().이다().toCommand();
             UsernamePasswordAuthenticationToken 인증_토큰 = new UsernamePasswordAuthenticationToken(유효한_로그인_요청.username(), 유효한_로그인_요청.password());
-            TokenDto 예상하는_새_토큰 = 발급된_토큰은().이다();
+            TokenResponse 예상하는_새_토큰 = 발급된_토큰은().이다();
 
             when(authenticationManager.authenticate(인증_토큰)).thenReturn(authentication);
             when(authentication.getPrincipal()).thenReturn(securityUser);
             when(tokenProvider.generateToken(securityUser)).thenReturn(예상하는_새_토큰);
             when(securityUser.getId()).thenReturn(기존_사용자_ID);
-            when(refreshTokenService.renewRefreshToken(기존_사용자_ID, 예상하는_새_토큰.getRefreshToken())).thenReturn(새_리프레시_토큰_ID);
+            when(refreshTokenService.renewRefreshToken(기존_사용자_ID, 예상하는_새_토큰.refreshToken())).thenReturn(새_리프레시_토큰_ID);
 
             // when
-            TokenDto 실제_새_토큰 = loginService.authenticateUser(유효한_로그인_요청);
+            TokenResponse 실제_새_토큰 = loginService.authenticateUser(유효한_로그인_요청);
 
             // then
             assertSoftly(softly -> {

@@ -25,7 +25,7 @@ public class RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(userRepository.findByIdOrThrow(userId))
                 .token(HashingUtil.generateHash(token))
-                .expiryDate(Instant.now().plusMillis(tokenProvider.refreshTokenExpirationTime))
+                .expiryDate(Instant.now().plusMillis(tokenProvider.refreshTokenExpirationMillis))
                 .build();
         return refreshTokenRepository.save(refreshToken).getId();
     }
@@ -34,7 +34,7 @@ public class RefreshTokenService {
     public Long renewRefreshToken(Long userId, String newRefreshToken) {
         return refreshTokenRepository.findByUserId(userId)
                 .map(token -> {
-                    token.updateToken(newRefreshToken, Instant.now().plusMillis(tokenProvider.refreshTokenExpirationTime));
+                    token.updateToken(newRefreshToken, Instant.now().plusMillis(tokenProvider.refreshTokenExpirationMillis));
                     return token.getId();
                 })
                 .orElseGet(() -> save(userId, newRefreshToken));

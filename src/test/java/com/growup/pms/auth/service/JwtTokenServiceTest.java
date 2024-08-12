@@ -1,7 +1,7 @@
 package com.growup.pms.auth.service;
 
 import static com.growup.pms.test.fixture.auth.SecurityUserTestBuilder.인증된_사용자는;
-import static com.growup.pms.test.fixture.auth.TokenDtoTestBuilder.발급된_토큰은;
+import static com.growup.pms.test.fixture.auth.TokenResponseTestBuilder.발급된_토큰은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -44,16 +44,16 @@ class JwtTokenServiceTest {
             Authentication 인증_정보 = mock(Authentication.class);
             SecurityUser 인증된_사용자 = 인증된_사용자는().식별자가(기존_사용자_ID).이다();
             String 예전_리프레시_토큰 = "예전 리프레시 토큰";
-            TokenDto 예상하는_새_토큰 = 발급된_토큰은().액세스_토큰이("새 액세스 토큰").리프레시_토큰이("새 리프레시 토큰").이다();
+            TokenResponse 예상하는_새_토큰 = 발급된_토큰은().액세스_토큰이("새 액세스 토큰").리프레시_토큰이("새 리프레시 토큰").이다();
 
             when(인증_정보.getPrincipal()).thenReturn(인증된_사용자);
             when(tokenProvider.getAuthentication(예전_리프레시_토큰)).thenReturn(인증_정보);
             when(tokenProvider.generateToken(인증된_사용자)).thenReturn(예상하는_새_토큰);
             when(refreshTokenService.validateToken(예전_리프레시_토큰)).thenReturn(true);
-            when(refreshTokenService.renewRefreshToken(기존_사용자_ID, 예상하는_새_토큰.getRefreshToken())).thenReturn(새_리프레시_토큰_ID);
+            when(refreshTokenService.renewRefreshToken(기존_사용자_ID, 예상하는_새_토큰.refreshToken())).thenReturn(새_리프레시_토큰_ID);
 
             // when
-            TokenDto 실제_토큰 = tokenService.refreshJwtTokens(예전_리프레시_토큰);
+            TokenResponse 실제_토큰 = tokenService.refreshJwtTokens(예전_리프레시_토큰);
 
             // then
             assertThat(실제_토큰).isEqualTo(예상하는_새_토큰);

@@ -3,7 +3,7 @@ package com.growup.pms.auth.service;
 import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.auth.service.dto.LoginCommand;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,13 +19,13 @@ public class JwtLoginService {
     private final RefreshTokenService refreshTokenService;
 
     @Transactional
-    public TokenDto authenticateUser(LoginCommand command) {
+    public TokenResponse authenticateUser(LoginCommand command) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(command.username(), command.password());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityUser principal = (SecurityUser) authentication.getPrincipal();
-        TokenDto newToken = tokenProvider.generateToken(principal);
+        TokenResponse newToken = tokenProvider.generateToken(principal);
 
-        refreshTokenService.renewRefreshToken(principal.getId(), newToken.getRefreshToken());
+        refreshTokenService.renewRefreshToken(principal.getId(), newToken.refreshToken());
         return newToken;
     }
 }

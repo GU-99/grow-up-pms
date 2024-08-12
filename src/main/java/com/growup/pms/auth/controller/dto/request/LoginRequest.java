@@ -1,16 +1,18 @@
 package com.growup.pms.auth.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.PASSWORD_PATTERN;
+import static com.growup.pms.common.constant.RegexConstants.USERNAME_PATTERN;
+
 import com.growup.pms.auth.service.dto.LoginCommand;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
-import org.hibernate.validator.constraints.Length;
 
 @Builder
 public record LoginRequest(
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,32}$")
+        @Pattern(regexp = USERNAME_PATTERN)
         String username,
 
-        @Length(min = 8, max = 16)
+        @Pattern(regexp = PASSWORD_PATTERN)
         String password
 ) {
     public LoginCommand toCommand() {

@@ -4,7 +4,7 @@ import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthenticationException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +18,13 @@ public class JwtTokenService {
     private final RefreshTokenService refreshTokenService;
 
     @Transactional
-    public TokenDto refreshJwtTokens(String oldRefreshToken) {
+    public TokenResponse refreshJwtTokens(String oldRefreshToken) {
         validateRefreshToken(oldRefreshToken);
 
         SecurityUser currentUser = (SecurityUser) tokenProvider.getAuthentication(oldRefreshToken).getPrincipal();
-        TokenDto newToken = tokenProvider.generateToken(currentUser);
+        TokenResponse newToken = tokenProvider.generateToken(currentUser);
 
-        refreshTokenService.renewRefreshToken(currentUser.getId(), newToken.getRefreshToken());
+        refreshTokenService.renewRefreshToken(currentUser.getId(), newToken.refreshToken());
         return newToken;
     }
 

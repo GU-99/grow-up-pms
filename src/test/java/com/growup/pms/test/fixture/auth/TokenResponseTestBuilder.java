@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.auth;
 
-import com.growup.pms.common.security.jwt.dto.TokenDto;
+import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -8,26 +8,26 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("NonAsciiCharacters")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TokenDtoTestBuilder {
+public class TokenResponseTestBuilder {
     private String accessToken = "액세스 토큰";
     private String refreshToken = "리프레시 토큰";
 
-    public static TokenDtoTestBuilder 발급된_토큰은() {
-        return new TokenDtoTestBuilder();
+    public static TokenResponseTestBuilder 발급된_토큰은() {
+        return new TokenResponseTestBuilder();
     }
 
-    public TokenDtoTestBuilder 액세스_토큰이(String 액세스_토큰) {
+    public TokenResponseTestBuilder 액세스_토큰이(String 액세스_토큰) {
         this.accessToken = 액세스_토큰;
         return this;
     }
 
-    public TokenDtoTestBuilder 리프레시_토큰이(String 리프레시_토큰) {
+    public TokenResponseTestBuilder 리프레시_토큰이(String 리프레시_토큰) {
         this.refreshToken = 리프레시_토큰;
         return this;
     }
 
-    public TokenDto 이다() {
-        return TokenDto.builder()
+    public TokenResponse 이다() {
+        return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
