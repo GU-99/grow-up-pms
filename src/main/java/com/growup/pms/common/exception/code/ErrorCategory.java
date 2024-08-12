@@ -13,6 +13,7 @@ public enum ErrorCategory {
     DATA_FORMAT_ERROR("DF_", "Data format error: "),
     STORAGE_ERROR("ST_", "Storage error: "),
     TEAM_ERROR("TM_", "Team error: "),
+    PROJECT_ERROR("PR_", "Project error: "),
     ;
 
     private final String codePrefix;
