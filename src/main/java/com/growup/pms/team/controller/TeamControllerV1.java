@@ -28,7 +28,10 @@ public class TeamControllerV1 {
     private final TeamService teamService;
 
     @PostMapping
-    public ResponseEntity<Void> createTeam(@AuthenticationPrincipal SecurityUser user, @Valid @RequestBody TeamCreateRequest request) {
+    public ResponseEntity<Void> createTeam(
+            @AuthenticationPrincipal SecurityUser user,
+            @Valid @RequestBody TeamCreateRequest request
+    ) {
         return ResponseEntity.created(URI.create("/api/v1/team/"
                         + teamService.createTeam(user.getId(), request.toCommand())))
                 .build();

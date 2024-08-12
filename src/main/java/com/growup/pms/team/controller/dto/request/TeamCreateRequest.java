@@ -1,5 +1,7 @@
 package com.growup.pms.team.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.TEAM_NAME_PATTERN;
+
 import com.growup.pms.team.service.dto.TeamCreateCommand;
 import com.growup.pms.team.service.dto.TeamCreateCommand.TeamCoworkerCommand;
 import jakarta.validation.Valid;
@@ -12,7 +14,7 @@ import lombok.Builder;
 
 @Builder
 public record TeamCreateRequest(
-        @Pattern(regexp = "^[가-힣a-zA-Z0-9]{1,10}$")
+        @Pattern(regexp = TEAM_NAME_PATTERN)
         String name,
 
         @Size(max = 300)

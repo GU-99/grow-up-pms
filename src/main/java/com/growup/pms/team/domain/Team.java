@@ -32,9 +32,10 @@ public class Team extends BaseTimeEntity {
     @JoinColumn(name = "creator_id", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "fk_team_creator"))
     private User creator;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String name;
 
+    @Column(length = 300)
     private String content;
 
     @Builder
