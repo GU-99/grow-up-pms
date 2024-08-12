@@ -28,9 +28,12 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String username;
 
     private String password;
+
+    @Column(nullable = false)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -46,9 +49,10 @@ public class User extends BaseTimeEntity {
     private int passwordFailureCount;
 
     @Builder
-    public User(String email, String password, Provider provider, UserProfile profile) {
-        this.email = email;
+    public User(String username, String password, String email, Provider provider, UserProfile profile) {
+        this.username = username;
         this.password = password;
+        this.email = email;
         this.provider = provider;
         this.profile = profile;
         this.passwordFailureCount = 0;

@@ -67,7 +67,7 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
                                     .summary("일반 로그인")
                                     .description("아이디와 비밀번호를 통해 로그인합니다.")
                                     .requestFields(
-                                            fieldWithPath("email").description("이메일"),
+                                            fieldWithPath("username").description("아이디"),
                                             fieldWithPath("password").description("비밀번호"))
                                     .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                     .responseHeaders(
@@ -78,10 +78,9 @@ class LoginControllerV1Test extends ControllerSliceTestSupport {
         @Test
         void 매치되는_정보가_없으면_예외가_발생한다() throws Exception {
             // given
-            LoginRequest 잘못된_요청 = 로그인_하는_사용자는().이메일이("존재하지 않는 이메일").이다();
+            LoginRequest 잘못된_요청 = 로그인_하는_사용자는().아이디가("notExistId").이다();
 
-            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(loginService).authenticateUser(any(
-                    LoginCommand.class));
+            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(loginService).authenticateUser(any(LoginCommand.class));
 
             // when & then
             mockMvc.perform(post("/api/v1/user/login")

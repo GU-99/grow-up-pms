@@ -14,6 +14,10 @@ tags:
   description: 상태
 - name: Team Invitation
   description: 팀 초대
+- name: Task
+  description: 일정
+- name: User
+  description: 사용자
 paths:
   /api/v1/team:
     post:
@@ -178,12 +182,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-user-login-74814376'
+              $ref: '#/components/schemas/api-v1-user-login-434021498'
             examples:
               사용자가_로그인_시에/성공한다:
                 value: |-
                   {
-                    "email" : "brown@gu99.com",
+                    "username" : "brown",
                     "password" : "test1234!@#$"
                   }
       responses:
@@ -736,12 +740,15 @@ components:
     api-v1-user-login-74814376:
       type: object
       properties:
-        password:
+        name:
           type: string
-          description: 비밀번호
-        email:
+          description: 팀 이름
+        creatorId:
+          type: number
+          description: 팀 생성자 ID
+        content:
           type: string
-          description: 이메일
+          description: 팀 소개
     api-v1-project-projectId-status816001105:
       type: object
       properties:
@@ -781,6 +788,15 @@ components:
               taskId:
                 type: number
                 description: 프로젝트 일정 식별자
+    api-v1-user-login-434021498:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        username:
+          type: string
+          description: 아이디
     api-v1-team2045834793:
       type: object
       properties:

@@ -20,7 +20,7 @@ public class JwtLoginService {
 
     @Transactional
     public TokenDto authenticateUser(LoginCommand command) {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(command.email(), command.password());
+        var authenticationToken = new UsernamePasswordAuthenticationToken(command.username(), command.password());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityUser principal = (SecurityUser) authentication.getPrincipal();
         TokenDto newToken = tokenProvider.generateToken(principal);

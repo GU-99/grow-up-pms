@@ -13,9 +13,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserTestBuilder {
     private Long id = 1L;
-    private String nickname = "브라운";
-    private String email = "brown@gu99.com";
+    private String username = "brown";
     private String password = "test1234!@#$";
+    private String email = "brown@example.com";
+    private String nickname = "브라운";
     private Provider provider = Provider.LOCAL;
     private String bio = "안녕하세요, 브라운입니다!";
 
@@ -28,8 +29,13 @@ public class UserTestBuilder {
         return this;
     }
 
-    public UserTestBuilder 닉네임이(String 닉네임) {
-        this.nickname = 닉네임;
+    public UserTestBuilder 아이디가(String 아이디) {
+        this.username = 아이디;
+        return this;
+    }
+
+    public UserTestBuilder 비밀번호가(String 비밀번호) {
+        this.password = 비밀번호;
         return this;
     }
 
@@ -38,8 +44,8 @@ public class UserTestBuilder {
         return this;
     }
 
-    public UserTestBuilder 비밀번호가(String 비밀번호) {
-        this.password = 비밀번호;
+    public UserTestBuilder 닉네임이(String 닉네임) {
+        this.nickname = 닉네임;
         return this;
     }
 
@@ -55,8 +61,9 @@ public class UserTestBuilder {
 
     public User 이다() {
         var build = User.builder()
-                .email(email)
+                .username(username)
                 .password(password)
+                .email(email)
                 .provider(provider)
                 .profile(UserProfile.builder()
                         .nickname(nickname)

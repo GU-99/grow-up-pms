@@ -7,21 +7,23 @@ import lombok.Builder;
 
 @Builder
 public record UserCreateCommand(
-        String email,
+        String username,
         String password,
+        String email,
         String nickname,
         String bio,
-        String image
+        String imageUrl
 ) {
     public User toEntity() {
         return User.builder()
-                .email(email)
+                .username(username)
                 .password(password)
+                .email(email)
                 .provider(Provider.LOCAL)
                 .profile(UserProfile.builder()
                         .nickname(nickname)
                         .bio(bio)
-                        .image(image)
+                        .image(imageUrl)
                         .build())
                 .build();
     }

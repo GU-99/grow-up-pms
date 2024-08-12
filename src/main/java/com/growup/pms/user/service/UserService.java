@@ -3,10 +3,12 @@ package com.growup.pms.user.service;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.storage.service.StorageService;
+import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +43,10 @@ public class UserService {
         user.updateImage(path + "/" + image);
 
         userRepository.save(user);
+    }
+
+    public List<UserSearchResponse> searchUsersByNicknamePrefix(String nicknamePrefix) {
+        return userRepository.findUsersByNicknameStartingWith(nicknamePrefix);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.growup.pms.user.service;
 
 import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
+import static com.growup.pms.test.fixture.user.UserSearchResponseTestBuilder.사용자_검색_응답은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -10,9 +11,11 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,6 +67,24 @@ class UserServiceTest {
             // when & then
             assertThatThrownBy(() -> userService.save(사용자_생성_요청))
                     .isInstanceOf(DuplicateException.class);
+        }
+    }
+
+    @Nested
+    class 전체_사용자_검색_시에 {
+        @Test
+        void 성공한다() {
+            // given
+            String 닉네임_접두사 = "브";
+            List<UserSearchResponse> 예상_결과 = List.of(사용자_검색_응답은().닉네임이("브라운").이다());
+
+            when(userRepository.findUsersByNicknameStartingWith(닉네임_접두사)).thenReturn(예상_결과);
+
+            // when
+            List<UserSearchResponse> 실제_결과 = userService.searchUsersByNicknamePrefix(닉네임_접두사);
+
+            // then
+            assertThat(실제_결과).isEqualTo(예상_결과);
         }
     }
 }
