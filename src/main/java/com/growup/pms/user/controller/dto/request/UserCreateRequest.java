@@ -1,5 +1,9 @@
 package com.growup.pms.user.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.NICKNAME_PATTERN;
+import static com.growup.pms.common.constant.RegexConstants.PASSWORD_PATTERN;
+import static com.growup.pms.common.constant.RegexConstants.USERNAME_PATTERN;
+
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -8,17 +12,17 @@ import org.hibernate.validator.constraints.Length;
 
 @Builder
 public record UserCreateRequest(
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,32}$")
+        @Pattern(regexp = USERNAME_PATTERN)
         String username,
 
-        @Length(min = 8, max = 16)
+        @Pattern(regexp = PASSWORD_PATTERN)
         String password,
 
         @Email
         @Length(max = 128)
         String email,
 
-        @Length(min = 2, max = 20)
+        @Pattern(regexp = NICKNAME_PATTERN)
         String nickname,
 
         @Length(max = 300)

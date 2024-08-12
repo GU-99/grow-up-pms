@@ -171,7 +171,7 @@ paths:
       - Auth
       summary: 일반 로그인
       description: 아이디와 비밀번호를 통해 로그인합니다.
-      operationId: 사용자가_로그인_시에/성공한다
+      operationId: login-controller-v1-docs-test/로그인_api_문서를_생성한다사용자가_로그인_시에/성공한다
       parameters:
       - name: Content-Type
         in: header
@@ -187,6 +187,12 @@ paths:
               $ref: '#/components/schemas/api-v1-user-login-434021498'
             examples:
               사용자가_로그인_시에/성공한다:
+                value: |-
+                  {
+                    "username" : "brown",
+                    "password" : "test1234!@#$"
+                  }
+              login-controller-v1-docs-test/로그인_api_문서를_생성한다:
                 value: |-
                   {
                     "username" : "brown",
@@ -448,7 +454,7 @@ paths:
       - Auth
       summary: 토큰 재발급
       description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.
-      operationId: 사용자가_토큰_재발급_시에/성공한다
+      operationId: login-controller-v1-docs-test/토큰_재발급_api_문서를_생성한다사용자가_토큰_재발급_시에/성공한다
       parameters:
       - name: Content-Type
         in: header
