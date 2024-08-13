@@ -49,6 +49,9 @@ public class StatusService {
         }
     }
 
+    @Transactional
     public void deleteStatus(Long statusId) {
+        Status status = statusRepository.findByIdOrThrow(statusId);
+        statusRepository.delete(status);
     }
 }
