@@ -9,7 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
@@ -189,6 +191,38 @@ class StatusServiceTest {
 
             // when & then
             assertThatThrownBy(() -> statusService.editStatus(상태_변경_요청))
+                    .isInstanceOf(EntityNotFoundException.class);
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_상태_삭제시에 {
+        @Test
+        void 성공한다() {
+            // given
+            Long 기존_상태_ID = 1L;
+            Status 기존_상태 = 상태는().식별자가(기존_상태_ID).이다();
+
+            when(statusRepository.findByIdOrThrow(기존_상태_ID)).thenReturn(기존_상태);
+            doNothing().when(statusRepository).delete(기존_상태);
+
+            // when
+            statusService.deleteStatus(기존_상태_ID);
+
+            // then
+            verify(statusRepository).delete(기존_상태);
+        }
+
+        @Test
+        void 상태가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_상태_ID = 1L;
+
+            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+                    .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
+
+            // when & then
+            assertThatThrownBy(() -> statusService.deleteStatus(잘못된_상태_ID))
                     .isInstanceOf(EntityNotFoundException.class);
         }
     }
