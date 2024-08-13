@@ -61,8 +61,8 @@ class TeamInvitationControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .pathParameters(parameterWithName("teamId").type(SimpleType.NUMBER).description("초대할 팀 ID"))
                                 .requestFields(fieldWithPath("userId").type(JsonFieldType.NUMBER).description("초대할 사용자 ID"))
                                 .requestHeaders(
-                                        headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE),
-                                        headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 액세스 토큰"))
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).type(SimpleType.STRING).description(MediaType.APPLICATION_JSON_VALUE),
+                                        headerWithName(HttpHeaders.AUTHORIZATION).type(SimpleType.STRING).description("Bearer 액세스 토큰"))
                                 .build())));
     }
 
@@ -84,7 +84,7 @@ class TeamInvitationControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .summary("팀 초대 승낙")
                                 .description("사용자가 팀 초대를 승낙합니다.")
                                 .pathParameters(parameterWithName("teamId").type(SimpleType.NUMBER).description("초대된 팀 ID"))
-                                .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 액세스 토큰"))
+                                .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).type(SimpleType.STRING).description("Bearer 액세스 토큰"))
                                 .build())));
     }
 
@@ -105,8 +105,8 @@ class TeamInvitationControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .tag(TAG)
                                 .summary("팀 초대 거절")
                                 .description("사용자가 팀 초대를 거절합니다.")
-                                .pathParameters(parameterWithName("teamId").type(SimpleType.NUMBER).description("초대된 팀 ID"))
-                                .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 액세스 토큰"))
+                                .pathParameters(parameterWithName("teamId").type(SimpleType.NUMBER).type(SimpleType.NUMBER).description("초대된 팀 ID"))
+                                .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).type(SimpleType.STRING).description("Bearer 액세스 토큰"))
                                 .build())));
     }
 }
