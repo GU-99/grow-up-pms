@@ -7,22 +7,20 @@ import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.support.RepositoryTestSupport;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Transactional
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
-class CustomizedUserRepositoryImplTest extends RepositoryTestSupport {
+class QueryDslUserRepositoryImplTest extends RepositoryTestSupport {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    CustomizedUserRepositoryImpl customizedUserRepository;
+    QueryDslUserRepositoryImpl customizedUserRepository;
 
     User 브라운, 레니, 레너드;
 

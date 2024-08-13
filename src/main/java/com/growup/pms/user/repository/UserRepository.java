@@ -6,7 +6,7 @@ import com.growup.pms.user.domain.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long>, CustomizedUserRepository {
+public interface UserRepository extends JpaRepository<User, Long>, QueryDslUserRepository {
     Optional<User> findByUsername(String username);
 
     default User findByIdOrThrow(Long id) {

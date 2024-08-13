@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomizedUserRepositoryImpl implements CustomizedUserRepository {
+public class QueryDslUserRepositoryImpl implements QueryDslUserRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     public List<UserSearchResponse> findUsersByNicknameStartingWith(String nicknamePrefix) {

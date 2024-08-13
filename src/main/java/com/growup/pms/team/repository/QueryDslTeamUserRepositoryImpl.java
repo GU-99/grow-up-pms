@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomizedTeamUserRepositoryImpl implements CustomizedTeamUserRepository {
+public class QueryDslTeamUserRepositoryImpl implements QueryDslTeamUserRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
