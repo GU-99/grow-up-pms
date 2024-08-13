@@ -3,7 +3,6 @@ package com.growup.pms.task.controller;
 import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
-import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
@@ -54,14 +53,14 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<PageResponse<List<TaskResponse>>> getTasks(@PathVariable Long projectId) {
+    public ResponseEntity<List<TaskResponse>> getTasks(@PathVariable Long projectId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("projectId={}", projectId);
 
-        PageResponse<List<TaskResponse>> response = taskService.getTasks(projectId);
-        log.debug("PageResponse={}", response);
+        List<TaskResponse> responses = taskService.getTasks(projectId);
+        log.debug("PageResponse={}", responses);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{taskId}")

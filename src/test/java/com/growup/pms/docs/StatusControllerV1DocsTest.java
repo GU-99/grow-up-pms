@@ -19,7 +19,6 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import com.growup.pms.status.controller.dto.request.StatusEditRequest;
-import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
@@ -110,11 +109,10 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                 .정렬순서는((short) 1)
                 .이다();
 
-        List<StatusResponse> statusResponses = List.of(statusResponse1, statusResponse2);
-        PageResponse<List<StatusResponse>> response = PageResponse.of(false, statusResponses);
+        List<StatusResponse> responses = List.of(statusResponse1, statusResponse2);
 
         when(statusService.getStatuses(조회할_프로젝트_ID))
-                .thenReturn(response);
+                .thenReturn(responses);
 
         // when & then
         mockMvc.perform(get("/api/v1/project/{projectId}/status", 조회할_프로젝트_ID)
@@ -130,19 +128,15 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("조회할 프로젝트 식별자")
                                 )
                                 .responseFields(
-                                        fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN)
-                                                .description("다음 페이지 존재 여부"),
-                                        fieldWithPath("items").type(JsonFieldType.ARRAY)
-                                                .description("프로젝트 내에 존재하는 상태 목록"),
-                                        fieldWithPath("items[].statusId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("[].statusId").type(JsonFieldType.NUMBER)
                                                 .description("상태 식별자"),
-                                        fieldWithPath("items[].projectId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("[].projectId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 식별자"),
-                                        fieldWithPath("items[].name").type(JsonFieldType.STRING)
+                                        fieldWithPath("[].name").type(JsonFieldType.STRING)
                                                 .description("상태 이름"),
-                                        fieldWithPath("items[].colorCode").type(JsonFieldType.STRING)
+                                        fieldWithPath("[].colorCode").type(JsonFieldType.STRING)
                                                 .description("색상 코드"),
-                                        fieldWithPath("items[].sortOrder").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("[].sortOrder").type(JsonFieldType.NUMBER)
                                                 .description("정렬 순서")
                                 )
                                 .build()
