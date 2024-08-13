@@ -4,7 +4,6 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
-import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
@@ -33,8 +32,8 @@ public class StatusService {
         return StatusResponse.of(savedStatus);
     }
 
-    public PageResponse<List<StatusResponse>> getStatuses(Long projectId) {
-        return null;
+    public List<StatusResponse> getStatuses(Long projectId) {
+        return statusRepository.getAllStatusByProjectId(projectId);
     }
 
     public void editStatus(StatusEditCommand dto) {

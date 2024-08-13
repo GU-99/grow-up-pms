@@ -1,6 +1,5 @@
 package com.growup.pms.task.service;
 
-import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
@@ -21,7 +20,7 @@ public class TaskService {
         return null;
     }
 
-    public PageResponse<List<TaskResponse>> getTasks(Long projectId) {
+    public List<TaskResponse> getTasks(Long projectId) {
         return null;
     }
 
