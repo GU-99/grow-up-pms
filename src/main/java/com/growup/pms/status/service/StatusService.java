@@ -33,7 +33,7 @@ public class StatusService {
     }
 
     public List<StatusResponse> getStatuses(Long projectId) {
-        return null;
+        return statusRepository.getAllStatusByProjectId(projectId);
     }
 
     public void editStatus(StatusEditCommand dto) {
