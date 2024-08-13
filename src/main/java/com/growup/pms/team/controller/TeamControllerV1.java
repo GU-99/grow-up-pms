@@ -2,6 +2,7 @@ package com.growup.pms.team.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
 import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
@@ -28,7 +29,10 @@ public class TeamControllerV1 {
     private final TeamService teamService;
 
     @PostMapping
-    public ResponseEntity<Void> createTeam(@AuthenticationPrincipal SecurityUser user, @Valid @RequestBody TeamCreateRequest request) {
+    public ResponseEntity<Void> createTeam(
+            @AuthenticationPrincipal SecurityUser user,
+            @Valid @RequestBody TeamCreateRequest request
+    ) {
         return ResponseEntity.created(URI.create("/api/v1/team/"
                         + teamService.createTeam(user.getId(), request.toCommand())))
                 .build();
@@ -42,14 +46,14 @@ public class TeamControllerV1 {
 
     @PatchMapping("/{teamId}")
     @RequirePermission(PermissionType.TEAM_UPDATE)
-    public ResponseEntity<Void> updateTeam(@PathVariable Long teamId, @Valid @RequestBody TeamUpdateRequest request) {
+    public ResponseEntity<Void> updateTeam(@PathVariable @TeamId Long teamId, @Valid @RequestBody TeamUpdateRequest request) {
         teamService.updateTeam(teamId, request.toCommand());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{teamId}")
     @RequirePermission(PermissionType.TEAM_DELETE)
-    public ResponseEntity<Void> deleteTeam(@PathVariable Long teamId) {
+    public ResponseEntity<Void> deleteTeam(@PathVariable @TeamId Long teamId) {
         teamService.deleteTeam(teamId);
         return ResponseEntity.noContent().build();
     }
