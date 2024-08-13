@@ -2,13 +2,17 @@ package com.growup.pms.status.service;
 
 import static com.growup.pms.test.fixture.project.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.status.StatusCreateRequestTestBuilder.상태_생성_요청은;
+import static com.growup.pms.test.fixture.status.StatusEditRequestTestBuilder.상태_변경_요청은;
 import static com.growup.pms.test.fixture.status.StatusResponseTestBuilder.상태_응답은;
 import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
@@ -16,10 +20,10 @@ import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
+import com.growup.pms.status.service.dto.StatusEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +57,7 @@ class StatusServiceTest {
             Status 생성된_상태 = 상태는().식별자가(예상_상태_ID).프로젝트가(예상_프로젝트).이다();
             StatusCreateCommand 상태_생성_요청 = 상태_생성_요청은().이다().toCommand(프로젝트_ID);
 
-            when(projectRepository.findById(프로젝트_ID)).thenReturn(Optional.of(예상_프로젝트));
+            when(projectRepository.findByIdOrThrow(프로젝트_ID)).thenReturn(예상_프로젝트);
             when(statusRepository.save(any(Status.class))).thenReturn(생성된_상태);
 
             // when
@@ -68,6 +72,9 @@ class StatusServiceTest {
             // given
             Long 프로젝트_ID = 1L;
             StatusCreateCommand 상태_생성_요청 = 상태_생성_요청은().이다().toCommand(프로젝트_ID);
+
+            doThrow(new EntityNotFoundException(ErrorCode.PROJECT_NOT_FOUND))
+                    .when(projectRepository).findByIdOrThrow(프로젝트_ID);
 
             // when & then
             assertThatThrownBy(() -> statusService.createStatus(상태_생성_요청))
@@ -128,6 +135,61 @@ class StatusServiceTest {
 
             // then
             assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_상태_변경시에 {
+
+        @Test
+        void 모든값_수정에_성공한다() {
+            // given
+            Long 기존_상태_ID = 1L;
+            Status 기존_상태 = 상태는().식별자가(기존_상태_ID).이다();
+            String 새로운_상태_이름 = "새로운 이름입니다!";
+            String 새로운_색상코드 = "A0B1C2";
+            Short 새로운_정렬순서 = 1;
+            StatusEditCommand 상태_변경_요청 = 상태_변경_요청은()
+                    .이름은(새로운_상태_이름)
+                    .색상코드는(새로운_색상코드)
+                    .정렬순서는(새로운_정렬순서)
+                    .이다()
+                    .toCommand(기존_상태_ID);
+
+            when(statusRepository.findByIdOrThrow(기존_상태_ID))
+                    .thenReturn(기존_상태);
+
+            // when
+            statusService.editStatus(상태_변경_요청);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(기존_상태.getName()).isEqualTo(새로운_상태_이름);
+                softly.assertThat(기존_상태.getColorCode()).isEqualTo(새로운_색상코드);
+                softly.assertThat(기존_상태.getSortOrder()).isEqualTo(새로운_정렬순서);
+            });
+        }
+
+        @Test
+        void 상태가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_상태_ID = 1L;
+            String 새로운_상태_이름 = "새로운 이름입니다!";
+            String 새로운_색상코드 = "A0B1C2";
+            Short 새로운_정렬순서 = 1;
+            StatusEditCommand 상태_변경_요청 = 상태_변경_요청은()
+                    .이름은(새로운_상태_이름)
+                    .색상코드는(새로운_색상코드)
+                    .정렬순서는(새로운_정렬순서)
+                    .이다()
+                    .toCommand(잘못된_상태_ID);
+
+            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+                    .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
+
+            // when & then
+            assertThatThrownBy(() -> statusService.editStatus(상태_변경_요청))
+                    .isInstanceOf(EntityNotFoundException.class);
         }
     }
 }
