@@ -1,13 +1,9 @@
 package com.growup.pms.status.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import com.growup.pms.status.controller.dto.response.StatusResponse;
+import java.util.List;
 
-@Repository
-@RequiredArgsConstructor
-public class StatusQueryRepository {
+public interface StatusQueryRepository {
 
-    private final JPAQueryFactory queryFactory;
-
+    List<StatusResponse> getAllStatusByProjectId(Long projectId);
 }
