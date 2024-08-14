@@ -210,6 +210,35 @@ paths:
               description: 리프레시 토큰
               schema:
                 type: string
+  /api/v1/user/team:
+    get:
+      tags:
+      - User
+      summary: 가입한 팀 목록 조회
+      description: 가입한 팀이거나 가입 대기 중인 팀의 목록을 조회합니다.
+      operationId: user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Content-Type:
+              description: application/json
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-user-team1292527924'
+              examples:
+                user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "teamId" : 1,
+                      "name" : "팀 이름",
+                      "content" : "팀 소개",
+                      "creator" : "팀장 닉네임",
+                      "isPendingApproval" : true
+                    } ]
   /api/v1/project/{projectId}/status:
     get:
       tags:
@@ -697,12 +726,6 @@ paths:
           description: "204"
 components:
   schemas:
-    api-v1-team-teamId-invitation-1361275252:
-      type: object
-      properties:
-        userId:
-          type: number
-          description: 초대할 사용자 ID
     api-v1-project-projectId-status-statusId-1514376740:
       type: object
       properties:
@@ -715,6 +738,21 @@ components:
         colorCode:
           type: string
           description: 변경할 색상 코드
+    api-v1-user-login-434021498:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        username:
+          type: string
+          description: 아이디
+    api-v1-team-teamId-invitation-1361275252:
+      type: object
+      properties:
+        userId:
+          type: number
+          description: 초대할 사용자 ID
     api-v1-project-projectId-status1214003116:
       type: object
       properties:
@@ -784,15 +822,6 @@ components:
               taskId:
                 type: number
                 description: 프로젝트 일정 식별자
-    api-v1-user-login-434021498:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 비밀번호
-        username:
-          type: string
-          description: 아이디
     api-v1-team2045834793:
       type: object
       properties:
@@ -874,6 +903,26 @@ components:
         content:
           type: string
           description: 일정 내용
+    api-v1-user-team1292527924:
+      type: array
+      items:
+        type: object
+        properties:
+          creator:
+            type: string
+            description: 팀장 닉네임
+          teamId:
+            type: number
+            description: 팀 ID
+          name:
+            type: string
+            description: 팀 이름
+          isPendingApproval:
+            type: boolean
+            description: 가입 대기 여부
+          content:
+            type: string
+            description: 팀 소개
     api-v1-project-projectId-task-106941217:
       type: object
       properties:
