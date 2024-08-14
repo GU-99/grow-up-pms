@@ -27,7 +27,8 @@ public enum ErrorCode {
     TEAM_NOT_FOUND(ErrorCategory.TEAM_ERROR, "002", "팀을 찾을 수 없습니다."),
 
     PROJECT_NOT_FOUND(ErrorCategory.PROJECT_ERROR, "001", "존재하지 않는 프로젝트입니다."),
-    ;
+
+    STATUS_NOT_FOUND(ErrorCategory.STATUS_ERROR, "001", "존재하지 않는 프로젝트 상태입니다.");
 
     private final ErrorCategory errorCategory;
     private final String code;

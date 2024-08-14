@@ -1,10 +1,7 @@
 package com.growup.pms.status.service;
 
-import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
-import com.growup.pms.status.controller.dto.response.PageResponse;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
@@ -27,27 +24,34 @@ public class StatusService {
 
     @Transactional
     public StatusResponse createStatus(StatusCreateCommand command) {
-        Project project = getProject(command);
+        Project project = projectRepository.findByIdOrThrow(command.projectId());
         Status savedStatus = statusRepository.save(command.toEntity(project));
 
         return StatusResponse.of(savedStatus);
     }
 
-    public PageResponse<List<StatusResponse>> getStatuses(Long projectId) {
-        return null;
+    public List<StatusResponse> getStatuses(Long projectId) {
+        return statusRepository.getAllStatusByProjectId(projectId);
     }
 
-    public void editStatus(StatusEditCommand dto) {
+    @Transactional
+    public void editStatus(StatusEditCommand command) {
+        Status status = statusRepository.findByIdOrThrow(command.statusId());
+
+        if (command.statusName().isPresent()) {
+            status.editName(command.statusName().get());
+        }
+        if (command.colorCode().isPresent()) {
+            status.editColorCode(command.colorCode().get());
+        }
+        if (command.sortOrder().isPresent()) {
+            status.editSortOrder(command.sortOrder().get());
+        }
     }
 
-    public void editStatusOrder(Long statusId, Short sortOrder) {
-    }
-
+    @Transactional
     public void deleteStatus(Long statusId) {
-    }
-
-    private Project getProject(StatusCreateCommand command) {
-        return projectRepository.findById(command.projectId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
+        Status status = statusRepository.findByIdOrThrow(statusId);
+        statusRepository.delete(status);
     }
 }

@@ -47,11 +47,15 @@ public class Status {
     }
 
     // Business Logics //
-    public void editStatus(String statusName, String colorCode) {
+    public void editName(String name) {
+        this.name = name;
+    }
 
+    public void editColorCode(String colorCode) {
+        this.colorCode = colorCode;
     }
 
     public void editSortOrder(Short sortOrder) {
-
+        this.sortOrder = sortOrder;
     }
 }
