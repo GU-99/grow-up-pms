@@ -39,12 +39,12 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
             when(userService.save(any(UserCreateCommand.class))).thenReturn(새_사용자_ID);
 
             // when & then
-            mockMvc.perform(post("/api/v1/users")
+            mockMvc.perform(post("/api/v1/user")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(사용자_생성_요청)))
                     .andExpectAll(
                             status().isCreated(),
-                            header().string(HttpHeaders.LOCATION, "/api/v1/users/" + 새_사용자_ID));
+                            header().string(HttpHeaders.LOCATION, "/api/v1/user/" + 새_사용자_ID));
         }
     }
 
@@ -66,7 +66,7 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
                 );
 
                 // when & then
-                mockMvc.perform(multipart("/api/v1/users/file")
+                mockMvc.perform(multipart("/api/v1/user/file")
                                 .file(업로드되는_파일)
                 ).andExpect(status().isOk());
             }

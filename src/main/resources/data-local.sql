@@ -20,10 +20,10 @@ INSERT INTO teams (creator_id, name, content) VALUES
     (2, '베타 팀', '베타 팀은 창의적인 디자인을 추구하는 팀입니다.');
 
 -- 팀 사용자 삽입
-INSERT INTO team_users (team_id, user_id, role_id) VALUES
-    (1, 1, 1), -- 브라운은 알파 팀의 팀장이다
-    (1, 2, 3), -- 코니는 알파 팀의 멤버이다
-    (2, 3, 2); -- 레너드는 베타 팀의 리더이다
+INSERT INTO team_users (team_id, user_id, role_id, is_pending_approval) VALUES
+    (1, 1, 1, true), -- 브라운은 알파 팀의 팀장이다
+    (1, 2, 3, true), -- 코니는 알파 팀의 멤버이다
+    (2, 3, 2, true); -- 레너드는 베타 팀의 리더이다
 
 -- 팀 초대 삽입
 INSERT INTO team_invitations (team_id, user_id) VALUES
