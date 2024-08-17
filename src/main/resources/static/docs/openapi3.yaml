@@ -396,12 +396,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId581167037'
+              $ref: '#/components/schemas/api-v1-project-projectId-task-1327488016'
             examples:
               task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                 value: |-
                   {
                     "statusId" : 1,
+                    "userId" : 1,
                     "taskName" : "환경설정 마치기",
                     "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                     "sortOrder" : 1,
@@ -419,7 +420,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+                $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-106941217'
               examples:
                 task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                   value: |-
@@ -593,7 +594,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+                $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-106941217'
               examples:
                 task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다:
                   value: |-
@@ -780,6 +781,30 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
+    api-v1-project-projectId-task-1327488016:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 담당할 팀원의 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-team-id-1408924108:
       type: object
       properties:
@@ -910,7 +935,7 @@ components:
           content:
             type: string
             description: 팀 소개
-    api-v1-project-projectId-task-106941217:
+    api-v1-project-projectId-task-taskId-106941217:
       type: object
       properties:
         statusId:

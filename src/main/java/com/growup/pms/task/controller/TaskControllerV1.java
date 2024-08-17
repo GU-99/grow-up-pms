@@ -38,14 +38,13 @@ public class TaskControllerV1 {
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
     public ResponseEntity<TaskDetailResponse> createTask(@ProjectId @PathVariable Long projectId,
-                                                         @AuthenticationPrincipal SecurityUser user,
                                                          @Valid @RequestBody TaskCreateRequest request) {
         log.debug("TaskControllerV1#createTask called.");
-        log.debug("projectId={}", projectId);
-        log.debug("request={}", request);
+        log.debug("일정 생성을 위한 projectId={}", projectId);
+        log.debug("일정 생성을 위한 TaskCreateRequest={}", request);
 
-        TaskDetailResponse response = taskService.createTask(request.toCommand(user.getId()));
-        log.debug("response={}", response);
+        TaskDetailResponse response = taskService.createTask(request.toCommand());
+        log.debug("생성된 일정에 대한 TaskDetailResponse={}", response);
         String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}/task/{taskId}")
                 .buildAndExpand(projectId, response.taskId())
                 .toUriString();

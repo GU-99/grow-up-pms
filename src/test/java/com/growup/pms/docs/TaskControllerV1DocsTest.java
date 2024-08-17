@@ -87,6 +87,9 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .optional()
                                                 .description("프로젝트 상태 식별자"),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
+                                                .optional()
+                                                .description("담당할 팀원의 회원 식별자"),
                                         fieldWithPath("taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
