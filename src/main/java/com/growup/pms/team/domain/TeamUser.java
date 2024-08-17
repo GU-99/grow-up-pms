@@ -2,6 +2,7 @@ package com.growup.pms.team.domain;
 
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.user.domain.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -35,10 +36,14 @@ public class TeamUser {
     @JoinColumn(name = "role_id", nullable = false, foreignKey = @ForeignKey(name = "fk_team_user_role"))
     private Role role;
 
+    @Column(nullable = false)
+    private boolean isPendingApproval;
+
     @Builder
-    public TeamUser(Team team, User user, Role role) {
+    public TeamUser(Team team, User user, Role role, boolean isPendingApproval) {
         this.team = team;
         this.user = user;
         this.role = role;
+        this.isPendingApproval = isPendingApproval;
     }
 }

@@ -4,6 +4,7 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
+import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
@@ -47,6 +48,10 @@ public class UserService {
 
     public List<UserSearchResponse> searchUsersByNicknamePrefix(String nicknamePrefix) {
         return userRepository.findUsersByNicknameStartingWith(nicknamePrefix);
+    }
+
+    public List<UserTeamResponse> getAllUserTeams(Long userId) {
+        return userRepository.findAllUserTeams(userId);
     }
 }
 

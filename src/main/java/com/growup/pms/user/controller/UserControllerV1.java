@@ -1,9 +1,11 @@
 package com.growup.pms.user.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
+import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.service.UserService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -20,13 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/user")
 public class UserControllerV1 {
     private final UserService userService;
 
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request) {
-        return ResponseEntity.created(URI.create("/api/v1/users/" + userService.save(request.toCommand()))).build();
+        return ResponseEntity.created(URI.create("/api/v1/user/" + userService.save(request.toCommand()))).build();
     }
 
     @PostMapping("/file")
@@ -38,5 +40,10 @@ public class UserControllerV1 {
     @GetMapping("/search")
     public ResponseEntity<List<UserSearchResponse>> search(@RequestParam("nickname") String nicknamePrefix) {
         return ResponseEntity.ok().body(userService.searchUsersByNicknamePrefix(nicknamePrefix));
+    }
+
+    @GetMapping("/team")
+    public ResponseEntity<List<UserTeamResponse>> getTeams(@CurrentUser SecurityUser user) {
+        return ResponseEntity.ok().body(userService.getAllUserTeams(user.getId()));
     }
 }
