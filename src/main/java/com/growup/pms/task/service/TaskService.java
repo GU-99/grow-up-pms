@@ -45,8 +45,8 @@ public class TaskService {
         return TaskDetailResponse.of(savedTask);
     }
 
-    public List<TaskResponse> getTasks(Long projectId, Long statusId) {
-        return null;
+    public List<TaskResponse> getTasks(Long statusId) {
+        return taskRepository.getTasksByStatusId(statusId);
     }
 
     public TaskDetailResponse getTask(Long projectId, Long taskId) {
