@@ -2,6 +2,7 @@ package com.growup.pms.task.service;
 
 import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
 import static com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder.일정_생성_요청은;
+import static com.growup.pms.test.fixture.task.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static com.growup.pms.test.fixture.task.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,12 +12,15 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
+import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -88,6 +92,105 @@ class TaskServiceTest {
             assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
             assertThat(실제_결과.getStatusId()).isNull();
             assertThat(실제_결과.getUserNickname()).isNull();
+        }
+    }
+
+    @Nested
+    class 사용자가_상태별로_프로젝트_일정_전체_조회시에 {
+        @Test
+        void 성공한다() {
+            // given
+            Long 예상_상태_ID = 1L;
+
+            TaskResponse 예상_응답_1 = 일정_전체조회_응답은()
+                    .일정_식별자는(1L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 환경설정을 진행함")
+                    .정렬순서는((short) 1)
+                    .이다();
+
+            TaskResponse 예상_응답_2 = 일정_전체조회_응답은()
+                    .일정_식별자는(2L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("레니")
+                    .일정이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
+                    .정렬순서는((short) 2)
+                    .이다();
+
+            TaskResponse 예상_응답_3 = 일정_전체조회_응답은()
+                    .일정_식별자는(3L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
+                    .정렬순서는((short) 3)
+                    .이다();
+
+            List<TaskResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
+            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
+
+            // when
+            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
+
+            // then
+            assertThat(실제_결과).hasSize(예상_결과.size());
+            assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+
+        @Test
+        void 상태_ID가_null_이어도_성공한다() {
+            // given
+            Long 예상_상태_ID = null;
+
+            // when
+            TaskResponse 예상_응답_1 = 일정_전체조회_응답은()
+                    .일정_식별자는(1L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 환경설정을 진행함")
+                    .정렬순서는((short) 1)
+                    .이다();
+
+            TaskResponse 예상_응답_2 = 일정_전체조회_응답은()
+                    .일정_식별자는(2L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("레니")
+                    .일정이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
+                    .정렬순서는((short) 2)
+                    .이다();
+
+            TaskResponse 예상_응답_3 = 일정_전체조회_응답은()
+                    .일정_식별자는(3L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
+                    .정렬순서는((short) 3)
+                    .이다();
+
+            List<TaskResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
+            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
+
+            // when
+            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
+
+            // then
+            assertThat(실제_결과).hasSize(예상_결과.size());
+            assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+
+        @Test
+        void 해당_상태를_갖는_일정이_없다면_빈리스트를_반환한다() {
+            // given
+            Long 예상_상태_ID = 1L;
+            List<TaskResponse> 예상_결과 = Collections.emptyList();
+
+            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
+
+            // when
+            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
+
+            // then
+            assertThat(실제_결과).isEmpty();
         }
     }
 }
