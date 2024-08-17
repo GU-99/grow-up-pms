@@ -1,6 +1,7 @@
 package com.growup.pms.task.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -35,7 +37,7 @@ public class TaskControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<TaskDetailResponse> createTask(@PathVariable Long projectId,
+    public ResponseEntity<TaskDetailResponse> createTask(@ProjectId @PathVariable Long projectId,
                                                          @AuthenticationPrincipal SecurityUser user,
                                                          @Valid @RequestBody TaskCreateRequest request) {
         log.debug("TaskControllerV1#createTask called.");
@@ -53,11 +55,12 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<List<TaskResponse>> getTasks(@PathVariable Long projectId) {
+    public ResponseEntity<List<TaskResponse>> getTasks(@ProjectId @PathVariable Long projectId,
+                                                       @RequestParam(required = false, defaultValue = "0") Long statusId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("projectId={}", projectId);
 
-        List<TaskResponse> responses = taskService.getTasks(projectId);
+        List<TaskResponse> responses = taskService.getTasks(projectId, statusId);
         log.debug("PageResponse={}", responses);
 
         return ResponseEntity.ok(responses);
@@ -65,7 +68,7 @@ public class TaskControllerV1 {
 
     @GetMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<TaskDetailResponse> getTask(@PathVariable Long projectId,
+    public ResponseEntity<TaskDetailResponse> getTask(@ProjectId @PathVariable Long projectId,
                                                       @PathVariable Long taskId) {
         log.debug("TaskControllerV1#getTask called.");
         log.debug("projectId={}", projectId);
@@ -79,7 +82,7 @@ public class TaskControllerV1 {
 
     @PatchMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
-    public ResponseEntity<Void> editTask(@PathVariable Long projectId, @PathVariable Long taskId,
+    public ResponseEntity<Void> editTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId,
                                          @AuthenticationPrincipal SecurityUser user,
                                          @Valid @RequestBody TaskEditRequest request) {
         log.debug("TaskControllerV1#editTask called.");
@@ -94,7 +97,7 @@ public class TaskControllerV1 {
 
     @DeleteMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_DELETE)
-    public ResponseEntity<Void> deleteTask(@PathVariable Long projectId, @PathVariable Long taskId) {
+    public ResponseEntity<Void> deleteTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId) {
         log.debug("TaskControllerV1#deleteTask called.");
         log.debug("projectId={}", projectId);
         log.debug("taskId={}", taskId);

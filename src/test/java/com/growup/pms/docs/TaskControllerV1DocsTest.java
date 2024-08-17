@@ -128,6 +128,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
     void 일정_전체조회_API_문서를_생성한다() throws Exception {
         // given
         Long 예상_프로젝트_식별자 = 1L;
+        Long 예상_상태_식별자 = 1L;
         TaskResponse response1 = TaskResponseTestBuilder.일정_전체조회_응답은().이다();
         TaskResponse response2 = TaskResponseTestBuilder.일정_전체조회_응답은()
                 .일정_식별자는(2L)
@@ -138,20 +139,26 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         List<TaskResponse> responses = List.of(response1, response2);
 
         // when
-        when(taskService.getTasks(anyLong())).thenReturn(responses);
+        when(taskService.getTasks(anyLong(), anyLong())).thenReturn(responses);
 
         // then
         mockMvc.perform(get(("/api/v1/project/{projectId}/task"), 예상_프로젝트_식별자)
-                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
+                        .queryParam("statusId", String.valueOf(예상_상태_식별자))
+                )
                 .andExpect(status().isOk())
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .summary("프로젝트 일정 전체 조회")
-                                .description("프로젝트 내의 모든 일정을 조회합니다.")
+                                .summary("상태별 프로젝트 일정 전체 조회")
+                                .description("프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 상태별로 조회합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").type(SimpleType.NUMBER)
                                                 .description("조회할 프로젝트 식별자")
+                                )
+                                .queryParameters(
+                                        parameterWithName("statusId").type(SimpleType.NUMBER)
+                                                .description("조회할 상태 식별자")
                                 )
                                 .responseFields(
                                         fieldWithPath("[].taskId").type(JsonFieldType.NUMBER)

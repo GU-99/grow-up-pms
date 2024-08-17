@@ -1,5 +1,6 @@
 package com.growup.pms.task.controller.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +8,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.Builder;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Builder
 public record TaskCreateRequest(
@@ -24,10 +24,10 @@ public record TaskCreateRequest(
         @Positive
         Short sortOrder,
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate startDate,
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate endDate
 ) {
     public TaskCreateCommand toCommand(Long userId) {

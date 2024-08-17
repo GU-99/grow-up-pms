@@ -333,13 +333,19 @@ paths:
     get:
       tags:
       - Task
-      summary: 프로젝트 일정 전체 조회
-      description: 프로젝트 내의 모든 일정을 조회합니다.
+      summary: 상태별 프로젝트 일정 전체 조회
+      description: 프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 상태별로 조회합니다.
       operationId: task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다
       parameters:
       - name: projectId
         in: path
         description: 조회할 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: statusId
+        in: query
+        description: 조회할 상태 식별자
         required: true
         schema:
           type: number
@@ -730,15 +736,26 @@ components:
         colorCode:
           type: string
           description: 변경할 색상 코드
-    api-v1-user-login-434021498:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 비밀번호
-        username:
-          type: string
-          description: 아이디
+    api-v1-project-projectId-task1608277617:
+      type: array
+      items:
+        type: object
+        properties:
+          statusId:
+            type: number
+            description: 프로젝트 상태 식별자
+          sortOrder:
+            type: number
+            description: 정렬 순서
+          userNickname:
+            type: string
+            description: 회원 이름
+          taskName:
+            type: string
+            description: 일정 이름
+          taskId:
+            type: number
+            description: 프로젝트 일정 식별자
     api-v1-team-teamId-invitation-1361275252:
       type: object
       properties:
@@ -787,33 +804,6 @@ components:
         colorCode:
           type: string
           description: 색상 코드
-    api-v1-project-projectId-task1816323921:
-      type: object
-      properties:
-        hasNext:
-          type: boolean
-          description: 다음 페이지 존재 여부
-        items:
-          type: array
-          description: 프로젝트 내에 존재하는 일정 목록
-          items:
-            type: object
-            properties:
-              statusId:
-                type: number
-                description: 프로젝트 상태 식별자
-              sortOrder:
-                type: number
-                description: 정렬 순서
-              userNickname:
-                type: string
-                description: 회원 이름
-              taskName:
-                type: string
-                description: 일정 이름
-              taskId:
-                type: number
-                description: 프로젝트 일정 식별자
     api-v1-project-projectId-status1220278061:
       type: array
       items:
@@ -879,26 +869,6 @@ components:
         username:
           type: string
           description: 아이디
-    api-v1-project-projectId-task1608277617:
-      type: array
-      items:
-        type: object
-        properties:
-          statusId:
-            type: number
-            description: 프로젝트 상태 식별자
-          sortOrder:
-            type: number
-            description: 정렬 순서
-          userNickname:
-            type: string
-            description: 회원 이름
-          taskName:
-            type: string
-            description: 일정 이름
-          taskId:
-            type: number
-            description: 프로젝트 일정 식별자
     api-v1-project-projectId-task-taskId581167037:
       type: object
       properties:
