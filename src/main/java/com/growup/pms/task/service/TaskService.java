@@ -1,5 +1,7 @@
 package com.growup.pms.task.service;
 
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.InvalidProjectException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
@@ -27,9 +29,14 @@ public class TaskService {
     private final UserRepository userRepository;
 
     @Transactional
-    public TaskDetailResponse createTask(TaskCreateCommand command) {
+    public TaskDetailResponse createTask(Long projectId, TaskCreateCommand command) {
         Status status = statusRepository.findById(command.statusId())
                 .orElse(null);
+
+        if (status != null) {
+            isValidProject(projectId, status.getProject().getId());
+        }
+
         User user = userRepository.findById(command.userId())
                 .orElse(null);
 
@@ -52,5 +59,11 @@ public class TaskService {
 
     public void deleteTask(Long taskId) {
 
+    }
+
+    private void isValidProject(Long requestedProjectId, Long originalProjectId) {
+        if (!requestedProjectId.equals(originalProjectId)) {
+            throw new InvalidProjectException(ErrorCode.INVALID_PROJECT);
+        }
     }
 }

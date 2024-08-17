@@ -43,7 +43,7 @@ public class TaskControllerV1 {
         log.debug("일정 생성을 위한 projectId={}", projectId);
         log.debug("일정 생성을 위한 TaskCreateRequest={}", request);
 
-        TaskDetailResponse response = taskService.createTask(request.toCommand());
+        TaskDetailResponse response = taskService.createTask(projectId, request.toCommand());
         log.debug("생성된 일정에 대한 TaskDetailResponse={}", response);
 
         String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}/task/{taskId}")

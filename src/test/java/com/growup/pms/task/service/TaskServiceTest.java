@@ -49,6 +49,7 @@ class TaskServiceTest {
         void 성공한다() {
             // given
             Long taskId = 1L;
+            Long projectId = 1L;
             Long statusId = 1L;
             Long userId = 1L;
             Status status = 상태는().식별자가(statusId).이다();
@@ -61,7 +62,7 @@ class TaskServiceTest {
             when(taskRepository.save(any(Task.class))).thenReturn(task);
 
             // when
-            TaskDetailResponse response = taskService.createTask(command);
+            TaskDetailResponse response = taskService.createTask(projectId, command);
 
             // then
             assertThat(response.getTaskId()).isEqualTo(taskId);
@@ -70,6 +71,7 @@ class TaskServiceTest {
         @Test
         void 담당회원과_상태가_없어도_성공한다() {
             Long taskId = 1L;
+            Long projectId = 1L;
             Long statusId = 1L;
             Long userId = 1L;
             Task task = 일정은().회원은(null).상태는(null).이다();
@@ -80,7 +82,7 @@ class TaskServiceTest {
             when(taskRepository.save(any(Task.class))).thenReturn(task);
 
             // when
-            TaskDetailResponse response = taskService.createTask(command);
+            TaskDetailResponse response = taskService.createTask(projectId, command);
 
             // then
             assertThat(response.getTaskId()).isEqualTo(taskId);

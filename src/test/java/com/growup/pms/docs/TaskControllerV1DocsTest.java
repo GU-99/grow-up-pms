@@ -59,7 +59,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         TaskDetailResponse 예상_일정_응답 = TaskDetailResponseTestBuilder.일정_상세조회_응답은().이다();
 
         // when
-        when(taskService.createTask(any(TaskCreateCommand.class)))
+        when(taskService.createTask(anyLong(), any(TaskCreateCommand.class)))
                 .thenReturn(예상_일정_응답);
 
         objectMapper.registerModule(new JavaTimeModule())
