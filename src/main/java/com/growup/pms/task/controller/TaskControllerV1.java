@@ -45,8 +45,9 @@ public class TaskControllerV1 {
 
         TaskDetailResponse response = taskService.createTask(request.toCommand());
         log.debug("생성된 일정에 대한 TaskDetailResponse={}", response);
+
         String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}/task/{taskId}")
-                .buildAndExpand(projectId, response.taskId())
+                .buildAndExpand(projectId, response.getTaskId())
                 .toUriString();
 
         return ResponseEntity.created(URI.create(uri)).body(response);
@@ -57,10 +58,9 @@ public class TaskControllerV1 {
     public ResponseEntity<List<TaskResponse>> getTasks(@ProjectId @PathVariable Long projectId,
                                                        @RequestParam(required = false, defaultValue = "0") Long statusId) {
         log.debug("TaskControllerV1#getTasks called.");
-        log.debug("projectId={}", projectId);
+        log.debug("일정 전체 조회를 위한 projectId={}", projectId);
 
         List<TaskResponse> responses = taskService.getTasks(projectId, statusId);
-        log.debug("PageResponse={}", responses);
 
         return ResponseEntity.ok(responses);
     }
@@ -70,11 +70,11 @@ public class TaskControllerV1 {
     public ResponseEntity<TaskDetailResponse> getTask(@ProjectId @PathVariable Long projectId,
                                                       @PathVariable Long taskId) {
         log.debug("TaskControllerV1#getTask called.");
-        log.debug("projectId={}", projectId);
-        log.debug("taskId={}", taskId);
+        log.debug("일정 상세 조회를 위한 projectId={}", projectId);
+        log.debug("일정 상세 조회를 위한 taskId={}", taskId);
 
         TaskDetailResponse response = taskService.getTask(projectId, taskId);
-        log.debug("response={}", response);
+        log.debug("일정 상세 조회 결과 TaskDetailResponse={}", response);
 
         return ResponseEntity.ok(response);
     }
@@ -85,9 +85,9 @@ public class TaskControllerV1 {
                                          @AuthenticationPrincipal SecurityUser user,
                                          @Valid @RequestBody TaskEditRequest request) {
         log.debug("TaskControllerV1#editTask called.");
-        log.debug("projectId={}", projectId);
-        log.debug("taskId={}", taskId);
-        log.debug("request={}", request);
+        log.debug("일정 변경을 위한 projectId={}", projectId);
+        log.debug("일정 변경을 위한 taskId={}", taskId);
+        log.debug("일정 변경을 위한 TaskEditRequest={}", request);
 
         taskService.editTask(request.toCommand(user.getId()));
 
@@ -98,8 +98,8 @@ public class TaskControllerV1 {
     @RequirePermission(PermissionType.PROJECT_TASK_DELETE)
     public ResponseEntity<Void> deleteTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId) {
         log.debug("TaskControllerV1#deleteTask called.");
-        log.debug("projectId={}", projectId);
-        log.debug("taskId={}", taskId);
+        log.debug("일정 삭제를 위한 projectId={}", projectId);
+        log.debug("일정 삭제를 위한 taskId={}", taskId);
 
         taskService.deleteTask(taskId);
 
