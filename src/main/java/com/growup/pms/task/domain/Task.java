@@ -29,11 +29,11 @@ public class Task {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_status_id", nullable = false, foreignKey = @ForeignKey(name = "fk_task_status"))
+    @JoinColumn(name = "project_status_id", foreignKey = @ForeignKey(name = "fk_task_status"))
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_task_user"))
+    @JoinColumn(name="user_id", foreignKey = @ForeignKey(name = "fk_task_user"))
     private User user;
 
     @Column(nullable = false, length = 128)
