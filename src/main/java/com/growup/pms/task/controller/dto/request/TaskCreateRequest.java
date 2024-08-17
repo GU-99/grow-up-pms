@@ -13,6 +13,8 @@ import lombok.Builder;
 public record TaskCreateRequest(
         Long statusId,
 
+        Long userId,
+
         @NotBlank
         @Size(max = 128)
         String taskName,
@@ -30,7 +32,7 @@ public record TaskCreateRequest(
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate endDate
 ) {
-    public TaskCreateCommand toCommand(Long userId) {
+    public TaskCreateCommand toCommand() {
         return TaskCreateCommand.builder()
                 .userId(userId)
                 .statusId(statusId)

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class TaskCreateRequestTestBuilder {
 
     private Long statusId = 1L;
+    private Long userId = 1L;
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
@@ -24,6 +25,11 @@ public class TaskCreateRequestTestBuilder {
 
     public TaskCreateRequestTestBuilder 상태_식별자는(Long statusId) {
         this.statusId = statusId;
+        return this;
+    }
+
+    public TaskCreateRequestTestBuilder 회원_식별자는(Long userId) {
+        this.userId = userId;
         return this;
     }
 
@@ -55,6 +61,7 @@ public class TaskCreateRequestTestBuilder {
     public TaskCreateRequest 이다() {
         return TaskCreateRequest.builder()
                 .statusId(statusId)
+                .userId(userId)
                 .taskName(taskName)
                 .content(content)
                 .sortOrder(sortOrder)

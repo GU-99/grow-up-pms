@@ -24,8 +24,8 @@ paths:
       tags:
       - Team
       summary: 팀 생성
-      description: 팀을 생성합니다.
-      operationId: team-controller-v1-docs-test/팀_생성_api_문서를_생성한다사용자가_팀을_생성_시에/성공한다
+      description: "사용자가 새로운 팀을 생성합니다. 생성 시, 다른 사용자를 함께 팀으로 초대할 수 있습니다."
+      operationId: team-controller-v1-docs-test/팀_생성_api_문서를_생성한다
       parameters:
       - name: Content-Type
         in: header
@@ -40,12 +40,6 @@ paths:
             schema:
               $ref: '#/components/schemas/api-v1-team2045834793'
             examples:
-              사용자가_팀을_생성_시에/성공한다:
-                value: |-
-                  {
-                    "name" : "구구구",
-                    "content" : "안녕하세요, 구구구입니다!"
-                  }
               team-controller-v1-docs-test/팀_생성_api_문서를_생성한다:
                 value: |-
                   {
@@ -70,15 +64,16 @@ paths:
       tags:
       - Team
       summary: 팀 조회
-      description: 팀 정보를 조회합니다.
-      operationId: team-controller-v1-docs-test/팀_조회_api_문서를_생성한다사용자가_팀을_조회_시에/성공한다
+      description: 해당 팀 정보를 조회합니다.
+      operationId: team-controller-v1-docs-test/팀_조회_api_문서를_생성한다
       parameters:
       - name: id
         in: path
         description: 팀 아이디
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "200":
           description: "200"
@@ -92,12 +87,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/api-v1-team-id-1408924108'
               examples:
-                사용자가_팀을_조회_시에/성공한다:
-                  value: |-
-                    {
-                      "name" : "구구구",
-                      "content" : "안녕하세요, 구구구입니다!"
-                    }
                 team-controller-v1-docs-test/팀_조회_api_문서를_생성한다:
                   value: |-
                     {
@@ -109,15 +98,16 @@ paths:
       tags:
       - Team
       summary: 팀 제거
-      description: 팀을 제거합니다.
-      operationId: team-controller-v1-docs-test/팀_제거_api_문서를_생성한다사용자가_팀을_제거_시에/성공한다
+      description: 해당 팀을 제거합니다.
+      operationId: team-controller-v1-docs-test/팀_제거_api_문서를_생성한다
       parameters:
       - name: id
         in: path
         description: 제거할 팀 ID
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "204":
           description: "204"
@@ -126,7 +116,7 @@ paths:
       - Team
       summary: 팀 변경
       description: 해당 팀의 정보를 변경합니다.
-      operationId: team-controller-v1-docs-test/팀_변경_api_문서를_생성한다사용자가_팀을_변경_시에/성공한다
+      operationId: team-controller-v1-docs-test/팀_변경_api_문서를_생성한다
       parameters:
       - name: id
         in: path
@@ -154,12 +144,6 @@ paths:
                     "name" : "구구구",
                     "content" : "안녕하세요, 구구구입니다!"
                   }
-              사용자가_팀을_변경_시에/성공한다:
-                value: |-
-                  {
-                    "name" : "구구구",
-                    "content" : "안녕하세요, 구구구입니다!"
-                  }
       responses:
         "204":
           description: "204"
@@ -169,7 +153,7 @@ paths:
       - Auth
       summary: 일반 로그인
       description: 아이디와 비밀번호를 통해 로그인합니다.
-      operationId: login-controller-v1-docs-test/로그인_api_문서를_생성한다사용자가_로그인_시에/성공한다
+      operationId: login-controller-v1-docs-test/로그인_api_문서를_생성한다
       parameters:
       - name: Content-Type
         in: header
@@ -182,14 +166,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-user-login-1192987719'
+              $ref: '#/components/schemas/api-v1-user-login-434021498'
             examples:
-              사용자가_로그인_시에/성공한다:
-                value: |-
-                  {
-                    "email" : "brown@gu99.com",
-                    "password" : "test1234!@#$"
-                  }
               login-controller-v1-docs-test/로그인_api_문서를_생성한다:
                 value: |-
                   {
@@ -396,12 +374,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId581167037'
+              $ref: '#/components/schemas/api-v1-project-projectId-task-1327488016'
             examples:
               task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                 value: |-
                   {
                     "statusId" : 1,
+                    "userId" : 1,
                     "taskName" : "환경설정 마치기",
                     "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                     "sortOrder" : 1,
@@ -419,7 +398,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+                $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-106941217'
               examples:
                 task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                   value: |-
@@ -481,7 +460,7 @@ paths:
       - Auth
       summary: 토큰 재발급
       description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.
-      operationId: login-controller-v1-docs-test/토큰_재발급_api_문서를_생성한다사용자가_토큰_재발급_시에/성공한다
+      operationId: login-controller-v1-docs-test/토큰_재발급_api_문서를_생성한다
       parameters:
       - name: Content-Type
         in: header
@@ -593,7 +572,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
+                $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-106941217'
               examples:
                 task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다:
                   value: |-
@@ -736,6 +715,15 @@ components:
         colorCode:
           type: string
           description: 변경할 색상 코드
+    api-v1-user-login-434021498:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        username:
+          type: string
+          description: 아이디
     api-v1-project-projectId-task1608277617:
       type: array
       items:
@@ -780,6 +768,30 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
+    api-v1-project-projectId-task-1327488016:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 담당할 팀원의 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-team-id-1408924108:
       type: object
       properties:
@@ -857,18 +869,6 @@ components:
         content:
           type: string
           description: 팀 소개
-    api-v1-user-login-1192987719:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 비밀번호
-        email:
-          type: string
-          description: 이메일
-        username:
-          type: string
-          description: 아이디
     api-v1-project-projectId-task-taskId581167037:
       type: object
       properties:
@@ -910,7 +910,7 @@ components:
           content:
             type: string
             description: 팀 소개
-    api-v1-project-projectId-task-106941217:
+    api-v1-project-projectId-task-taskId-106941217:
       type: object
       properties:
         statusId:

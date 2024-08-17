@@ -10,4 +10,6 @@ public final class RegexConstants {
     public static final String NICKNAME_PATTERN = "^[A-Za-z0-9가-힣]{2,20}$";
 
     public static final String TEAM_NAME_PATTERN = "^[가-힣a-zA-Z0-9]{1,10}$";
+
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd";
 }

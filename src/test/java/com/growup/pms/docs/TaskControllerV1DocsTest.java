@@ -59,7 +59,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         TaskDetailResponse 예상_일정_응답 = TaskDetailResponseTestBuilder.일정_상세조회_응답은().이다();
 
         // when
-        when(taskService.createTask(any(TaskCreateCommand.class)))
+        when(taskService.createTask(anyLong(), any(TaskCreateCommand.class)))
                 .thenReturn(예상_일정_응답);
 
         objectMapper.registerModule(new JavaTimeModule())
@@ -87,6 +87,9 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .optional()
                                                 .description("프로젝트 상태 식별자"),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
+                                                .optional()
+                                                .description("담당할 팀원의 회원 식별자"),
                                         fieldWithPath("taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
