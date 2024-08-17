@@ -20,7 +20,7 @@ public class TaskService {
         return null;
     }
 
-    public List<TaskResponse> getTasks(Long projectId) {
+    public List<TaskResponse> getTasks(Long projectId, Long statusId) {
         return null;
     }
 

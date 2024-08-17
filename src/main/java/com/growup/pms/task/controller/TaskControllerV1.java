@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -54,11 +55,12 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<List<TaskResponse>> getTasks(@ProjectId @PathVariable Long projectId) {
+    public ResponseEntity<List<TaskResponse>> getTasks(@ProjectId @PathVariable Long projectId,
+                                                       @RequestParam(required = false, defaultValue = "0") Long statusId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("projectId={}", projectId);
 
-        List<TaskResponse> responses = taskService.getTasks(projectId);
+        List<TaskResponse> responses = taskService.getTasks(projectId, statusId);
         log.debug("PageResponse={}", responses);
 
         return ResponseEntity.ok(responses);
