@@ -48,46 +48,46 @@ class TaskServiceTest {
         @Test
         void 성공한다() {
             // given
-            Long taskId = 1L;
-            Long projectId = 1L;
-            Long statusId = 1L;
-            Long userId = 1L;
-            Status status = 상태는().식별자가(statusId).이다();
-            User user = 사용자는().식별자가(userId).이다();
-            Task task = 일정은().이다();
-            TaskCreateCommand command = 일정_생성_요청은().이다().toCommand();
+            Long 예상_일정_ID = 1L;
+            Long 예상_프로젝트_ID = 1L;
+            Long 예상_상태_ID = 1L;
+            Long 예상_담당자_ID = 1L;
+            Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
+            User 예상_담당자 = 사용자는().식별자가(예상_담당자_ID).이다();
+            Task 예상_일정 = 일정은().이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
-            when(statusRepository.findById(statusId)).thenReturn(Optional.of(status));
-            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-            when(taskRepository.save(any(Task.class))).thenReturn(task);
+            when(statusRepository.findById(예상_상태_ID)).thenReturn(Optional.of(예상_상태));
+            when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.of(예상_담당자));
+            when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
             // when
-            TaskDetailResponse response = taskService.createTask(projectId, command);
+            TaskDetailResponse 실제_결과 = taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청);
 
             // then
-            assertThat(response.getTaskId()).isEqualTo(taskId);
+            assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
         }
 
         @Test
         void 담당회원과_상태가_없어도_성공한다() {
-            Long taskId = 1L;
-            Long projectId = 1L;
-            Long statusId = 1L;
-            Long userId = 1L;
-            Task task = 일정은().회원은(null).상태는(null).이다();
-            TaskCreateCommand command = 일정_생성_요청은().이다().toCommand();
+            Long 예상_일정_ID = 1L;
+            Long 예상_프로젝트_ID = 1L;
+            Long 예상_상태_ID = 1L;
+            Long 예상_담당자_ID = 1L;
+            Task 예상_일정 = 일정은().회원은(null).상태는(null).이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
-            when(statusRepository.findById(statusId)).thenReturn(Optional.empty());
-            when(userRepository.findById(userId)).thenReturn(Optional.empty());
-            when(taskRepository.save(any(Task.class))).thenReturn(task);
+            when(statusRepository.findById(예상_상태_ID)).thenReturn(Optional.empty());
+            when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.empty());
+            when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
             // when
-            TaskDetailResponse response = taskService.createTask(projectId, command);
+            TaskDetailResponse 실제_결과 = taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청);
 
             // then
-            assertThat(response.getTaskId()).isEqualTo(taskId);
-            assertThat(response.getStatusId()).isNull();
-            assertThat(response.getUserNickname()).isNull();
+            assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
+            assertThat(실제_결과.getStatusId()).isNull();
+            assertThat(실제_결과.getUserNickname()).isNull();
         }
     }
 }
