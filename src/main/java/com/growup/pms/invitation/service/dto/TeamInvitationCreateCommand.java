@@ -1,4 +1,4 @@
-package com.growup.pms.invitation.domian.dto;
+package com.growup.pms.invitation.service.dto;
 
 import com.growup.pms.invitation.domian.TeamInvitation;
 import com.growup.pms.team.domain.Team;
