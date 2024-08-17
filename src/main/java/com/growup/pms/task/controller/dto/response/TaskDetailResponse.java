@@ -1,6 +1,9 @@
 package com.growup.pms.task.controller.dto.response;
 
+import static com.growup.pms.common.constant.RegexConstants.DATE_TIME_PATTERN;
+
 import com.growup.pms.task.domain.Task;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,15 +39,33 @@ public class TaskDetailResponse {
     public static TaskDetailResponse of(Task task) {
         return TaskDetailResponse.builder()
                 .taskId(task.getId())
-                .statusId(task.getStatus() != null ? task.getStatus().getId() : null)
-                .userNickname(task.getUser() != null ? task.getUser().getUsername() : null)
+                .statusId(hasStatus(task) ? getStatusId(task) : null)
+                .userNickname(isAssigned(task) ? getAssignee(task) : null)
                 .taskName(task.getName())
                 .content(task.getContent())
                 .sortOrder(task.getSortOrder())
-                .startDate(task.getStartDate() != null ? task.getStartDate()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null)
-                .endDate(task.getEndDate() != null ? task.getEndDate()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null)
+                .startDate(formatDateOrNull(task.getStartDate()))
+                .endDate(formatDateOrNull(task.getEndDate()))
                 .build();
+    }
+
+    private static Long getStatusId(Task task) {
+        return task.getStatus().getId();
+    }
+
+    private static boolean hasStatus(Task task) {
+        return task.getStatus() != null;
+    }
+
+    private static String getAssignee(Task task) {
+        return task.getUser().getUsername();
+    }
+
+    private static boolean isAssigned(Task task) {
+        return task.getUser() != null;
+    }
+
+    private static String formatDateOrNull(LocalDate localDAte) {
+        return localDAte != null ? localDAte.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)) : null;
     }
 }
