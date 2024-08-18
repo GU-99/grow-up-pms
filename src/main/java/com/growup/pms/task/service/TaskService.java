@@ -12,8 +12,8 @@ import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -60,23 +60,29 @@ public class TaskService {
     public void editTask(Long taskId, TaskEditCommand command) {
         Task task = taskRepository.findByIdOrThrow(taskId);
 
-        changeAssignee(command.userId(), task);
-        changeStatus(command.statusId(), task);
-        changeTaskName(command.taskName(), task);
-        changeContent(command.content(), task);
-        changSortOrder(command.sortOrder(), task);
-        changeStartDate(command.startDate(), task);
-        changeEndDate(command.endDate(), task);
+        updateField(command.userId(), this::changeAssignee, task);
+        updateField(command.statusId(), this::changeStatus, task);
+        updateField(command.taskName(), (v, t) -> t.editName(v.get()), task);
+        updateField(command.content(), (v, t) -> t.editContent(v.get()), task);
+        updateField(command.sortOrder(), (v, t) -> t.editSortOrder(v.get()), task);
+        updateField(command.startDate(), (v, t) -> t.editStartDate(v.get()), task);
+        updateField(command.endDate(), (v, t) -> t.editEndDate(v.get()), task);
     }
 
+    @Transactional
     public void deleteTask(Long taskId) {
-
+        Task task = taskRepository.findByIdOrThrow(taskId);
+        taskRepository.delete(task);
     }
 
     private void isValidProject(Long requestedProjectId, Long originalProjectId) {
         if (!requestedProjectId.equals(originalProjectId)) {
             throw new InvalidProjectException(ErrorCode.INVALID_PROJECT);
         }
+    }
+
+    private <T> void updateField(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Task> updater, Task task) {
+        value.ifPresent(v -> updater.accept(JsonNullable.of(v), task));
     }
 
     private void changeAssignee(JsonNullable<Long> userId, Task task) {
@@ -91,25 +97,5 @@ public class TaskService {
             Status status = statusRepository.findByIdOrThrow(id);
             task.editStatus(status);
         });
-    }
-
-    private void changeTaskName(JsonNullable<String> taskName, Task task) {
-        taskName.ifPresent(task::editName);
-    }
-
-    private void changeContent(JsonNullable<String> content, Task task) {
-        content.ifPresent(task::editContent);
-    }
-
-    private void changSortOrder(JsonNullable<Short> sortOrder, Task task) {
-        sortOrder.ifPresent(task::editSortOrder);
-    }
-
-    private void changeStartDate(JsonNullable<LocalDate> startDate, Task task) {
-        startDate.ifPresent(task::editStartDate);
-    }
-
-    private void changeEndDate(JsonNullable<LocalDate> endDate, Task task) {
-        endDate.ifPresent(task::editEndDate);
     }
 }

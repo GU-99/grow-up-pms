@@ -10,7 +10,9 @@ import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
@@ -330,6 +332,40 @@ class TaskServiceTest {
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage("존재하지 않는 프로젝트 상태입니다.");
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_일정_삭제시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            doNothing().when(taskRepository).delete(기존_일정);
+
+            // when
+            taskService.deleteTask(기존_일정_ID);
+
+            // then
+            verify(taskRepository).delete(기존_일정);
+        }
+
+        @Test
+        void 일정이_없으면_예외가_발생한다() {
+            // given
+            Long 기존_일정_ID = 1L;
+
+            doThrow(new EntityNotFoundException(ErrorCode.TASK_NOT_FOUND))
+                    .when(taskRepository).findByIdOrThrow(기존_일정_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.deleteTask(기존_일정_ID))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("존재하지 않는 프로젝트 일정입니다.");
         }
     }
 }
