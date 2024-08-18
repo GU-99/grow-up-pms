@@ -37,6 +37,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
+@WithMockSecurityUser(id = 1L)
 class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
     static final String TAG = "Team";
 
@@ -44,7 +45,6 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
     TeamService teamService;
 
     @Test
-    @WithMockSecurityUser(id = 1L)
     void 팀_생성_API_문서를_생성한다() throws Exception {
         // given
         Long 팀장_ID = 1L;
@@ -127,5 +127,24 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .requestFields(
                                         fieldWithPath("name").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개")).build())));
+    }
+
+    @Test
+    void 팀_탈퇴_API_문서를_생성한다() throws Exception {
+        // given
+        Long 팀_ID = 1L;
+        Long 사용자_ID = 1L;
+
+        doNothing().when(teamService).leaveTeam(팀_ID, 사용자_ID);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/team/{id}/leave", 팀_ID))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀 탈퇴")
+                                .description("해당 팀을 탈퇴합니다. 자신이 팀장이라면 팀을 제거합니다.")
+                                .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("탈퇴할 팀 ID")).build())));
     }
 }

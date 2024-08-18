@@ -1,5 +1,6 @@
 package com.growup.pms.status.domain;
 
+import com.growup.pms.common.BaseEntity;
 import com.growup.pms.project.domain.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,15 +15,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Table(name = "project_status")
+@SQLDelete(sql = "UPDATE project_status SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Status {
+public class Status extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_status_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -13,4 +13,6 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId>,
         FROM TeamUser tu JOIN tu.role r ON tu.role.id = r.id
         WHERE tu.team.id = :teamId AND tu.user.id = :userId""")
     Optional<Role> findRoleById(Long teamId, Long userId);
+
+    void deleteAllByTeamId(Long teamId);
 }

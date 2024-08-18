@@ -1,6 +1,7 @@
 package com.growup.pms.team.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.role.domain.PermissionType;
@@ -47,6 +48,12 @@ public class TeamControllerV1 {
     @RequirePermission(PermissionType.TEAM_UPDATE)
     public ResponseEntity<Void> updateTeam(@PathVariable @TeamId Long teamId, @Valid @RequestBody TeamUpdateRequest request) {
         teamService.updateTeam(teamId, request.toCommand());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{teamId}/leave")
+    public ResponseEntity<Void> leaveTeam(@CurrentUser SecurityUser user, @PathVariable Long teamId) {
+        teamService.leaveTeam(teamId, user.getId());
         return ResponseEntity.noContent().build();
     }
 }
