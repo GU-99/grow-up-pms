@@ -1,0 +1,38 @@
+package com.growup.pms.auth.service;
+
+import com.growup.pms.auth.service.dto.EmailDetails;
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.MessageFailureException;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+@Service
+public class MailtrapClient {
+    private final JavaMailSender mailSender;
+    private final String sandboxSenderEmail;
+
+    public MailtrapClient(JavaMailSender mailSender, @Value("${mailtrap.from}") String sandboxSenderEmail) {
+        this.mailSender = mailSender;
+        this.sandboxSenderEmail = sandboxSenderEmail;
+    }
+
+    public void sendEmail(EmailDetails emailDetails) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(sandboxSenderEmail);
+            helper.setTo(emailDetails.recipient());
+            helper.setSubject(emailDetails.subject());
+            helper.setText(emailDetails.content());
+
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new MessageFailureException(ErrorCode.EMAIL_SENDING_ERROR);
+        }
+    }
+}
