@@ -64,13 +64,15 @@ public class TaskService {
         changeStatus(command.statusId(), task);
         changeTaskName(command.taskName(), task);
         changeContent(command.content(), task);
-        changSortOrder(command.sortOrder(), task);
+        changeSortOrder(command.sortOrder(), task);
         changeStartDate(command.startDate(), task);
         changeEndDate(command.endDate(), task);
     }
 
+    @Transactional
     public void deleteTask(Long taskId) {
-
+        Task task = taskRepository.findByIdOrThrow(taskId);
+        taskRepository.delete(task);
     }
 
     private void isValidProject(Long requestedProjectId, Long originalProjectId) {
@@ -101,7 +103,7 @@ public class TaskService {
         content.ifPresent(task::editContent);
     }
 
-    private void changSortOrder(JsonNullable<Short> sortOrder, Task task) {
+    private void changeSortOrder(JsonNullable<Short> sortOrder, Task task) {
         sortOrder.ifPresent(task::editSortOrder);
     }
 
