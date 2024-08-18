@@ -50,7 +50,8 @@ public class TaskService {
     }
 
     public TaskDetailResponse getTask(Long taskId) {
-        return null;
+        Task task = taskRepository.findByIdOrThrow(taskId);
+        return TaskDetailResponse.of(task);
     }
 
     public void editTask(TaskEditCommand command) {
