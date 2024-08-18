@@ -47,6 +47,7 @@ public class TeamService {
     @Transactional
     public void updateTeam(Long teamId, TeamUpdateCommand command) {
         Team team = teamRepository.findByIdOrThrow(teamId);
+
         if (command.name().isPresent()) {
             team.updateName(command.name().get());
         }

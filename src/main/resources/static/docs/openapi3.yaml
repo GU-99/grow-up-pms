@@ -719,6 +719,31 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/team/{teamId}/user/{targetMemberId}:
+    delete:
+      tags:
+      - Team
+      summary: 팀원 추방
+      description: 해당 팀원을 추방합니다. 역할이 Mate인 팀원만 추방할 수 있습니다.
+      operationId: team-user-controller-v1-test/팀_추방_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: targetMemberId
+        in: path
+        description: 추방할 팀원 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "204":
+          description: "204"
 components:
   schemas:
     api-v1-project-projectId-status-statusId-1514376740:
