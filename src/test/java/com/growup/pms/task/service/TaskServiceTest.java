@@ -3,6 +3,7 @@ package com.growup.pms.task.service;
 import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
 import static com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder.일정_생성_요청은;
 import static com.growup.pms.test.fixture.task.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
+import static com.growup.pms.test.fixture.task.TaskEditRequestTestBuilder.일정_수정_요청은;
 import static com.growup.pms.test.fixture.task.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static com.growup.pms.test.fixture.task.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
@@ -21,9 +22,11 @@ import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
+import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -102,6 +105,7 @@ class TaskServiceTest {
 
     @Nested
     class 사용자가_상태별로_프로젝트_일정_전체_조회시에 {
+
         @Test
         void 성공한다() {
             // given
@@ -230,6 +234,102 @@ class TaskServiceTest {
             assertThatThrownBy(() -> taskService.getTask(존재하지_않는_일정_ID))
                     .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage("존재하지 않는 프로젝트 일정입니다.");
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_일정_변경시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            Long 변경할_담당자_ID = 2L;
+            User 변경할_담당자 = 사용자는().식별자가(변경할_담당자_ID).이다();
+            Long 변경할_상태_ID = 2L;
+            Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
+            String 변경할_일정_이름 = "변경할 이름 입니다!";
+            String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
+            Short 변경할_정렬순서 = (short) 2;
+            LocalDate 변경할_시작일자 = LocalDate.of(2023, 1, 1);
+            LocalDate 변경할_종료일자 = LocalDate.of(2023, 3, 1);
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
+                    .회원_식별자는(변경할_담당자_ID)
+                    .상태_식별자는(변경할_상태_ID)
+                    .일정이름은(변경할_일정_이름)
+                    .본문내용은(변경할_내용)
+                    .정렬순서는(변경할_정렬순서)
+                    .시작일자는(변경할_시작일자)
+                    .종료일자는(변경할_종료일자)
+                    .이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(userRepository.findByIdOrThrow(변경할_담당자_ID)).thenReturn(변경할_담당자);
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
+
+            // when
+            taskService.editTask(기존_일정_ID, 일정_변경_요청);
+
+            // then
+            assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
+            assertThat(기존_일정.getUser().getId()).isEqualTo(변경할_담당자_ID);
+            assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
+            assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
+            assertThat(기존_일정.getSortOrder()).isEqualTo(변경할_정렬순서);
+            assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
+            assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
+        }
+
+        @Test
+        void 일정이_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_일정_ID = 1L;
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().이다().toCommand();
+
+            doThrow(new EntityNotFoundException(ErrorCode.TASK_NOT_FOUND))
+                    .when(taskRepository).findByIdOrThrow(잘못된_일정_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(잘못된_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("존재하지 않는 프로젝트 일정입니다.");
+        }
+
+        @Test
+        void 변경하려는_회원이_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            Long 잘못된_담당자_ID = 2L;
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().회원_식별자는(잘못된_담당자_ID).이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND))
+                    .when(userRepository).findByIdOrThrow(잘못된_담당자_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("ENTITY가 없습니다.");
+        }
+
+        @Test
+        void 변경하려는_상태가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            Long 잘못된_상태_ID = 2L;
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().상태_식별자는(잘못된_상태_ID).이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+                    .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("존재하지 않는 프로젝트 상태입니다.");
         }
     }
 }
