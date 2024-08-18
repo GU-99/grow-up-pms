@@ -1,6 +1,6 @@
 package com.growup.pms.user.domain;
 
-import com.growup.pms.common.BaseTimeEntity;
+import com.growup.pms.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -25,7 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseTimeEntity {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,6 +1,6 @@
 package com.growup.pms.project.domain;
 
-import com.growup.pms.common.BaseTimeEntity;
+import com.growup.pms.common.BaseEntity;
 import com.growup.pms.team.domain.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE projects SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Project extends BaseTimeEntity {
+public class Project extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
