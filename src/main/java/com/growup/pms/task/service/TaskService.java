@@ -56,6 +56,7 @@ public class TaskService {
         return TaskDetailResponse.of(task);
     }
 
+    @Transactional
     public void editTask(Long taskId, TaskEditCommand command) {
         Task task = taskRepository.findByIdOrThrow(taskId);
 
