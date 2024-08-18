@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.growup.pms.invitation.controller.dto.request.TeamInvitationCreateRequest;
-import com.growup.pms.invitation.domian.dto.TeamInvitationCreateCommand;
 import com.growup.pms.invitation.service.TeamInvitationService;
+import com.growup.pms.invitation.service.dto.TeamInvitationCreateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import org.apache.http.HttpHeaders;

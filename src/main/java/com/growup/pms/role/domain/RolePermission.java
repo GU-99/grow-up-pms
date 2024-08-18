@@ -1,5 +1,6 @@
 package com.growup.pms.role.domain;
 
+import com.growup.pms.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
@@ -10,13 +11,17 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @IdClass(RolePermissionId.class)
 @Table(name = "role_permissions")
+@SQLDelete(sql = "UPDATE role_permissions SET is_deleted = true WHERE role_id = ? AND permission_id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RolePermission {
+public class RolePermission extends BaseEntity {
     @Id
     @ManyToOne
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_role_permission_role"))
