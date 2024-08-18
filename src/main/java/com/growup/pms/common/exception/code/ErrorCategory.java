@@ -14,7 +14,7 @@ public enum ErrorCategory {
     STORAGE_ERROR("ST_", "Storage error: "),
     TEAM_ERROR("TM_", "Team error: "),
     PROJECT_ERROR("PR_", "Project error: "),
-    STATUS_ERROR("STS_","Status error: " );
+    STATUS_ERROR("STS_", "Status error: ");
 
     private final String codePrefix;
     private final String messagePrefix;

@@ -51,10 +51,10 @@ public class TeamControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{teamId}")
-    @RequirePermission(PermissionType.TEAM_DELETE)
-    public ResponseEntity<Void> deleteTeam(@PathVariable @TeamId Long teamId) {
-        teamService.deleteTeam(teamId);
+    @DeleteMapping("/{teamId}/user/{targetMemberId}")
+    @RequirePermission(PermissionType.TEAM_KICK_MEMBER)
+    public ResponseEntity<Void> kickMember(@PathVariable @TeamId Long teamId, @PathVariable Long targetMemberId) {
+        teamService.kickMember(teamId, targetMemberId);
         return ResponseEntity.noContent().build();
     }
 }
