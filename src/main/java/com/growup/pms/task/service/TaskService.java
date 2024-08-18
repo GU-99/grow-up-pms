@@ -54,8 +54,7 @@ public class TaskService {
         return TaskDetailResponse.of(task);
     }
 
-    public void editTask(TaskEditCommand command) {
-
+    public void editTask(Long taskId, TaskEditCommand command) {
     }
 
     public void deleteTask(Long taskId) {

@@ -1,6 +1,5 @@
 package com.growup.pms.task.controller;
 
-import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
@@ -15,7 +14,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -82,14 +80,13 @@ public class TaskControllerV1 {
     @PatchMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
     public ResponseEntity<Void> editTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId,
-                                         @AuthenticationPrincipal SecurityUser user,
                                          @Valid @RequestBody TaskEditRequest request) {
         log.debug("TaskControllerV1#editTask called.");
         log.debug("일정 변경을 위한 projectId={}", projectId);
         log.debug("일정 변경을 위한 taskId={}", taskId);
         log.debug("일정 변경을 위한 TaskEditRequest={}", request);
 
-        taskService.editTask(request.toCommand(user.getId()));
+        taskService.editTask(taskId, request.toCommand());
 
         return ResponseEntity.noContent().build();
     }

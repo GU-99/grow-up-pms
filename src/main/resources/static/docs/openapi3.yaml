@@ -656,11 +656,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId581167037'
+              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-1439620849'
             examples:
               task-controller-v1-docs-test/일정_변경_api_문서를_작성한다:
                 value: |-
                   {
+                    "userId" : 1,
                     "statusId" : 1,
                     "taskName" : "환경설정 마치기",
                     "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
@@ -912,27 +913,6 @@ components:
         content:
           type: string
           description: 팀 소개
-    api-v1-project-projectId-task-taskId581167037:
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
     api-v1-user-team1292527924:
       type: array
       items:
@@ -953,6 +933,30 @@ components:
           content:
             type: string
             description: 팀 소개
+    api-v1-project-projectId-task-taskId-1439620849:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-project-projectId-task-taskId-106941217:
       type: object
       properties:

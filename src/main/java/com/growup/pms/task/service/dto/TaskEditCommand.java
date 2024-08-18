@@ -6,7 +6,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 @Builder
 public record TaskEditCommand(
-        Long userId,
+        JsonNullable<Long> userId,
         JsonNullable<Long> statusId,
         JsonNullable<String> taskName,
         JsonNullable<String> content,

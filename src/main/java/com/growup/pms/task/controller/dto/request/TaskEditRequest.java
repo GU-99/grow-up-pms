@@ -17,6 +17,8 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @ToString
 public class TaskEditRequest {
 
+    private JsonNullable<Long> userId = JsonNullable.undefined();
+
     private JsonNullable<Long> statusId = JsonNullable.undefined();
 
     @Size(max = 128)
@@ -34,9 +36,11 @@ public class TaskEditRequest {
     private JsonNullable<LocalDate> endDate = JsonNullable.undefined();
 
     @Builder
-    public TaskEditRequest(JsonNullable<Long> statusId, JsonNullable<String> taskName, JsonNullable<String> content,
-                           JsonNullable<Short> sortOrder, JsonNullable<LocalDate> startDate,
+    public TaskEditRequest(JsonNullable<Long> userId, JsonNullable<Long> statusId, JsonNullable<String> taskName,
+                           JsonNullable<String> content, JsonNullable<Short> sortOrder,
+                           JsonNullable<LocalDate> startDate,
                            JsonNullable<LocalDate> endDate) {
+        this.userId = userId;
         this.statusId = statusId;
         this.taskName = taskName;
         this.content = content;
@@ -45,7 +49,7 @@ public class TaskEditRequest {
         this.endDate = endDate;
     }
 
-    public TaskEditCommand toCommand(Long userId) {
+    public TaskEditCommand toCommand() {
         return TaskEditCommand.builder()
                 .userId(userId)
                 .statusId(statusId)
