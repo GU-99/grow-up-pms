@@ -1,5 +1,6 @@
 package com.growup.pms.user.domain;
 
+import com.growup.pms.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,15 +15,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Table(name = "user_links")
+@SQLDelete(sql = "UPDATE user_links SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserLink {
+public class UserLink extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_link_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

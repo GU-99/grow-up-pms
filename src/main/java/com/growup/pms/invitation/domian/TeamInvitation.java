@@ -1,8 +1,8 @@
 package com.growup.pms.invitation.domian;
 
+import com.growup.pms.common.BaseEntity;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.user.domain.User;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -17,15 +17,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Table(name = "team_invitations", uniqueConstraints = @UniqueConstraint(columnNames = {"team_id", "user_id"}))
+@SQLDelete(sql = "UPDATE team_invitations SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamInvitation {
+public class TeamInvitation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_invitation_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

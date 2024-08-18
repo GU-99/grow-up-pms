@@ -1,5 +1,6 @@
 package com.growup.pms.team.domain;
 
+import com.growup.pms.common.BaseEntity;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.user.domain.User;
 import jakarta.persistence.Column;
@@ -15,13 +16,17 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @IdClass(TeamUserId.class)
 @Table(name = "team_users")
+@SQLDelete(sql = "UPDATE team_users SET is_deleted = true WHERE team_id = ? AND user_id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamUser {
+public class TeamUser extends BaseEntity {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false, foreignKey = @ForeignKey(name = "fk_team_user_team"))
