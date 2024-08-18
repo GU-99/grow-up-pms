@@ -1,6 +1,7 @@
 package com.growup.pms.auth.service;
 
 import com.growup.pms.auth.service.dto.EmailDetails;
+import com.growup.pms.auth.service.mail.MailClient;
 import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class EmailVerificationService {
     public static final Duration VERIFICATION_CODE_EXPIRATION = Duration.ofSeconds(60);
     public static final int MAX_VERIFICATION_CODE = 999999;
 
-    private final MailtrapClient mailtrapClient;
+    private final MailClient mailClient;
     private final StringRedisTemplate stringRedisTemplate;
 
     public boolean verifyEmail(String email, String code) {
@@ -28,7 +29,7 @@ public class EmailVerificationService {
 
         stringRedisTemplate.opsForValue().set(KEYSPACE_USER_EMAIL_CODE.formatted(email), verificationCode,
                 VERIFICATION_CODE_EXPIRATION);
-        mailtrapClient.sendEmail(EmailDetails.builder()
+        mailClient.sendEmail(EmailDetails.builder()
                 .recipient(email)
                 .subject("인증 코드 안내 - [서비스 이름]")
                 .content("""
