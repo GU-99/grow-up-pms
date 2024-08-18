@@ -49,7 +49,7 @@ public class TaskService {
         return taskRepository.getTasksByStatusId(statusId);
     }
 
-    public TaskDetailResponse getTask(Long projectId, Long taskId) {
+    public TaskDetailResponse getTask(Long taskId) {
         return null;
     }
 
