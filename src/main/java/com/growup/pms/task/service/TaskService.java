@@ -80,56 +80,36 @@ public class TaskService {
     }
 
     private void changeAssignee(JsonNullable<Long> userId, Task task) {
-        if (userId.isPresent()) {
-            User user = userRepository.findByIdOrThrow(userId.get());
+        userId.ifPresent(id -> {
+            User user = userRepository.findByIdOrThrow(id);
             task.editAssignee(user);
-            return;
-        }
-        task.editAssignee(null);
+        });
     }
 
     private void changeStatus(JsonNullable<Long> statusId, Task task) {
-        if (statusId.isPresent()) {
-            Status status = statusRepository.findByIdOrThrow(statusId.get());
+        statusId.ifPresent(id -> {
+            Status status = statusRepository.findByIdOrThrow(id);
             task.editStatus(status);
-            return;
-        }
-        task.editStatus(null);
+        });
     }
 
     private void changeTaskName(JsonNullable<String> taskName, Task task) {
-        if (taskName.isPresent()) {
-            task.editName(taskName.get());
-        }
+        taskName.ifPresent(task::editName);
     }
 
     private void changeContent(JsonNullable<String> content, Task task) {
-        if (content.isPresent()) {
-            task.editContent(content.get());
-            return;
-        }
-        task.editContent(null);
+        content.ifPresent(task::editContent);
     }
 
     private void changSortOrder(JsonNullable<Short> sortOrder, Task task) {
-        if (sortOrder.isPresent()) {
-            task.editSortOrder(sortOrder.get());
-        }
+        sortOrder.ifPresent(task::editSortOrder);
     }
 
     private void changeStartDate(JsonNullable<LocalDate> startDate, Task task) {
-        if (startDate.isPresent()) {
-            task.editStartDate(startDate.get());
-            return;
-        }
-        task.editStartDate(null);
+        startDate.ifPresent(task::editStartDate);
     }
 
     private void changeEndDate(JsonNullable<LocalDate> endDate, Task task) {
-        if (endDate.isPresent()) {
-            task.editEndDate(endDate.get());
-            return;
-        }
-        task.editEndDate(null);
+        endDate.ifPresent(task::editEndDate);
     }
 }
