@@ -12,9 +12,11 @@ import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +57,15 @@ public class TaskService {
     }
 
     public void editTask(Long taskId, TaskEditCommand command) {
+        Task task = taskRepository.findByIdOrThrow(taskId);
+
+        changeAssignee(command.userId(), task);
+        changeStatus(command.statusId(), task);
+        changeTaskName(command.taskName(), task);
+        changeContent(command.content(), task);
+        changSortOrder(command.sortOrder(), task);
+        changeStartDate(command.startDate(), task);
+        changeEndDate(command.endDate(), task);
     }
 
     public void deleteTask(Long taskId) {
@@ -65,5 +76,59 @@ public class TaskService {
         if (!requestedProjectId.equals(originalProjectId)) {
             throw new InvalidProjectException(ErrorCode.INVALID_PROJECT);
         }
+    }
+
+    private void changeAssignee(JsonNullable<Long> userId, Task task) {
+        if (userId.isPresent()) {
+            User user = userRepository.findByIdOrThrow(userId.get());
+            task.editAssignee(user);
+            return;
+        }
+        task.editAssignee(null);
+    }
+
+    private void changeStatus(JsonNullable<Long> statusId, Task task) {
+        if (statusId.isPresent()) {
+            Status status = statusRepository.findByIdOrThrow(statusId.get());
+            task.editStatus(status);
+            return;
+        }
+        task.editStatus(null);
+    }
+
+    private void changeTaskName(JsonNullable<String> taskName, Task task) {
+        if (taskName.isPresent()) {
+            task.editName(taskName.get());
+        }
+    }
+
+    private void changeContent(JsonNullable<String> content, Task task) {
+        if (content.isPresent()) {
+            task.editContent(content.get());
+            return;
+        }
+        task.editContent(null);
+    }
+
+    private void changSortOrder(JsonNullable<Short> sortOrder, Task task) {
+        if (sortOrder.isPresent()) {
+            task.editSortOrder(sortOrder.get());
+        }
+    }
+
+    private void changeStartDate(JsonNullable<LocalDate> startDate, Task task) {
+        if (startDate.isPresent()) {
+            task.editStartDate(startDate.get());
+            return;
+        }
+        task.editStartDate(null);
+    }
+
+    private void changeEndDate(JsonNullable<LocalDate> endDate, Task task) {
+        if (endDate.isPresent()) {
+            task.editEndDate(endDate.get());
+            return;
+        }
+        task.editEndDate(null);
     }
 }

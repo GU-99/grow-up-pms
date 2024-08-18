@@ -44,6 +44,11 @@ public class TaskEditRequestTestBuilder {
         return this;
     }
 
+    public TaskEditRequestTestBuilder 정렬순서는(Short sortOrder) {
+        this.sortOrder = sortOrder;
+        return this;
+    }
+
     public TaskEditRequestTestBuilder 시작일자는(LocalDate startDate) {
         this.startDate = startDate;
         return this;
