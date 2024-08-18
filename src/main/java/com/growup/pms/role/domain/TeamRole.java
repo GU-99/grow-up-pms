@@ -6,14 +6,15 @@ import lombok.Getter;
 public enum TeamRole {
     HEAD("HEAD"),
     LEADER("LEADER"),
-    MATE("MATE"),
-    ;
-
-    private static final String ROLE_PREFIX = "TEAM_";
+    MATE("MATE");
 
     private final String roleName;
 
     TeamRole(String roleName) {
-        this.roleName = ROLE_PREFIX + roleName;
+        this.roleName =  roleName;
+    }
+
+    public static TeamRole of(String roleName) {
+        return TeamRole.valueOf(roleName);
     }
 }
