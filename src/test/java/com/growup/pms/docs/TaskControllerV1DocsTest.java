@@ -142,7 +142,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         List<TaskResponse> responses = List.of(response1, response2);
 
         // when
-        when(taskService.getTasks(anyLong(), anyLong())).thenReturn(responses);
+        when(taskService.getTasks(anyLong())).thenReturn(responses);
 
         // then
         mockMvc.perform(get(("/api/v1/project/{projectId}/task"), 예상_프로젝트_식별자)

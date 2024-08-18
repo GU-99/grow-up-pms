@@ -56,11 +56,11 @@ public class TaskControllerV1 {
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
     public ResponseEntity<List<TaskResponse>> getTasks(@ProjectId @PathVariable Long projectId,
-                                                       @RequestParam(required = false, defaultValue = "0") Long statusId) {
+                                                       @RequestParam(required = false) Long statusId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("일정 전체 조회를 위한 projectId={}", projectId);
 
-        List<TaskResponse> responses = taskService.getTasks(projectId, statusId);
+        List<TaskResponse> responses = taskService.getTasks(statusId);
 
         return ResponseEntity.ok(responses);
     }

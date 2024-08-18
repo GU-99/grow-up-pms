@@ -2,6 +2,7 @@ package com.growup.pms.task.service;
 
 import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
 import static com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder.일정_생성_요청은;
+import static com.growup.pms.test.fixture.task.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static com.growup.pms.test.fixture.task.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,12 +12,15 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
+import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,46 +52,145 @@ class TaskServiceTest {
         @Test
         void 성공한다() {
             // given
-            Long taskId = 1L;
-            Long projectId = 1L;
-            Long statusId = 1L;
-            Long userId = 1L;
-            Status status = 상태는().식별자가(statusId).이다();
-            User user = 사용자는().식별자가(userId).이다();
-            Task task = 일정은().이다();
-            TaskCreateCommand command = 일정_생성_요청은().이다().toCommand();
+            Long 예상_일정_ID = 1L;
+            Long 예상_프로젝트_ID = 1L;
+            Long 예상_상태_ID = 1L;
+            Long 예상_담당자_ID = 1L;
+            Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
+            User 예상_담당자 = 사용자는().식별자가(예상_담당자_ID).이다();
+            Task 예상_일정 = 일정은().이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
-            when(statusRepository.findById(statusId)).thenReturn(Optional.of(status));
-            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-            when(taskRepository.save(any(Task.class))).thenReturn(task);
+            when(statusRepository.findById(예상_상태_ID)).thenReturn(Optional.of(예상_상태));
+            when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.of(예상_담당자));
+            when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
             // when
-            TaskDetailResponse response = taskService.createTask(projectId, command);
+            TaskDetailResponse 실제_결과 = taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청);
 
             // then
-            assertThat(response.getTaskId()).isEqualTo(taskId);
+            assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
         }
 
         @Test
         void 담당회원과_상태가_없어도_성공한다() {
-            Long taskId = 1L;
-            Long projectId = 1L;
-            Long statusId = 1L;
-            Long userId = 1L;
-            Task task = 일정은().회원은(null).상태는(null).이다();
-            TaskCreateCommand command = 일정_생성_요청은().이다().toCommand();
+            Long 예상_일정_ID = 1L;
+            Long 예상_프로젝트_ID = 1L;
+            Long 예상_상태_ID = 1L;
+            Long 예상_담당자_ID = 1L;
+            Task 예상_일정 = 일정은().회원은(null).상태는(null).이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
-            when(statusRepository.findById(statusId)).thenReturn(Optional.empty());
-            when(userRepository.findById(userId)).thenReturn(Optional.empty());
-            when(taskRepository.save(any(Task.class))).thenReturn(task);
+            when(statusRepository.findById(예상_상태_ID)).thenReturn(Optional.empty());
+            when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.empty());
+            when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
             // when
-            TaskDetailResponse response = taskService.createTask(projectId, command);
+            TaskDetailResponse 실제_결과 = taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청);
 
             // then
-            assertThat(response.getTaskId()).isEqualTo(taskId);
-            assertThat(response.getStatusId()).isNull();
-            assertThat(response.getUserNickname()).isNull();
+            assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
+            assertThat(실제_결과.getStatusId()).isNull();
+            assertThat(실제_결과.getUserNickname()).isNull();
+        }
+    }
+
+    @Nested
+    class 사용자가_상태별로_프로젝트_일정_전체_조회시에 {
+        @Test
+        void 성공한다() {
+            // given
+            Long 예상_상태_ID = 1L;
+
+            TaskResponse 예상_응답_1 = 일정_전체조회_응답은()
+                    .일정_식별자는(1L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 환경설정을 진행함")
+                    .정렬순서는((short) 1)
+                    .이다();
+
+            TaskResponse 예상_응답_2 = 일정_전체조회_응답은()
+                    .일정_식별자는(2L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("레니")
+                    .일정이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
+                    .정렬순서는((short) 2)
+                    .이다();
+
+            TaskResponse 예상_응답_3 = 일정_전체조회_응답은()
+                    .일정_식별자는(3L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
+                    .정렬순서는((short) 3)
+                    .이다();
+
+            List<TaskResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
+            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
+
+            // when
+            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
+
+            // then
+            assertThat(실제_결과).hasSize(예상_결과.size());
+            assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+
+        @Test
+        void 상태_ID가_null_이어도_성공한다() {
+            // given
+            Long 예상_상태_ID = null;
+
+            // when
+            TaskResponse 예상_응답_1 = 일정_전체조회_응답은()
+                    .일정_식별자는(1L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 환경설정을 진행함")
+                    .정렬순서는((short) 1)
+                    .이다();
+
+            TaskResponse 예상_응답_2 = 일정_전체조회_응답은()
+                    .일정_식별자는(2L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("레니")
+                    .일정이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
+                    .정렬순서는((short) 2)
+                    .이다();
+
+            TaskResponse 예상_응답_3 = 일정_전체조회_응답은()
+                    .일정_식별자는(3L)
+                    .상태_식별자는(예상_상태_ID)
+                    .회원_닉네임은("브라운")
+                    .일정이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
+                    .정렬순서는((short) 3)
+                    .이다();
+
+            List<TaskResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
+            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
+
+            // when
+            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
+
+            // then
+            assertThat(실제_결과).hasSize(예상_결과.size());
+            assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+
+        @Test
+        void 해당_상태를_갖는_일정이_없다면_빈리스트를_반환한다() {
+            // given
+            Long 예상_상태_ID = 1L;
+            List<TaskResponse> 예상_결과 = Collections.emptyList();
+
+            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
+
+            // when
+            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
+
+            // then
+            assertThat(실제_결과).isEmpty();
         }
     }
 }
