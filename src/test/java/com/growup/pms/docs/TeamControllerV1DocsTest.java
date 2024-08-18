@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -38,6 +37,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
+@WithMockSecurityUser(id = 1L)
 class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
     static final String TAG = "Team";
 
@@ -45,7 +45,6 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
     TeamService teamService;
 
     @Test
-    @WithMockSecurityUser(id = 1L)
     void 팀_생성_API_문서를_생성한다() throws Exception {
         // given
         Long 팀장_ID = 1L;
@@ -131,20 +130,21 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
     }
 
     @Test
-    void 팀_제거_API_문서를_생성한다() throws Exception {
+    void 팀_탈퇴_API_문서를_생성한다() throws Exception {
         // given
-        Long 기존_팀_ID = 1L;
+        Long 팀_ID = 1L;
+        Long 사용자_ID = 1L;
 
-        doNothing().when(teamService).deleteTeam(기존_팀_ID);
+        doNothing().when(teamService).leaveTeam(팀_ID, 사용자_ID);
 
         // when & then
-        mockMvc.perform(delete("/api/v1/team/{id}", 기존_팀_ID))
+        mockMvc.perform(post("/api/v1/team/{id}/leave", 팀_ID))
                 .andExpect(status().isNoContent())
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .summary("팀 제거")
-                                .description("해당 팀을 제거합니다.")
-                                .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("제거할 팀 ID")).build())));
+                                .summary("팀 탈퇴")
+                                .description("해당 팀을 탈퇴합니다. 자신이 팀장이라면 팀을 제거합니다.")
+                                .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("탈퇴할 팀 ID")).build())));
     }
 }
