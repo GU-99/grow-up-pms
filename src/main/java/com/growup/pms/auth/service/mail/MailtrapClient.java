@@ -1,4 +1,4 @@
-package com.growup.pms.auth.service;
+package com.growup.pms.auth.service.mail;
 
 import com.growup.pms.auth.service.dto.EmailDetails;
 import com.growup.pms.common.exception.code.ErrorCode;
@@ -6,12 +6,13 @@ import com.growup.pms.common.exception.exceptions.MessageFailureException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MailtrapClient {
+public class MailtrapClient implements MailClient {
     private final JavaMailSender mailSender;
     private final String sandboxSenderEmail;
 
@@ -31,7 +32,7 @@ public class MailtrapClient {
             helper.setText(emailDetails.content());
 
             mailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (MessagingException | MailException e) {
             throw new MessageFailureException(ErrorCode.EMAIL_SENDING_ERROR);
         }
     }
