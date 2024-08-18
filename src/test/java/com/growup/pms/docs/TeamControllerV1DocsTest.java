@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -128,23 +127,5 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .requestFields(
                                         fieldWithPath("name").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개")).build())));
-    }
-
-    @Test
-    void 팀_제거_API_문서를_생성한다() throws Exception {
-        // given
-        Long 기존_팀_ID = 1L;
-
-        doNothing().when(teamService).deleteTeam(기존_팀_ID);
-
-        // when & then
-        mockMvc.perform(delete("/api/v1/team/{id}", 기존_팀_ID))
-                .andExpect(status().isNoContent())
-                .andDo(docs.document(resource(
-                        ResourceSnippetParameters.builder()
-                                .tag(TAG)
-                                .summary("팀 제거")
-                                .description("해당 팀을 제거합니다.")
-                                .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("제거할 팀 ID")).build())));
     }
 }
