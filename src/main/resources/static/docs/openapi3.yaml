@@ -412,6 +412,24 @@ paths:
                       "startDate" : "2023-01-01",
                       "endDate" : "2023-12-31"
                     }
+  /api/v1/team/{id}/leave:
+    post:
+      tags:
+      - Team
+      summary: 팀 탈퇴
+      description: 해당 팀을 탈퇴합니다. 자신이 팀장이라면 팀을 제거합니다.
+      operationId: team-controller-v1-docs-test/팀_탈퇴_api_문서를_생성한다
+      parameters:
+      - name: id
+        in: path
+        description: 탈퇴할 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "204":
+          description: "204"
   /api/v1/team/{teamId}/invitation:
     post:
       tags:
@@ -698,6 +716,31 @@ paths:
         schema:
           type: string
         example: Bearer 액세스 토큰
+      responses:
+        "204":
+          description: "204"
+  /api/v1/team/{teamId}/user/{targetMemberId}:
+    delete:
+      tags:
+      - Team
+      summary: 팀원 추방
+      description: 해당 팀원을 추방합니다. 역할이 Mate인 팀원만 추방할 수 있습니다.
+      operationId: team-user-controller-v1-test/팀_추방_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: targetMemberId
+        in: path
+        description: 추방할 팀원 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
       responses:
         "204":
           description: "204"

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamUserControllerV1 {
     private final TeamUserService teamUserService;
 
-    @DeleteMapping("/{teamId}/user/{targetMemberId}")
+    @DeleteMapping("/{targetMemberId}")
     @RequirePermission(PermissionType.TEAM_KICK_MEMBER)
     public ResponseEntity<Void> kickMember(@PathVariable @TeamId Long teamId, @PathVariable Long targetMemberId) {
         teamUserService.kickMember(teamId, targetMemberId);

@@ -27,7 +27,7 @@ public class TeamUserService {
     }
 
     private void ensureMemberIsMate(Optional<Role> targetMemberRole) {
-        Role role = targetMemberRole.orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+        Role role = targetMemberRole.orElseThrow(() -> new EntityNotFoundException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
 
         if (!TeamRole.MATE.equals(TeamRole.of(role.getName()))) {
             throw new AuthorizationException(ErrorCode.AUTHZ_ACCESS_DENIED);
