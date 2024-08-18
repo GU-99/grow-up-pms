@@ -13,7 +13,6 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,13 +47,6 @@ public class TeamControllerV1 {
     @RequirePermission(PermissionType.TEAM_UPDATE)
     public ResponseEntity<Void> updateTeam(@PathVariable @TeamId Long teamId, @Valid @RequestBody TeamUpdateRequest request) {
         teamService.updateTeam(teamId, request.toCommand());
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{teamId}/user/{targetMemberId}")
-    @RequirePermission(PermissionType.TEAM_KICK_MEMBER)
-    public ResponseEntity<Void> kickMember(@PathVariable @TeamId Long teamId, @PathVariable Long targetMemberId) {
-        teamService.kickMember(teamId, targetMemberId);
         return ResponseEntity.noContent().build();
     }
 }
