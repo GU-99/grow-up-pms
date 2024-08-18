@@ -1,6 +1,7 @@
 package com.growup.pms.team.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.role.domain.PermissionType;
@@ -13,7 +14,6 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,10 +51,9 @@ public class TeamControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{teamId}")
-    @RequirePermission(PermissionType.TEAM_DELETE)
-    public ResponseEntity<Void> deleteTeam(@PathVariable @TeamId Long teamId) {
-        teamService.deleteTeam(teamId);
+    @PostMapping("/{teamId}/leave")
+    public ResponseEntity<Void> leaveTeam(@CurrentUser SecurityUser user, @PathVariable Long teamId) {
+        teamService.leaveTeam(teamId, user.getId());
         return ResponseEntity.noContent().build();
     }
 }
