@@ -7,7 +7,6 @@ import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.domain.TeamUserId;
 import com.growup.pms.team.repository.TeamUserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,17 +18,16 @@ public class TeamUserService {
 
     @Transactional
     public void kickMember(Long teamId, Long targetMemberId) {
-        Optional<Role> targetMemberRole = teamUserRepository.findRoleById(teamId, targetMemberId);
+        Role targetMemberRole = teamUserRepository.findRoleById(teamId, targetMemberId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
 
         ensureMemberIsMate(targetMemberRole);
 
         teamUserRepository.deleteById(new TeamUserId(teamId, targetMemberId));
     }
 
-    private void ensureMemberIsMate(Optional<Role> targetMemberRole) {
-        Role role = targetMemberRole.orElseThrow(() -> new EntityNotFoundException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
-
-        if (!TeamRole.MATE.equals(TeamRole.of(role.getName()))) {
+    private void ensureMemberIsMate(Role targetMemberRole) {
+        if (!TeamRole.MATE.equals(TeamRole.of(targetMemberRole.getName()))) {
             throw new AuthorizationException(ErrorCode.AUTHZ_ACCESS_DENIED);
         }
     }
