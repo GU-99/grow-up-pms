@@ -237,7 +237,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         TaskEditRequest 일정_변경_요청 = TaskEditRequestTestBuilder.일정_수정_요청은().이다();
 
         // when
-        doNothing().when(taskService).editTask(any(TaskEditCommand.class));
+        doNothing().when(taskService).editTask(anyLong(), any(TaskEditCommand.class));
 
         // then
         mockMvc.perform(patch("/api/v1/project/{projectId}/task/{taskId}", 예상_프로젝트_식별자, 예상_일정_식별자)
@@ -258,6 +258,9 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                         org.springframework.http.HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
                                 .requestFields(
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
+                                                .optional()
+                                                .description("회원 식별자"),
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .optional()
                                                 .description("프로젝트 상태 식별자"),

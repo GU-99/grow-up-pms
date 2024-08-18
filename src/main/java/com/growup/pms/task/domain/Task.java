@@ -66,6 +66,34 @@ public class Task extends BaseEntity {
     }
 
     // Business Logics //
+    public void editStatus(Status status) {
+        this.status = status;
+    }
+
+    public void editAssignee(User user) {
+        this.user = user;
+    }
+
+    public void editName(String name) {
+        this.name = name;
+    }
+
+    public void editContent(String content) {
+        this.content = content;
+    }
+
+    public void editSortOrder(Short sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public void editStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void editEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
     public Long getTaskStatus() {
         return status != null ? status.getId() : null;
     }
