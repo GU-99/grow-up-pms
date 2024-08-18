@@ -73,7 +73,7 @@ public class TaskControllerV1 {
         log.debug("일정 상세 조회를 위한 projectId={}", projectId);
         log.debug("일정 상세 조회를 위한 taskId={}", taskId);
 
-        TaskDetailResponse response = taskService.getTask(projectId, taskId);
+        TaskDetailResponse response = taskService.getTask(taskId);
         log.debug("일정 상세 조회 결과 TaskDetailResponse={}", response);
 
         return ResponseEntity.ok(response);

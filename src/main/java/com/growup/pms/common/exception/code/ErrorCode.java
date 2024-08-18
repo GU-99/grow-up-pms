@@ -30,7 +30,9 @@ public enum ErrorCode {
     PROJECT_NOT_FOUND(ErrorCategory.PROJECT_ERROR, "001", "존재하지 않는 프로젝트입니다."),
     INVALID_PROJECT(ErrorCategory.PROJECT_ERROR, "002", "부적절한 프로젝트입니다."),
 
-    STATUS_NOT_FOUND(ErrorCategory.STATUS_ERROR, "001", "존재하지 않는 프로젝트 상태입니다.");
+    STATUS_NOT_FOUND(ErrorCategory.STATUS_ERROR, "001", "존재하지 않는 프로젝트 상태입니다."),
+
+    TASK_NOT_FOUND(ErrorCategory.TASK_ERROR, "001", "존재하지 않는 프로젝트 일정입니다.");
 
     private final ErrorCategory errorCategory;
     private final String code;

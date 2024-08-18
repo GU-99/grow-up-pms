@@ -39,30 +39,14 @@ public class TaskDetailResponse {
     public static TaskDetailResponse of(Task task) {
         return TaskDetailResponse.builder()
                 .taskId(task.getId())
-                .statusId(hasStatus(task) ? getStatusId(task) : null)
-                .userNickname(isAssigned(task) ? getAssignee(task) : null)
+                .statusId(task.getTaskStatus())
+                .userNickname(task.getAssignee())
                 .taskName(task.getName())
                 .content(task.getContent())
                 .sortOrder(task.getSortOrder())
                 .startDate(formatDateOrNull(task.getStartDate()))
                 .endDate(formatDateOrNull(task.getEndDate()))
                 .build();
-    }
-
-    private static Long getStatusId(Task task) {
-        return task.getStatus().getId();
-    }
-
-    private static boolean hasStatus(Task task) {
-        return task.getStatus() != null;
-    }
-
-    private static String getAssignee(Task task) {
-        return task.getUser().getUsername();
-    }
-
-    private static boolean isAssigned(Task task) {
-        return task.getUser() != null;
     }
 
     private static String formatDateOrNull(LocalDate localDAte) {

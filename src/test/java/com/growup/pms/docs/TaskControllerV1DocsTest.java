@@ -188,7 +188,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         TaskDetailResponse 예상_상세조회_응답 = TaskDetailResponseTestBuilder.일정_상세조회_응답은().이다();
 
         // when
-        when(taskService.getTask(anyLong(), anyLong())).thenReturn(예상_상세조회_응답);
+        when(taskService.getTask(anyLong())).thenReturn(예상_상세조회_응답);
 
         // then
         mockMvc.perform(get(("/api/v1/project/{projectId}/task/{taskId}"), 예상_프로젝트_식별자, 예상_일정_식별자)

@@ -49,8 +49,9 @@ public class TaskService {
         return taskRepository.getTasksByStatusId(statusId);
     }
 
-    public TaskDetailResponse getTask(Long projectId, Long taskId) {
-        return null;
+    public TaskDetailResponse getTask(Long taskId) {
+        Task task = taskRepository.findByIdOrThrow(taskId);
+        return TaskDetailResponse.of(task);
     }
 
     public void editTask(TaskEditCommand command) {

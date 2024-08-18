@@ -64,4 +64,13 @@ public class Task extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    // Business Logics //
+    public Long getTaskStatus() {
+        return status != null ? status.getId() : null;
+    }
+
+    public String getAssignee() {
+        return user != null ? user.getUsername() : null;
+    }
 }
