@@ -2,13 +2,18 @@ package com.growup.pms.task.service;
 
 import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
 import static com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder.일정_생성_요청은;
+import static com.growup.pms.test.fixture.task.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
 import static com.growup.pms.test.fixture.task.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static com.growup.pms.test.fixture.task.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
@@ -191,6 +196,40 @@ class TaskServiceTest {
 
             // then
             assertThat(실제_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_일정_상세_조회시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 예상_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(예상_일정_ID).이다();
+            TaskDetailResponse 예상_응답 = 일정_상세조회_응답은().일정_식별자는(예상_일정_ID).이다();
+
+            when(taskRepository.findByIdOrThrow(예상_일정_ID)).thenReturn(기존_일정);
+
+            // when
+            TaskDetailResponse 실제_결과 = taskService.getTask(예상_일정_ID);
+
+            // then
+            assertThat(실제_결과.getTaskId()).isEqualTo(예상_응답.getTaskId());
+        }
+
+        @Test
+        void 일정이_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 존재하지_않는_일정_ID = 1L;
+
+            doThrow(new EntityNotFoundException(ErrorCode.TASK_NOT_FOUND))
+                    .when(taskRepository).findByIdOrThrow(존재하지_않는_일정_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.getTask(존재하지_않는_일정_ID))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("존재하지 않는 프로젝트 일정입니다.");
         }
     }
 }
