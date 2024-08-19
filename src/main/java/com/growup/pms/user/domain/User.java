@@ -55,10 +55,10 @@ public class User extends BaseEntity {
     private final List<UserLink> links = new ArrayList<>();
 
     @Column(nullable = false)
-    private LocalDateTime passwordChangeDate;
+    private LocalDateTime passwordChangeDate = LocalDateTime.now();
 
     @Column(nullable = false)
-    private int passwordFailureCount;
+    private int passwordFailureCount = 0;
 
     @Builder
     public User(String username, String password, String email, Provider provider, UserProfile profile, List<UserLink> links) {
@@ -67,8 +67,6 @@ public class User extends BaseEntity {
         this.email = email;
         this.provider = provider;
         this.profile = profile;
-        this.passwordFailureCount = 0;
-        this.passwordChangeDate = LocalDateTime.now();
 
         if (links != null) {
             this.links.addAll(links);
