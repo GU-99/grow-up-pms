@@ -1,8 +1,19 @@
 spring:
+  mail:
+    host: live.smtp.mailtrap.io
+    port: 587
+    username: api
+    password: ENC(nc+/bpDH70Gm6hmsOWniHJn/q39VOPb2khMnMid5jMNK8kQXhJJXKnyyEhV6nXzCRjxdXEYjzSo/CA7Q1b7NBCBlmvI30yb1G+bkKNYTiWA=)
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
   application:
     name: grow-up-pms
+
   jpa:
     open-in-view: false
+
   servlet:
     multipart:
       max-file-size: 10MB
@@ -25,3 +36,6 @@ security:
 springdoc:
   swagger-ui:
     url: /docs/openapi3.yaml
+
+mailtrap:
+  from: mailtrap@demomailtrap.com

@@ -12,6 +12,7 @@ public enum ErrorCode {
 
     AUTH_AUTHENTICATION_ERROR(ErrorCategory.AUTHENTICATION_ERROR, "001", "인증을 실패했습니다."),
     INVALID_REFRESH_TOKEN_ERROR(ErrorCategory.AUTHENTICATION_ERROR, "002", "리프레시 토큰이 유효하지 않습니다."),
+    EMAIL_SENDING_ERROR(ErrorCategory.AUTHENTICATION_ERROR, "003", "이메일 전송에 실패했습니다."),
 
     AUTHZ_ACCESS_DENIED(ErrorCategory.AUTHORIZATION_ERROR, "001", "접근 권한이 없습니다."),
 

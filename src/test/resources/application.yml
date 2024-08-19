@@ -11,3 +11,21 @@ security:
 
 storage:
   root-path: src/test/resources/
+
+spring:
+  mail:
+    host: live.smtp.mailtrap.io
+    port: 587
+    username: api
+    password: ENC(nc+/bpDH70Gm6hmsOWniHJn/q39VOPb2khMnMid5jMNK8kQXhJJXKnyyEhV6nXzCRjxdXEYjzSo/CA7Q1b7NBCBlmvI30yb1G+bkKNYTiWA=)
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+mailtrap:
+  from: mailtrap@demomailtrap.com
