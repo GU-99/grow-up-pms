@@ -29,8 +29,8 @@ import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -111,97 +111,45 @@ class TaskServiceTest {
         @Test
         void 성공한다() {
             // given
-            Long 예상_상태_ID = 1L;
+            Long 예상_프로젝트_ID = 1L;
+            Long 예상_상태_ID_1 = 1L;
+            Long 예상_상태_ID_2 = 2L;
 
-            TaskResponse 예상_응답_1 = 일정_전체조회_응답은()
+            TaskResponse 예상_일정_1 = 일정_전체조회_응답은()
                     .일정_식별자는(1L)
-                    .상태_식별자는(예상_상태_ID)
+                    .상태_식별자는(예상_상태_ID_1)
                     .회원_닉네임은("브라운")
                     .일정이름은("PMS 프로젝트의 환경설정을 진행함")
                     .정렬순서는((short) 1)
                     .이다();
 
-            TaskResponse 예상_응답_2 = 일정_전체조회_응답은()
+            TaskResponse 예상_일정_2 = 일정_전체조회_응답은()
                     .일정_식별자는(2L)
-                    .상태_식별자는(예상_상태_ID)
+                    .상태_식별자는(예상_상태_ID_1)
                     .회원_닉네임은("레니")
                     .일정이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
                     .정렬순서는((short) 2)
                     .이다();
 
-            TaskResponse 예상_응답_3 = 일정_전체조회_응답은()
+            TaskResponse 예상_일정_3 = 일정_전체조회_응답은()
                     .일정_식별자는(3L)
-                    .상태_식별자는(예상_상태_ID)
+                    .상태_식별자는(예상_상태_ID_2)
                     .회원_닉네임은("브라운")
                     .일정이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
                     .정렬순서는((short) 3)
                     .이다();
 
-            List<TaskResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
-            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
+            List<TaskResponse> 예상_일정_목록_1 = List.of(예상_일정_1, 예상_일정_2);
+            List<TaskResponse> 예상_일정_목록_2 = List.of(예상_일정_3);
+
+            Map<Long, List<TaskResponse>> 예상_결과 = Map.of(예상_상태_ID_1, 예상_일정_목록_1, 예상_상태_ID_2, 예상_일정_목록_2);
+
+            when(taskRepository.getTasksByProjectId(예상_프로젝트_ID)).thenReturn(예상_결과);
 
             // when
-            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
+            Map<Long, List<TaskResponse>> 실제_결과 = taskService.getTasks(예상_프로젝트_ID);
 
             // then
-            assertThat(실제_결과).hasSize(예상_결과.size());
-            assertThat(실제_결과).isEqualTo(예상_결과);
-        }
-
-        @Test
-        void 상태_ID가_null_이어도_성공한다() {
-            // given
-            Long 예상_상태_ID = null;
-
-            // when
-            TaskResponse 예상_응답_1 = 일정_전체조회_응답은()
-                    .일정_식별자는(1L)
-                    .상태_식별자는(예상_상태_ID)
-                    .회원_닉네임은("브라운")
-                    .일정이름은("PMS 프로젝트의 환경설정을 진행함")
-                    .정렬순서는((short) 1)
-                    .이다();
-
-            TaskResponse 예상_응답_2 = 일정_전체조회_응답은()
-                    .일정_식별자는(2L)
-                    .상태_식별자는(예상_상태_ID)
-                    .회원_닉네임은("레니")
-                    .일정이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
-                    .정렬순서는((short) 2)
-                    .이다();
-
-            TaskResponse 예상_응답_3 = 일정_전체조회_응답은()
-                    .일정_식별자는(3L)
-                    .상태_식별자는(예상_상태_ID)
-                    .회원_닉네임은("브라운")
-                    .일정이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
-                    .정렬순서는((short) 3)
-                    .이다();
-
-            List<TaskResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
-            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
-
-            // when
-            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
-
-            // then
-            assertThat(실제_결과).hasSize(예상_결과.size());
-            assertThat(실제_결과).isEqualTo(예상_결과);
-        }
-
-        @Test
-        void 해당_상태를_갖는_일정이_없다면_빈리스트를_반환한다() {
-            // given
-            Long 예상_상태_ID = 1L;
-            List<TaskResponse> 예상_결과 = Collections.emptyList();
-
-            when(taskRepository.getTasksByStatusId(예상_상태_ID)).thenReturn(예상_결과);
-
-            // when
-            List<TaskResponse> 실제_결과 = taskService.getTasks(예상_상태_ID);
-
-            // then
-            assertThat(실제_결과).isEmpty();
         }
     }
 

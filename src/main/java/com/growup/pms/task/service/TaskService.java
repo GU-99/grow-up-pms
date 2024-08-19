@@ -13,6 +13,7 @@ import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +48,9 @@ public class TaskService {
         return TaskDetailResponse.of(savedTask);
     }
 
-    public List<TaskResponse> getTasks(Long statusId) {
-        return taskRepository.getTasksByStatusId(statusId);
+    public Map<Long, List<TaskResponse>> getTasks(Long projectId) {
+        // TODO: Project 의 유무에 대한 검증 로직 추가 여부에 대해서 논의 필요
+        return taskRepository.getTasksByProjectId(projectId);
     }
 
     public TaskDetailResponse getTask(Long taskId) {

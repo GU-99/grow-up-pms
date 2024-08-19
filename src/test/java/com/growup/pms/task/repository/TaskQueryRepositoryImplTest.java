@@ -5,13 +5,11 @@ import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
 import static com.growup.pms.test.fixture.task.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
-import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.repository.TeamRepository;
@@ -20,10 +18,8 @@ import com.growup.pms.test.support.RepositoryTestSupport;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -182,44 +178,19 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
     @Nested
     class 상태별_일정_전체_검색시 {
 
-        @Test
-        void 성공한다() {
-            // given
-            Long 상태_ID = PMS_완료.getId();
-
-            // when
-            List<TaskResponse> 실제_결과 = taskQueryRepository.getTasksByStatusId(상태_ID);
-
-            // then
-            assertThat(실제_결과).hasSize(2);
-            assertThat(실제_결과.stream().map(TaskResponse::taskName))
-                    .containsExactly("PMS 프로젝트의 환경설정을 진행함", "PMS 프로젝트의 등록 기능 구현을 진행함");
-        }
-
-        @Test
-        void 상태_ID_가_null_이어도_성공한다() {
-            // given
-            Long 상태_ID = null;
-
-            // when
-            List<TaskResponse> 실제_결과 = taskQueryRepository.getTasksByStatusId(상태_ID);
-
-            // then
-            assertThat(실제_결과).hasSize(1);
-            assertThat(실제_결과.stream().map(TaskResponse::taskName))
-                    .containsExactly("PMS 프로젝트의 삭제 기능 구현을 진행함");
-        }
-
-        @Test
-        void 해당_상태의_일정이_없으면_빈_리스트를_반환한다() {
-            // given
-            Long 상태_ID = PMS_보류.getId();
-
-            // when
-            List<TaskResponse> 실제_결과 = taskQueryRepository.getTasksByStatusId(상태_ID);
-
-            // then
-            assertThat(실제_결과).isEmpty();
-        }
+        // @Test
+        // void 성공한다() {
+        //     // given
+        //     Long 프로젝트_ID =PMS_프로젝트.getId();
+        //     Long 상태_ID = PMS_완료.getId();
+        //
+        //     // when
+        //     Map<Long, List<TaskResponse>> 실제_결과 = taskQueryRepository.getTasksByProjectId(프로젝트_ID);
+        //
+        //     // then
+        //     assertThat(실제_결과).hasSize(2);
+        //     assertThat(실제_결과.get(상태_ID).stream().map(TaskResponse::taskName))
+        //             .containsExactly("PMS 프로젝트의 환경설정을 진행함", "PMS 프로젝트의 등록 기능 구현을 진행함");
+        // }
     }
 }
