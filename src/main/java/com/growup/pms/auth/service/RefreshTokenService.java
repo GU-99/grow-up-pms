@@ -6,7 +6,8 @@ import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.util.HashingUtil;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(userRepository.findByIdOrThrow(userId))
                 .token(HashingUtil.generateHash(token))
-                .expiryDate(Instant.now().plusMillis(tokenProvider.refreshTokenExpirationMillis))
+                .expiryDate(LocalDateTime.now().plus(tokenProvider.refreshTokenExpirationMillis, ChronoUnit.MILLIS))
                 .build();
         return refreshTokenRepository.save(refreshToken).getId();
     }
@@ -34,7 +35,7 @@ public class RefreshTokenService {
     public Long renewRefreshToken(Long userId, String newRefreshToken) {
         return refreshTokenRepository.findByUserId(userId)
                 .map(token -> {
-                    token.updateToken(newRefreshToken, Instant.now().plusMillis(tokenProvider.refreshTokenExpirationMillis));
+                    token.renewToken(newRefreshToken, LocalDateTime.now().plus(tokenProvider.refreshTokenExpirationMillis, ChronoUnit.MILLIS));
                     return token.getId();
                 })
                 .orElseGet(() -> save(userId, newRefreshToken));
@@ -55,6 +56,6 @@ public class RefreshTokenService {
     }
 
     private boolean isTokenExpired(RefreshToken token) {
-        return token.getExpiryDate().isBefore(Instant.now());
+        return token.getExpiredAt().isBefore(LocalDateTime.now());
     }
 }

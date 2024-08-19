@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,17 +38,17 @@ public class RefreshToken extends BaseEntity {
     private String token;
 
     @Column(nullable = false)
-    private Instant expiryDate;
+    private LocalDateTime expiredAt;
 
     @Builder
-    public RefreshToken(User user, String token, Instant expiryDate) {
+    public RefreshToken(User user, String token, LocalDateTime expiryDate) {
         this.user = user;
         this.token = token;
-        this.expiryDate = expiryDate;
+        this.expiredAt = expiryDate;
     }
 
-    public void updateToken(String newToken, Instant newExpiryDate) {
+    public void renewToken(String newToken, LocalDateTime newExpiryDate) {
         this.token = newToken;
-        this.expiryDate = newExpiryDate;
+        this.expiredAt = newExpiryDate;
     }
 }

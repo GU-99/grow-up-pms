@@ -18,7 +18,8 @@ import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -88,7 +89,7 @@ class RefreshTokenServiceTest {
 
             when(refreshTokenRepository.findByUserId(기존_사용자_ID)).thenReturn(Optional.of(기존_리프레시_토큰));
             when(기존_리프레시_토큰.getId()).thenReturn(기존_리프레시_토큰_ID);
-            doNothing().when(기존_리프레시_토큰).updateToken(eq(새_리프레시_토큰), any(Instant.class));
+            doNothing().when(기존_리프레시_토큰).renewToken(eq(새_리프레시_토큰), any(LocalDateTime.class));
 
             // when
             Long 새_리프레시_토큰_ID = refreshTokenService.renewRefreshToken(기존_사용자_ID, 새_리프레시_토큰);
@@ -123,7 +124,7 @@ class RefreshTokenServiceTest {
             // given
             Long 기존_사용자_ID = 1L;
             User 기존_사용자 = 사용자는().식별자가(기존_사용자_ID).이다();
-            Instant 유효한_만료기한 = Instant.now().plusMillis(1000);
+            LocalDateTime 유효한_만료기한 = LocalDateTime.now().plus(1000, ChronoUnit.MILLIS);
             RefreshToken 유효한_토큰 = 리프레시_토큰은().사용자가(기존_사용자).만료기한이(유효한_만료기한).이다();
 
             when(tokenProvider.validateToken(유효한_토큰.getToken())).thenReturn(true);
@@ -176,7 +177,7 @@ class RefreshTokenServiceTest {
             // given
             Long 기존_사용자_ID = 1L;
             User 기존_사용자 = 사용자는().식별자가(기존_사용자_ID).이다();
-            Instant 만료된_만료기한 = Instant.now().minusMillis(1000);
+            LocalDateTime 만료된_만료기한 = LocalDateTime.now().minus(1000, ChronoUnit.MILLIS);
             RefreshToken 만료된_토큰 = 리프레시_토큰은().사용자가(기존_사용자).만료기한이(만료된_만료기한).이다();
 
             when(tokenProvider.validateToken(만료된_토큰.getToken())).thenReturn(true);
