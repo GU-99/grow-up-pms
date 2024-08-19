@@ -41,7 +41,7 @@ public class UserService {
 
         String path = "users";
         String image = storageService.upload(command.file(), path);
-        user.updateImage(path + "/" + image);
+        user.replaceProfileImage(path + "/" + image);
 
         userRepository.save(user);
     }

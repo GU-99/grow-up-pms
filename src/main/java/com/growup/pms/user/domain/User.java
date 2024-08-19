@@ -1,6 +1,7 @@
 package com.growup.pms.user.domain;
 
 import com.growup.pms.common.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -9,8 +10,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +30,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
+    public static final int MAX_LINKS_PER_USER = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,6 +51,9 @@ public class User extends BaseEntity {
     @Embedded
     private UserProfile profile;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<UserLink> links = new ArrayList<>();
+
     @Column(nullable = false)
     private LocalDateTime passwordChangeDate;
 
@@ -52,7 +61,7 @@ public class User extends BaseEntity {
     private int passwordFailureCount;
 
     @Builder
-    public User(String username, String password, String email, Provider provider, UserProfile profile) {
+    public User(String username, String password, String email, Provider provider, UserProfile profile, List<UserLink> links) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -60,6 +69,10 @@ public class User extends BaseEntity {
         this.profile = profile;
         this.passwordFailureCount = 0;
         this.passwordChangeDate = LocalDateTime.now();
+
+        if (links != null) {
+            this.links.addAll(links);
+        }
     }
 
     public void increasePasswordFailureCount() {
@@ -75,7 +88,24 @@ public class User extends BaseEntity {
         passwordChangeDate = LocalDateTime.now();
     }
 
-    public void updateImage(String image) {
+    public void replaceProfileImage(String image) {
         this.profile.setImage(image);
+    }
+
+    public void addLink(String link) {
+        if (links.size() > MAX_LINKS_PER_USER) {
+            throw new IllegalStateException("더 이상 링크를 등록할 수 없습니다.");
+        }
+        links.add(new UserLink(this, link));
+    }
+
+    public void addLinks(List<String> links) {
+        if (links != null) {
+            links.forEach(this::addLink);
+        }
+    }
+
+    public void removeLink(String link) {
+        links.removeIf(item -> item.getLink().equals(link));
     }
 }

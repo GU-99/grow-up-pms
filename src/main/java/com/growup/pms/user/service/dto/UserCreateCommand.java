@@ -3,6 +3,7 @@ package com.growup.pms.user.service.dto;
 import com.growup.pms.user.domain.Provider;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.domain.UserProfile;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
@@ -12,10 +13,11 @@ public record UserCreateCommand(
         String email,
         String nickname,
         String bio,
-        String imageUrl
+        String imageUrl,
+        List<String> links
 ) {
     public User toEntity() {
-        return User.builder()
+        User user = User.builder()
                 .username(username)
                 .password(password)
                 .email(email)
@@ -26,5 +28,7 @@ public record UserCreateCommand(
                         .image(imageUrl)
                         .build())
                 .build();
+        user.addLinks(links);
+        return user;
     }
 }
