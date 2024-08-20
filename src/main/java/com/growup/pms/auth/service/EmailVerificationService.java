@@ -19,16 +19,23 @@ public class EmailVerificationService {
     private final MailClient mailClient;
     private final StringRedisTemplate stringRedisTemplate;
 
-    public boolean verifyEmail(String email, String code) {
-        String value = stringRedisTemplate.opsForValue().get(KEYSPACE_USER_EMAIL_CODE.formatted(email));
-        return StringUtils.hasLength(value) && value.equals(code);
+    public boolean verifyAndInvalidateEmail(String email, String code) {
+        String redisKey = KEYSPACE_USER_EMAIL_CODE.formatted(email);
+        String storedCode = stringRedisTemplate.opsForValue().get(redisKey);
+
+        if (StringUtils.hasLength(storedCode) && storedCode.equals(code)) {
+            stringRedisTemplate.delete(redisKey);
+            return true;
+        }
+        return false;
     }
 
-    public String getAndSetVerificationCode(String email) {
+    public void sendVerificationCode(String email) {
         String verificationCode = generateVerificationCode();
 
         stringRedisTemplate.opsForValue().set(KEYSPACE_USER_EMAIL_CODE.formatted(email), verificationCode,
                 VERIFICATION_CODE_EXPIRATION);
+
         mailClient.sendEmail(EmailDetails.builder()
                 .recipient(email)
                 .subject("인증 코드 안내 - [서비스 이름]")
@@ -42,7 +49,6 @@ public class EmailVerificationService {
                     이 코드는 %d초 후에 만료됩니다.
                     """.formatted(verificationCode, VERIFICATION_CODE_EXPIRATION.getSeconds()))
                 .build());
-        return verificationCode;
     }
 
     private String generateVerificationCode() {

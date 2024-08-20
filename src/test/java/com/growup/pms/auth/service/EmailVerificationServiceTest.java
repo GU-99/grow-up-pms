@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.service.dto.EmailDetails;
@@ -43,15 +44,18 @@ class EmailVerificationServiceTest {
             // given
             String email = "exists@email.com";
             String code = "123456";
+            String key = "user:%s:email".formatted(email);
 
             when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
             when(valueOperations.get(anyString())).thenReturn(code);
 
             // when
-            boolean isVerified = emailVerificationService.verifyEmail(email, code);
+            boolean isVerified = emailVerificationService.verifyAndInvalidateEmail(email, code);
 
             // then
             assertThat(isVerified).isTrue();
+
+            verify(stringRedisTemplate).delete(key);
         }
 
         @Test
@@ -64,7 +68,7 @@ class EmailVerificationServiceTest {
             when(valueOperations.get(anyString())).thenReturn(null);
 
             // when
-            boolean 인증_결과 = emailVerificationService.verifyEmail(이메일, 코드);
+            boolean 인증_결과 = emailVerificationService.verifyAndInvalidateEmail(이메일, 코드);
 
             // then
             assertThat(인증_결과).isFalse();
@@ -81,7 +85,7 @@ class EmailVerificationServiceTest {
             when(valueOperations.get(anyString())).thenReturn(실제_코드);
 
             // when
-            boolean 인증_결과 = emailVerificationService.verifyEmail(메일, 코드);
+            boolean 인증_결과 = emailVerificationService.verifyAndInvalidateEmail(메일, 코드);
 
             // then
             assertThat(인증_결과).isFalse();
@@ -100,7 +104,7 @@ class EmailVerificationServiceTest {
             doNothing().when(mailClient).sendEmail(any(EmailDetails.class));
 
             // when
-            assertThatCode(() -> emailVerificationService.getAndSetVerificationCode(메일))
+            assertThatCode(() -> emailVerificationService.sendVerificationCode(메일))
                     .doesNotThrowAnyException();
         }
     }
