@@ -93,6 +93,42 @@ paths:
                         "content" : [ "a", "b", "c" ]
                       } ]
                     }
+  /api/v1/user:
+    post:
+      tags:
+      - User
+      summary: 사용자 일반 회원가입
+      description: 사용자의 계정을 서버에 등록합니다.
+      operationId: user-controller-v1-docs-test/사용자_일반_회원가입_api_문서를_생성한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-user-1578985727'
+            examples:
+              user-controller-v1-docs-test/사용자_일반_회원가입_api_문서를_생성한다:
+                value: |-
+                  {
+                    "username" : "brown",
+                    "password" : "test1234!@#$",
+                    "email" : "brown@example.com",
+                    "nickname" : "브라운",
+                    "bio" : "안녕하세요, 브라운입니다!",
+                    "imageUrl" : "https://example.org/attachments/img1.png",
+                    "links" : [ "http://example.com" ],
+                    "verificationCode" : 123456
+                  }
+      responses:
+        "201":
+          description: "201"
   /api/v1/team/{id}:
     get:
       tags:
@@ -533,6 +569,35 @@ paths:
               description: 새 리프레시 토큰
               schema:
                 type: string
+  /api/v1/user/verify/send:
+    post:
+      tags:
+      - User
+      summary: 인증코드 전송
+      description: 사용자의 이메일에 인증코드를 전송합니다. 만료기간은 3분입니다.
+      operationId: user-controller-v1-docs-test/인증코드_전송_api_문서를_생성한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-user-verify-send1365830936'
+            examples:
+              user-controller-v1-docs-test/인증코드_전송_api_문서를_생성한다:
+                value: |-
+                  {
+                    "email" : "test@example.org"
+                  }
+      responses:
+        "200":
+          description: "200"
   /api/v1/project/{projectId}/status/{statusId}:
     delete:
       tags:
@@ -793,6 +858,39 @@ components:
         colorCode:
           type: string
           description: 변경할 색상 코드
+    api-v1-user-1578985727:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        imageUrl:
+          type: string
+          description: 프로필 이미지 URL
+        nickname:
+          type: string
+          description: 닉네임
+        bio:
+          type: string
+          description: 자기소개
+        links:
+          type: array
+          description: 사용자 링크
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        email:
+          type: string
+          description: 이메일
+        verificationCode:
+          type: number
+          description: 인증코드
+        username:
+          type: string
+          description: 사용자 아이디
     api-v1-user-login-434021498:
       type: object
       properties:
@@ -869,6 +967,12 @@ components:
         userId:
           type: number
           description: 초대할 사용자 ID
+    api-v1-user-verify-send1365830936:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 인증하려는 사용자 이메일
     api-v1-project-projectId-status1214003116:
       type: object
       properties:
