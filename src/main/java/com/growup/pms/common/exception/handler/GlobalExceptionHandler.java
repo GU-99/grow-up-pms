@@ -7,6 +7,7 @@ import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.InvalidInputException;
 import com.growup.pms.common.exception.exceptions.MessageFailureException;
 import com.growup.pms.common.exception.exceptions.StorageException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.of(ex.getErrorCode()));
     }
 
-    @ExceptionHandler({DuplicateException.class, MessageFailureException.class})
+    @ExceptionHandler({DuplicateException.class, MessageFailureException.class, InvalidInputException.class})
     protected ResponseEntity<ErrorResponse> handleBadRequestException(BusinessException ex, HttpServletRequest request) {
         logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

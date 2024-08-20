@@ -46,4 +46,10 @@ public class UserControllerV1 {
     public ResponseEntity<List<UserTeamResponse>> getTeams(@CurrentUser SecurityUser user) {
         return ResponseEntity.ok().body(userService.getAllUserTeams(user.getId()));
     }
+
+    @PostMapping("/verify/send")
+    public ResponseEntity<Void> sendVerificationCode(String email) {
+        userService.sendVerificationCode(email);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -1,7 +1,9 @@
 package com.growup.pms.user.service;
 
+import com.growup.pms.auth.service.EmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
+import com.growup.pms.common.exception.exceptions.InvalidInputException;
 import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -23,9 +26,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
+    private final EmailVerificationService emailVerificationService;
 
     @Transactional
     public Long save(UserCreateCommand command) {
+        validateVerificationCode(command.email(), command.verificationCode());
+
         try {
             User user = command.toEntity();
             user.encodePassword(passwordEncoder);
@@ -35,13 +41,18 @@ public class UserService {
         }
     }
 
+    @Transactional(propagation = Propagation.NEVER)
+    public void sendVerificationCode(String email) {
+        emailVerificationService.sendVerificationCode(email);
+    }
+
     @Transactional
     public void uploadImage(Long userId, UserUploadCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
 
         String path = "users";
         String image = storageService.upload(command.file(), path);
-        user.updateImage(path + "/" + image);
+        user.replaceProfileImage(path + "/" + image);
 
         userRepository.save(user);
     }
@@ -52,6 +63,12 @@ public class UserService {
 
     public List<UserTeamResponse> getAllUserTeams(Long userId) {
         return userRepository.findAllUserTeams(userId);
+    }
+
+    private void validateVerificationCode(String email, int verificationCode) {
+        if (!emailVerificationService.verifyAndInvalidateEmail(email, String.valueOf(verificationCode))) {
+            throw new InvalidInputException(ErrorCode.INVALID_EMAIL_VERIFICATION);
+        }
     }
 }
 
