@@ -33,12 +33,9 @@ public class TaskService {
 
     @Transactional
     public TaskDetailResponse createTask(Long projectId, TaskCreateCommand command) {
-        Status status = statusRepository.findById(command.statusId())
-                .orElse(null);
+        Status status = statusRepository.findByIdOrThrow(command.statusId());
 
-        if (status != null) {
-            isValidProject(projectId, status.getProject().getId());
-        }
+        isValidProject(projectId, status.getProject().getId());
 
         User user = userRepository.findById(command.userId())
                 .orElse(null);

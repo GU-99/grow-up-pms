@@ -39,7 +39,7 @@ public class TaskDetailResponse {
     public static TaskDetailResponse of(Task task) {
         return TaskDetailResponse.builder()
                 .taskId(task.getId())
-                .statusId(task.getTaskStatus())
+                .statusId(task.getStatus().getId())
                 .userNickname(task.getAssignee())
                 .taskName(task.getName())
                 .content(task.getContent())
