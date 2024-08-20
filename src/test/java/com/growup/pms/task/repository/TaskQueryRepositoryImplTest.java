@@ -129,7 +129,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .회원은(브라운)
                         .이름은("PMS 프로젝트의 환경설정을 진행함")
                         .내용은("- build.gradle 의존성 추가 <br> - Config 클래스 추가")
-                        .정렬순서는((short) 1)
+                        .정렬순서는((short) 2)
                         .시작일자는(LocalDate.parse("2023-01-01"))
                         .종료일자는(LocalDate.parse("2023-01-15"))
                         .이다()
@@ -140,7 +140,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .회원은(레니)
                         .이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
                         .내용은("- ProjectRepository 구현 <br> - ProjectService 클래스 내부 구현")
-                        .정렬순서는((short) 2)
+                        .정렬순서는((short) 1)
                         .시작일자는(LocalDate.parse("2023-01-16"))
                         .종료일자는(LocalDate.parse("2023-01-31"))
                         .이다()
@@ -162,7 +162,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .회원은(레너드)
                         .이름은("PMS 프로젝트의 수정 기능 구현을 진행함")
                         .내용은(null)
-                        .정렬순서는((short) 4)
+                        .정렬순서는((short) 5)
                         .시작일자는(null)
                         .종료일자는(null)
                         .이다()
@@ -173,7 +173,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .회원은(null)
                         .이름은("PMS 프로젝트의 삭제 기능 구현을 진행함")
                         .내용은("- 누가누가 이 기능에 먼저 도착할까")
-                        .정렬순서는((short) 5)
+                        .정렬순서는((short) 4)
                         .시작일자는(null)
                         .종료일자는(null)
                         .이다()
@@ -198,7 +198,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
             // then
             assertThat(실제_결과.get(완료_상태_ID)).hasSize(2);
             assertThat(실제_결과.get(완료_상태_ID).stream().map(TaskResponse::taskName))
-                    .containsExactly("PMS 프로젝트의 환경설정을 진행함", "PMS 프로젝트의 등록 기능 구현을 진행함");
+                    .containsExactly("PMS 프로젝트의 등록 기능 구현을 진행함", "PMS 프로젝트의 환경설정을 진행함");
 
             assertThat(실제_결과.get(진행중_상태_ID)).hasSize(1);
             assertThat(실제_결과.get(진행중_상태_ID).stream().map(TaskResponse::taskName))
@@ -206,7 +206,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
             assertThat(실제_결과.get(할일_상태_ID)).hasSize(2);
             assertThat(실제_결과.get(할일_상태_ID).stream().map(TaskResponse::taskName))
-                    .containsExactly("PMS 프로젝트의 수정 기능 구현을 진행함", "PMS 프로젝트의 삭제 기능 구현을 진행함");
+                    .containsExactly("PMS 프로젝트의 삭제 기능 구현을 진행함", "PMS 프로젝트의 수정 기능 구현을 진행함");
 
             assertThat(실제_결과.get(보류_상태_ID)).isNull();
         }
