@@ -194,9 +194,6 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
             // when
             Map<Long, List<TaskResponse>> 실제_결과 = taskQueryRepository.getTasksByProjectId(프로젝트_ID);
-            for (Long l : 실제_결과.keySet()) {
-                System.out.println(실제_결과.get(l));
-            }
 
             // then
             assertThat(실제_결과.get(완료_상태_ID)).hasSize(2);
