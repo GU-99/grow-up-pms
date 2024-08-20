@@ -187,19 +187,35 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         void 성공한다() {
             // given
             Long 프로젝트_ID = PMS_프로젝트.getId();
-            Long 상태_ID = PMS_완료.getId();
+            Long 완료_상태_ID = PMS_완료.getId();
+            Long 진행중_상태_ID = PMS_진행중.getId();
+            Long 할일_상태_ID = PMS_할일.getId();
+            Long 보류_상태_ID = PMS_보류.getId();
 
             // when
             Map<Long, List<TaskResponse>> 실제_결과 = taskQueryRepository.getTasksByProjectId(프로젝트_ID);
+            for (Long l : 실제_결과.keySet()) {
+                System.out.println(실제_결과.get(l));
+            }
 
             // then
-            assertThat(실제_결과.get(상태_ID)).hasSize(2);
-            assertThat(실제_결과.get(상태_ID).stream().map(TaskResponse::taskName))
+            assertThat(실제_결과.get(완료_상태_ID)).hasSize(2);
+            assertThat(실제_결과.get(완료_상태_ID).stream().map(TaskResponse::taskName))
                     .containsExactly("PMS 프로젝트의 환경설정을 진행함", "PMS 프로젝트의 등록 기능 구현을 진행함");
+
+            assertThat(실제_결과.get(진행중_상태_ID)).hasSize(1);
+            assertThat(실제_결과.get(진행중_상태_ID).stream().map(TaskResponse::taskName))
+                    .containsExactly("PMS 프로젝트의 조회 기능 구현을 진행함");
+
+            assertThat(실제_결과.get(할일_상태_ID)).hasSize(2);
+            assertThat(실제_결과.get(할일_상태_ID).stream().map(TaskResponse::taskName))
+                    .containsExactly("PMS 프로젝트의 수정 기능 구현을 진행함", "PMS 프로젝트의 삭제 기능 구현을 진행함");
+
+            assertThat(실제_결과.get(보류_상태_ID)).isNull();
         }
 
         @Test
-        void 프로젝트가_존재하지_않으면_빈_맵을_반환한다() {
+        void 해당_프로젝트에_일정이_없으면_빈맵을_반환한다() {
             // given
             Long 잘못된_프로젝트_ID = Long.MAX_VALUE;
 
