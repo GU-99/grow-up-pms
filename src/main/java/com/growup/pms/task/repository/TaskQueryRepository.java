@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface TaskQueryRepository {
 
-    Map<Long, List<TaskResponse>> getTasksByProjectId(Long statusId);
+    Map<Long, List<TaskResponse>> getTasksByProjectId(Long projectId);
 }
