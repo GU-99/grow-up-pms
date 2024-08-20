@@ -51,7 +51,8 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("[].name").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("[].content").type(JsonFieldType.STRING).description("팀 소개"),
                                         fieldWithPath("[].creator").type(JsonFieldType.STRING).description("팀장 닉네임"),
-                                        fieldWithPath("[].isPendingApproval").type(JsonFieldType.BOOLEAN).description("가입 대기 여부"))
+                                        fieldWithPath("[].isPendingApproval").type(JsonFieldType.BOOLEAN).description("가입 대기 여부"),
+                                        fieldWithPath("[].role").type(JsonFieldType.STRING).description("팀 내에서의 역할"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }
