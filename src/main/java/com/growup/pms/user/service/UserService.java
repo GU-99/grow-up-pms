@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -30,6 +31,7 @@ public class UserService {
     @Transactional
     public Long save(UserCreateCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
+
         try {
             User user = command.toEntity();
             user.encodePassword(passwordEncoder);
@@ -39,10 +41,9 @@ public class UserService {
         }
     }
 
-    private void validateVerificationCode(String email, int verificationCode) {
-        if (!emailVerificationService.verifyEmail(email, String.valueOf(verificationCode))) {
-            throw new InvalidInputException(ErrorCode.INVALID_EMAIL_VERIFICATION);
-        }
+    @Transactional(propagation = Propagation.NEVER)
+    public void sendVerificationCode(String email) {
+        emailVerificationService.sendVerificationCode(email);
     }
 
     @Transactional
@@ -62,6 +63,12 @@ public class UserService {
 
     public List<UserTeamResponse> getAllUserTeams(Long userId) {
         return userRepository.findAllUserTeams(userId);
+    }
+
+    private void validateVerificationCode(String email, int verificationCode) {
+        if (!emailVerificationService.verifyAndInvalidateEmail(email, String.valueOf(verificationCode))) {
+            throw new InvalidInputException(ErrorCode.INVALID_EMAIL_VERIFICATION);
+        }
     }
 }
 
