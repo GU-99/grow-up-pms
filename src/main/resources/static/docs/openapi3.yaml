@@ -352,18 +352,18 @@ paths:
                 task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
                   value: |-
                     {
-                      "2" : [ {
-                        "taskId" : 2,
-                        "statusId" : 2,
-                        "taskName" : "프로젝트 일정 등록 기능 구현",
-                        "userNickname" : "Hello2",
-                        "sortOrder" : 1
-                      } ],
                       "1" : [ {
                         "taskId" : 1,
                         "statusId" : 1,
                         "taskName" : "환경설정 마치기",
                         "userNickname" : "Hello나는팀원1",
+                        "sortOrder" : 1
+                      } ],
+                      "2" : [ {
+                        "taskId" : 2,
+                        "statusId" : 2,
+                        "taskName" : "프로젝트 일정 등록 기능 구현",
+                        "userNickname" : "Hello2",
                         "sortOrder" : 1
                       } ]
                     }

@@ -72,7 +72,7 @@ class TaskServiceTest {
             Task 예상_일정 = 일정은().이다();
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
-            when(statusRepository.findById(예상_상태_ID)).thenReturn(Optional.of(예상_상태));
+            when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
             when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.of(예상_담당자));
             when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
@@ -84,15 +84,16 @@ class TaskServiceTest {
         }
 
         @Test
-        void 담당회원과_상태가_없어도_성공한다() {
+        void 담당자가_없어도_성공한다() {
             Long 예상_일정_ID = 1L;
             Long 예상_프로젝트_ID = 1L;
             Long 예상_상태_ID = 1L;
             Long 예상_담당자_ID = 1L;
-            Task 예상_일정 = 일정은().회원은(null).상태는(null).이다();
+            Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
+            Task 예상_일정 = 일정은().회원은(null).이다();
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
-            when(statusRepository.findById(예상_상태_ID)).thenReturn(Optional.empty());
+            when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
             when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.empty());
             when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
@@ -101,8 +102,24 @@ class TaskServiceTest {
 
             // then
             assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
-            assertThat(실제_결과.getStatusId()).isNull();
+            assertThat(실제_결과.getStatusId()).isEqualTo(예상_상태_ID);
             assertThat(실제_결과.getUserNickname()).isNull();
+        }
+
+        @Test
+        void 상태가_없으면_예외가_발생한다() {
+            // given
+            Long 예상_프로젝트_ID = 1L;
+            Long 예상_상태_ID = 1L;
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
+
+            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+                    .when(statusRepository).findByIdOrThrow(예상_상태_ID);
+
+            // when &then
+            assertThatThrownBy(() -> taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("존재하지 않는 프로젝트 상태입니다.");
         }
     }
 
