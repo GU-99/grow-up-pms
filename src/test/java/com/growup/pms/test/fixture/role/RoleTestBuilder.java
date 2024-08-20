@@ -19,6 +19,11 @@ public class RoleTestBuilder {
         return new RoleTestBuilder();
     }
 
+    public RoleTestBuilder 식별자가(Long 식별자) {
+        this.id = 식별자;
+        return this;
+    }
+
     public RoleTestBuilder 타입이(RoleType 타입) {
         this.roleType = 타입;
         return this;
