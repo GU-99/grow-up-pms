@@ -332,18 +332,12 @@ paths:
       tags:
       - Task
       summary: 상태별 프로젝트 일정 전체 조회
-      description: 프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 상태별로 조회합니다.
+      description: 프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 해당 상태 식별자와 함께 상태별로 조회합니다.
       operationId: task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다
       parameters:
       - name: projectId
         in: path
         description: 조회할 프로젝트 식별자
-        required: true
-        schema:
-          type: number
-      - name: statusId
-        in: query
-        description: 조회할 상태 식별자
         required: true
         schema:
           type: number
@@ -353,23 +347,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task1608277617'
+                $ref: '#/components/schemas/api-v1-project-projectId-task817120761'
               examples:
                 task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
                   value: |-
-                    [ {
-                      "taskId" : 1,
-                      "statusId" : 1,
-                      "taskName" : "환경설정 마치기",
-                      "userNickname" : "Hello나는팀원1",
-                      "sortOrder" : 1
-                    }, {
-                      "taskId" : 2,
-                      "statusId" : 1,
-                      "taskName" : "프로젝트 일정 등록 기능 구현",
-                      "userNickname" : "Hello2",
-                      "sortOrder" : 1
-                    } ]
+                    {
+                      "2" : [ {
+                        "taskId" : 2,
+                        "statusId" : 2,
+                        "taskName" : "프로젝트 일정 등록 기능 구현",
+                        "userNickname" : "Hello2",
+                        "sortOrder" : 1
+                      } ],
+                      "1" : [ {
+                        "taskId" : 1,
+                        "statusId" : 1,
+                        "taskName" : "환경설정 마치기",
+                        "userNickname" : "Hello나는팀원1",
+                        "sortOrder" : 1
+                      } ]
+                    }
     post:
       tags:
       - Task
@@ -850,26 +847,30 @@ components:
         username:
           type: string
           description: 아이디
-    api-v1-project-projectId-task1608277617:
-      type: array
-      items:
-        type: object
-        properties:
-          statusId:
-            type: number
-            description: 프로젝트 상태 식별자
-          sortOrder:
-            type: number
-            description: 정렬 순서
-          userNickname:
-            type: string
-            description: 회원 이름
-          taskName:
-            type: string
-            description: 일정 이름
-          taskId:
-            type: number
-            description: 프로젝트 일정 식별자
+    api-v1-project-projectId-task817120761:
+      type: object
+      properties:
+        '*':
+          type: array
+          description: 상태별 프로젝트 일정 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 프로젝트 상태 식별자
+              sortOrder:
+                type: number
+                description: 정렬 순서
+              userNickname:
+                type: string
+                description: 회원 이름
+              taskName:
+                type: string
+                description: 일정 이름
+              taskId:
+                type: number
+                description: 프로젝트 일정 식별자
     api-v1-team-teamId-invitation-1361275252:
       type: object
       properties:

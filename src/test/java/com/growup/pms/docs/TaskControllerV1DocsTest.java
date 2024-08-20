@@ -3,6 +3,7 @@ package com.growup.pms.docs;
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.growup.pms.test.fixture.task.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -31,9 +32,9 @@ import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder;
 import com.growup.pms.test.fixture.task.TaskDetailResponseTestBuilder;
 import com.growup.pms.test.fixture.task.TaskEditRequestTestBuilder;
-import com.growup.pms.test.fixture.task.TaskResponseTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
+import java.util.Map;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,49 +131,53 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
     @Test
     void 일정_전체조회_API_문서를_생성한다() throws Exception {
         // given
-        Long 예상_프로젝트_식별자 = 1L;
-        Long 예상_상태_식별자 = 1L;
-        TaskResponse response1 = TaskResponseTestBuilder.일정_전체조회_응답은().이다();
-        TaskResponse response2 = TaskResponseTestBuilder.일정_전체조회_응답은()
+        Long 예상_프로젝트_ID = 1L;
+        Long 예상_상태_ID_1 = 1L;
+        Long 예상_상태_ID_2 = 2L;
+        TaskResponse 예상_일정_1 = 일정_전체조회_응답은()
+                .상태_식별자는(예상_상태_ID_1)
+                .이다();
+        TaskResponse 예상_일정_2 = 일정_전체조회_응답은()
                 .일정_식별자는(2L)
+                .상태_식별자는(예상_상태_ID_2)
                 .일정이름은("프로젝트 일정 등록 기능 구현")
                 .회원_닉네임은("Hello2")
                 .이다();
 
-        List<TaskResponse> responses = List.of(response1, response2);
+        List<TaskResponse> 예상_일정_목록_1 = List.of(예상_일정_1);
+        List<TaskResponse> 예상_일정_목록_2 = List.of(예상_일정_2);
+
+        Map<Long, List<TaskResponse>> 예상_결과 = Map.of(예상_상태_ID_1, 예상_일정_목록_1, 예상_상태_ID_2, 예상_일정_목록_2);
 
         // when
-        when(taskService.getTasks(anyLong())).thenReturn(responses);
+        when(taskService.getTasks(anyLong())).thenReturn(예상_결과);
 
         // then
-        mockMvc.perform(get(("/api/v1/project/{projectId}/task"), 예상_프로젝트_식별자)
+        mockMvc.perform(get(("/api/v1/project/{projectId}/task"), 예상_프로젝트_ID)
                         .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
-                        .queryParam("statusId", String.valueOf(예상_상태_식별자))
                 )
                 .andExpect(status().isOk())
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("상태별 프로젝트 일정 전체 조회")
-                                .description("프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 상태별로 조회합니다.")
+                                .description("프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 해당 상태 식별자와 함께 상태별로 조회합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").type(SimpleType.NUMBER)
                                                 .description("조회할 프로젝트 식별자")
                                 )
-                                .queryParameters(
-                                        parameterWithName("statusId").type(SimpleType.NUMBER)
-                                                .description("조회할 상태 식별자")
-                                )
                                 .responseFields(
-                                        fieldWithPath("[].taskId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("*").type(JsonFieldType.ARRAY)
+                                                .description("상태별 프로젝트 일정 목록"),
+                                        fieldWithPath("*.[].taskId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 일정 식별자"),
-                                        fieldWithPath("[].statusId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("*.[].statusId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 상태 식별자"),
-                                        fieldWithPath("[].userNickname").type(JsonFieldType.STRING)
-                                                .description("회원 이름"),
-                                        fieldWithPath("[].taskName").type(JsonFieldType.STRING)
+                                        fieldWithPath("*.[].taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
-                                        fieldWithPath("[].sortOrder").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("*.[].userNickname").type(JsonFieldType.STRING)
+                                                .description("회원 이름"),
+                                        fieldWithPath("*.[].sortOrder").type(JsonFieldType.NUMBER)
                                                 .description("정렬 순서")
                                 )
                                 .build()
