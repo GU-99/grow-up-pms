@@ -94,23 +94,6 @@ paths:
                       "content" : "코드 한 줄에 커피 한 잔, 우리는 카페인으로 움직이는 팀입니다!",
                       "creatorId" : 1
                     }
-    delete:
-      tags:
-      - Team
-      summary: 팀 제거
-      description: 해당 팀을 제거합니다.
-      operationId: team-controller-v1-docs-test/팀_제거_api_문서를_생성한다
-      parameters:
-      - name: id
-        in: path
-        description: 제거할 팀 ID
-        required: true
-        schema:
-          type: integer
-          format: int32
-      responses:
-        "204":
-          description: "204"
     patch:
       tags:
       - Team
