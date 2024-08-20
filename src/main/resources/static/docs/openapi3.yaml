@@ -187,7 +187,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-user-team1292527924'
+                $ref: '#/components/schemas/api-v1-user-team1301002808'
               examples:
                 user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다:
                   value: |-
@@ -196,7 +196,8 @@ paths:
                       "name" : "팀 이름",
                       "content" : "팀 소개",
                       "creator" : "팀장 닉네임",
-                      "isPendingApproval" : true
+                      "isPendingApproval" : true,
+                      "role" : "MATE"
                     } ]
   /api/v1/project/{projectId}/status:
     get:
@@ -728,6 +729,42 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/team/{teamId}/user/{targetMemberId}/role:
+    put:
+      tags:
+      - Team
+      summary: 팀원 역할 변경
+      description: 팀장이 자신의 팀원의 역할을 변경합니다. 자신의 역할은 변경할 수 없습니다.
+      operationId: team-user-controller-v1-test/팀원_역할_변경_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: targetMemberId
+        in: path
+        description: 역할을 변경할 팀원 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-teamId-user-targetMemberId-role-892778194'
+            examples:
+              team-user-controller-v1-test/팀원_역할_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "role" : "MATE"
+                  }
+      responses:
+        "200":
+          description: "200"
 components:
   schemas:
     api-v1-project-projectId-status-statusId-1514376740:
@@ -751,6 +788,12 @@ components:
         username:
           type: string
           description: 아이디
+    api-v1-team-teamId-user-targetMemberId-role-892778194:
+      type: object
+      properties:
+        role:
+          type: string
+          description: 부여할 역할명
     api-v1-project-projectId-task1608277617:
       type: array
       items:
@@ -843,6 +886,29 @@ components:
         colorCode:
           type: string
           description: 색상 코드
+    api-v1-user-team1301002808:
+      type: array
+      items:
+        type: object
+        properties:
+          creator:
+            type: string
+            description: 팀장 닉네임
+          role:
+            type: string
+            description: 팀 내에서의 역할
+          teamId:
+            type: number
+            description: 팀 ID
+          name:
+            type: string
+            description: 팀 이름
+          isPendingApproval:
+            type: boolean
+            description: 가입 대기 여부
+          content:
+            type: string
+            description: 팀 소개
     api-v1-project-projectId-status1220278061:
       type: array
       items:
@@ -896,26 +962,6 @@ components:
         content:
           type: string
           description: 팀 소개
-    api-v1-user-team1292527924:
-      type: array
-      items:
-        type: object
-        properties:
-          creator:
-            type: string
-            description: 팀장 닉네임
-          teamId:
-            type: number
-            description: 팀 ID
-          name:
-            type: string
-            description: 팀 이름
-          isPendingApproval:
-            type: boolean
-            description: 가입 대기 여부
-          content:
-            type: string
-            description: 팀 소개
     api-v1-project-projectId-task-taskId-1439620849:
       type: object
       properties:
