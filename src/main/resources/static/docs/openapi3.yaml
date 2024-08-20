@@ -59,40 +59,6 @@ paths:
               description: 생성된 팀의 URL
               schema:
                 type: string
-  /api/v1/test:
-    get:
-      tags:
-      - User
-      summary: 테스트
-      description: 테스트
-      operationId: example-controller-test/가입한_팀_목록_조회_api_문서를_생성한다
-      responses:
-        "200":
-          description: "200"
-          headers:
-            Content-Type:
-              description: application/json
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api-v1-test914791177'
-              examples:
-                example-controller-test/가입한_팀_목록_조회_api_문서를_생성한다:
-                  value: |-
-                    {
-                      "bar" : [ {
-                        "name" : "foo",
-                        "title" : "bar",
-                        "content" : [ "a", "b", "c" ]
-                      } ],
-                      "foo" : [ {
-                        "name" : "foo",
-                        "title" : "bar",
-                        "content" : [ "a", "b", "c" ]
-                      } ]
-                    }
   /api/v1/user:
     post:
       tags:
@@ -164,23 +130,6 @@ paths:
                       "content" : "코드 한 줄에 커피 한 잔, 우리는 카페인으로 움직이는 팀입니다!",
                       "creatorId" : 1
                     }
-    delete:
-      tags:
-      - Team
-      summary: 팀 제거
-      description: 해당 팀을 제거합니다.
-      operationId: team-controller-v1-docs-test/팀_제거_api_문서를_생성한다
-      parameters:
-      - name: id
-        in: path
-        description: 제거할 팀 ID
-        required: true
-        schema:
-          type: integer
-          format: int32
-      responses:
-        "204":
-          description: "204"
     patch:
       tags:
       - Team
@@ -920,47 +869,6 @@ components:
           taskId:
             type: number
             description: 프로젝트 일정 식별자
-    api-v1-test914791177:
-      type: object
-      properties:
-        bar:
-          type: array
-          description: 바
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        foo:
-          type: array
-          description: 푸
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        '*':
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: 이름
-              title:
-                type: string
-                description: 제목
-              content:
-                type: array
-                description: 내용 목록
-                items:
-                  oneOf:
-                  - type: object
-                  - type: boolean
-                  - type: string
-                  - type: number
     api-v1-team-teamId-invitation-1361275252:
       type: object
       properties:
