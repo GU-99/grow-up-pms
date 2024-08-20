@@ -29,6 +29,7 @@ import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -150,6 +151,28 @@ class TaskServiceTest {
             Map<Long, List<TaskResponse>> 실제_결과 = taskService.getTasks(예상_프로젝트_ID);
 
             // then
+            assertThat(실제_결과).hasSize(2);
+            assertThat(실제_결과.get(예상_상태_ID_1)).hasSize(2);
+            assertThat(실제_결과.get(예상_상태_ID_1).stream().map(TaskResponse::taskName))
+                    .containsExactlyInAnyOrder("PMS 프로젝트의 환경설정을 진행함", "PMS 프로젝트의 등록 기능 구현을 진행함");
+            assertThat(실제_결과.get(예상_상태_ID_2)).hasSize(1);
+            assertThat(실제_결과.get(예상_상태_ID_2).stream().map(TaskResponse::taskName))
+                    .containsExactlyInAnyOrder("PMS 프로젝트의 조회 기능 구현을 진행함");
+        }
+
+        @Test
+        void 해당_프로젝트에_일정이_없으면_빈맵을_반환한다() {
+            // given
+            Long 잘못된_프로젝트_ID = Long.MAX_VALUE;
+
+            Map<Long, List<TaskResponse>> 예상_결과 = Collections.emptyMap();
+            when(taskRepository.getTasksByProjectId(잘못된_프로젝트_ID)).thenReturn(예상_결과);
+
+            // when
+            Map<Long, List<TaskResponse>> 실제_결과 = taskService.getTasks(잘못된_프로젝트_ID);
+
+            // then
+            assertThat(실제_결과).isEmpty();
         }
     }
 
