@@ -32,7 +32,7 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
         List<Long> ids = queryFactory
                 .select(task.id)
                 .from(task)
-                .join(task.user, user)
+                .leftJoin(task.user, user)
                 .join(task.status, status)
                 .join(task.status.project, project)
                 .where(
@@ -50,11 +50,11 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                         task.id,
                         task.status.id,
                         task.name,
-                        task.user.username,
+                        task.user != null ? task.user.username : null,
                         task.sortOrder
                 ))
                 .from(task)
-                .join(task.user, user)
+                .leftJoin(task.user, user)
                 .join(task.status, status)
                 .join(task.status.project, project)
                 .where(
