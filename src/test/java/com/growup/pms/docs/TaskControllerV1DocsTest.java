@@ -3,6 +3,7 @@ package com.growup.pms.docs;
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.epages.restdocs.apispec.Schema.schema;
 import static com.growup.pms.test.fixture.task.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -78,6 +79,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
+                                .requestSchema(schema("프로젝트 일정 생성 요청 예시입니다."))
+                                .responseSchema(schema("프로젝트 일정 생성 성공 시 응답 예시입니다."))
                                 .summary("프로젝트 일정 생성")
                                 .description("프로젝트의 상태 식별자와 일정 이름, 일정 내용, 정렬 순서, 시작일자, 종료일자를 입력 받습니다.")
                                 .pathParameters(
@@ -109,7 +112,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("프로젝트 일정 식별자"),
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 상태 식별자"),
-                                        fieldWithPath("userNickname").type(JsonFieldType.STRING)
+                                        fieldWithPath("username").type(JsonFieldType.STRING)
                                                 .description("회원 이름"),
                                         fieldWithPath("taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
@@ -161,7 +164,9 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("상태별 프로젝트 일정 전체 조회")
-                                .description("프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 해당 상태 식별자와 함께 상태별로 조회합니다.")
+                                .requestSchema(schema("프로젝트 일정 전체 조회 요청 예시입니다."))
+                                .responseSchema(schema("프로젝트 일정 전체 조회 성공 시 응답 예시입니다."))
+                                .description("프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 상태별로 상태 식별자와 함께 상태별로 조회합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").type(SimpleType.NUMBER)
                                                 .description("조회할 프로젝트 식별자")
@@ -175,7 +180,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("프로젝트 상태 식별자"),
                                         fieldWithPath("*.[].taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
-                                        fieldWithPath("*.[].userNickname").type(JsonFieldType.STRING)
+                                        fieldWithPath("*.[].username").type(JsonFieldType.STRING)
                                                 .description("회원 이름"),
                                         fieldWithPath("*.[].sortOrder").type(JsonFieldType.NUMBER)
                                                 .description("정렬 순서")
@@ -203,6 +208,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("프로젝트 일정 상세 조회")
+                                .requestSchema(schema("프로젝트 일정 상세 조회 요청 예시입니다."))
+                                .responseSchema(schema("프로젝트 일정 상세 조회 성공 시 응답 예시입니다."))
                                 .description("프로젝트 내에서 선택한 일정을 조회합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").type(SimpleType.NUMBER)
@@ -215,7 +222,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("프로젝트 일정 식별자"),
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 상태 식별자"),
-                                        fieldWithPath("userNickname").type(JsonFieldType.STRING)
+                                        fieldWithPath("username").type(JsonFieldType.STRING)
                                                 .description("회원 이름"),
                                         fieldWithPath("taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
@@ -254,6 +261,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("프로젝트 일정 내용 변경")
+                                .requestSchema(schema("프로젝트 일정 변경 요청 예시입니다."))
                                 .description("프로젝트 일정의 상태 식별자, 일정 이름, 일정 본문내용, 정렬 순서, 시작일자, 종료일자를 변경합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").description("프로젝트 식별자"),
@@ -302,7 +310,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("프로젝트 일정 삭제")
-                                .description("프로젝트 일정을 삭제합니다.")
+                                .requestSchema(schema("프로젝트 일정 삭제 요청 예시입니다."))
+                                .description("프로젝트 식별자와 일정 식별자를 사용하여 프로젝트 일정을 삭제합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").description("프로젝트 식별자"),
                                         parameterWithName("taskId").description("변경할 일정 식별자")

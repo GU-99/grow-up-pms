@@ -7,7 +7,7 @@ public record TaskResponse(
         Long taskId,
         Long statusId,
         String taskName,
-        String userNickname,
+        String username,
         Short sortOrder
 ) {
 }

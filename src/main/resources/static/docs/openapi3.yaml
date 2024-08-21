@@ -332,7 +332,7 @@ paths:
       tags:
       - Task
       summary: 상태별 프로젝트 일정 전체 조회
-      description: 프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 해당 상태 식별자와 함께 상태별로 조회합니다.
+      description: 프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 상태별로 상태 식별자와 함께 상태별로 조회합니다.
       operationId: task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다
       parameters:
       - name: projectId
@@ -347,7 +347,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task817120761'
+                $ref: '#/components/schemas/프로젝트 일정 전체 조회 성공 시 응답 예시입니다.'
               examples:
                 task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
                   value: |-
@@ -356,14 +356,14 @@ paths:
                         "taskId" : 1,
                         "statusId" : 1,
                         "taskName" : "환경설정 마치기",
-                        "userNickname" : "Hello나는팀원1",
+                        "username" : "Hello나는팀원1",
                         "sortOrder" : 1
                       } ],
                       "2" : [ {
                         "taskId" : 2,
                         "statusId" : 2,
                         "taskName" : "프로젝트 일정 등록 기능 구현",
-                        "userNickname" : "Hello2",
+                        "username" : "Hello2",
                         "sortOrder" : 1
                       } ]
                     }
@@ -391,7 +391,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-task-1327488016'
+              $ref: '#/components/schemas/프로젝트 일정 생성 요청 예시입니다.'
             examples:
               task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                 value: |-
@@ -415,14 +415,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-106941217'
+                $ref: '#/components/schemas/프로젝트 일정 생성 성공 시 응답 예시입니다.'
               examples:
                 task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                   value: |-
                     {
                       "taskId" : 1,
                       "statusId" : 1,
-                      "userNickname" : "Hello나는팀원1",
+                      "username" : "Hello나는팀원1",
                       "taskName" : "환경설정 마치기",
                       "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                       "sortOrder" : 1,
@@ -636,14 +636,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-106941217'
+                $ref: '#/components/schemas/프로젝트 일정 상세 조회 성공 시 응답 예시입니다.'
               examples:
                 task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다:
                   value: |-
                     {
                       "taskId" : 1,
                       "statusId" : 1,
-                      "userNickname" : "Hello나는팀원1",
+                      "username" : "Hello나는팀원1",
                       "taskName" : "환경설정 마치기",
                       "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                       "sortOrder" : 1,
@@ -654,7 +654,7 @@ paths:
       tags:
       - Task
       summary: 프로젝트 일정 삭제
-      description: 프로젝트 일정을 삭제합니다.
+      description: 프로젝트 식별자와 일정 식별자를 사용하여 프로젝트 일정을 삭제합니다.
       operationId: task-controller-v1-docs-test/일정_삭제_api_문서를_작성한다
       parameters:
       - name: projectId
@@ -702,7 +702,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-1439620849'
+              $ref: '#/components/schemas/프로젝트 일정 변경 요청 예시입니다.'
             examples:
               task-controller-v1-docs-test/일정_변경_api_문서를_작성한다:
                 value: |-
@@ -838,6 +838,31 @@ components:
         username:
           type: string
           description: 사용자 아이디
+    프로젝트 일정 생성 요청 예시입니다.:
+      title: 프로젝트 일정 생성 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 담당할 팀원의 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-user-login-434021498:
       type: object
       properties:
@@ -847,30 +872,34 @@ components:
         username:
           type: string
           description: 아이디
-    api-v1-project-projectId-task817120761:
+    프로젝트 일정 상세 조회 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 상세 조회 성공 시 응답 예시입니다.
       type: object
       properties:
-        '*':
-          type: array
-          description: 상태별 프로젝트 일정 목록
-          items:
-            type: object
-            properties:
-              statusId:
-                type: number
-                description: 프로젝트 상태 식별자
-              sortOrder:
-                type: number
-                description: 정렬 순서
-              userNickname:
-                type: string
-                description: 회원 이름
-              taskName:
-                type: string
-                description: 일정 이름
-              taskId:
-                type: number
-                description: 프로젝트 일정 식별자
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+        taskId:
+          type: number
+          description: 프로젝트 일정 식별자
+        username:
+          type: string
+          description: 회원 이름
     api-v1-team-teamId-invitation-1361275252:
       type: object
       properties:
@@ -901,30 +930,6 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
-    api-v1-project-projectId-task-1327488016:
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        userId:
-          type: number
-          description: 담당할 팀원의 회원 식별자
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
     api-v1-team-id-1408924108:
       type: object
       properties:
@@ -992,6 +997,31 @@ components:
           projectId:
             type: number
             description: 프로젝트 식별자
+    프로젝트 일정 변경 요청 예시입니다.:
+      title: 프로젝트 일정 변경 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-team2045834793:
       type: object
       properties:
@@ -1025,7 +1055,8 @@ components:
         content:
           type: string
           description: 팀 소개
-    api-v1-project-projectId-task-taskId-1439620849:
+    프로젝트 일정 생성 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 생성 성공 시 응답 예시입니다.
       type: object
       properties:
         statusId:
@@ -1037,33 +1068,6 @@ components:
         sortOrder:
           type: number
           description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        userId:
-          type: number
-          description: 회원 식별자
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
-    api-v1-project-projectId-task-taskId-106941217:
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        userNickname:
-          type: string
-          description: 회원 이름
         taskName:
           type: string
           description: 일정 이름
@@ -1076,3 +1080,31 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
+        username:
+          type: string
+          description: 회원 이름
+    프로젝트 일정 전체 조회 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 전체 조회 성공 시 응답 예시입니다.
+      type: object
+      properties:
+        '*':
+          type: array
+          description: 상태별 프로젝트 일정 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 프로젝트 상태 식별자
+              sortOrder:
+                type: number
+                description: 정렬 순서
+              taskName:
+                type: string
+                description: 일정 이름
+              taskId:
+                type: number
+                description: 프로젝트 일정 식별자
+              username:
+                type: string
+                description: 회원 이름

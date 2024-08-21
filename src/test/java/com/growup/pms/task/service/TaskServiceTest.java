@@ -103,7 +103,7 @@ class TaskServiceTest {
             // then
             assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
             assertThat(실제_결과.getStatusId()).isEqualTo(예상_상태_ID);
-            assertThat(실제_결과.getUserNickname()).isNull();
+            assertThat(실제_결과.getUsername()).isNull();
         }
 
         @Test
