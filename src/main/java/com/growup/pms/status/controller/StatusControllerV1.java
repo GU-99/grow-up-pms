@@ -60,7 +60,7 @@ public class StatusControllerV1 {
     }
 
     @PatchMapping("/{statusId}")
-    @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
+    @RequirePermission(PermissionType.PROJECT_STATUS_UPDATE)
     public ResponseEntity<Void> editStatus(@ProjectId @PathVariable Long projectId, @PathVariable Long statusId,
                                            @Valid @RequestBody StatusEditRequest request) {
         log.debug("StatusControllerV1#editStatus called.");

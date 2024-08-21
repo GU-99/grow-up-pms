@@ -77,7 +77,7 @@ public class TaskControllerV1 {
     }
 
     @PatchMapping("/{taskId}")
-    @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
+    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
     public ResponseEntity<Void> editTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId,
                                          @Valid @RequestBody TaskEditRequest request) {
         log.debug("TaskControllerV1#editTask called.");
