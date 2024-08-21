@@ -1,6 +1,49 @@
 spring:
   profiles:
     active: local
-    group:
-      local: local, common
-      prod: prod, common
+
+  mail:
+    host: live.smtp.mailtrap.io
+    port: 587
+    username: api
+    password: ENC(nc+/bpDH70Gm6hmsOWniHJn/q39VOPb2khMnMid5jMNK8kQXhJJXKnyyEhV6nXzCRjxdXEYjzSo/CA7Q1b7NBCBlmvI30yb1G+bkKNYTiWA=)
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  application:
+    name: grow-up-pms
+
+  jpa:
+    open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+storage:
+  root-path: uploads
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+    password: ${JASYPT_PASSWORD}
+
+security:
+  jwt:
+    base64-secret: ENC(GsF8xZqjhZEphkvkgkKHDS23D6xo73+8iBGBJH1zSm1L9YBsHth1HdjMBivz3ljMSNTLDl+ZzlEw9UClhNemX+AmN0eVomJfo93VX6tZk5KWqAGhGk9X8hrCJnZluFFsjjMBd2+tJ13NHHigXpGxT+OxeziTgJWz0OP+vHLoNgQ=)
+    access-token-expiration-millis: 86400000
+    refresh-token-expiration-millis: 604800000
+
+springdoc:
+  swagger-ui:
+    url: /docs/openapi3.yaml
+
+mailtrap:
+  from: mailtrap@demomailtrap.com
