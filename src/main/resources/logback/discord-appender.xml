@@ -2,7 +2,7 @@
 <included>
     <springProperty name="webhookUrl" source="discord.webhook.url" />
     <springProperty name="username" source="discord.webhook.username" defaultValue="RISK-ALERT" />
-    <springProperty name="avatarUrl" source="discord.webhook.url" />
+    <springProperty name="avatarUrl" source="discord.webhook.avatar-url" />
 
     <appender name="DISCORD" class="com.growup.pms.common.DiscordWebhookAppender">
         <webhookUrl>${webhookUrl}</webhookUrl>

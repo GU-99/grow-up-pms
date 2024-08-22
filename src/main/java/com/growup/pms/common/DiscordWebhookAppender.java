@@ -2,6 +2,7 @@ package com.growup.pms.common;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
+import ch.qos.logback.core.CoreConstants;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
@@ -11,8 +12,8 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
     private WebhookClient webhookClient;
     private String webhookUrl;
@@ -21,6 +22,7 @@ public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
 
     @Override
     public void start() {
+        init();
         if (webhookUrl != null) {
             webhookClient = WebhookClient.withUrl(webhookUrl);
             super.start();
@@ -39,6 +41,16 @@ public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
             webhookClient.close();
         }
         super.stop();
+    }
+
+    private void init() {
+        // 로그백에서 값과 기본 값이 모두 NULL 이면 문자열 "KEY_IS_UNDEFINED"가 값으로 들어오는 비직관적인 동작을 수행함
+        webhookUrl = isDefined("webhookUrl") ? webhookUrl : null;
+        avatarUrl = isDefined("avatarUrl") ? webhookUrl : null;
+    }
+
+    private boolean isDefined(String key) {
+        return !CoreConstants.UNDEFINED_PROPERTY_SUFFIX.equals(key);
     }
 
     private static class EmbedBuilder {
