@@ -14,6 +14,7 @@ public class UserTeamResponseTestBuilder {
     private String content = "팀 소개";
     private String creator = "팀장 닉네임";
     private boolean isPendingApproval = true;
+    private String role = "MATE";
 
     public static UserTeamResponseTestBuilder 가입한_팀_응답은() {
         return new UserTeamResponseTestBuilder();
@@ -44,7 +45,12 @@ public class UserTeamResponseTestBuilder {
         return this;
     }
 
+    public UserTeamResponseTestBuilder 역할이(String 역할) {
+        this.role = 역할;
+        return this;
+    }
+
     public UserTeamResponse 이다() {
-        return new UserTeamResponse(teamId, name, content, creator, isPendingApproval);
+        return new UserTeamResponse(teamId, name, content, creator, isPendingApproval, role);
     }
 }

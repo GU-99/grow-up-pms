@@ -6,10 +6,14 @@ import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import com.growup.pms.auth.service.EmailVerificationService;
 import com.growup.pms.common.exception.exceptions.DuplicateException;
+import com.growup.pms.common.exception.exceptions.InvalidInputException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
@@ -32,6 +36,9 @@ class UserServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    EmailVerificationService emailVerificationService;
+
     @InjectMocks
     UserService userService;
 
@@ -47,6 +54,7 @@ class UserServiceTest {
             User 새_사용자 = 사용자는().식별자가(예상하는_새_사용자_ID).이다();
             UserCreateCommand 사용자_생성_요청 = 가입하는_사용자는(새_사용자).이다().toCommand();
 
+            when(emailVerificationService.verifyAndInvalidateEmail(eq(새_사용자.getEmail()), anyString())).thenReturn(true);
             when(userRepository.save(any(User.class))).thenReturn(새_사용자);
 
             // when
@@ -62,11 +70,26 @@ class UserServiceTest {
             User 새_사용자 = 사용자는().이메일이("중복된 이메일").이다();
             UserCreateCommand 사용자_생성_요청 = 가입하는_사용자는(새_사용자).이다().toCommand();
 
+            when(emailVerificationService.verifyAndInvalidateEmail(eq(새_사용자.getEmail()), anyString())).thenReturn(true);
             doThrow(DataIntegrityViolationException.class).when(userRepository).save(any(User.class));
 
             // when & then
             assertThatThrownBy(() -> userService.save(사용자_생성_요청))
                     .isInstanceOf(DuplicateException.class);
+        }
+
+        @Test
+        void 이메일_인증에_실패하면_예외가_발생한다() {
+            // given
+            User 새_사용자 = 사용자는().이다();
+            UserCreateCommand 사용자_생성_요청 = 가입하는_사용자는(새_사용자).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(anyString(), anyString())).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> userService.save(사용자_생성_요청))
+                    .isInstanceOf(InvalidInputException.class)
+                    .hasMessage("이메일 인증 번호가 일치하지 않습니다.");
         }
     }
 

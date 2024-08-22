@@ -11,6 +11,7 @@ import com.growup.pms.task.service.TaskService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -53,14 +53,13 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<List<TaskResponse>> getTasks(@ProjectId @PathVariable Long projectId,
-                                                       @RequestParam(required = false) Long statusId) {
+    public ResponseEntity<Map<Long, List<TaskResponse>>> getTasks(@ProjectId @PathVariable Long projectId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("일정 전체 조회를 위한 projectId={}", projectId);
 
-        List<TaskResponse> responses = taskService.getTasks(statusId);
+        Map<Long, List<TaskResponse>> response = taskService.getTasks(projectId);
 
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{taskId}")

@@ -6,9 +6,12 @@ import static com.growup.pms.common.constant.RegexConstants.USERNAME_PATTERN;
 
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import java.util.List;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
 
 @Builder
 public record UserCreateRequest(
@@ -29,7 +32,13 @@ public record UserCreateRequest(
         String bio,
 
         @Length(max = 255)
-        String imageUrl
+        String imageUrl,
+
+        @NotNull
+        List<@URL @Length(max = 255) String> links,
+
+        @NotNull
+        Integer verificationCode
 ) {
     public UserCreateCommand toCommand() {
         return UserCreateCommand.builder()
@@ -39,6 +48,8 @@ public record UserCreateRequest(
                 .nickname(nickname)
                 .bio(bio)
                 .imageUrl(imageUrl)
+                .links(links)
+                .verificationCode(verificationCode)
                 .build();
     }
 }
