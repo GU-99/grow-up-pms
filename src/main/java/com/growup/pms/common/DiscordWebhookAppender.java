@@ -49,7 +49,7 @@ public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
     private void init() {
         // 로그백에서 값과 기본 값이 모두 NULL 이면 문자열 "KEY_IS_UNDEFINED"가 값으로 들어오는 비직관적인 동작을 수행함
         webhookUrl = isDefined("webhookUrl") ? webhookUrl : null;
-        avatarUrl = isDefined("avatarUrl") ? webhookUrl : null;
+        avatarUrl = isDefined("avatarUrl") ? avatarUrl : null;
     }
 
     private boolean isDefined(String key) {
