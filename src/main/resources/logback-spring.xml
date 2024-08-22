@@ -4,7 +4,6 @@
 
     <include resource="logback/console-appender.xml"/>
     <include resource="logback/file-appender.xml"/>
-    <include resource="logback/discord-appender.xml"/>
 
     <springProfile name="local">
         <logger name="com.growup.pms" level="DEBUG">
@@ -21,6 +20,8 @@
     </springProfile>
 
     <springProfile name="prod">
+        <include resource="logback/discord-appender.xml"/>
+
         <logger name="com.growup.pms" level="INFO">
             <appender-ref ref="INFO_FILE"/>
             <appender-ref ref="WARN_FILE"/>
