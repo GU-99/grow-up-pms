@@ -791,6 +791,42 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/team/{teamId}/user/{targetMemberId}/role:
+    put:
+      tags:
+      - Team
+      summary: 팀원 역할 변경
+      description: 팀장이 자신의 팀원의 역할을 변경합니다. 자신의 역할은 변경할 수 없습니다.
+      operationId: team-user-controller-v1-test/팀원_역할_변경_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: targetMemberId
+        in: path
+        description: 역할을 변경할 팀원 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-teamId-user-targetMemberId-role-892778194'
+            examples:
+              team-user-controller-v1-test/팀원_역할_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "role" : "MATE"
+                  }
+      responses:
+        "200":
+          description: "200"
 components:
   schemas:
     api-v1-project-projectId-status-statusId-1514376740:
@@ -847,6 +883,32 @@ components:
         username:
           type: string
           description: 아이디
+    api-v1-team-teamId-user-targetMemberId-role-892778194:
+      type: object
+      properties:
+        role:
+          type: string
+          description: 부여할 역할명
+    api-v1-project-projectId-task1608277617:
+      type: array
+      items:
+        type: object
+        properties:
+          statusId:
+            type: number
+            description: 프로젝트 상태 식별자
+          sortOrder:
+            type: number
+            description: 정렬 순서
+          userNickname:
+            type: string
+            description: 회원 이름
+          taskName:
+            type: string
+            description: 일정 이름
+          taskId:
+            type: number
+            description: 프로젝트 일정 식별자
     api-v1-project-projectId-task817120761:
       type: object
       properties:

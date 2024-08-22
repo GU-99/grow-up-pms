@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.growup.pms")
 public class GlobalExceptionHandler {
     private static final String LOG_MESSAGE_FORMAT = "[{}] ({} {}) {}";
 
