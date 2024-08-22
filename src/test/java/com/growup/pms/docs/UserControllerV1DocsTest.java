@@ -1,20 +1,27 @@
 package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
 import static com.growup.pms.test.fixture.user.UserTeamResponseTestBuilder.가입한_팀_응답은;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
+import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.service.UserService;
+import com.growup.pms.user.service.dto.UserCreateCommand;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -51,8 +58,66 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("[].name").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("[].content").type(JsonFieldType.STRING).description("팀 소개"),
                                         fieldWithPath("[].creator").type(JsonFieldType.STRING).description("팀장 닉네임"),
-                                        fieldWithPath("[].isPendingApproval").type(JsonFieldType.BOOLEAN).description("가입 대기 여부"))
+                                        fieldWithPath("[].isPendingApproval").type(JsonFieldType.BOOLEAN).description("가입 대기 여부"),
+                                        fieldWithPath("[].role").type(JsonFieldType.STRING).description("팀 내에서의 역할"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .build())));
+    }
+
+    @Test
+    void 사용자_일반_회원가입_API_문서를_생성한다() throws Exception {
+        // given
+        Long 사용자_ID = 1L;
+        UserCreateRequest 사용자_생성_요청 = 가입하는_사용자는().이다();
+
+        when(userService.save(any(UserCreateCommand.class))).thenReturn(사용자_ID);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(사용자_생성_요청)))
+                .andExpectAll(
+                        status().isCreated(),
+                        header().string(HttpHeaders.LOCATION, "/api/v1/user/" + 사용자_ID)
+                )
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("사용자 일반 회원가입")
+                                .description("사용자의 계정을 서버에 등록합니다.")
+                                .requestFields(
+                                        fieldWithPath("username").type(JsonFieldType.STRING).description("사용자 아이디"),
+                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("links").type(JsonFieldType.ARRAY).description("사용자 링크"),
+                                        fieldWithPath("verificationCode").type(JsonFieldType.NUMBER).description("인증코드"))
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .build())));
+    }
+
+    @Test
+    void 인증코드_전송_API_문서를_생성한다() throws Exception {
+        // given
+        Long 사용자_ID = 1L;
+        Map<String, String> 가입하려는_사용자_이메일 = Map.of("email", "test@example.org");
+
+        when(userService.save(any(UserCreateCommand.class))).thenReturn(사용자_ID);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/user/verify/send")
+                        .content(objectMapper.writeValueAsString(가입하려는_사용자_이메일))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("인증코드 전송")
+                                .description("사용자의 이메일에 인증코드를 전송합니다. 만료기간은 3분입니다.")
+                                .requestFields(fieldWithPath("email").type(JsonFieldType.STRING).description("인증하려는 사용자 이메일"))
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }
 }

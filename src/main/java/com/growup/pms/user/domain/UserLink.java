@@ -33,7 +33,7 @@ public class UserLink extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_link_user"))
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String link;
 
     @Builder
