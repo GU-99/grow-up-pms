@@ -18,5 +18,5 @@ spring:
 discord:
   webhook:
     url: ${DISCORD_WEBHOOK_URL}
-    username: RISK-GU-99
+    username: Error Reporter
     avatar-url: https://i.imgur.com/uRkHXjk.png
