@@ -57,6 +57,7 @@ dependencies {
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'club.minnced:discord-webhooks:0.8.4'
 }
 
 ext {

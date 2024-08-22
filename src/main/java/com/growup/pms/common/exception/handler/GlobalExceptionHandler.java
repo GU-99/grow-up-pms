@@ -12,6 +12,7 @@ import com.growup.pms.common.exception.exceptions.MessageFailureException;
 import com.growup.pms.common.exception.exceptions.StorageException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -78,6 +79,13 @@ public class GlobalExceptionHandler {
     }
 
     private void logError(Exception ex, HttpServletRequest request) {
-        log.error(LOG_MESSAGE_FORMAT, "ERROR", request.getMethod(), request.getRequestURI(), ex.getMessage(), ex);
+        try {
+            MDC.put("requestUri", request.getRequestURI());
+            MDC.put("method", request.getMethod());
+            log.error(LOG_MESSAGE_FORMAT, "ERROR", request.getMethod(), request.getRequestURI(), ex.getMessage(), ex);
+        } finally {
+            MDC.remove("requestUri");
+            MDC.remove("method");
+        }
     }
 }
