@@ -479,16 +479,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-team-teamId-invitation-1361275252'
+              $ref: '#/components/schemas/api-v1-team-teamId-invitation-1262545139'
             examples:
               team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다:
                 value: |-
                   {
-                    "userId" : 1
+                    "userId" : 1,
+                    "roleName" : "LEADER"
                   }
       responses:
-        "201":
-          description: "201"
+        "200":
+          description: "200"
   /api/v1/user/login/refresh:
     post:
       tags:
@@ -740,8 +741,8 @@ paths:
           type: string
         example: Bearer 액세스 토큰
       responses:
-        "204":
-          description: "204"
+        "200":
+          description: "200"
   /api/v1/team/{teamId}/invitation/decline:
     post:
       tags:
@@ -764,8 +765,8 @@ paths:
           type: string
         example: Bearer 액세스 토큰
       responses:
-        "204":
-          description: "204"
+        "200":
+          description: "200"
   /api/v1/team/{teamId}/user/{targetMemberId}:
     delete:
       tags:
@@ -889,26 +890,6 @@ components:
         role:
           type: string
           description: 부여할 역할명
-    api-v1-project-projectId-task1608277617:
-      type: array
-      items:
-        type: object
-        properties:
-          statusId:
-            type: number
-            description: 프로젝트 상태 식별자
-          sortOrder:
-            type: number
-            description: 정렬 순서
-          userNickname:
-            type: string
-            description: 회원 이름
-          taskName:
-            type: string
-            description: 일정 이름
-          taskId:
-            type: number
-            description: 프로젝트 일정 식별자
     api-v1-project-projectId-task817120761:
       type: object
       properties:
@@ -933,12 +914,6 @@ components:
               taskId:
                 type: number
                 description: 프로젝트 일정 식별자
-    api-v1-team-teamId-invitation-1361275252:
-      type: object
-      properties:
-        userId:
-          type: number
-          description: 초대할 사용자 ID
     api-v1-user-verify-send1365830936:
       type: object
       properties:
@@ -999,6 +974,15 @@ components:
         content:
           type: string
           description: 팀 소개
+    api-v1-team-teamId-invitation-1262545139:
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 초대할 사용자의 역할명
+        userId:
+          type: number
+          description: 초대할 사용자 ID
     api-v1-project-projectId-status816001105:
       type: object
       properties:
