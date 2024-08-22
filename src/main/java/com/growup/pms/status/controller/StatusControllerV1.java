@@ -9,6 +9,7 @@ import com.growup.pms.status.controller.dto.request.StatusEditRequest;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,10 @@ public class StatusControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<StatusResponse> createStatus(@PathVariable Long projectId,
-                                                       @Valid @RequestBody StatusCreateRequest request) {
+    public ResponseEntity<StatusResponse> createStatus(
+            @Positive @PathVariable Long projectId,
+            @Valid @RequestBody StatusCreateRequest request
+    ) {
         log.debug("StatusControllerV1#createStatus called.");
         log.debug("projectId={}", projectId);
         log.debug("StatusCreateRequest={}", request);
@@ -49,7 +52,7 @@ public class StatusControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_READ)
-    public ResponseEntity<List<StatusResponse>> getStatuses(@ProjectId @PathVariable Long projectId) {
+    public ResponseEntity<List<StatusResponse>> getStatuses(@Positive @ProjectId @PathVariable Long projectId) {
         log.debug("StatusControllerV1#getStatuses called.");
         log.debug("projectId={}", projectId);
 
@@ -61,8 +64,11 @@ public class StatusControllerV1 {
 
     @PatchMapping("/{statusId}")
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<Void> editStatus(@ProjectId @PathVariable Long projectId, @PathVariable Long statusId,
-                                           @Valid @RequestBody StatusEditRequest request) {
+    public ResponseEntity<Void> editStatus(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long statusId,
+            @Valid @RequestBody StatusEditRequest request
+    ) {
         log.debug("StatusControllerV1#editStatus called.");
         log.debug("projectId={}", projectId);
         log.debug("statusId={}", statusId);
@@ -75,7 +81,10 @@ public class StatusControllerV1 {
 
     @DeleteMapping("/{statusId}")
     @RequirePermission(PermissionType.PROJECT_STATUS_DELETE)
-    public ResponseEntity<Void> deleteStatus(@ProjectId @PathVariable Long projectId, @PathVariable Long statusId) {
+    public ResponseEntity<Void> deleteStatus(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long statusId
+    ) {
         log.debug("StatusControllerV1#deleteStatus called.");
         log.debug("projectId={}", projectId);
         log.debug("statusId={}", statusId);

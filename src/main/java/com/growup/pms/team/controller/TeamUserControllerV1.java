@@ -6,6 +6,7 @@ import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.team.controller.dto.request.RoleUpdateRequest;
 import com.growup.pms.team.service.TeamUserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +24,10 @@ public class TeamUserControllerV1 {
 
     @DeleteMapping("/{targetMemberId}")
     @RequirePermission(PermissionType.TEAM_KICK_MEMBER)
-    public ResponseEntity<Void> kickMember(@PathVariable @TeamId Long teamId, @PathVariable Long targetMemberId) {
+    public ResponseEntity<Void> kickMember(
+            @Positive @PathVariable @TeamId Long teamId,
+            @Positive @PathVariable Long targetMemberId
+    ) {
         teamUserService.kickMember(teamId, targetMemberId);
         return ResponseEntity.noContent().build();
     }
@@ -31,8 +35,8 @@ public class TeamUserControllerV1 {
     @PutMapping("/{targetMemberId}/role")
     @RequirePermission(PermissionType.TEAM_MEMBER_ROLE_UPDATE)
     public ResponseEntity<Void> changeRole(
-            @PathVariable @TeamId Long teamId,
-            @PathVariable Long targetMemberId,
+            @Positive @PathVariable @TeamId Long teamId,
+            @Positive @PathVariable Long targetMemberId,
             @Valid @RequestBody RoleUpdateRequest request
     ) {
         teamUserService.changeRole(teamId, targetMemberId, request.role());

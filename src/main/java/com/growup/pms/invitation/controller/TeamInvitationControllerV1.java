@@ -4,6 +4,7 @@ import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.invitation.controller.dto.request.TeamInvitationCreateRequest;
 import com.growup.pms.invitation.service.TeamInvitationService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,10 @@ public class TeamInvitationControllerV1 {
 
     // TODO: 권한이나 역할이 구현되면 팀 초대 권한이 있는 팀원만 다른 사용자를 초대할 수 있도록 구현해야 함
     @PostMapping
-    public ResponseEntity<Void> invite(@PathVariable Long teamId, @Valid @RequestBody TeamInvitationCreateRequest request) {
+    public ResponseEntity<Void> invite(
+            @PathVariable @Positive Long teamId,
+            @Valid @RequestBody TeamInvitationCreateRequest request
+    ) {
         return ResponseEntity.created(
                 URI.create("/api/v1/team/" + teamId + "/invitation/"
                         + teamInvitationService.sendInvitation(teamId, request.toCommand())))
@@ -30,13 +34,19 @@ public class TeamInvitationControllerV1 {
     }
 
     @PostMapping("/accept")
-    public ResponseEntity<Void> accept(@AuthenticationPrincipal SecurityUser user, @PathVariable Long teamId) {
+    public ResponseEntity<Void> accept(
+            @AuthenticationPrincipal SecurityUser user,
+            @Positive @PathVariable Long teamId
+    ) {
         teamInvitationService.acceptInvitation(teamId, user.getId());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/decline")
-    public ResponseEntity<Void> decline(@AuthenticationPrincipal SecurityUser user, @PathVariable Long teamId) {
+    public ResponseEntity<Void> decline(
+            @AuthenticationPrincipal SecurityUser user,
+            @Positive @PathVariable Long teamId
+    ) {
         teamInvitationService.declineInvitation(teamId, user.getId());
         return ResponseEntity.noContent().build();
     }
