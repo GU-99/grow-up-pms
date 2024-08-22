@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "discord.webhook.url",
+      "type": "java.lang.String",
+      "description": "디스코드 웹훅 URL"
+    },
+    {
+      "name": "discord.webhook.username",
+      "type": "java.lang.String",
+      "description": "디스코드 웹훅 전송 시 임베드 내의 저자명(author)"
+    }
+  ] }

@@ -14,3 +14,8 @@ spring:
     redis:
       host: redis
       port: 6379
+
+discord:
+  webhook:
+    url: ${DISCORD_WEBHOOK_URL}
+    username: RISK-GU-99
