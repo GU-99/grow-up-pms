@@ -9,5 +9,10 @@
       "name": "discord.webhook.username",
       "type": "java.lang.String",
       "description": "디스코드 웹훅 전송 시 임베드 내의 저자명(author)"
+    },
+    {
+      "name": "discord.webhook.avatar-url",
+      "type": "java.lang.String",
+      "description": "디스코드 웹훅 전송 시 임베드 내에서 사용되는 아바타 이미지 URL"
     }
   ] }

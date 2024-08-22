@@ -7,7 +7,7 @@
     <appender name="DISCORD" class="com.growup.pms.common.DiscordWebhookAppender">
         <webhookUrl>${webhookUrl}</webhookUrl>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%thread] %logger{36} - %msg%n%Ex{5}</pattern>
+            <pattern>[%thread] %logger{36} - %msg%n%rEx{5}</pattern>
         </layout>
         <username>${username}</username>
         <avatarUrl>${avatarUrl}</avatarUrl>

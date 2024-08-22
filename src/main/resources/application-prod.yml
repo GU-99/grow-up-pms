@@ -19,3 +19,4 @@ discord:
   webhook:
     url: ${DISCORD_WEBHOOK_URL}
     username: RISK-GU-99
+    avatar-url: https://i.imgur.com/uRkHXjk.png

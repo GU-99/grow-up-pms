@@ -3,6 +3,7 @@ package com.growup.pms.common;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.core.CoreConstants;
+import ch.qos.logback.core.Layout;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Getter
 public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
     private WebhookClient webhookClient;
+    private Layout<ILoggingEvent> layout;
     private String webhookUrl;
     private String username;
     private String avatarUrl;
@@ -31,8 +33,9 @@ public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
 
     @Override
     protected void append(ILoggingEvent eventObject) {
+        String message = layout.doLayout(eventObject);
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        webhookClient.send(embedBuilder.buildEmbed(eventObject, username, avatarUrl));
+        webhookClient.send(embedBuilder.buildEmbed(eventObject, message, username, avatarUrl));
     }
 
     @Override
@@ -62,7 +65,7 @@ public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
         private static final String MDC_REQUEST_URI = "requestUri";
         private static final String MDC_KEY_TRACE_ID = "traceId";
 
-        WebhookEmbed buildEmbed(ILoggingEvent eventObject, String username, String avatarUrl) {
+        WebhookEmbed buildEmbed(ILoggingEvent eventObject, String message, String username, String avatarUrl) {
             WebhookEmbedBuilder builder = new WebhookEmbedBuilder()
                     .setColor(getColorByLogLevel(eventObject.getLevel()))
                     .addField(new WebhookEmbed.EmbedField(false, "Level", eventObject.getLevel().levelStr))
@@ -70,7 +73,7 @@ public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
 
             setAuthor(builder, username, avatarUrl);
             addRequestInfo(builder, eventObject.getMDCPropertyMap());
-            addStackTrace(builder, eventObject.getFormattedMessage());
+            addMessage(builder, message);
             addTraceId(builder, eventObject.getMDCPropertyMap().get(MDC_KEY_TRACE_ID));
 
             return builder.build();
@@ -105,9 +108,9 @@ public class DiscordWebhookAppender extends AppenderBase<ILoggingEvent> {
             }
         }
 
-        private void addStackTrace(WebhookEmbedBuilder embedBuilder, String message) {
+        private void addMessage(WebhookEmbedBuilder embedBuilder, String message) {
             if (StringUtils.isNotEmpty(message)) {
-                embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Stack Trace", "```\n" + message + "\n```"));
+                embedBuilder.addField(new WebhookEmbed.EmbedField(false, "Message", "```\n" + message + "\n```"));
             }
         }
     }
