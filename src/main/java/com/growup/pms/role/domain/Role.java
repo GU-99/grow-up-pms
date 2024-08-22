@@ -35,7 +35,7 @@ public class Role extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RoleType type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)

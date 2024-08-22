@@ -1,11 +1,13 @@
-package com.growup.pms.invitation.controller;
+package com.growup.pms.team.controller;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.invitation.controller.dto.request.TeamInvitationCreateRequest;
-import com.growup.pms.invitation.service.TeamInvitationService;
+import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.TeamId;
+import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.team.controller.dto.request.TeamInvitationCreateRequest;
+import com.growup.pms.team.service.TeamInvitationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,16 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamInvitationControllerV1 {
     private final TeamInvitationService teamInvitationService;
 
-    // TODO: 권한이나 역할이 구현되면 팀 초대 권한이 있는 팀원만 다른 사용자를 초대할 수 있도록 구현해야 함
     @PostMapping
+    @RequirePermission(PermissionType.TEAM_INVITE_MEMBER)
     public ResponseEntity<Void> invite(
-            @PathVariable @Positive Long teamId,
+            @Positive @PathVariable @TeamId Long teamId,
             @Valid @RequestBody TeamInvitationCreateRequest request
     ) {
-        return ResponseEntity.created(
-                URI.create("/api/v1/team/" + teamId + "/invitation/"
-                        + teamInvitationService.sendInvitation(teamId, request.toCommand())))
-                .build();
+        teamInvitationService.sendInvitation(teamId, request.toCommand());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/accept")
@@ -39,7 +39,7 @@ public class TeamInvitationControllerV1 {
             @Positive @PathVariable Long teamId
     ) {
         teamInvitationService.acceptInvitation(teamId, user.getId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/decline")
@@ -48,6 +48,6 @@ public class TeamInvitationControllerV1 {
             @Positive @PathVariable Long teamId
     ) {
         teamInvitationService.declineInvitation(teamId, user.getId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

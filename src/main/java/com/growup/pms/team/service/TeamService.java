@@ -1,6 +1,5 @@
 package com.growup.pms.team.service;
 
-import com.growup.pms.invitation.repository.TeamInvitationRepository;
 import com.growup.pms.project.service.ProjectService;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
@@ -21,7 +20,6 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamUserRepository teamUserRepository;
-    private final TeamInvitationRepository teamInvitationRepository;
     private final ProjectService projectService;
 
     public TeamResponse getTeam(Long teamId) {
@@ -59,6 +57,5 @@ public class TeamService {
     private void removeTeam(Long teamId) {
         projectService.deleteAllProjectsForTeam(teamId);
         teamUserRepository.deleteAllByTeamId(teamId);
-        teamInvitationRepository.deleteAllByTeamId(teamId);
     }
 }
