@@ -58,6 +58,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'club.minnced:discord-webhooks:0.8.4'
+    // Prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.13.3'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 ext {
