@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
@@ -39,7 +40,8 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.of(ex.getErrorCode()));
     }
 
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class,
+        HandlerMethodValidationException.class})
     public ResponseEntity<ErrorResponse> handleDataFormatException(Exception ex, HttpServletRequest request) {
         logInfo(ex, request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
