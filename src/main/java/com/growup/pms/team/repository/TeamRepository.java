@@ -14,6 +14,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     boolean isUserTeamLeader(Long teamId, Long userId);
 
     default Team findByIdOrThrow(Long id) {
-        return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+        return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
     }
 }

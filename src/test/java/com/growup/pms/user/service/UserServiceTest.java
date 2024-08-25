@@ -12,6 +12,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.service.EmailVerificationService;
+import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
@@ -88,7 +89,7 @@ class UserServiceTest {
             // when & then
             assertThatThrownBy(() -> userService.save(사용자_생성_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage("이메일 인증 번호가 일치하지 않습니다.");
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
         }
     }
 

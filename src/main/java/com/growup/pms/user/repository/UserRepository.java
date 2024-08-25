@@ -10,10 +10,10 @@ public interface UserRepository extends JpaRepository<User, Long>, QueryDslUserR
     Optional<User> findByUsername(String username);
 
     default User findByIdOrThrow(Long id) {
-        return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+        return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     default User findByUsernameOrThrow(String username) {
-        return findByUsername(username).orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+        return findByUsername(username).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 }

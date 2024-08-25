@@ -33,7 +33,7 @@ public class MailtrapClient implements MailClient {
 
             mailSender.send(message);
         } catch (MessagingException | MailException e) {
-            throw new BusinessException(ErrorCode.EMAIL_SENDING_ERROR);
+            throw new BusinessException(ErrorCode.EMAIL_SENDING_FAILURE);
         }
     }
 }

@@ -79,14 +79,14 @@ public class AuthorizationAspect {
                 .allMatch(permissionNames::contains);
 
         if (!hasAllPermissions) {
-            throw new BusinessException(ErrorCode.AUTHZ_ACCESS_DENIED);
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
     }
 
     private SecurityUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken) {
-            throw new BusinessException(ErrorCode.AUTHZ_ACCESS_DENIED);
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
         return (SecurityUser) authentication.getPrincipal();
     }

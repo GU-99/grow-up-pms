@@ -40,7 +40,7 @@ public class TeamUserService {
 
     private void ensureMemberIsMate(Role targetMemberRole) {
         if (!TeamRole.MATE.equals(TeamRole.of(targetMemberRole.getName()))) {
-            throw new BusinessException(ErrorCode.AUTHZ_ACCESS_DENIED);
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
     }
 }

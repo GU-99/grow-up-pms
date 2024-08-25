@@ -36,7 +36,7 @@ public class UserService {
             user.encodePassword(passwordEncoder);
             return userRepository.save(user).getId();
         } catch (DataIntegrityViolationException ex) {
-            throw new BusinessException(ErrorCode.ENTITY_ALREADY_EXIST);
+            throw new BusinessException(ErrorCode.USER_ALREADY_EXISTS);
         }
     }
 
@@ -66,7 +66,7 @@ public class UserService {
 
     private void validateVerificationCode(String email, int verificationCode) {
         if (!emailVerificationService.verifyAndInvalidateEmail(email, String.valueOf(verificationCode))) {
-            throw new BusinessException(ErrorCode.INVALID_EMAIL_VERIFICATION);
+            throw new BusinessException(ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
         }
     }
 }

@@ -206,7 +206,7 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.getTask(존재하지_않는_일정_ID))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage("존재하지 않는 프로젝트 일정입니다.");
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
         }
     }
 
@@ -266,7 +266,7 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.editTask(잘못된_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage("존재하지 않는 프로젝트 일정입니다.");
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
         }
 
         @Test
@@ -278,13 +278,13 @@ class TaskServiceTest {
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().회원_식별자는(잘못된_담당자_ID).이다().toCommand();
 
             when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
-            doThrow(new BusinessException(ErrorCode.ENTITY_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.USER_NOT_FOUND))
                     .when(userRepository).findByIdOrThrow(잘못된_담당자_ID);
 
             // when & then
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage("ENTITY가 없습니다.");
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_NOT_FOUND);
         }
 
         @Test
@@ -302,7 +302,7 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage("존재하지 않는 프로젝트 상태입니다.");
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.STATUS_NOT_FOUND);
         }
     }
 
@@ -336,7 +336,7 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.deleteTask(기존_일정_ID))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage("존재하지 않는 프로젝트 일정입니다.");
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
         }
     }
 }

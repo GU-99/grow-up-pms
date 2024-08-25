@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.role.repository.RoleRepository;
@@ -82,7 +83,7 @@ class TeamInvitationServiceTest {
             assertThatThrownBy(() -> teamInvitationService.sendInvitation(초대할_팀.getId(),
                     new TeamInvitationCreateCommand(초대된_사용자.getId(), 초대된_역할)))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage("사용자가 이미 팀에 존재합니다.");
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_ALREADY_IN_TEAM);
         }
 
         @Test

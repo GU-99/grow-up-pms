@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        ErrorResponse response = ErrorResponse.of(ErrorCode.DATA_FORMAT_INVALID, ex.getBindingResult());
+        ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_DATA_FORMAT, ex.getBindingResult());
         LogFormatter.info(ex, request);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

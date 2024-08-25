@@ -79,7 +79,7 @@ class TeamServiceTest {
             Long 팀장_ID = 1L;
             TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은().이다().toCommand();
 
-            doThrow(new BusinessException(ErrorCode.ENTITY_NOT_FOUND)).when(userRepository).findByIdOrThrow(팀장_ID);
+            doThrow(new BusinessException(ErrorCode.USER_NOT_FOUND)).when(userRepository).findByIdOrThrow(팀장_ID);
 
             // when & then
             assertThatThrownBy(() -> teamService.createTeam(팀장_ID, 팀_생성_요청))
@@ -113,7 +113,7 @@ class TeamServiceTest {
             // given
             Long 존재하지_않는_팀_ID = 1L;
 
-            doThrow(new BusinessException(ErrorCode.ENTITY_NOT_FOUND)).when(teamRepository).findByIdOrThrow(존재하지_않는_팀_ID);
+            doThrow(new BusinessException(ErrorCode.TEAM_NOT_FOUND)).when(teamRepository).findByIdOrThrow(존재하지_않는_팀_ID);
 
             // when & then
             assertThatThrownBy(() -> teamService.getTeam(존재하지_않는_팀_ID))

@@ -13,7 +13,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     default Role findByTypeAndNameOrThrow(RoleType type, String name) {
         return findByTypeAndName(type, name)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ROLE_NOT_FOUND));
     }
 
     default Role findTeamRoleByName(String name) {
