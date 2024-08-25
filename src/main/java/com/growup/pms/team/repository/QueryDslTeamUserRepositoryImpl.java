@@ -26,4 +26,21 @@ public class QueryDslTeamUserRepositoryImpl implements QueryDslTeamUserRepositor
                 .where(teamUser.team.id.eq(teamId), teamUser.user.id.eq(userId))
                 .fetch();
     }
+
+    @Override
+    public long updateRoleForTeamUser(Long teamId, Long userId, String newRoleName) {
+        Long roleId = jpaQueryFactory.select(role.id)
+                .from(role)
+                .where(role.name.eq(newRoleName))
+                .fetchOne();
+
+        if (roleId == null) {
+            throw new IllegalArgumentException("해당 역할은 존재하지 않습니다: %s".formatted(newRoleName));
+        }
+
+        return jpaQueryFactory.update(teamUser)
+                .set(teamUser.role.id, roleId)
+                .where(teamUser.team.id.eq(teamId), teamUser.user.id.eq(userId))
+                .execute();
+    }
 }

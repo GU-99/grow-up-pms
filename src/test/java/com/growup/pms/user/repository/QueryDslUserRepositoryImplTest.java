@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
@@ -51,6 +52,7 @@ class QueryDslUserRepositoryImplTest extends RepositoryTestSupport {
     }
 
     @Nested
+    @Transactional
     class 전체_사용자_검색_시 {
         @Test
         void 성공한다() {
@@ -79,17 +81,18 @@ class QueryDslUserRepositoryImplTest extends RepositoryTestSupport {
     }
 
     @Nested
+    @Transactional
     class 가입된_팀_목록_조회_시 {
-        public static final String ROLE_TEAM_ADMIN = "TEAM_ADMIN";
-        public static final String ROLE_TEAM_MATE = "TEAM_MATE";
+        public static final String 관리자 = "TEAM_ADMIN";
+        public static final String 메이트 = "TEAM_MATE";
 
         Role 관리자_역할, 메이트_역할;
         Team 브라운_팀, 레니_팀, 레너드_팀;
 
         @BeforeEach
         void setUp() {
-            관리자_역할 = roleRepository.save(역할은().이름이(ROLE_TEAM_ADMIN).이다());
-            메이트_역할 = roleRepository.save(역할은().이름이(ROLE_TEAM_MATE).이다());
+            관리자_역할 = roleRepository.save(역할은().식별자가(1L).이름이(관리자).이다());
+            메이트_역할 = roleRepository.save(역할은().식별자가(2L).이름이(메이트).이다());
 
             브라운_팀 = 사용자가_새로운_팀을_생성한다(브라운);
             레니_팀 = 사용자가_새로운_팀을_생성한다(레니);
@@ -105,9 +108,9 @@ class QueryDslUserRepositoryImplTest extends RepositoryTestSupport {
             사용자가_팀에_가입_대기_중이다(브라운, 레너드_팀);
 
             List<UserTeamResponse> 예상_결과 = Arrays.asList(
-                    팀에_가입한_상태일_것으로_예상한다(브라운_팀),
-                    팀에_가입한_상태일_것으로_예상한다(레니_팀),
-                    팀에_가입_대기_중인_상태일_것으로_예상한다(레너드_팀)
+                    팀에_가입한_상태일_것으로_예상한다(브라운_팀, 관리자),
+                    팀에_가입한_상태일_것으로_예상한다(레니_팀, 메이트),
+                    팀에_가입_대기_중인_상태일_것으로_예상한다(레너드_팀, 메이트)
             );
 
             // when
@@ -131,14 +134,14 @@ class QueryDslUserRepositoryImplTest extends RepositoryTestSupport {
             teamUserRepository.save(팀원은().팀이(가입_신청한_팀).사용자가(사용자).역할이(메이트_역할).가입_대기_여부는(true).이다());
         }
 
-        UserTeamResponse 팀에_가입한_상태일_것으로_예상한다(Team 가입한_팀) {
+        UserTeamResponse 팀에_가입한_상태일_것으로_예상한다(Team 가입한_팀, String 팀_역할) {
             return new UserTeamResponse(가입한_팀.getId(), 가입한_팀.getName(), 가입한_팀.getContent(),
-                    가입한_팀.getCreator().getProfile().getNickname(), false, ROLE_TEAM_MATE);
+                    가입한_팀.getCreator().getProfile().getNickname(), false, 팀_역할);
         }
 
-        UserTeamResponse 팀에_가입_대기_중인_상태일_것으로_예상한다(Team 가입한_팀) {
+        UserTeamResponse 팀에_가입_대기_중인_상태일_것으로_예상한다(Team 가입한_팀, String 팀_역할) {
             return new UserTeamResponse(가입한_팀.getId(), 가입한_팀.getName(), 가입한_팀.getContent(),
-                    가입한_팀.getCreator().getProfile().getNickname(), true, ROLE_TEAM_MATE);
+                    가입한_팀.getCreator().getProfile().getNickname(), true, 팀_역할);
         }
     }
 }

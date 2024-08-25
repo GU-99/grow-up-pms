@@ -3,6 +3,7 @@ package com.growup.pms.team.service;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.InvalidInputException;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.domain.TeamUserId;
@@ -24,6 +25,19 @@ public class TeamUserService {
         ensureMemberIsMate(targetMemberRole);
 
         teamUserRepository.deleteById(new TeamUserId(teamId, targetMemberId));
+    }
+
+    @Transactional
+    public void changeRole(Long teamId, Long targetMemberId, String roleName) {
+        ensureValidTeamRole(roleName);
+
+        teamUserRepository.updateRoleForTeamUser(teamId, targetMemberId, roleName);
+    }
+
+    private void ensureValidTeamRole(String roleName) {
+        if (!(TeamRole.MATE.getRoleName().equals(roleName) || TeamRole.LEADER.getRoleName().equals(roleName))) {
+            throw new InvalidInputException(ErrorCode.UNAUTHORIZED_ROLE_ASSIGNMENT);
+        }
     }
 
     private void ensureMemberIsMate(Role targetMemberRole) {

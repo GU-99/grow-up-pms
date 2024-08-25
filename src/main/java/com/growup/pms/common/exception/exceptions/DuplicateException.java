@@ -7,4 +7,8 @@ public class DuplicateException extends BusinessException {
     public DuplicateException(ErrorCode errorCode) {
         super(errorCode);
     }
+
+    public DuplicateException(ErrorCode errorCode, Throwable cause) {
+        super(errorCode, cause);
+    }
 }

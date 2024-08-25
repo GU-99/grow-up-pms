@@ -9,6 +9,7 @@ import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.service.TaskService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,10 @@ public class TaskControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
-    public ResponseEntity<TaskDetailResponse> createTask(@ProjectId @PathVariable Long projectId,
-                                                         @Valid @RequestBody TaskCreateRequest request) {
+    public ResponseEntity<TaskDetailResponse> createTask(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Valid @RequestBody TaskCreateRequest request
+    ) {
         log.debug("TaskControllerV1#createTask called.");
         log.debug("일정 생성을 위한 projectId={}", projectId);
         log.debug("일정 생성을 위한 TaskCreateRequest={}", request);
@@ -53,7 +56,7 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<Map<Long, List<TaskResponse>>> getTasks(@ProjectId @PathVariable Long projectId) {
+    public ResponseEntity<Map<Long, List<TaskResponse>>> getTasks(@Positive @ProjectId @PathVariable Long projectId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("일정 전체 조회를 위한 projectId={}", projectId);
 
@@ -64,8 +67,10 @@ public class TaskControllerV1 {
 
     @GetMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<TaskDetailResponse> getTask(@ProjectId @PathVariable Long projectId,
-                                                      @PathVariable Long taskId) {
+    public ResponseEntity<TaskDetailResponse> getTask(
+            @Positive@ProjectId @PathVariable Long projectId,
+            @PathVariable Long taskId
+    ) {
         log.debug("TaskControllerV1#getTask called.");
         log.debug("일정 상세 조회를 위한 projectId={}", projectId);
         log.debug("일정 상세 조회를 위한 taskId={}", taskId);
@@ -77,9 +82,12 @@ public class TaskControllerV1 {
     }
 
     @PatchMapping("/{taskId}")
-    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
-    public ResponseEntity<Void> editTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId,
-                                         @Valid @RequestBody TaskEditRequest request) {
+    @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
+    public ResponseEntity<Void> editTask(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long taskId,
+            @Valid @RequestBody TaskEditRequest request
+    ) {
         log.debug("TaskControllerV1#editTask called.");
         log.debug("일정 변경을 위한 projectId={}", projectId);
         log.debug("일정 변경을 위한 taskId={}", taskId);
@@ -92,7 +100,10 @@ public class TaskControllerV1 {
 
     @DeleteMapping("/{taskId}")
     @RequirePermission(PermissionType.PROJECT_TASK_DELETE)
-    public ResponseEntity<Void> deleteTask(@ProjectId @PathVariable Long projectId, @PathVariable Long taskId) {
+    public ResponseEntity<Void> deleteTask(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long taskId
+    ) {
         log.debug("TaskControllerV1#deleteTask called.");
         log.debug("일정 삭제를 위한 projectId={}", projectId);
         log.debug("일정 삭제를 위한 taskId={}", taskId);

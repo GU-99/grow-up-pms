@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.invitation.repository.TeamInvitationRepository;
 import com.growup.pms.project.service.ProjectService;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
@@ -46,9 +45,6 @@ class TeamServiceTest {
 
     @Mock
     UserRepository userRepository;
-
-    @Mock
-    TeamInvitationRepository teamInvitationRepository;
 
     @Mock
     ProjectService projectService;
@@ -175,7 +171,6 @@ class TeamServiceTest {
 
             when(teamRepository.isUserTeamLeader(팀_ID, 사용자_ID)).thenReturn(팀장_여부);
             doNothing().when(teamUserRepository).deleteAllByTeamId(팀_ID);
-            doNothing().when(teamInvitationRepository).deleteAllByTeamId(팀_ID);
             doNothing().when(projectService).deleteAllProjectsForTeam(팀_ID);
 
             // when & then

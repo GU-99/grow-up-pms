@@ -14,3 +14,27 @@ spring:
     redis:
       host: redis
       port: 6379
+
+discord:
+  webhook:
+    url: ${DISCORD_WEBHOOK_URL}
+    username: Error Reporter
+    avatar-url: https://i.imgur.com/uRkHXjk.png
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["prometheus"]
+
+  endpoint:
+    prometheus:
+      enabled: true
+
+    metrics:
+      enabled: true
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true

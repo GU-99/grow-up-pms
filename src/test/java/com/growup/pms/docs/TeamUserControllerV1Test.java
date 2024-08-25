@@ -4,16 +4,22 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithNam
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
+import com.growup.pms.role.domain.TeamRole;
+import com.growup.pms.team.controller.dto.request.RoleUpdateRequest;
 import com.growup.pms.team.service.TeamUserService;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
@@ -43,6 +49,31 @@ class TeamUserControllerV1Test extends ControllerSliceTestSupport {
                                 .pathParameters(
                                         parameterWithName("teamId").type(SimpleType.INTEGER).description("팀 ID"),
                                         parameterWithName("targetMemberId").type(SimpleType.INTEGER).description("추방할 팀원 ID")).build())));
+    }
+
+    @Test
+    void 팀원_역할_변경_API_문서를_생성한다() throws Exception {
+        // given
+        Long 팀_ID = 1L;
+        Long 역할_변경할_팀원_ID = 2L;
+        RoleUpdateRequest 역할_변경_요청 = new RoleUpdateRequest(TeamRole.MATE.getRoleName());
+
+        doNothing().when(teamUserService).changeRole(팀_ID, 역할_변경할_팀원_ID, 역할_변경_요청.role());
+
+        // when & then
+        mockMvc.perform(put("/api/v1/team/{teamId}/user/{targetMemberId}/role", 팀_ID, 역할_변경할_팀원_ID)
+                        .content(objectMapper.writeValueAsString(역할_변경_요청))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀원 역할 변경")
+                                .description("팀장이 자신의 팀원의 역할을 변경합니다. 자신의 역할은 변경할 수 없습니다.")
+                                .pathParameters(
+                                        parameterWithName("teamId").type(SimpleType.INTEGER).description("팀 ID"),
+                                        parameterWithName("targetMemberId").type(SimpleType.INTEGER).description("역할을 변경할 팀원 ID"))
+                                .requestFields(fieldWithPath("role").type(JsonFieldType.STRING).description("부여할 역할명")).build())));
     }
 }
 
