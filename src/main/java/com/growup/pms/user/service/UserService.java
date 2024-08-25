@@ -55,7 +55,7 @@ public class UserService {
         MultipartFile image = command.file();
 
         String imagePath = storageService.upload(image, path);
-        user.updateImage(path + "/" + imagePath);
+        user.replaceProfileImage(path + "/" + imagePath);
         user.updateImageName(image.getOriginalFilename());
 
         userRepository.save(user);

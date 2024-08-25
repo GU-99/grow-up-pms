@@ -55,13 +55,13 @@ public class FileSystemStorageService implements StorageService {
         Path filePath = this.rootPath.resolve(path).normalize().toAbsolutePath();
 
         if (!Files.exists(filePath)) {
-            throw new StorageException(ErrorCode.STORAGE_NOT_FOUND_ERROR);
+            throw new BusinessException(ErrorCode.FILE_NOT_FOUND);
         }
 
         try {
             return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
-            throw new StorageException(ErrorCode.STORAGE_READE_FILE_ERROR);
+            throw new BusinessException(ErrorCode.READ_FILE_ERROR);
         }
     }
 }

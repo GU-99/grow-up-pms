@@ -95,7 +95,7 @@ class UserControllerV1Test extends ControllerSliceTestSupport {
 
             // when & then
             mockMvc.perform(
-                    get("/api/v1/users/file")
+                    get("/api/v1/user/file")
                 ).andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + 다운로드할_파일_이름+ "\""))
                 .andExpect(content().bytes(다운로드한_파일의_Bytes));
