@@ -2,7 +2,7 @@ package com.growup.pms.auth.service.mail;
 
 import com.growup.pms.auth.service.dto.EmailDetails;
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.MessageFailureException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,7 @@ public class MailtrapClient implements MailClient {
 
             mailSender.send(message);
         } catch (MessagingException | MailException e) {
-            throw new MessageFailureException(ErrorCode.EMAIL_SENDING_ERROR);
+            throw new BusinessException(ErrorCode.EMAIL_SENDING_ERROR);
         }
     }
 }

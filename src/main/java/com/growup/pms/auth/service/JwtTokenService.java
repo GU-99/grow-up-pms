@@ -2,7 +2,7 @@ package com.growup.pms.auth.service;
 
 import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.AuthenticationException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class JwtTokenService {
 
     private void validateRefreshToken(String token) {
         if (!StringUtils.hasText(token) || !refreshTokenService.validateToken(token)) {
-            throw new AuthenticationException(ErrorCode.INVALID_REFRESH_TOKEN_ERROR);
+            throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN_ERROR);
         }
     }
 }

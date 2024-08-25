@@ -5,7 +5,7 @@ import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.AuthorizationException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.util.AopUtil;
 import com.growup.pms.project.repository.ProjectUserRepository;
 import com.growup.pms.role.domain.Permission;
@@ -79,14 +79,14 @@ public class AuthorizationAspect {
                 .allMatch(permissionNames::contains);
 
         if (!hasAllPermissions) {
-            throw new AuthorizationException(ErrorCode.AUTHZ_ACCESS_DENIED);
+            throw new BusinessException(ErrorCode.AUTHZ_ACCESS_DENIED);
         }
     }
 
     private SecurityUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken) {
-            throw new AuthorizationException(ErrorCode.AUTHZ_ACCESS_DENIED);
+            throw new BusinessException(ErrorCode.AUTHZ_ACCESS_DENIED);
         }
         return (SecurityUser) authentication.getPrincipal();
     }

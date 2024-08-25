@@ -2,8 +2,7 @@ package com.growup.pms.user.service;
 
 import com.growup.pms.auth.service.EmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.DuplicateException;
-import com.growup.pms.common.exception.exceptions.InvalidInputException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
@@ -37,7 +36,7 @@ public class UserService {
             user.encodePassword(passwordEncoder);
             return userRepository.save(user).getId();
         } catch (DataIntegrityViolationException ex) {
-            throw new DuplicateException(ErrorCode.ENTITY_ALREADY_EXIST);
+            throw new BusinessException(ErrorCode.ENTITY_ALREADY_EXIST);
         }
     }
 
@@ -67,7 +66,7 @@ public class UserService {
 
     private void validateVerificationCode(String email, int verificationCode) {
         if (!emailVerificationService.verifyAndInvalidateEmail(email, String.valueOf(verificationCode))) {
-            throw new InvalidInputException(ErrorCode.INVALID_EMAIL_VERIFICATION);
+            throw new BusinessException(ErrorCode.INVALID_EMAIL_VERIFICATION);
         }
     }
 }

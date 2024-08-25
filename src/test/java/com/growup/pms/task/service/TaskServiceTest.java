@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
@@ -200,12 +200,12 @@ class TaskServiceTest {
             // given
             Long 존재하지_않는_일정_ID = 1L;
 
-            doThrow(new EntityNotFoundException(ErrorCode.TASK_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.TASK_NOT_FOUND))
                     .when(taskRepository).findByIdOrThrow(존재하지_않는_일정_ID);
 
             // when & then
             assertThatThrownBy(() -> taskService.getTask(존재하지_않는_일정_ID))
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("존재하지 않는 프로젝트 일정입니다.");
         }
     }
@@ -260,12 +260,12 @@ class TaskServiceTest {
             Long 잘못된_일정_ID = 1L;
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().이다().toCommand();
 
-            doThrow(new EntityNotFoundException(ErrorCode.TASK_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.TASK_NOT_FOUND))
                     .when(taskRepository).findByIdOrThrow(잘못된_일정_ID);
 
             // when & then
             assertThatThrownBy(() -> taskService.editTask(잘못된_일정_ID, 일정_변경_요청))
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("존재하지 않는 프로젝트 일정입니다.");
         }
 
@@ -278,12 +278,12 @@ class TaskServiceTest {
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().회원_식별자는(잘못된_담당자_ID).이다().toCommand();
 
             when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
-            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.ENTITY_NOT_FOUND))
                     .when(userRepository).findByIdOrThrow(잘못된_담당자_ID);
 
             // when & then
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("ENTITY가 없습니다.");
         }
 
@@ -296,12 +296,12 @@ class TaskServiceTest {
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().상태_식별자는(잘못된_상태_ID).이다().toCommand();
 
             when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
-            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
                     .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
 
             // when & then
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("존재하지 않는 프로젝트 상태입니다.");
         }
     }
@@ -330,12 +330,12 @@ class TaskServiceTest {
             // given
             Long 기존_일정_ID = 1L;
 
-            doThrow(new EntityNotFoundException(ErrorCode.TASK_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.TASK_NOT_FOUND))
                     .when(taskRepository).findByIdOrThrow(기존_일정_ID);
 
             // when & then
             assertThatThrownBy(() -> taskService.deleteTask(기존_일정_ID))
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("존재하지 않는 프로젝트 일정입니다.");
         }
     }

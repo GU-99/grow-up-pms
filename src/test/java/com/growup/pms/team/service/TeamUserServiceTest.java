@@ -7,9 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.growup.pms.common.exception.exceptions.AuthorizationException;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.common.exception.exceptions.InvalidInputException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.domain.TeamUserId;
@@ -62,7 +60,7 @@ class TeamUserServiceTest {
 
             // when & then
             assertThatCode(() -> teamUserService.kickMember(팀_ID, 추방할_팀원_ID))
-                    .isInstanceOf(EntityNotFoundException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("팀원을 찾을 수 없습니다.");
         }
 
@@ -77,7 +75,7 @@ class TeamUserServiceTest {
 
             // when & then
             assertThatCode(() -> teamUserService.kickMember(팀_ID, 추방할_팀원_ID))
-                    .isInstanceOf(AuthorizationException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("접근 권한이 없습니다.");
         }
     }
@@ -109,7 +107,7 @@ class TeamUserServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamUserService.changeRole(팀_ID, 역할_변경할_팀원_ID, 변경할_역할명))
-                    .isInstanceOf(InvalidInputException.class)
+                    .isInstanceOf(BusinessException.class)
                     .hasMessage("허용되지 않은 역할 지정입니다.");
         }
     }

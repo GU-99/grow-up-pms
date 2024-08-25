@@ -1,8 +1,7 @@
 package com.growup.pms.team.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.DuplicateException;
-import com.growup.pms.common.exception.exceptions.InvalidInputException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.team.domain.TeamUser;
@@ -50,12 +49,12 @@ public class TeamInvitationService {
 
     private void validateTeamInvitation(Long teamId, TeamInvitationCreateCommand command) {
         if (isUserAlreadyInTeam(teamId, command.userId())) {
-            throw new DuplicateException(ErrorCode.USER_ALREADY_IN_TEAM);
+            throw new BusinessException(ErrorCode.USER_ALREADY_IN_TEAM);
         }
 
         if (!(TeamRole.MATE.getRoleName().equals(command.roleName())
                 || TeamRole.LEADER.getRoleName().equals(command.roleName()))) {
-            throw new InvalidInputException(ErrorCode.UNAUTHORIZED_ROLE_ASSIGNMENT);
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_ROLE_ASSIGNMENT);
         }
     }
 
