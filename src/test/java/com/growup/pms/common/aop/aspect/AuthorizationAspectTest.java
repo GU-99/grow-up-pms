@@ -13,7 +13,8 @@ import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
-import com.growup.pms.common.exception.exceptions.AuthorizationException;
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.util.AopUtil;
 import com.growup.pms.project.repository.ProjectUserRepository;
 import com.growup.pms.role.domain.Permission;
@@ -101,8 +102,8 @@ class AuthorizationAspectTest {
 
                 // when & then
                 assertThatThrownBy(() -> authorizationAspect.checkTeamPermission(mock(JoinPoint.class), 권한_애노테이션))
-                        .isInstanceOf(AuthorizationException.class)
-                        .hasMessage("접근 권한이 없습니다.");
+                        .isInstanceOf(BusinessException.class)
+                        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
             }
         }
     }
@@ -150,8 +151,8 @@ class AuthorizationAspectTest {
 
                 // when & then
                 assertThatThrownBy(() -> authorizationAspect.checkProjectPermission(mock(JoinPoint.class), 권한_애노테이션))
-                        .isInstanceOf(AuthorizationException.class)
-                        .hasMessage("접근 권한이 없습니다.");
+                        .isInstanceOf(BusinessException.class)
+                        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
             }
         }
     }

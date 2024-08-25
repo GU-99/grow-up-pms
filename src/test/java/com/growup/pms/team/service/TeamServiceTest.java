@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.service.ProjectService;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
@@ -79,11 +79,11 @@ class TeamServiceTest {
             Long 팀장_ID = 1L;
             TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은().이다().toCommand();
 
-            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(userRepository).findByIdOrThrow(팀장_ID);
+            doThrow(new BusinessException(ErrorCode.USER_NOT_FOUND)).when(userRepository).findByIdOrThrow(팀장_ID);
 
             // when & then
             assertThatThrownBy(() -> teamService.createTeam(팀장_ID, 팀_생성_요청))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 
@@ -113,11 +113,11 @@ class TeamServiceTest {
             // given
             Long 존재하지_않는_팀_ID = 1L;
 
-            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(teamRepository).findByIdOrThrow(존재하지_않는_팀_ID);
+            doThrow(new BusinessException(ErrorCode.TEAM_NOT_FOUND)).when(teamRepository).findByIdOrThrow(존재하지_않는_팀_ID);
 
             // when & then
             assertThatThrownBy(() -> teamService.getTeam(존재하지_않는_팀_ID))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 

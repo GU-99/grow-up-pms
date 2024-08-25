@@ -1,9 +1,7 @@
 package com.growup.pms.team.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.AuthorizationException;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.common.exception.exceptions.InvalidInputException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.domain.TeamUserId;
@@ -20,7 +18,7 @@ public class TeamUserService {
     @Transactional
     public void kickMember(Long teamId, Long targetMemberId) {
         Role targetMemberRole = teamUserRepository.findRoleById(teamId, targetMemberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_MEMBER_NOT_FOUND));
 
         ensureMemberIsMate(targetMemberRole);
 
@@ -36,13 +34,13 @@ public class TeamUserService {
 
     private void ensureValidTeamRole(String roleName) {
         if (!(TeamRole.MATE.getRoleName().equals(roleName) || TeamRole.LEADER.getRoleName().equals(roleName))) {
-            throw new InvalidInputException(ErrorCode.UNAUTHORIZED_ROLE_ASSIGNMENT);
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_ROLE_ASSIGNMENT);
         }
     }
 
     private void ensureMemberIsMate(Role targetMemberRole) {
         if (!TeamRole.MATE.equals(TeamRole.of(targetMemberRole.getName()))) {
-            throw new AuthorizationException(ErrorCode.AUTHZ_ACCESS_DENIED);
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
     }
 }

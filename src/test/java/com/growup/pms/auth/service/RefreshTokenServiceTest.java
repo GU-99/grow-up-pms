@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.domain.RefreshToken;
 import com.growup.pms.auth.repository.RefreshTokenRepository;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
@@ -69,11 +69,11 @@ class RefreshTokenServiceTest {
             User 존재하지_않는_사용자 = 사용자는().식별자가(존재하지_않는_사용자_ID).이다();
             String 유효한_리프레시_토큰 = "유효한 리프레시 토큰";
 
-            doThrow(EntityNotFoundException.class).when(userRepository).findByIdOrThrow(존재하지_않는_사용자.getId());
+            doThrow(BusinessException.class).when(userRepository).findByIdOrThrow(존재하지_않는_사용자.getId());
 
             // when & then
             assertThatThrownBy(() -> refreshTokenService.save(존재하지_않는_사용자_ID, 유효한_리프레시_토큰))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 

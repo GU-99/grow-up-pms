@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
@@ -75,12 +75,12 @@ class StatusServiceTest {
             Long 프로젝트_ID = 1L;
             StatusCreateCommand 상태_생성_요청 = 상태_생성_요청은().이다().toCommand(프로젝트_ID);
 
-            doThrow(new EntityNotFoundException(ErrorCode.PROJECT_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.PROJECT_NOT_FOUND))
                     .when(projectRepository).findByIdOrThrow(프로젝트_ID);
 
             // when & then
             assertThatThrownBy(() -> statusService.createStatus(상태_생성_요청))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 
@@ -186,12 +186,12 @@ class StatusServiceTest {
                     .이다()
                     .toCommand(잘못된_상태_ID);
 
-            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
                     .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
 
             // when & then
             assertThatThrownBy(() -> statusService.editStatus(상태_변경_요청))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 
@@ -218,12 +218,12 @@ class StatusServiceTest {
             // given
             Long 잘못된_상태_ID = 1L;
 
-            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
                     .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
 
             // when & then
             assertThatThrownBy(() -> statusService.deleteStatus(잘못된_상태_ID))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 }
