@@ -9,6 +9,7 @@ import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
+import com.growup.pms.user.service.dto.UserDownloadCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +52,24 @@ public class UserService {
         User user = userRepository.findByIdOrThrow(userId);
 
         String path = "users";
-        String image = storageService.upload(command.file(), path);
-        user.replaceProfileImage(path + "/" + image);
+        MultipartFile image = command.file();
+
+        String imagePath = storageService.upload(image, path);
+        user.replaceProfileImage(path + "/" + imagePath);
+        user.updateImageName(image.getOriginalFilename());
 
         userRepository.save(user);
     }
 
+    @Transactional
+    public UserDownloadCommand imageDownload(Long userId) {
+        User user = userRepository.findByIdOrThrow(userId);
+
+        String path = user.getProfile().getImage();
+
+        return new UserDownloadCommand(user.getProfile().getImageName(), storageService.getFileResource(path));
+    }
+  
     public List<UserSearchResponse> searchUsersByNicknamePrefix(String nicknamePrefix) {
         return userRepository.findUsersByNicknameStartingWith(nicknamePrefix);
     }

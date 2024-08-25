@@ -20,10 +20,14 @@ public class UserProfile {
     @Setter
     private String image;
 
+    @Setter
+    private String imageName;
+
     @Builder
-    public UserProfile(String nickname, String bio, String image) {
+    public UserProfile(String nickname, String bio, String image, String imageName) {
         this.nickname = nickname;
         this.bio = bio;
         this.image = image;
+        this.imageName = imageName;
     }
 }

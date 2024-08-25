@@ -4,12 +4,15 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,5 +48,20 @@ public class FileSystemStorageService implements StorageService {
         }
 
         return uploadFileName.toString();
+    }
+
+    @Override
+    public Resource getFileResource(String path) {
+        Path filePath = this.rootPath.resolve(path).normalize().toAbsolutePath();
+
+        if (!Files.exists(filePath)) {
+            throw new BusinessException(ErrorCode.FILE_NOT_FOUND);
+        }
+
+        try {
+            return new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e) {
+            throw new BusinessException(ErrorCode.READ_FILE_ERROR);
+        }
     }
 }

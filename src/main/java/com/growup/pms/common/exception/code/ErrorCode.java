@@ -36,6 +36,8 @@ public enum ErrorCode {
     FILE_STORAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ST_001", "파일을 저장할 수 없습니다. 잠시 후 다시 시도해 주세요."),
     EMPTY_FILE_ERROR(BAD_REQUEST, "ST_002", "업로드된 파일이 비어 있습니다. 유효한 파일을 선택해 주세요."),
     FOLDER_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ST_003", "저장 폴더를 생성하지 못했습니다. 시스템 관리자에게 문의해 주세요."),
+    READ_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ST_004", "저장된 파일을 읽을 수 없습니다."),
+    FILE_NOT_FOUND(NOT_FOUND, "ST_005", "파일을 찾을 수 없습니다."),
 
     // 팀(Team) - TM
     USER_ALREADY_IN_TEAM(BAD_REQUEST, "TM_001", "해당 사용자가 이미 팀에 속해 있습니다."),

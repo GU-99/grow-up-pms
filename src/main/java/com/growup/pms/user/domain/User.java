@@ -90,6 +90,10 @@ public class User extends BaseEntity {
         this.profile.setImage(image);
     }
 
+    public void updateImageName(String imageName) {
+        this.profile.setImageName(imageName);
+    }
+  
     public void addLink(String link) {
         if (links.size() > MAX_LINKS_PER_USER) {
             throw new IllegalStateException("더 이상 링크를 등록할 수 없습니다.");
