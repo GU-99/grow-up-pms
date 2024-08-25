@@ -1,20 +1,23 @@
 package com.growup.pms.auth.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.PASSWORD_PATTERN;
+import static com.growup.pms.common.constant.RegexConstants.USERNAME_PATTERN;
+
 import com.growup.pms.auth.service.dto.LoginCommand;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
-import org.hibernate.validator.constraints.Length;
 
 @Builder
 public record LoginRequest(
-        @Length(max = 255, message = "이메일이 너무 깁니다.")
-        String email,
+        @Pattern(regexp = USERNAME_PATTERN)
+        String username,
 
-        @Length(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
+        @Pattern(regexp = PASSWORD_PATTERN)
         String password
 ) {
     public LoginCommand toCommand() {
         return LoginCommand.builder()
-                .email(email)
+                .username(username)
                 .password(password)
                 .build();
     }

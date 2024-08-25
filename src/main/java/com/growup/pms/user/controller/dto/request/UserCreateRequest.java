@@ -1,40 +1,55 @@
 package com.growup.pms.user.controller.dto.request;
 
-import com.growup.pms.common.validation.constraint.FieldMatch;
+import static com.growup.pms.common.constant.RegexConstants.NICKNAME_PATTERN;
+import static com.growup.pms.common.constant.RegexConstants.PASSWORD_PATTERN;
+import static com.growup.pms.common.constant.RegexConstants.USERNAME_PATTERN;
+
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import java.util.List;
 import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
 
 @Builder
-@FieldMatch(first = "password", second = "passwordConfirm")
 public record UserCreateRequest(
-        @Email
-        @Length(max = 255, message = "이메일이 너무 깁니다.")
-        String email,
+        @Pattern(regexp = USERNAME_PATTERN)
+        String username,
 
-        @Length(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요.")
+        @Pattern(regexp = PASSWORD_PATTERN)
         String password,
 
-        @Length(min = 8, max = 16, message = "비밀번호 확인은 8자 이상 16자 이하로 입력해주세요.")
-        String passwordConfirm,
+        @Email
+        @Length(max = 128)
+        String email,
 
-        @NotBlank
-        @Length(max = 20)
+        @Pattern(regexp = NICKNAME_PATTERN)
         String nickname,
 
+        @Length(max = 300)
         String bio,
 
-        String image
+        @Length(max = 255)
+        String imageUrl,
+
+        @NotNull
+        List<@URL @Length(max = 255) String> links,
+
+        @NotNull
+        Integer verificationCode
 ) {
     public UserCreateCommand toCommand() {
         return UserCreateCommand.builder()
-                .email(email)
+                .username(username)
                 .password(password)
+                .email(email)
                 .nickname(nickname)
                 .bio(bio)
-                .image(image)
+                .imageUrl(imageUrl)
+                .links(links)
+                .verificationCode(verificationCode)
                 .build();
     }
 }

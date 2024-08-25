@@ -2,23 +2,26 @@ package com.growup.pms.team.service;
 
 import static com.growup.pms.test.fixture.team.TeamCreateRequestTestBuilder.팀_생성_요청은;
 import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
-import static com.growup.pms.test.fixture.team.TeamUpdateRequestTestBuilder.팀_수정_요청은;
+import static com.growup.pms.test.fixture.team.TeamUpdateRequestTestBuilder.팀_변경_요청은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.project.service.ProjectService;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
+import com.growup.pms.team.domain.TeamUserId;
 import com.growup.pms.team.repository.TeamRepository;
+import com.growup.pms.team.repository.TeamUserRepository;
 import com.growup.pms.team.service.dto.TeamCreateCommand;
 import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -38,7 +41,13 @@ class TeamServiceTest {
     TeamRepository teamRepository;
 
     @Mock
+    TeamUserRepository teamUserRepository;
+
+    @Mock
     UserRepository userRepository;
+
+    @Mock
+    ProjectService projectService;
 
     @InjectMocks
     TeamService teamService;
@@ -70,11 +79,11 @@ class TeamServiceTest {
             Long 팀장_ID = 1L;
             TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은().이다().toCommand();
 
-            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(userRepository).findByIdOrThrow(팀장_ID);
+            doThrow(new BusinessException(ErrorCode.USER_NOT_FOUND)).when(userRepository).findByIdOrThrow(팀장_ID);
 
             // when & then
             assertThatThrownBy(() -> teamService.createTeam(팀장_ID, 팀_생성_요청))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 
@@ -104,11 +113,11 @@ class TeamServiceTest {
             // given
             Long 존재하지_않는_팀_ID = 1L;
 
-            doThrow(new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND)).when(teamRepository).findByIdOrThrow(존재하지_않는_팀_ID);
+            doThrow(new BusinessException(ErrorCode.TEAM_NOT_FOUND)).when(teamRepository).findByIdOrThrow(존재하지_않는_팀_ID);
 
             // when & then
             assertThatThrownBy(() -> teamService.getTeam(존재하지_않는_팀_ID))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 
@@ -121,7 +130,7 @@ class TeamServiceTest {
             Team 기존_팀 = 팀은().식별자가(기존_팀_ID).이다();
             String 새로운_팀_이름 = "구구팔";
             String 새로운_팀_소개 = "안녕하세요, 구구팔입니다!";
-            TeamUpdateCommand request = 팀_수정_요청은().이름이(새로운_팀_이름).소개가(새로운_팀_소개).이다().toCommand();
+            TeamUpdateCommand request = 팀_변경_요청은().이름이(새로운_팀_이름).소개가(새로운_팀_소개).이다().toCommand();
 
             when(teamRepository.findByIdOrThrow(기존_팀_ID)).thenReturn(기존_팀);
 
@@ -137,19 +146,36 @@ class TeamServiceTest {
     }
 
     @Nested
-    class 팀_삭제_시에 {
+    class 팀_탈퇴_시에 {
         @Test
-        void 성공한다() {
+        void 사용자가_탈퇴에_성공한다() {
             // given
-            Long 기존_팀_ID = 1L;
+            Long 팀_ID = 1L;
+            Long 사용자_ID = 1L;
+            boolean 팀장_여부 = false;
 
-            doNothing().when(teamRepository).deleteById(기존_팀_ID);
+            when(teamRepository.isUserTeamLeader(팀_ID, 사용자_ID)).thenReturn(팀장_여부);
+            doNothing().when(teamUserRepository).deleteById(new TeamUserId(팀_ID, 사용자_ID));
 
-            // when
-            teamService.deleteTeam(기존_팀_ID);
+            // when & then
+            assertThatCode(() -> teamService.leaveTeam(팀_ID, 사용자_ID))
+                    .doesNotThrowAnyException();
+        }
 
-            // then
-            verify(teamRepository).deleteById(기존_팀_ID);
+        @Test
+        void 팀장이_탈퇴에_성공한다() {
+            // given
+            Long 팀_ID = 1L;
+            Long 사용자_ID = 1L;
+            boolean 팀장_여부 = true;
+
+            when(teamRepository.isUserTeamLeader(팀_ID, 사용자_ID)).thenReturn(팀장_여부);
+            doNothing().when(teamUserRepository).deleteAllByTeamId(팀_ID);
+            doNothing().when(projectService).deleteAllProjectsForTeam(팀_ID);
+
+            // when & then
+            assertThatCode(() -> teamService.leaveTeam(팀_ID, 사용자_ID))
+                    .doesNotThrowAnyException();
         }
     }
 }

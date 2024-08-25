@@ -1,5 +1,6 @@
 package com.growup.pms.task.controller.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -10,12 +11,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.openapitools.jackson.nullable.JsonNullable;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 public class TaskEditRequest {
+
+    private JsonNullable<Long> userId = JsonNullable.undefined();
 
     private JsonNullable<Long> statusId = JsonNullable.undefined();
 
@@ -27,16 +29,18 @@ public class TaskEditRequest {
     @Positive
     private JsonNullable<Short> sortOrder = JsonNullable.undefined();
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private JsonNullable<LocalDate> startDate = JsonNullable.undefined();
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private JsonNullable<LocalDate> endDate = JsonNullable.undefined();
 
     @Builder
-    public TaskEditRequest(JsonNullable<Long> statusId, JsonNullable<String> taskName, JsonNullable<String> content,
-                           JsonNullable<Short> sortOrder, JsonNullable<LocalDate> startDate,
+    public TaskEditRequest(JsonNullable<Long> userId, JsonNullable<Long> statusId, JsonNullable<String> taskName,
+                           JsonNullable<String> content, JsonNullable<Short> sortOrder,
+                           JsonNullable<LocalDate> startDate,
                            JsonNullable<LocalDate> endDate) {
+        this.userId = userId;
         this.statusId = statusId;
         this.taskName = taskName;
         this.content = content;
@@ -45,7 +49,7 @@ public class TaskEditRequest {
         this.endDate = endDate;
     }
 
-    public TaskEditCommand toCommand(Long userId) {
+    public TaskEditCommand toCommand() {
         return TaskEditCommand.builder()
                 .userId(userId)
                 .statusId(statusId)

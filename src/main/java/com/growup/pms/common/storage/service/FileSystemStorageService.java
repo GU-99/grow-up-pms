@@ -1,7 +1,7 @@
 package com.growup.pms.common.storage.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.StorageException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -22,7 +22,7 @@ public class FileSystemStorageService implements StorageService {
     private final Path rootPath;
 
     public FileSystemStorageService(
-        @Value("${storage.root-path}") String rootPath
+            @Value("${storage.root-path}") String rootPath
     ) {
         this.rootPath = Paths.get(rootPath);
     }
@@ -37,14 +37,14 @@ public class FileSystemStorageService implements StorageService {
             try {
                 Files.createDirectories(destinationPath.getParent());
             } catch (IOException e) {
-                throw new StorageException(ErrorCode.STORAGE_CREATE_FOLDER_ERROR);
+                throw new BusinessException(ErrorCode.FOLDER_CREATION_ERROR);
             }
         }
 
         try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new StorageException(ErrorCode.STORAGE_STORE_ERROR);
+            throw new BusinessException(ErrorCode.FILE_STORAGE_ERROR);
         }
 
         return uploadFileName.toString();

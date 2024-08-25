@@ -16,11 +16,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailOrThrow(username);
+        User user = userRepository.findByUsernameOrThrow(username);
 
         return SecurityUser.builder()
                 .id(user.getId())
-                .email(user.getEmail())
+                .username(user.getUsername())
                 .password(user.getPassword())
                 .build();
     }

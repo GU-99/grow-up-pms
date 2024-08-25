@@ -1,6 +1,6 @@
 package com.growup.pms.team.domain;
 
-import com.growup.pms.common.BaseTimeEntity;
+import com.growup.pms.common.BaseEntity;
 import com.growup.pms.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,24 +17,28 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Table(name = "teams", uniqueConstraints = @UniqueConstraint(columnNames = {"creator_id", "name"}))
+@SQLDelete(sql = "UPDATE teams SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Team extends BaseTimeEntity {
+public class Team extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "fk_team_creator"))
     private User creator;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String name;
 
+    @Column(length = 300)
     private String content;
 
     @Builder

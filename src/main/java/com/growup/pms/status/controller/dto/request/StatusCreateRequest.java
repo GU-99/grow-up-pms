@@ -3,6 +3,7 @@ package com.growup.pms.status.controller.dto.request;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
@@ -17,6 +18,7 @@ public record StatusCreateRequest(
         String colorCode,
 
         @NotNull
+        @PositiveOrZero
         Short sortOrder
 ) {
     public StatusCreateCommand toCommand(Long projectId) {

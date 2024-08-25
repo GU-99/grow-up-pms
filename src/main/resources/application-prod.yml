@@ -1,10 +1,40 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ENC(f3v9QAvyRmXYDUUP4N4Q6YyqxP3sfj8TUBZxdzb4R7+LEZfnnkWj7JNz/owcBu9yuYj2Yp9xS9nZ6KA4hkSKtuOofD9Ve7anLUnqNOwwBtFbjToQkPv9pRmz4GC66Mzl)
-    username: ENC(DYcC1VqO2FRWqRgPEf2YwMBVazjsF1IXSov4au+L7IMUVod01BE3tz3Zw6I6trdx)
-    password: ENC(H0C0dQCXG0zxHHLOQQfZQwdkE2QODOPC2I/KLRR9ECks57lAt0/oxqNFOh0JzJri)
+    url: ENC(WZHLm3GnAlU8rTxFs7SzoV5rMDScKvxijuDXUSSTWYxZXZXIn5aCY2cml6ju79ViHVDMmcGACADrTWCQfw0QjJeHftCSFTmmmtrxCjOYgXI=)
+    username: ENC(LSBagAlJD17jijCc9EzIrls5cFWPJBJ1vv5UZFq2aaxMQfUdtthCZZNBcQBZ8Lgc)
+    password: ENC(dGA/gmYmcGV7vk1CHj5d3q63EF4ZAm/poV9onyenaB43GUfML0J4NYBQvhte/3Sk)
 
   jpa:
     hibernate:
-      ddl-auto: none
+      # FIXME: 추후에 서비스 개발이 끝나고 배포 환경이 구성되면 validate 혹은 none으로 변경해야 함
+      ddl-auto: create
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+discord:
+  webhook:
+    url: ${DISCORD_WEBHOOK_URL}
+    username: Error Reporter
+    avatar-url: https://i.imgur.com/uRkHXjk.png
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["prometheus"]
+
+  endpoint:
+    prometheus:
+      enabled: true
+
+    metrics:
+      enabled: true
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true

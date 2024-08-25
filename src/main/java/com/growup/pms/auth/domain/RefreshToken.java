@@ -1,5 +1,6 @@
 package com.growup.pms.auth.domain;
 
+import com.growup.pms.common.BaseEntity;
 import com.growup.pms.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,20 +11,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Table(name = "refresh_tokens")
+@SQLDelete(sql = "UPDATE refresh_tokens SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken {
+public class RefreshToken extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "refresh_token_id")
     private Long id;
 
     @OneToOne
@@ -34,17 +38,17 @@ public class RefreshToken {
     private String token;
 
     @Column(nullable = false)
-    private Instant expiryDate;
+    private LocalDateTime expiredAt;
 
     @Builder
-    public RefreshToken(User user, String token, Instant expiryDate) {
+    public RefreshToken(User user, String token, LocalDateTime expiryDate) {
         this.user = user;
         this.token = token;
-        this.expiryDate = expiryDate;
+        this.expiredAt = expiryDate;
     }
 
-    public void updateToken(String newToken, Instant newExpiryDate) {
+    public void renewToken(String newToken, LocalDateTime newExpiryDate) {
         this.token = newToken;
-        this.expiryDate = newExpiryDate;
+        this.expiredAt = newExpiryDate;
     }
 }

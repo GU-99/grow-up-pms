@@ -1,5 +1,6 @@
 package com.growup.pms.task.domain;
 
+import com.growup.pms.common.BaseEntity;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.user.domain.User;
 import jakarta.persistence.Column;
@@ -17,23 +18,26 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Table(name = "status_tasks")
+@SQLDelete(sql = "UPDATE status_tasks SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Task {
+public class Task extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "task_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_status_id", nullable = false, foreignKey = @ForeignKey(name = "fk_task_status"))
+    @JoinColumn(name = "project_status_id", foreignKey = @ForeignKey(name = "fk_task_status"))
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_task_user"))
+    @JoinColumn(name="user_id", foreignKey = @ForeignKey(name = "fk_task_user"))
     private User user;
 
     @Column(nullable = false, length = 128)
@@ -59,5 +63,42 @@ public class Task {
         this.sortOrder = sortOrder;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    // Business Logics //
+    public void editStatus(Status status) {
+        this.status = status;
+    }
+
+    public void editAssignee(User user) {
+        this.user = user;
+    }
+
+    public void editName(String name) {
+        this.name = name;
+    }
+
+    public void editContent(String content) {
+        this.content = content;
+    }
+
+    public void editSortOrder(Short sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public void editStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void editEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getTaskStatus() {
+        return status != null ? status.getId() : null;
+    }
+
+    public String getAssignee() {
+        return user != null ? user.getUsername() : null;
     }
 }

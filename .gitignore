@@ -38,3 +38,9 @@ out/
 
 ### Qodana ###
 .qodana/
+
+### Log ###
+logs/
+
+### Etc ###
+spy.log
