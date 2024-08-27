@@ -33,7 +33,7 @@ public class Task extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_status_id", foreignKey = @ForeignKey(name = "fk_task_status"))
+    @JoinColumn(name = "project_status_id", foreignKey = @ForeignKey(name = "fk_task_status"), nullable = false)
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -92,10 +92,6 @@ public class Task extends BaseEntity {
 
     public void editEndDate(LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    public Long getTaskStatus() {
-        return status != null ? status.getId() : null;
     }
 
     public String getAssignee() {

@@ -1583,6 +1583,31 @@ components:
         username:
           type: string
           description: 사용자 아이디
+    프로젝트 일정 생성 요청 예시입니다.:
+      title: 프로젝트 일정 생성 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 담당할 팀원의 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-user-login-434021498:
       type: object
       properties:
@@ -1598,30 +1623,34 @@ components:
         role:
           type: string
           description: 부여할 역할명
-    api-v1-project-projectId-task817120761:
+    프로젝트 일정 상세 조회 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 상세 조회 성공 시 응답 예시입니다.
       type: object
       properties:
-        '*':
-          type: array
-          description: 상태별 프로젝트 일정 목록
-          items:
-            type: object
-            properties:
-              statusId:
-                type: number
-                description: 프로젝트 상태 식별자
-              sortOrder:
-                type: number
-                description: 정렬 순서
-              userNickname:
-                type: string
-                description: 회원 이름
-              taskName:
-                type: string
-                description: 일정 이름
-              taskId:
-                type: number
-                description: 프로젝트 일정 식별자
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+        taskId:
+          type: number
+          description: 프로젝트 일정 식별자
+        username:
+          type: string
+          description: 회원 이름
     api-v1-user-verify-send1365830936:
       type: object
       properties:
@@ -1646,30 +1675,6 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
-    api-v1-project-projectId-task-1327488016:
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        userId:
-          type: number
-          description: 담당할 팀원의 회원 식별자
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
     api-v1-team-id-1408924108:
       type: object
       properties:
@@ -1746,6 +1751,31 @@ components:
           projectId:
             type: number
             description: 프로젝트 식별자
+    프로젝트 일정 변경 요청 예시입니다.:
+      title: 프로젝트 일정 변경 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-team2045834793:
       type: object
       properties:
@@ -1803,7 +1833,8 @@ components:
         content:
           type: string
           description: 일정 내용
-    api-v1-project-projectId-task-106941217:
+    프로젝트 일정 생성 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 생성 성공 시 응답 예시입니다.
       type: object
       properties:
         statusId:
@@ -1815,9 +1846,6 @@ components:
         sortOrder:
           type: number
           description: 정렬 순서
-        userNickname:
-          type: string
-          description: 회원 이름
         taskName:
           type: string
           description: 일정 이름
@@ -1830,5 +1858,33 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
+        username:
+          type: string
+          description: 회원 이름
+    프로젝트 일정 전체 조회 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 전체 조회 성공 시 응답 예시입니다.
+      type: object
+      properties:
+        '*':
+          type: array
+          description: 상태별 프로젝트 일정 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 프로젝트 상태 식별자
+              sortOrder:
+                type: number
+                description: 정렬 순서
+              taskName:
+                type: string
+                description: 일정 이름
+              taskId:
+                type: number
+                description: 프로젝트 일정 식별자
+              username:
+                type: string
+                description: 회원 이름
     api-v1-user-file486549215:
       type: object

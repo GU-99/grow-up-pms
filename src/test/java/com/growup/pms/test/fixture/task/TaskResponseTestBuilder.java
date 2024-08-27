@@ -49,7 +49,7 @@ public class TaskResponseTestBuilder {
         return TaskResponse.builder()
                 .taskId(taskId)
                 .statusId(statusId)
-                .userNickname(userNickname)
+                .username(userNickname)
                 .taskName(taskName)
                 .sortOrder(sortOrder)
                 .build();
