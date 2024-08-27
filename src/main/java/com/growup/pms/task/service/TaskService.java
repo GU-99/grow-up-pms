@@ -1,7 +1,7 @@
 package com.growup.pms.task.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.InvalidProjectException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
@@ -76,7 +76,7 @@ public class TaskService {
 
     private void isValidProject(Long requestedProjectId, Long originalProjectId) {
         if (!requestedProjectId.equals(originalProjectId)) {
-            throw new InvalidProjectException(ErrorCode.INVALID_PROJECT);
+            throw new BusinessException(ErrorCode.INVALID_PROJECT);
         }
     }
 

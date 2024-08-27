@@ -3,14 +3,7 @@ package com.growup.pms.common.exception.handler;
 import com.growup.pms.GrowUpPmsApplication;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.dto.ErrorResponse;
-import com.growup.pms.common.exception.exceptions.AuthenticationException;
-import com.growup.pms.common.exception.exceptions.AuthorizationException;
 import com.growup.pms.common.exception.exceptions.BusinessException;
-import com.growup.pms.common.exception.exceptions.DuplicateException;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
-import com.growup.pms.common.exception.exceptions.InvalidInputException;
-import com.growup.pms.common.exception.exceptions.MessageFailureException;
-import com.growup.pms.common.exception.exceptions.StorageException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +15,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice(basePackageClasses = GrowUpPmsApplication.class)
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({EntityNotFoundException.class, DuplicateException.class, MessageFailureException.class,
-        InvalidInputException.class, AuthenticationException.class, AuthorizationException.class, StorageException.class})
+    @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
         LogFormatter.info(ex, request);
         return ResponseEntity.status(ex.getErrorCode().getStatus())
@@ -32,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        ErrorResponse response = ErrorResponse.of(ErrorCode.DATA_FORMAT_INVALID, ex.getBindingResult());
+        ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_DATA_FORMAT, ex.getBindingResult());
         LogFormatter.info(ex, request);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.domain.SecurityUser;
-import com.growup.pms.common.exception.exceptions.AuthenticationException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -64,11 +64,11 @@ class JwtTokenServiceTest {
             // given
             String 유효하지_않은_리프레시_토큰 = "유효하지 않은 리프레시 토큰";
 
-            doThrow(AuthenticationException.class).when(refreshTokenService).validateToken(유효하지_않은_리프레시_토큰);
+            doThrow(BusinessException.class).when(refreshTokenService).validateToken(유효하지_않은_리프레시_토큰);
 
             // when & then
             assertThatThrownBy(() -> tokenService.refreshJwtTokens(유효하지_않은_리프레시_토큰))
-                    .isInstanceOf(AuthenticationException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 }

@@ -7,10 +7,13 @@ import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.service.UserService;
+import com.growup.pms.user.service.dto.UserDownloadCommand;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +40,14 @@ public class UserControllerV1 {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/file")
+    public ResponseEntity<Resource> download(@AuthenticationPrincipal SecurityUser user) {
+        UserDownloadCommand command = userService.imageDownload(user.getId());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + command.imageName() + "\"")
+                .body(command.resource());
+    }
+  
     @GetMapping("/search")
     public ResponseEntity<List<UserSearchResponse>> search(@RequestParam("nickname") String nicknamePrefix) {
         return ResponseEntity.ok().body(userService.searchUsersByNicknamePrefix(nicknamePrefix));

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -45,6 +46,23 @@ class FileSystemStorageServiceTest {
         String destinationBase64 = Base64.getEncoder().encodeToString(Files.readAllBytes(destinationFilePath));
 
         Assertions.assertEquals(sourceBase64, destinationBase64);
+    }
+
+    @Test
+    void 파일의_리소스를_가져온다() throws Exception {
+        // given
+        final String rootPath = "src/test/resources";
+        final String filePath = "images/testImage.jpg";
+
+        // when
+        Resource resource = fileSystemStorageService.getFileResource(filePath);
+
+        // then
+        Path sourceFilePath = Paths.get(rootPath).resolve(filePath).normalize().toAbsolutePath();
+        String sourceBase64 = Base64.getEncoder().encodeToString(Files.readAllBytes(sourceFilePath));
+
+        String base64 = Base64.getEncoder().encodeToString(resource.getInputStream().readAllBytes());
+        Assertions.assertEquals(sourceBase64, base64);
     }
 
     @AfterEach

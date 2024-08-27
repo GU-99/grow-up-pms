@@ -9,8 +9,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import com.growup.pms.common.exception.exceptions.DuplicateException;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.team.domain.Team;
@@ -82,8 +82,8 @@ class TeamInvitationServiceTest {
             // when & then
             assertThatThrownBy(() -> teamInvitationService.sendInvitation(초대할_팀.getId(),
                     new TeamInvitationCreateCommand(초대된_사용자.getId(), 초대된_역할)))
-                    .isInstanceOf(DuplicateException.class)
-                    .hasMessage("사용자가 이미 팀에 존재합니다.");
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_ALREADY_IN_TEAM);
         }
 
         @Test
@@ -94,11 +94,11 @@ class TeamInvitationServiceTest {
             TeamInvitationCreateCommand 팀_초대_요청 = new TeamInvitationCreateCommand(초대할_팀_ID, 초대된_역할);
 
             when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(false);
-            doThrow(EntityNotFoundException.class).when(userRepository).findByIdOrThrow(any(Long.class));
+            doThrow(BusinessException.class).when(userRepository).findByIdOrThrow(any(Long.class));
 
             // when & then
             assertThatThrownBy(() -> teamInvitationService.sendInvitation(초대할_팀_ID, 팀_초대_요청))
-                    .isInstanceOf(EntityNotFoundException.class);
+                    .isInstanceOf(BusinessException.class);
         }
     }
 

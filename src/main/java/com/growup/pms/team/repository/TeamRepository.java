@@ -1,7 +1,7 @@
 package com.growup.pms.team.repository;
 
 import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.EntityNotFoundException;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.team.domain.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +14,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     boolean isUserTeamLeader(Long teamId, Long userId);
 
     default Team findByIdOrThrow(Long id) {
-        return findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+        return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
     }
 }

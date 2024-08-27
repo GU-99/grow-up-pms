@@ -39,7 +39,7 @@ public class ErrorResponse {
     }
 
     public static ErrorResponse of(MethodArgumentTypeMismatchException ex) {
-        return new ErrorResponse(ErrorCode.DATA_FORMAT_INVALID, FieldError.of(ex.getName(), ex.getErrorCode()));
+        return new ErrorResponse(ErrorCode.INVALID_DATA_FORMAT, FieldError.of(ex.getName(), ex.getErrorCode()));
     }
 
     @Getter
