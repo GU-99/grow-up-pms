@@ -1,9 +1,11 @@
 package com.growup.pms.auth.controller;
 
+import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import com.growup.pms.auth.controller.dto.response.AccessTokenResponse;
 import com.growup.pms.auth.service.JwtLoginService;
-import com.growup.pms.auth.service.JwtTokenService;
+import com.growup.pms.auth.service.RedisRefreshTokenService;
+import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.security.jwt.JwtConstants;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
@@ -20,14 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/user/login")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class LoginControllerV1 {
+    private final RedisRefreshTokenService refreshTokenService;
     private final JwtLoginService loginService;
     private final JwtTokenProvider tokenProvider;
-    private final JwtTokenService tokenService;
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<AccessTokenResponse> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response
@@ -45,12 +47,21 @@ public class LoginControllerV1 {
             @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
             HttpServletResponse response
     ) {
-        TokenResponse authTokens = tokenService.refreshJwtTokens(refreshToken);
+        TokenResponse authTokens = refreshTokenService.refreshJwtTokens(refreshToken);
 
         setRefreshTokenCookie(response, authTokens.refreshToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
                 .build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @CurrentUser SecurityUser user,
+            @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken
+    ) {
+        refreshTokenService.revokeRefreshToken(user.getId(), refreshToken);
+        return ResponseEntity.ok().build();
     }
 
     private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
