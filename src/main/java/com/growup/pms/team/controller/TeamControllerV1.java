@@ -1,6 +1,6 @@
 package com.growup.pms.team.controller;
 
-import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;

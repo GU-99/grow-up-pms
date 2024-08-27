@@ -1,6 +1,6 @@
 package com.growup.pms.auth.service;
 
-import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -903,6 +903,43 @@ paths:
               description: 리프레시 토큰
               schema:
                 type: string
+  /api/v1/user/logout:
+    post:
+      tags:
+      - Auth
+      summary: 로그아웃
+      description: 사용자의 리프레시 토큰을 만료시킵니다. (요청 쿠키로 refreshToken 필요함)
+      operationId: login-controller-v1-docs-test/로그아웃_api_문서를_생성한다
+      responses:
+        "200":
+          description: "200"
+  /api/v1/user/refresh:
+    post:
+      tags:
+      - Auth
+      summary: 토큰 재발급
+      description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.
+      operationId: login-controller-v1-docs-test/토큰_재발급_api_문서를_생성한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Authorization:
+              description: 새 액세스 토큰
+              schema:
+                type: string
+            Set-Cookie:
+              description: 새 리프레시 토큰
+              schema:
+                type: string
   /api/v1/user/team:
     get:
       tags:
@@ -1030,7 +1067,7 @@ paths:
       tags:
       - Task
       summary: 상태별 프로젝트 일정 전체 조회
-      description: 프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 상태별로 상태 식별자와 함께 상태별로 조회합니다.
+      description: 프로젝트와 상태의 식별자를 사용하여 프로젝트 내의 모든 일정을 해당 상태 식별자와 함께 상태별로 조회합니다.
       operationId: task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다
       parameters:
       - name: projectId
@@ -1045,7 +1082,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/프로젝트 일정 전체 조회 성공 시 응답 예시입니다.'
+                $ref: '#/components/schemas/api-v1-project-projectId-task817120761'
               examples:
                 task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
                   value: |-
@@ -1054,14 +1091,14 @@ paths:
                         "taskId" : 1,
                         "statusId" : 1,
                         "taskName" : "환경설정 마치기",
-                        "username" : "Hello나는팀원1",
+                        "userNickname" : "Hello나는팀원1",
                         "sortOrder" : 1
                       } ],
                       "2" : [ {
                         "taskId" : 2,
                         "statusId" : 2,
                         "taskName" : "프로젝트 일정 등록 기능 구현",
-                        "username" : "Hello2",
+                        "userNickname" : "Hello2",
                         "sortOrder" : 1
                       } ]
                     }
@@ -1089,7 +1126,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/프로젝트 일정 생성 요청 예시입니다.'
+              $ref: '#/components/schemas/api-v1-project-projectId-task-1327488016'
             examples:
               task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                 value: |-
@@ -1113,14 +1150,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/프로젝트 일정 생성 성공 시 응답 예시입니다.'
+                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
               examples:
                 task-controller-v1-docs-test/일정등록_api_문서를_생성한다:
                   value: |-
                     {
                       "taskId" : 1,
                       "statusId" : 1,
-                      "username" : "Hello나는팀원1",
+                      "userNickname" : "Hello나는팀원1",
                       "taskName" : "환경설정 마치기",
                       "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                       "sortOrder" : 1,
@@ -1188,33 +1225,6 @@ paths:
       responses:
         "200":
           description: "200"
-  /api/v1/user/login/refresh:
-    post:
-      tags:
-      - Auth
-      summary: 토큰 재발급
-      description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.
-      operationId: login-controller-v1-docs-test/토큰_재발급_api_문서를_생성한다
-      parameters:
-      - name: Content-Type
-        in: header
-        description: application/json
-        required: true
-        schema:
-          type: string
-        example: application/json
-      responses:
-        "200":
-          description: "200"
-          headers:
-            Authorization:
-              description: 새 액세스 토큰
-              schema:
-                type: string
-            Set-Cookie:
-              description: 새 리프레시 토큰
-              schema:
-                type: string
   /api/v1/user/verify/send:
     post:
       tags:
@@ -1335,14 +1345,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/프로젝트 일정 상세 조회 성공 시 응답 예시입니다.'
+                $ref: '#/components/schemas/api-v1-project-projectId-task-106941217'
               examples:
                 task-controller-v1-docs-test/일정_상세조회_api_문서를_생성한다:
                   value: |-
                     {
                       "taskId" : 1,
                       "statusId" : 1,
-                      "username" : "Hello나는팀원1",
+                      "userNickname" : "Hello나는팀원1",
                       "taskName" : "환경설정 마치기",
                       "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                       "sortOrder" : 1,
@@ -1353,7 +1363,7 @@ paths:
       tags:
       - Task
       summary: 프로젝트 일정 삭제
-      description: 프로젝트 식별자와 일정 식별자를 사용하여 프로젝트 일정을 삭제합니다.
+      description: 프로젝트 일정을 삭제합니다.
       operationId: task-controller-v1-docs-test/일정_삭제_api_문서를_작성한다
       parameters:
       - name: projectId
@@ -1401,7 +1411,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/프로젝트 일정 변경 요청 예시입니다.'
+              $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-1439620849'
             examples:
               task-controller-v1-docs-test/일정_변경_api_문서를_작성한다:
                 value: |-
@@ -1799,6 +1809,30 @@ components:
         content:
           type: string
           description: 팀 소개
+    api-v1-project-projectId-task-taskId-1439620849:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        userId:
+          type: number
+          description: 회원 식별자
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     프로젝트 일정 생성 성공 시 응답 예시입니다.:
       title: 프로젝트 일정 생성 성공 시 응답 예시입니다.
       type: object

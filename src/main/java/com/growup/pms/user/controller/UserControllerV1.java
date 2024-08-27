@@ -1,6 +1,6 @@
 package com.growup.pms.user.controller;
 
-import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;

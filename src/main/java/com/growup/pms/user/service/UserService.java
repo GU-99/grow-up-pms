@@ -1,6 +1,6 @@
 package com.growup.pms.user.service;
 
-import com.growup.pms.auth.service.EmailVerificationService;
+import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.storage.service.StorageService;
@@ -27,7 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
-    private final EmailVerificationService emailVerificationService;
+    private final RedisEmailVerificationService emailVerificationService;
 
     @Transactional
     public Long save(UserCreateCommand command) {

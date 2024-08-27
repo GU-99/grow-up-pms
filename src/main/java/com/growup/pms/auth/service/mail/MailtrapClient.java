@@ -1,6 +1,6 @@
 package com.growup.pms.auth.service.mail;
 
-import com.growup.pms.auth.service.dto.EmailDetails;
+import com.growup.pms.auth.service.dto.EmailSendCommand;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import jakarta.mail.MessagingException;
@@ -21,7 +21,7 @@ public class MailtrapClient implements MailClient {
         this.sandboxSenderEmail = sandboxSenderEmail;
     }
 
-    public void sendEmail(EmailDetails emailDetails) {
+    public void sendEmail(EmailSendCommand emailDetails) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);

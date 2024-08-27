@@ -6,7 +6,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.growup.pms.auth.service.dto.EmailDetails;
+import com.growup.pms.auth.service.dto.EmailSendCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class MailtrapClientTest {
     @Test
     void 이메일을_보내는_데_성공한다() {
         // given
-        EmailDetails 메일 = EmailDetails.builder()
+        EmailSendCommand 메일 = EmailSendCommand.builder()
                 .subject("제목")
                 .content("내용")
                 .recipient("recipient@example.org")
@@ -52,7 +52,7 @@ class MailtrapClientTest {
     @Test
     void 수신자가_없으면_예외가_발생한다() {
         // given
-        EmailDetails 메일 = EmailDetails.builder()
+        EmailSendCommand 메일 = EmailSendCommand.builder()
                 .subject("제목")
                 .content("내용")
                 .recipient(null)

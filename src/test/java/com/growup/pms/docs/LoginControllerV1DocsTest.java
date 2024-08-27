@@ -5,6 +5,9 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.growup.pms.test.fixture.auth.LoginRequestTestBuilder.로그인_하는_사용자는;
 import static com.growup.pms.test.fixture.auth.TokenResponseTestBuilder.발급된_토큰은;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -16,10 +19,11 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import com.growup.pms.auth.service.JwtLoginService;
-import com.growup.pms.auth.service.JwtTokenService;
+import com.growup.pms.auth.service.RedisRefreshTokenService;
 import com.growup.pms.auth.service.dto.LoginCommand;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
@@ -37,7 +41,7 @@ class LoginControllerV1DocsTest extends ControllerSliceTestSupport {
     JwtLoginService loginService;
 
     @Autowired
-    JwtTokenService tokenService;
+    RedisRefreshTokenService refreshTokenService;
 
     @Test
     void 로그인_API_문서를_생성한다() throws Exception {
@@ -70,15 +74,33 @@ class LoginControllerV1DocsTest extends ControllerSliceTestSupport {
     }
 
     @Test
+    @WithMockSecurityUser(id = 1L)
+    void 로그아웃_API_문서를_생성한다() throws Exception {
+        // given
+        TokenResponse 기존_발급된_토큰 = 발급된_토큰은().리프레시_토큰이("기존 리프레시 토큰").이다();
+        doNothing().when(refreshTokenService).revoke(anyLong(), anyString());
+
+        // when & then
+        mockMvc.perform(post("/api/v1/user/logout")
+                        .cookie(new Cookie("refreshToken", 기존_발급된_토큰.refreshToken())))
+                .andExpectAll(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("로그아웃")
+                                .description("사용자의 리프레시 토큰을 만료시킵니다. (요청 쿠키로 refreshToken 필요함)").build())));
+    }
+
+    @Test
     void 토큰_재발급_API_문서를_생성한다() throws Exception {
         // given
         String 유효한_리프레시_토큰 = "유효한 리프레시 토큰";
         TokenResponse 발급된_새_토큰 = 발급된_토큰은().이다();
 
-        when(tokenService.refreshJwtTokens(유효한_리프레시_토큰)).thenReturn(발급된_새_토큰);
+        when(refreshTokenService.refreshJwtTokens(유효한_리프레시_토큰)).thenReturn(발급된_새_토큰);
 
         // when & then
-        mockMvc.perform(post("/api/v1/user/login/refresh")
+        mockMvc.perform(post("/api/v1/user/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .cookie(new Cookie("refreshToken", 유효한_리프레시_토큰)))
                 .andExpectAll(

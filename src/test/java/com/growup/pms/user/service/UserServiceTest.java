@@ -11,7 +11,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import com.growup.pms.auth.service.EmailVerificationService;
+import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -37,7 +37,7 @@ class UserServiceTest {
     UserRepository userRepository;
 
     @Mock
-    EmailVerificationService emailVerificationService;
+    RedisEmailVerificationService emailVerificationService;
 
     @InjectMocks
     UserService userService;
