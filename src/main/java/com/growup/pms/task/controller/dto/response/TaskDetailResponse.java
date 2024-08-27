@@ -16,7 +16,7 @@ public class TaskDetailResponse {
 
     private Long taskId;
     private Long statusId;
-    private String userNickname;
+    private String username;
     private String taskName;
     private String content;
     private Short sortOrder;
@@ -24,11 +24,11 @@ public class TaskDetailResponse {
     private String endDate;
 
     @Builder
-    public TaskDetailResponse(Long taskId, Long statusId, String userNickname, String taskName, String content,
+    public TaskDetailResponse(Long taskId, Long statusId, String username, String taskName, String content,
                               Short sortOrder, String startDate, String endDate) {
         this.taskId = taskId;
         this.statusId = statusId;
-        this.userNickname = userNickname;
+        this.username = username;
         this.taskName = taskName;
         this.content = content;
         this.sortOrder = sortOrder;
@@ -39,8 +39,8 @@ public class TaskDetailResponse {
     public static TaskDetailResponse of(Task task) {
         return TaskDetailResponse.builder()
                 .taskId(task.getId())
-                .statusId(task.getTaskStatus())
-                .userNickname(task.getAssignee())
+                .statusId(task.getStatus().getId())
+                .username(task.getAssignee())
                 .taskName(task.getName())
                 .content(task.getContent())
                 .sortOrder(task.getSortOrder())
