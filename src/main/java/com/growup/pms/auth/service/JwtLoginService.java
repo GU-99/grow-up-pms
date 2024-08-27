@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JwtLoginService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider tokenProvider;
-    private final RedisRefreshTokenService refreshTokenService;
+    private final RefreshTokenService redisRefreshTokenService;
 
     @Transactional
     public TokenResponse authenticateUser(LoginCommand command) {
@@ -25,7 +25,7 @@ public class JwtLoginService {
         SecurityUser principal = (SecurityUser) authentication.getPrincipal();
         TokenResponse newToken = tokenProvider.generateToken(principal);
 
-        refreshTokenService.save(principal.getId(), newToken.refreshToken());
+        redisRefreshTokenService.save(principal.getId(), newToken.refreshToken());
         return newToken;
     }
 }

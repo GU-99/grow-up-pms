@@ -7,7 +7,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.auth.service.dto.LoginCommand;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
@@ -41,7 +41,7 @@ class JwtLoginServiceTest {
     SecurityUser securityUser;
 
     @Mock
-    RefreshTokenService refreshTokenService;
+    RedisRefreshTokenService refreshTokenService;
 
     @Mock
     JwtTokenProvider tokenProvider;
@@ -60,7 +60,6 @@ class JwtLoginServiceTest {
         void 성공한다() {
             // given
             Long 기존_사용자_ID = 1L;
-            Long 새_리프레시_토큰_ID = 1L;
             LoginCommand 유효한_로그인_요청 = 로그인_하는_사용자는().이다().toCommand();
             UsernamePasswordAuthenticationToken 인증_토큰 = new UsernamePasswordAuthenticationToken(유효한_로그인_요청.username(), 유효한_로그인_요청.password());
             TokenResponse 예상하는_새_토큰 = 발급된_토큰은().이다();
@@ -69,7 +68,6 @@ class JwtLoginServiceTest {
             when(authentication.getPrincipal()).thenReturn(securityUser);
             when(tokenProvider.generateToken(securityUser)).thenReturn(예상하는_새_토큰);
             when(securityUser.getId()).thenReturn(기존_사용자_ID);
-            when(refreshTokenService.renewRefreshToken(기존_사용자_ID, 예상하는_새_토큰.refreshToken())).thenReturn(새_리프레시_토큰_ID);
 
             // when
             TokenResponse 실제_새_토큰 = loginService.authenticateUser(유효한_로그인_요청);

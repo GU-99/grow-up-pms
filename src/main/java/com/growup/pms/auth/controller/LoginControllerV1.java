@@ -4,7 +4,7 @@ import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import com.growup.pms.auth.controller.dto.response.AccessTokenResponse;
 import com.growup.pms.auth.service.JwtLoginService;
-import com.growup.pms.auth.service.RedisRefreshTokenService;
+import com.growup.pms.auth.service.RefreshTokenService;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.security.jwt.JwtConstants;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class LoginControllerV1 {
-    private final RedisRefreshTokenService refreshTokenService;
+    private final RefreshTokenService redisRefreshTokenService;
     private final JwtLoginService loginService;
     private final JwtTokenProvider tokenProvider;
 
@@ -47,7 +47,7 @@ public class LoginControllerV1 {
             @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
             HttpServletResponse response
     ) {
-        TokenResponse authTokens = refreshTokenService.refreshJwtTokens(refreshToken);
+        TokenResponse authTokens = redisRefreshTokenService.refreshJwtTokens(refreshToken);
 
         setRefreshTokenCookie(response, authTokens.refreshToken());
         return ResponseEntity.ok()
@@ -60,7 +60,7 @@ public class LoginControllerV1 {
             @CurrentUser SecurityUser user,
             @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken
     ) {
-        refreshTokenService.revokeRefreshToken(user.getId(), refreshToken);
+        redisRefreshTokenService.revoke(user.getId(), refreshToken);
         return ResponseEntity.ok().build();
     }
 

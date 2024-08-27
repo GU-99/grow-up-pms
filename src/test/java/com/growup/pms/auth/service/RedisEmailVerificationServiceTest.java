@@ -24,7 +24,7 @@ import org.springframework.data.redis.core.ValueOperations;
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
-class EmailVerificationServiceTest {
+class RedisEmailVerificationServiceTest {
     @Mock
     MailClient mailClient;
 

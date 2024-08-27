@@ -7,5 +7,5 @@ public interface RefreshTokenService {
 
     TokenResponse refreshJwtTokens(String oldRefreshToken);
 
-    void revokeRefreshToken(Long userId, String refreshToken);
+    void revoke(Long userId, String refreshToken);
 }
