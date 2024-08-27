@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
-public class RedisEmailVerificationService {
+public class RedisEmailVerificationService implements EmailVerificationService {
     private static final String KEYSPACE_USER_EMAIL_CODE = "user:%s:email";
     private static final Duration VERIFICATION_CODE_EXPIRATION = Duration.ofSeconds(60);
     private static final int MAX_VERIFICATION_CODE = 999999;

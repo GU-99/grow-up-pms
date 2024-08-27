@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
-public class RedisRefreshTokenService {
+public class RedisRefreshTokenService implements RefreshTokenService {
     private static final String KEYSPACE_REFRESH_TOKEN = "user:%s:refresh-token:%s";
 
     private final JwtTokenProvider tokenProvider;
