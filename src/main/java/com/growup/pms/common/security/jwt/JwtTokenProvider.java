@@ -1,6 +1,6 @@
 package com.growup.pms.common.security.jwt;
 
-import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

@@ -1,6 +1,6 @@
 package com.growup.pms.auth.service;
 
-import com.growup.pms.auth.service.dto.EmailDetails;
+import com.growup.pms.auth.service.dto.EmailSendCommand;
 import com.growup.pms.auth.service.mail.MailClient;
 import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,10 +11,10 @@ import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
-public class EmailVerificationService {
-    public static final String KEYSPACE_USER_EMAIL_CODE = "user:%s:email";
-    public static final Duration VERIFICATION_CODE_EXPIRATION = Duration.ofSeconds(60);
-    public static final int MAX_VERIFICATION_CODE = 999999;
+public class RedisEmailVerificationService {
+    private static final String KEYSPACE_USER_EMAIL_CODE = "user:%s:email";
+    private static final Duration VERIFICATION_CODE_EXPIRATION = Duration.ofSeconds(60);
+    private static final int MAX_VERIFICATION_CODE = 999999;
 
     private final MailClient mailClient;
     private final StringRedisTemplate stringRedisTemplate;
@@ -36,7 +36,7 @@ public class EmailVerificationService {
         stringRedisTemplate.opsForValue().set(KEYSPACE_USER_EMAIL_CODE.formatted(email), verificationCode,
                 VERIFICATION_CODE_EXPIRATION);
 
-        mailClient.sendEmail(EmailDetails.builder()
+        mailClient.sendEmail(EmailSendCommand.builder()
                 .recipient(email)
                 .subject("인증 코드 안내 - [서비스 이름]")
                 .content("""

@@ -1,4 +1,4 @@
-package com.growup.pms.auth.domain;
+package com.growup.pms.auth.controller.dto;
 
 import java.util.Collection;
 import java.util.Collections;
