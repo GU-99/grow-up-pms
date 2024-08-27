@@ -138,7 +138,7 @@ class RedisRefreshTokenServiceTest {
             // when & then
             assertThatThrownBy(() -> refreshTokenService.refreshJwtTokens(기존_리프레시_토큰))
                     .isInstanceOf(BusinessException.class)
-                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_REFRESH_TOKEN);
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
     }
 }

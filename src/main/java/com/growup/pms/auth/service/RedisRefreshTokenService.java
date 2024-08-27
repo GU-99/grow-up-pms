@@ -65,7 +65,7 @@ public class RedisRefreshTokenService implements RefreshTokenService {
     private void validateRefreshTokenExists(String key) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (hasKey == null || !hasKey) {
-            throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new BusinessException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
     }
 }
