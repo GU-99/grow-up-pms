@@ -1,6 +1,6 @@
 package com.growup.pms.auth.service;
 
-import com.growup.pms.auth.domain.SecurityUser;
+import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.auth.service.dto.LoginCommand;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JwtLoginService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider tokenProvider;
-    private final RefreshTokenService refreshTokenService;
+    private final RedisRefreshTokenService refreshTokenService;
 
     @Transactional
     public TokenResponse authenticateUser(LoginCommand command) {
@@ -25,7 +25,7 @@ public class JwtLoginService {
         SecurityUser principal = (SecurityUser) authentication.getPrincipal();
         TokenResponse newToken = tokenProvider.generateToken(principal);
 
-        refreshTokenService.renewRefreshToken(principal.getId(), newToken.refreshToken());
+        refreshTokenService.save(principal.getId(), newToken.refreshToken());
         return newToken;
     }
 }
