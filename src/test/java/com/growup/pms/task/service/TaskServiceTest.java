@@ -113,13 +113,13 @@ class TaskServiceTest {
             Long 예상_상태_ID = 1L;
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
-            doThrow(new EntityNotFoundException(ErrorCode.STATUS_NOT_FOUND))
+            doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
                     .when(statusRepository).findByIdOrThrow(예상_상태_ID);
 
             // when &then
             assertThatThrownBy(() -> taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청))
-                    .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage("존재하지 않는 프로젝트 상태입니다.");
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage("해당 프로젝트 상태를 찾을 수 없습니다. 유효한 상태를 선택해 주세요.");
         }
     }
 
