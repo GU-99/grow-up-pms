@@ -1,5 +1,6 @@
 package com.growup.pms.common.storage.service;
 
+import com.growup.pms.test.annotation.ContainerTest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;
@@ -15,6 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
+@ContainerTest
 @SpringBootTest
 class FileSystemStorageServiceTest {
 
