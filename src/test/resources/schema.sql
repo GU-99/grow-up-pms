@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS projects (
     CONSTRAINT fk_project_team FOREIGN KEY (team_id) REFERENCES teams(id)
 );
 
-CREATE TABLE project_status (
+CREATE TABLE IF NOT EXISTS project_status (
     id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
     project_id  BIGINT          NOT NULL,
     name        VARCHAR(32)     NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE project_status (
 );
 
 -- 프로젝트 일정
-CREATE TABLE status_tasks (
+CREATE TABLE IF NOT EXISTS status_tasks (
     id                  BIGINT          AUTO_INCREMENT PRIMARY KEY,
     project_status_id   BIGINT          NOT NULL,
     user_id             BIGINT,
