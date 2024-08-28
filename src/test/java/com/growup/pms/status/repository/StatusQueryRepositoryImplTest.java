@@ -121,7 +121,6 @@ class StatusQueryRepositoryImplTest extends RepositoryTestSupport {
 
             // then
             assertThat(실제_결과).hasSize(3);
-            System.out.println(실제_결과);
             assertThat(실제_결과.stream().map(StatusResponse::name))
                     .containsExactlyInAnyOrder("할일", "진행중", "완료");
         }
