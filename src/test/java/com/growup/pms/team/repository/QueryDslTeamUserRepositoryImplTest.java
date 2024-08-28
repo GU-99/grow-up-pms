@@ -61,7 +61,6 @@ class QueryDslTeamUserRepositoryImplTest extends RepositoryTestSupport {
 
     @BeforeEach
     void setUp() {
-        System.out.println("QueryDslTeamUserRepositoryImplTest.setUp");
         어드민 = roleRepository.save(역할은().식별자가(1L).타입이(TEAM).이름이(HEAD.getRoleName()).이다());
         리더 = roleRepository.save(역할은().식별자가(2L).타입이(TEAM).이름이(LEADER.getRoleName()).이다());
         메이트 = roleRepository.save(역할은().식별자가(3L).타입이(TEAM).이름이(MATE.getRoleName()).이다());
