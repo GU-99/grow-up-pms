@@ -3,6 +3,7 @@ package com.growup.pms.user.controller;
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
+import com.growup.pms.user.controller.dto.request.UserPasswordUpdateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 public class UserControllerV1 {
+
     private final UserService userService;
 
     @PostMapping
@@ -47,7 +50,7 @@ public class UserControllerV1 {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + command.imageName() + "\"")
                 .body(command.resource());
     }
-  
+
     @GetMapping("/search")
     public ResponseEntity<List<UserSearchResponse>> search(@RequestParam("nickname") String nicknamePrefix) {
         return ResponseEntity.ok().body(userService.searchUsersByNicknamePrefix(nicknamePrefix));
@@ -61,6 +64,14 @@ public class UserControllerV1 {
     @PostMapping("/verify/send")
     public ResponseEntity<Void> sendVerificationCode(String email) {
         userService.sendVerificationCode(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal SecurityUser user,
+                                               @Valid @RequestBody UserPasswordUpdateRequest request) {
+
+        userService.updatePassword(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }
 }
