@@ -15,10 +15,13 @@ import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.test.fixture.user.UserPasswordUpdateTestBuilder;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
+import com.growup.pms.user.service.dto.UserPasswordUpdateCommand;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +36,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
     @Mock
     UserRepository userRepository;
 
@@ -47,6 +51,7 @@ class UserServiceTest {
 
     @Nested
     class 사용자가_회원가입_시에 {
+
         @Test
         void 성공적으로_계정을_생성한다() {
             // given
@@ -95,6 +100,7 @@ class UserServiceTest {
 
     @Nested
     class 전체_사용자_검색_시에 {
+
         @Test
         void 성공한다() {
             // given
@@ -108,6 +114,42 @@ class UserServiceTest {
 
             // then
             assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+    }
+
+    @Nested
+    class 비밀번호_변경_시에 {
+
+        @Test
+        void 성공적으로_비밀번호를_변경한다() {
+            // given
+            User 기존_사용자 = 사용자는().이다();
+            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder.비밀번호_변경은().이다().toCommand();
+            LocalDateTime 기존_비밀번호_수정일 = 기존_사용자.getPasswordChangeDate();
+
+            when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
+            when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(true);
+
+            // when
+            userService.updatePassword(기존_사용자.getId(), 비밀번호_변경_요청);
+
+            // then
+            assertThat(기존_비밀번호_수정일).isNotEqualTo(기존_사용자.getPasswordChangeDate());
+        }
+
+        @Test
+        void 저장된_비밀번호와_매치에_실패하면_예외가_발생한다() {
+            // given
+            User 기존_사용자 = 사용자는().이다();
+            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder.비밀번호_변경은().이다().toCommand();
+
+            when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
+            when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> userService.updatePassword(기존_사용자.getId(), 비밀번호_변경_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_NOT_FOUND);
         }
     }
 }
