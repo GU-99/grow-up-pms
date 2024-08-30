@@ -15,7 +15,6 @@ import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,7 +34,6 @@ public class UserService {
     @Transactional
     public Long save(UserCreateCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         try {
             User user = command.toEntity();
             user.encodePassword(passwordEncoder);
@@ -75,18 +73,16 @@ public class UserService {
 
     @Transactional
     public void updatePassword(Long userId, UserPasswordUpdateCommand command) {
-        User user = validatePassword(userId, command.password());
+        User user = userRepository.findByIdOrThrow(userId);
+        validateCurrentPassword(user.getPassword(), command.password());
 
         user.changePassword(passwordEncoder, command.passwordNew());
     }
 
-    private User validatePassword(Long userId, String password) {
-        User user = userRepository.findByIdOrThrow(userId);
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+    private void validateCurrentPassword(String inputPassword, String storedPassword) {
+        if (!passwordEncoder.matches(inputPassword, storedPassword)) {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }
-        return user;
     }
 
     public List<UserSearchResponse> searchUsersByNicknamePrefix(String nicknamePrefix) {
