@@ -156,7 +156,7 @@ class UserServiceTest {
             // when & then
             assertThatThrownBy(() -> userService.updatePassword(기존_사용자.getId(), 비밀번호_변경_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_NOT_FOUND);
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_PASSWORD);
         }
     }
 }
