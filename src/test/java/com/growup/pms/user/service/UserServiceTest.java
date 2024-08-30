@@ -123,9 +123,13 @@ class UserServiceTest {
         @Test
         void 성공적으로_비밀번호를_변경한다() {
             // given
+            String 기존_비밀번호 = "test1234!@#$";
+            String 새로운_비밀번호 = "test2345!@#$";
             User 기존_사용자 = 사용자는().이다();
-            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder.비밀번호_변경은().이다().toCommand();
             LocalDateTime 기존_비밀번호_수정일 = 기존_사용자.getPasswordChangeDate();
+
+            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder
+                    .비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
 
             when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
             when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(true);
@@ -140,8 +144,11 @@ class UserServiceTest {
         @Test
         void 저장된_비밀번호와_매치에_실패하면_예외가_발생한다() {
             // given
+            String 기존_비밀번호 = "test1234!@#$";
+            String 새로운_비밀번호 = "test2345!@#$";
             User 기존_사용자 = 사용자는().이다();
-            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder.비밀번호_변경은().이다().toCommand();
+            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder
+                    .비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
 
             when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
             when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(false);
