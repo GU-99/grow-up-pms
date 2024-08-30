@@ -68,7 +68,7 @@ public class UserControllerV1 {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal SecurityUser user,
+    public ResponseEntity<Void> updatePassword(@CurrentUser SecurityUser user,
                                                @Valid @RequestBody UserPasswordUpdateRequest request) {
 
         userService.updatePassword(user.getId(), request.toCommand());
