@@ -1,17 +1,3 @@
-jasypt:
-  encryptor:
-    bean: jasyptEncryptorAES
-    password: ${JASYPT_PASSWORD}
-
-security:
-  jwt:
-    base64-secret: ENC(IAOzDB87WA/evdFrSSzDsmgtpFC+fIev+ckx+Qb3+KFwLpCPInk8oPxILwE33IdUchcesVhpzuO1PjKaIqFAOZINbJniiuuzr/PZ0FSDhYM=)
-    access-token-expiration-millis: 86400000
-    refresh-token-expiration-millis: 604800000
-
-storage:
-  root-path: src/test/resources/
-
 spring:
   mail:
     host: live.smtp.mailtrap.io
@@ -22,10 +8,32 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  sql:
+    init:
+      mode: always
+
   data:
     redis:
       host: localhost
       port: 6379
+
+storage:
+  root-path: src/test/resources/
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+    password: ${JASYPT_PASSWORD}
+
+security:
+  jwt:
+    base64-secret: ENC(L9Pb+BcmqJYvNlrIrKXXO2LcrNXulGAi4YvPCgi66VhKyeRfh73d137aJBULiTc8I2xKsAyrHjX6NyWHK1EcE3XuEE5PVnDvXb/H5rxi8+pwzRk0Z9nOmYXdBY+8QW2na88H1jOJdI1e4Ow3VZVIsRUssljE0GajNbwLmnYzwxA=)
+    access-token-expiration-millis: 86400000
+    refresh-token-expiration-millis: 604800000
 
 mailtrap:
   from: mailtrap@demomailtrap.com

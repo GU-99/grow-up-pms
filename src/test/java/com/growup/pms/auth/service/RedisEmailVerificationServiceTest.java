@@ -8,7 +8,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.growup.pms.auth.service.dto.EmailDetails;
+import com.growup.pms.auth.service.dto.EmailSendCommand;
 import com.growup.pms.auth.service.mail.MailClient;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import java.time.Duration;
@@ -24,7 +24,7 @@ import org.springframework.data.redis.core.ValueOperations;
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
-class EmailVerificationServiceTest {
+class RedisEmailVerificationServiceTest {
     @Mock
     MailClient mailClient;
 
@@ -35,7 +35,7 @@ class EmailVerificationServiceTest {
     ValueOperations<String, String> valueOperations;
 
     @InjectMocks
-    EmailVerificationService emailVerificationService;
+    RedisEmailVerificationService emailVerificationService;
 
     @Nested
     class 이메일을_인증할_때 {
@@ -101,7 +101,7 @@ class EmailVerificationServiceTest {
 
             when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
             doNothing().when(valueOperations).set(anyString(), anyString(), any(Duration.class));
-            doNothing().when(mailClient).sendEmail(any(EmailDetails.class));
+            doNothing().when(mailClient).sendEmail(any(EmailSendCommand.class));
 
             // when
             assertThatCode(() -> emailVerificationService.sendVerificationCode(메일))

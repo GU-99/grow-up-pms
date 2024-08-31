@@ -38,7 +38,7 @@ jasypt:
 security:
   jwt:
     base64-secret: ENC(GsF8xZqjhZEphkvkgkKHDS23D6xo73+8iBGBJH1zSm1L9YBsHth1HdjMBivz3ljMSNTLDl+ZzlEw9UClhNemX+AmN0eVomJfo93VX6tZk5KWqAGhGk9X8hrCJnZluFFsjjMBd2+tJ13NHHigXpGxT+OxeziTgJWz0OP+vHLoNgQ=)
-    access-token-expiration-millis: 86400000
+    access-token-expiration-millis: 900000
     refresh-token-expiration-millis: 604800000
 
 springdoc:
