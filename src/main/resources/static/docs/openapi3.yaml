@@ -903,36 +903,6 @@ paths:
               description: 리프레시 토큰
               schema:
                 type: string
-  /api/v1/user/team:
-    get:
-      tags:
-      - User
-      summary: 가입한 팀 목록 조회
-      description: 가입한 팀이거나 가입 대기 중인 팀의 목록을 조회합니다.
-      operationId: user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다
-      responses:
-        "200":
-          description: "200"
-          headers:
-            Content-Type:
-              description: application/json
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api-v1-user-team1301002808'
-              examples:
-                user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다:
-                  value: |-
-                    [ {
-                      "teamId" : 1,
-                      "name" : "팀 이름",
-                      "content" : "팀 소개",
-                      "creator" : "팀장 닉네임",
-                      "isPendingApproval" : true,
-                      "role" : "MATE"
-                    } ]
   /api/v1/project/{projectId}/status:
     get:
       tags:
@@ -1188,6 +1158,53 @@ paths:
       responses:
         "200":
           description: "200"
+  /api/v1/team/{teamId}/project:
+    post:
+      tags:
+      - Project
+      summary: 프로젝트 생성
+      description: "프로젝트의 이름, 설명, 시작일자, 종료일자를 입력 받습니다."
+      operationId: project-controller-v1-docs-test/프로젝트_생성_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/프로젝트 생성 요청 예시입니다.'
+            examples:
+              project-controller-v1-docs-test/프로젝트_생성_api_문서를_생성한다:
+                value: |-
+                  {
+                    "projectName" : "GU-PMS 프로젝트",
+                    "content" : "프로젝트 관리 서비스 개발 프로젝트",
+                    "startDate" : "2024-01-01",
+                    "endDate" : "2024-12-31",
+                    "coworkers" : [ {
+                      "userId" : 1,
+                      "roleName" : "ASSIGNEE"
+                    } ]
+                  }
+      responses:
+        "201":
+          description: "201"
+          headers:
+            Location:
+              description: 생성된 프로젝트 URL
+              schema:
+                type: string
   /api/v1/user/login/refresh:
     post:
       tags:
@@ -1698,29 +1715,6 @@ components:
         colorCode:
           type: string
           description: 색상 코드
-    api-v1-user-team1301002808:
-      type: array
-      items:
-        type: object
-        properties:
-          creator:
-            type: string
-            description: 팀장 닉네임
-          role:
-            type: string
-            description: 팀 내에서의 역할
-          teamId:
-            type: number
-            description: 팀 ID
-          name:
-            type: string
-            description: 팀 이름
-          isPendingApproval:
-            type: boolean
-            description: 가입 대기 여부
-          content:
-            type: string
-            description: 팀 소개
     api-v1-project-projectId-status1220278061:
       type: array
       items:
@@ -1799,6 +1793,34 @@ components:
         content:
           type: string
           description: 팀 소개
+    프로젝트 생성 요청 예시입니다.:
+      title: 프로젝트 생성 요청 예시입니다.
+      type: object
+      properties:
+        endDate:
+          type: string
+          description: 프로젝트 종료 일자
+        coworkers:
+          type: array
+          description: 프로젝트에 초대할 팀원 목록
+          items:
+            type: object
+            properties:
+              roleName:
+                type: string
+                description: 초대할 팀원의 프로젝트 내에서의 권한
+              userId:
+                type: number
+                description: 초대할 팀원의 회원 ID
+        projectName:
+          type: string
+          description: 프로젝트 이름
+        startDate:
+          type: string
+          description: 프로젝트 시작 일자
+        content:
+          type: string
+          description: 프로젝트 설명
     프로젝트 일정 생성 성공 시 응답 예시입니다.:
       title: 프로젝트 일정 생성 성공 시 응답 예시입니다.
       type: object

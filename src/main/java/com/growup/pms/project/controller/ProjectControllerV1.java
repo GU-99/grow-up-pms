@@ -1,11 +1,11 @@
 package com.growup.pms.project.controller;
 
+import com.growup.pms.auth.domain.SecurityUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.project.controller.dto.request.ProjectCreateRequest;
 import com.growup.pms.project.service.ProjectService;
 import com.growup.pms.role.domain.PermissionType;
-import com.growup.pms.user.domain.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.net.URI;
@@ -32,16 +32,17 @@ public class ProjectControllerV1 {
     @RequirePermission(PermissionType.TEAM_PROJECT_CREATE)
     public ResponseEntity<Void> createProject(
             @Positive @TeamId @PathVariable Long teamId,
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal SecurityUser user,
             @Valid @RequestBody ProjectCreateRequest request) {
         log.debug("ProjectControllerV1#createProject called.");
         log.debug("프로젝트 생성을 위한 팀 ID={}", teamId);
+        log.debug("프로젝트를 생성하는 회원={}", user);
         log.debug("프로젝트 생성을 위한 ProjectCreateRequest={}", request);
 
         Long savedId = projectService.createProject(teamId, user.getId(), request.toCommand());
 
-        String uri = UriComponentsBuilder.fromPath("/api/v1/project/{projectId}")
-                .buildAndExpand(savedId)
+        String uri = UriComponentsBuilder.fromPath("/api/v1/team/{teamId}/project/{projectId}")
+                .buildAndExpand(teamId, savedId)
                 .toUriString();
 
         return ResponseEntity.created(URI.create(uri)).build();
