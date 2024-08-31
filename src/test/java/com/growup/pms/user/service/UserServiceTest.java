@@ -1,6 +1,7 @@
 package com.growup.pms.user.service;
 
 import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
+import static com.growup.pms.test.fixture.user.UserPasswordUpdateTestBuilder.비밀번호_변경은;
 import static com.growup.pms.test.fixture.user.UserSearchResponseTestBuilder.사용자_검색_응답은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,7 +16,6 @@ import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.user.UserPasswordUpdateTestBuilder;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
@@ -128,8 +128,7 @@ class UserServiceTest {
             User 기존_사용자 = 사용자는().이다();
             LocalDateTime 기존_비밀번호_수정일 = 기존_사용자.getPasswordChangeDate();
 
-            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder
-                    .비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
+            UserPasswordUpdateCommand 비밀번호_변경_요청 = 비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
 
             when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
             when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(true);
@@ -147,8 +146,7 @@ class UserServiceTest {
             String 기존_비밀번호 = "test1234!@#$";
             String 새로운_비밀번호 = "test2345!@#$";
             User 기존_사용자 = 사용자는().이다();
-            UserPasswordUpdateCommand 비밀번호_변경_요청 = UserPasswordUpdateTestBuilder
-                    .비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
+            UserPasswordUpdateCommand 비밀번호_변경_요청 = 비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
 
             when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
             when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(false);
