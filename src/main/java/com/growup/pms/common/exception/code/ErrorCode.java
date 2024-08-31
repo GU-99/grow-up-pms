@@ -27,6 +27,7 @@ public enum ErrorCode {
     // 사용자(User) - US
     USER_NOT_FOUND(NOT_FOUND, "US_001", "해당 사용자를 찾을 수 없습니다. 입력 정보를 확인해 주세요."),
     USER_ALREADY_EXISTS(CONFLICT, "US_002", "이미 등록된 사용자입니다. 다른 정보로 시도해 주세요."),
+    INVALID_PASSWORD(BAD_REQUEST, "US_003", "비밀번호가 일치하지 않습니다. 다시 확인해 주세요"),
 
     // 역할(Role) - RL
     ROLE_NOT_FOUND(NOT_FOUND, "RL_001", "해당 역할이 존재하지 않습니다. 유효한 역할을 선택해 주세요."),

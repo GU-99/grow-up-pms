@@ -10,6 +10,7 @@ import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
+import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
@@ -32,7 +34,6 @@ public class UserService {
     @Transactional
     public Long save(UserCreateCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
-
         try {
             User user = command.toEntity();
             user.encodePassword(passwordEncoder);
@@ -69,7 +70,21 @@ public class UserService {
 
         return new UserDownloadCommand(user.getProfile().getImageName(), storageService.getFileResource(path));
     }
-  
+
+    @Transactional
+    public void updatePassword(Long userId, PasswordUpdateCommand command) {
+        User user = userRepository.findByIdOrThrow(userId);
+        validateCurrentPassword(user.getPassword(), command.password());
+
+        user.changePassword(passwordEncoder, command.newPassword());
+    }
+
+    private void validateCurrentPassword(String inputPassword, String storedPassword) {
+        if (!passwordEncoder.matches(inputPassword, storedPassword)) {
+            throw new BusinessException(ErrorCode.INVALID_PASSWORD);
+        }
+    }
+
     public List<UserSearchResponse> searchUsersByNicknamePrefix(String nicknamePrefix) {
         return userRepository.findUsersByNicknameStartingWith(nicknamePrefix);
     }
