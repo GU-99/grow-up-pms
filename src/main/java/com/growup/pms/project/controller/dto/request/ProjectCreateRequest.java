@@ -2,7 +2,7 @@ package com.growup.pms.project.controller.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.growup.pms.project.service.dto.ProjectCreateCommand;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,10 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectCreateRequest {
 
-    @NotNull
+    @NotBlank
     @Size(max = 128)
     private String projectName;
 
+    @Size(max = 200)
     private String content;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -37,7 +38,7 @@ public class ProjectCreateRequest {
         this.content = content;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.coworkers = coworkers.isEmpty() ? new ArrayList<>() : coworkers;
+        this.coworkers = coworkers == null ? new ArrayList<>() : coworkers;
     }
 
     public ProjectCreateCommand toCommand() {
