@@ -1,5 +1,6 @@
 package com.growup.pms.project.service;
 
+import com.growup.pms.project.controller.dto.response.ProjectResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.project.repository.ProjectRepository;
@@ -78,5 +79,9 @@ public class ProjectService {
 
     public void deleteAllProjectsForTeam(Long teamId) {
         throw new UnsupportedOperationException("아직 구현되지 않은 기능입니다.");
+    }
+
+    public List<ProjectResponse> getProjects(Long teamId) {
+        return projectRepository.getProjectsByTeamId(teamId);
     }
 }
