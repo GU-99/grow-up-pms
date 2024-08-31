@@ -3,7 +3,7 @@ package com.growup.pms.user.controller;
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
-import com.growup.pms.user.controller.dto.request.UserPasswordUpdateRequest;
+import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
@@ -69,8 +69,7 @@ public class UserControllerV1 {
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@CurrentUser SecurityUser user,
-                                               @Valid @RequestBody UserPasswordUpdateRequest request) {
-
+                                               @Valid @RequestBody PasswordUpdateRequest request) {
         userService.updatePassword(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }

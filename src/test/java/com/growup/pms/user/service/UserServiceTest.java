@@ -20,7 +20,7 @@ import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
-import com.growup.pms.user.service.dto.UserPasswordUpdateCommand;
+import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -128,7 +128,7 @@ class UserServiceTest {
             User 기존_사용자 = 사용자는().이다();
             LocalDateTime 기존_비밀번호_수정일 = 기존_사용자.getPasswordChangeDate();
 
-            UserPasswordUpdateCommand 비밀번호_변경_요청 = 비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
+            PasswordUpdateCommand 비밀번호_변경_요청 = 비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
 
             when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
             when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(true);
@@ -146,7 +146,7 @@ class UserServiceTest {
             String 기존_비밀번호 = "test1234!@#$";
             String 새로운_비밀번호 = "test2345!@#$";
             User 기존_사용자 = 사용자는().이다();
-            UserPasswordUpdateCommand 비밀번호_변경_요청 = 비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
+            PasswordUpdateCommand 비밀번호_변경_요청 = 비밀번호_변경은().기존_비밀번호가(기존_비밀번호).새로운_비밀번호가(새로운_비밀번호).이다().toCommand();
 
             when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
             when(passwordEncoder.matches(비밀번호_변경_요청.password(), 기존_사용자.getPassword())).thenReturn(false);

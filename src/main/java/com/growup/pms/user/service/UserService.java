@@ -10,7 +10,7 @@ import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
-import com.growup.pms.user.service.dto.UserPasswordUpdateCommand;
+import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -72,11 +72,11 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long userId, UserPasswordUpdateCommand command) {
+    public void updatePassword(Long userId, PasswordUpdateCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
         validateCurrentPassword(user.getPassword(), command.password());
 
-        user.changePassword(passwordEncoder, command.passwordNew());
+        user.changePassword(passwordEncoder, command.newPassword());
     }
 
     private void validateCurrentPassword(String inputPassword, String storedPassword) {
