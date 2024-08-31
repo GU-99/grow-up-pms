@@ -1,5 +1,7 @@
 package com.growup.pms.task.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.LOCAL_DATE_PATTERN;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import jakarta.validation.constraints.Positive;
@@ -29,10 +31,10 @@ public class TaskEditRequest {
     @Positive
     private JsonNullable<Short> sortOrder = JsonNullable.undefined();
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = LOCAL_DATE_PATTERN)
     private JsonNullable<LocalDate> startDate = JsonNullable.undefined();
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = LOCAL_DATE_PATTERN)
     private JsonNullable<LocalDate> endDate = JsonNullable.undefined();
 
     @Builder
