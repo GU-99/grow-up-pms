@@ -2,7 +2,6 @@ package com.growup.pms.auth.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.auth.controller.dto.request.LoginRequest;
-import com.growup.pms.auth.controller.dto.response.AccessTokenResponse;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.RefreshTokenService;
 import com.growup.pms.common.aop.annotation.CurrentUser;
@@ -30,7 +29,7 @@ public class LoginControllerV1 {
     private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(
+    public ResponseEntity<Void> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response
     ) {
@@ -43,7 +42,7 @@ public class LoginControllerV1 {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AccessTokenResponse> refresh(
+    public ResponseEntity<Void> refresh(
             @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
             HttpServletResponse response
     ) {

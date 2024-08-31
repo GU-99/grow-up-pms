@@ -3,6 +3,7 @@ package com.growup.pms.common.exception.code;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
@@ -15,9 +16,9 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     // 인증(Authentication) - AT
     AUTHENTICATION_FAILED(UNAUTHORIZED, "AT_001", "인증을 실패했습니다. 아이디와 비밀번호를 확인해 주세요."),
-    INVALID_REFRESH_TOKEN(BAD_REQUEST, "AT_002", "리프레시 토큰이 유효하지 않습니다. 다시 로그인해 주세요."),
-    REFRESH_TOKEN_NOT_FOUND(BAD_REQUEST, "AT_003", "리프레시 토큰이 존재하지 않습니다."),
-    EMAIL_SENDING_FAILURE(UNAUTHORIZED, "AT_004", "이메일 전송에 실패했습니다. 잠시 후 다시 시도해 주세요."),
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "AT_002", "리프레시 토큰이 유효하지 않습니다. 다시 로그인해 주세요."),
+    REFRESH_TOKEN_NOT_FOUND(UNAUTHORIZED, "AT_003", "리프레시 토큰이 존재하지 않습니다."),
+    EMAIL_SENDING_FAILURE(INTERNAL_SERVER_ERROR, "AT_004", "이메일 전송에 실패했습니다. 잠시 후 다시 시도해 주세요."),
     INVALID_EMAIL_VERIFICATION_CODE(BAD_REQUEST, "AT_005", "이메일 인증 번호가 일치하지 않습니다. 다시 확인해 주세요."),
 
     // 인가(Authorization) - ATZ
@@ -34,10 +35,10 @@ public enum ErrorCode {
     INVALID_DATA_FORMAT(BAD_REQUEST, "DF_001", "입력한 데이터 형식이 올바르지 않습니다. 입력 형식을 확인해 주세요."),
 
     // 스토리지(Storage) - ST
-    FILE_STORAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ST_001", "파일을 저장할 수 없습니다. 잠시 후 다시 시도해 주세요."),
+    FILE_STORAGE_ERROR(INTERNAL_SERVER_ERROR, "ST_001", "파일을 저장할 수 없습니다. 잠시 후 다시 시도해 주세요."),
     EMPTY_FILE_ERROR(BAD_REQUEST, "ST_002", "업로드된 파일이 비어 있습니다. 유효한 파일을 선택해 주세요."),
-    FOLDER_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ST_003", "저장 폴더를 생성하지 못했습니다. 시스템 관리자에게 문의해 주세요."),
-    READ_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ST_004", "저장된 파일을 읽을 수 없습니다."),
+    FOLDER_CREATION_ERROR(INTERNAL_SERVER_ERROR, "ST_003", "저장 폴더를 생성하지 못했습니다. 시스템 관리자에게 문의해 주세요."),
+    READ_FILE_ERROR(INTERNAL_SERVER_ERROR, "ST_004", "저장된 파일을 읽을 수 없습니다."),
     FILE_NOT_FOUND(NOT_FOUND, "ST_005", "파일을 찾을 수 없습니다."),
 
     // 팀(Team) - TM
@@ -57,7 +58,7 @@ public enum ErrorCode {
     TASK_NOT_FOUND(NOT_FOUND, "TS_001", "해당 프로젝트 일정을 찾을 수 없습니다. 일정 정보를 확인해 주세요."),
 
     // 내부 서버 에러(Internal Server Error) - IS
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "IS_001", "문제가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+    APPLICATION_ERROR(INTERNAL_SERVER_ERROR, "IS_001", "문제가 발생했습니다. 잠시 후 다시 시도해 주세요.");
 
     private final HttpStatus status;
     private final String code;

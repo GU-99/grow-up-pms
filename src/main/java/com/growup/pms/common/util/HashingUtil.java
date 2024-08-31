@@ -19,7 +19,7 @@ public final class HashingUtil {
             byte[] hash = md.digest(input.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException ex) {
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new BusinessException(ErrorCode.APPLICATION_ERROR);
         }
     }
 }

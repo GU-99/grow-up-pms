@@ -63,6 +63,7 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mariadb'
+    testImplementation 'com.redis:testcontainers-redis:2.2.2'
     // REST Docs & Swagger UI
     testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.18.2'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'

@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
-public class H2DatabaseCleaner extends AbstractTestExecutionListener {
+public class MariaDatabaseCleaner extends AbstractTestExecutionListener {
     private JdbcTemplate jdbcTemplate;
 
     @Override
@@ -28,15 +28,15 @@ public class H2DatabaseCleaner extends AbstractTestExecutionListener {
     }
 
     private void enableReferentialIntegrity() {
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 
     private void disableReferentialIntegrity() {
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
     }
 
     private List<String> getAllTableNames() {
-        return jdbcTemplate.queryForList("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'", String.class);
+        return jdbcTemplate.queryForList("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'", String.class);
     }
 
     private void truncateAllTables() {
