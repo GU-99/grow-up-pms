@@ -125,7 +125,7 @@ public class UserService {
     }
 
     private void validateVerificationCode(String email, String verificationCode) {
-        if (!emailVerificationService.verifyAndInvalidateEmail(email, String.valueOf(verificationCode))) {
+        if (!emailVerificationService.verifyAndInvalidateEmail(email, verificationCode)) {
             throw new BusinessException(ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
         }
     }
