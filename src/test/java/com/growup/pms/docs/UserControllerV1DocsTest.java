@@ -86,6 +86,7 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
     }
 
     @Test
+    @WithMockSecurityUser(id = 1L)
     void 가입한_팀_목록_조회_API_문서를_생성한다() throws Exception {
         // given
         Long 사용자_ID = 1L;
