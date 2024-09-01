@@ -98,13 +98,13 @@ public class UserService {
 
         User user = userRepository.findByEmailOrThrow(command.email());
 
-        validateUsername(command.username(), user.getUsername());
+        validateUsernameMatch(command.username(), user.getUsername());
 
         String temporaryPassword = user.renewPassword(passwordEncoder);
         return new RecoverPasswordResponse(temporaryPassword);
     }
 
-    private void validateUsername(String inputUsername, String storedUsername) {
+    private void validateUsernameMatch(String inputUsername, String storedUsername) {
         if (!storedUsername.equals(inputUsername)) {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }
