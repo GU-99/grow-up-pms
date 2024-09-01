@@ -4,6 +4,7 @@ import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가�
 import static com.growup.pms.test.fixture.user.UserPasswordUpdateTestBuilder.비밀번호_변경은;
 import static com.growup.pms.test.fixture.user.UserSearchResponseTestBuilder.사용자_검색_응답은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.user.UserUpdateRequestTestBuilder.사용자_정보_변경_요청은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,10 +18,12 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
+import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
-import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
+import com.growup.pms.user.service.dto.UserCreateCommand;
+import com.growup.pms.user.service.dto.UserUpdateCommand;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -155,6 +158,51 @@ class UserServiceTest {
             assertThatThrownBy(() -> userService.updatePassword(기존_사용자.getId(), 비밀번호_변경_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_PASSWORD);
+        }
+    }
+
+    @Nested
+    class 유저_정보_변경_시에 {
+
+        @Test
+        void 성공한다() {
+            //given
+            User 기존_사용자 = 사용자는().이다();
+            String 변경할_닉네임 = "wlshooo";
+            String 변경할_자기소개 = "신입입니다. 잘 부탁드려요!";
+            String 변경할_프로필_이미지_URL = "http://example.com/profile.png";
+            List<String> 링크 = List.of("http://github.com", "http://blog.example.com");
+
+            UserUpdateCommand 사용자_정보_변경_요청 = 사용자_정보_변경_요청은()
+                    .닉네임이(변경할_닉네임).자기소개는(변경할_자기소개).프로필_이미지_URL이(변경할_프로필_이미지_URL).링크가(링크).이다().toCommand();
+
+            when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
+
+            //when
+            UserUpdateResponse 변경된_유저_정보 = userService.updateUserDetails(기존_사용자.getId(), 사용자_정보_변경_요청);
+
+            //then
+            assertThat(변경된_유저_정보.links()).hasSize(2);
+            assertThat(변경된_유저_정보)
+                    .extracting("userId", "nickname", "imageUrl", "bio", "links")
+                    .contains(1L, 변경할_닉네임, 변경할_자기소개, 변경할_프로필_이미지_URL, 링크);
+        }
+
+        @Test
+        void 링크가_5개를_초과하면_예외가_발생한다() {
+            //given
+            User 기존_사용자 = 사용자는().이다();
+            List<String> 링크 = List.of("http://github.com", "http://blog.example.com",
+                    "http://GU-99.com", "http://longBright.com", "http://yachimiy.com", "http://wlshooo.com");
+
+            UserUpdateCommand 사용자_정보_변경_요청 = 사용자_정보_변경_요청은().링크가(링크).이다().toCommand();
+
+            when(userRepository.findByIdOrThrow(기존_사용자.getId())).thenReturn(기존_사용자);
+
+            //when & then
+            assertThatThrownBy(()-> userService.updateUserDetails(기존_사용자.getId(), 사용자_정보_변경_요청))
+                    .isInstanceOf(IllegalStateException.class)
+                    .hasMessage("더 이상 링크를 등록할 수 없습니다.");
         }
     }
 }
