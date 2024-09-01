@@ -2,8 +2,9 @@ package com.growup.pms.user.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
-import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
+import com.growup.pms.user.controller.dto.request.RecoverRequest;
+import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
@@ -16,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,13 +38,13 @@ public class UserControllerV1 {
     }
 
     @PostMapping("/file")
-    public ResponseEntity<Void> upload(@AuthenticationPrincipal SecurityUser user, @Valid UserUploadRequest request) {
+    public ResponseEntity<Void> upload(@CurrentUser SecurityUser user, @Valid @RequestBody UserUploadRequest request) {
         userService.uploadImage(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/file")
-    public ResponseEntity<Resource> download(@AuthenticationPrincipal SecurityUser user) {
+    public ResponseEntity<Resource> download(@CurrentUser SecurityUser user) {
         UserDownloadCommand command = userService.imageDownload(user.getId());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + command.imageName() + "\"")
@@ -61,6 +61,12 @@ public class UserControllerV1 {
         return ResponseEntity.ok().body(userService.getAllUserTeams(user.getId()));
     }
 
+    @PostMapping("/recover/username")
+    public ResponseEntity<Void> recoverUsername(@Valid @RequestBody RecoverRequest request) {
+        userService.recoverUsername(request.toCommand());
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/verify/send")
     public ResponseEntity<Void> sendVerificationCode(String email) {
         userService.sendVerificationCode(email);
@@ -68,8 +74,10 @@ public class UserControllerV1 {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@CurrentUser SecurityUser user,
-                                               @Valid @RequestBody PasswordUpdateRequest request) {
+    public ResponseEntity<Void> updatePassword(
+            @CurrentUser SecurityUser user,
+            @Valid @RequestBody PasswordUpdateRequest request
+    ) {
         userService.updatePassword(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }

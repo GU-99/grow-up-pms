@@ -4,13 +4,15 @@ import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.storage.service.StorageService;
+import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import com.growup.pms.user.service.dto.PasswordUpdateCommand;
+import com.growup.pms.user.service.dto.RecoverCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
-import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +81,14 @@ public class UserService {
         user.changePassword(passwordEncoder, command.newPassword());
     }
 
+    public RecoverUsernameResponse recoverUsername(RecoverCommand command) {
+        validateVerificationCode(command.email(), command.verificationCode());
+
+        User user = userRepository.findByEmailOrThrow(command.email());
+
+        return new RecoverUsernameResponse(user.getUsername());
+    }
+
     private void validateCurrentPassword(String inputPassword, String storedPassword) {
         if (!passwordEncoder.matches(inputPassword, storedPassword)) {
             throw new BusinessException(ErrorCode.INVALID_PASSWORD);
@@ -93,7 +103,7 @@ public class UserService {
         return userRepository.findAllUserTeams(userId);
     }
 
-    private void validateVerificationCode(String email, int verificationCode) {
+    private void validateVerificationCode(String email, String verificationCode) {
         if (!emailVerificationService.verifyAndInvalidateEmail(email, String.valueOf(verificationCode))) {
             throw new BusinessException(ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
         }
