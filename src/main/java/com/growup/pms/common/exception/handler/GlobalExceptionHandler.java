@@ -45,9 +45,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<String> handleException(Exception ex, HttpServletRequest request) {
+    protected ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
         LogFormatter.error(ex, request);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body(ErrorResponse.of(ErrorCode.APPLICATION_ERROR));
     }
 }
