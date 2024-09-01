@@ -1,18 +1,24 @@
 package com.growup.pms.user.service;
 
+import static com.growup.pms.user.domain.User.MIN_PASSWORD_LENGTH;
+
 import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.storage.service.StorageService;
+import com.growup.pms.common.util.RandomPasswordGenerator;
+import com.growup.pms.common.util.RandomPasswordGenerator.PasswordOptions;
+import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
+import com.growup.pms.user.service.dto.RecoverPasswordCommand;
+import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
-import com.growup.pms.user.service.dto.UserRecoveryCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -81,12 +87,38 @@ public class UserService {
         user.changePassword(passwordEncoder, command.newPassword());
     }
 
-    public RecoverUsernameResponse recoverUsername(UserRecoveryCommand command) {
+    public RecoverUsernameResponse recoverUsername(RecoverUsernameCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
 
         User user = userRepository.findByEmailOrThrow(command.email());
 
         return new RecoverUsernameResponse(user.getUsername());
+    }
+
+    @Transactional
+    public RecoverPasswordResponse recoverPassword(RecoverPasswordCommand command) {
+        validateVerificationCode(command.email(), command.verificationCode());
+
+        User user = userRepository.findByEmailOrThrow(command.email());
+
+        validateUsername(command.username(), user.getUsername());
+
+        String newPassword = RandomPasswordGenerator.generatePassword(MIN_PASSWORD_LENGTH,
+                PasswordOptions.builder()
+                        .includeLower(true)
+                        .includeUpper(true)
+                        .includeDigits(true)
+                        .includeSpecial(true)
+                        .build());
+
+        user.changePassword(passwordEncoder, newPassword);
+        return new RecoverPasswordResponse(newPassword);
+    }
+
+    private void validateUsername(String inputUsername, String storedUsername) {
+        if (!storedUsername.equals(inputUsername)) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
+        }
     }
 
     private void validateCurrentPassword(String inputPassword, String storedPassword) {

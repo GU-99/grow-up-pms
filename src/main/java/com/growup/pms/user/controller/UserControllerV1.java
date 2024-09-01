@@ -3,9 +3,11 @@ package com.growup.pms.user.controller;
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
+import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
+import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
-import com.growup.pms.user.controller.dto.request.UserRecoveryRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
+import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
@@ -63,8 +65,13 @@ public class UserControllerV1 {
     }
 
     @PostMapping("/recover/username")
-    public ResponseEntity<RecoverUsernameResponse> recoverUsername(@Valid @RequestBody UserRecoveryRequest request) {
+    public ResponseEntity<RecoverUsernameResponse> recoverUsername(@Valid @RequestBody RecoverUsernameRequest request) {
         return ResponseEntity.ok().body(userService.recoverUsername(request.toCommand()));
+    }
+
+    @PostMapping("/recover/password")
+    public ResponseEntity<RecoverPasswordResponse> recoverPassword(@Valid @RequestBody RecoverPasswordRequest request) {
+        return ResponseEntity.ok().body(userService.recoverPassword(request.toCommand()));
     }
 
     @PostMapping("/verify/send")

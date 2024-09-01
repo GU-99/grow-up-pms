@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HashingUtil {
+
     private static final String DEFAULT_HASHING_ALGORITHM = "SHA-256";
 
     public static String generateHash(final String input) {
