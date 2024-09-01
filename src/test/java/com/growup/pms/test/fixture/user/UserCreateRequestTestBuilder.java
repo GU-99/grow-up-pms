@@ -18,7 +18,7 @@ public class UserCreateRequestTestBuilder {
     private String bio = "안녕하세요, 브라운입니다!";
     private String imageUrl = "https://example.org/attachments/img1.png";
     private List<String> links = List.of("http://example.com");
-    private int verificationCode = 123456;
+    private String verificationCode = "123456";
 
     public static UserCreateRequestTestBuilder 가입하는_사용자는() {
         return new UserCreateRequestTestBuilder();
@@ -68,7 +68,7 @@ public class UserCreateRequestTestBuilder {
         return this;
     }
 
-    public UserCreateRequestTestBuilder 인증번호가(int 인증번호) {
+    public UserCreateRequestTestBuilder 인증번호가(String 인증번호) {
         this.verificationCode = 인증번호;
         return this;
     }
@@ -80,7 +80,7 @@ public class UserCreateRequestTestBuilder {
                 .email(email)
                 .nickname(nickname)
                 .bio(bio)
-                .imageUrl(imageUrl)
+                .profileImageUrl(imageUrl)
                 .links(links)
                 .verificationCode(verificationCode)
                 .build();

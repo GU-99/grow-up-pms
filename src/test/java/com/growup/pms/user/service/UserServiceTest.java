@@ -1,5 +1,7 @@
 package com.growup.pms.user.service;
 
+import static com.growup.pms.test.fixture.user.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
+import static com.growup.pms.test.fixture.user.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
 import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
 import static com.growup.pms.test.fixture.user.UserPasswordUpdateTestBuilder.비밀번호_변경은;
 import static com.growup.pms.test.fixture.user.UserSearchResponseTestBuilder.사용자_검색_응답은;
@@ -16,11 +18,15 @@ import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
+import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
-import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
+import com.growup.pms.user.service.dto.RecoverPasswordCommand;
+import com.growup.pms.user.service.dto.RecoverUsernameCommand;
+import com.growup.pms.user.service.dto.UserCreateCommand;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -155,6 +161,96 @@ class UserServiceTest {
             assertThatThrownBy(() -> userService.updatePassword(기존_사용자.getId(), 비밀번호_변경_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_PASSWORD);
+        }
+    }
+
+    @Nested
+    class 아이디_찾기_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            String 연결된_이메일 = "brown@example.com";
+            User 잃어버린_계정 = 사용자는().이메일이(연결된_이메일).이다();
+            RecoverUsernameCommand 아이디_찾기_요청 = 아이디_찾기_요청은().이메일이(연결된_이메일).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(연결된_이메일, String.valueOf(아이디_찾기_요청.verificationCode()))).thenReturn(true);
+            when(userRepository.findByEmailOrThrow(연결된_이메일)).thenReturn(잃어버린_계정);
+
+            // when
+            RecoverUsernameResponse 실제_결과 = userService.recoverUsername(아이디_찾기_요청);
+
+            // then
+            assertThat(실제_결과.username()).isEqualTo(잃어버린_계정.getUsername());
+        }
+
+        @Test
+        void 이메일_인증에_실패하면_예외가_발생한다() {
+            // given
+            String 연결된_이메일 = "brown@example.com";
+            RecoverUsernameCommand 아이디_찾기_요청 = 아이디_찾기_요청은().이메일이(연결된_이메일).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(연결된_이메일, String.valueOf(아이디_찾기_요청.verificationCode()))).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> userService.recoverUsername(아이디_찾기_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
+        }
+    }
+
+    @Nested
+    class 비밀번호_찾기_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            String 연결된_이메일 = "brown@example.com";
+            String 연결된_아이디 = "brown";
+            User 잃어버린_계정 = 사용자는().이메일이(연결된_이메일).아이디가(연결된_아이디).이다();
+            RecoverPasswordCommand 비밀번호_찾기_요청 = 비밀번호_찾기_요청은().이메일이(연결된_이메일).아이디가(연결된_아이디).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(연결된_이메일, String.valueOf(비밀번호_찾기_요청.verificationCode()))).thenReturn(true);
+            when(userRepository.findByEmailOrThrow(연결된_이메일)).thenReturn(잃어버린_계정);
+
+            // when
+            RecoverPasswordResponse 실제_결과 = userService.recoverPassword(비밀번호_찾기_요청);
+
+            // then
+            assertThat(실제_결과.password()).isNotEmpty();
+        }
+
+        @Test
+        void 이메일_인증에_실패하면_예외가_발생한다() {
+            // given
+            String 연결된_이메일 = "brown@example.com";
+            String 연결된_아이디 = "brown";
+            RecoverPasswordCommand 비밀번호_찾기_요청 = 비밀번호_찾기_요청은().이메일이(연결된_이메일).아이디가(연결된_아이디).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(연결된_이메일, String.valueOf(비밀번호_찾기_요청.verificationCode()))).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> userService.recoverPassword(비밀번호_찾기_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
+        }
+
+        @Test
+        void 사용자_아이디가_일치하지_않으면_예외가_발생한다() {
+            // given
+            String 연결된_이메일 = "brown@example.com";
+            String 연결된_아이디 = "brown";
+            String 입력된_아이디 = "incorrect_username";
+            User 잃어버린_계정 = 사용자는().이메일이(연결된_이메일).아이디가(연결된_아이디).이다();
+            RecoverPasswordCommand 비밀번호_찾기_요청 = 비밀번호_찾기_요청은().이메일이(연결된_이메일).아이디가(입력된_아이디).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(연결된_이메일, String.valueOf(비밀번호_찾기_요청.verificationCode()))).thenReturn(true);
+            when(userRepository.findByEmailOrThrow(연결된_이메일)).thenReturn(잃어버린_계정);
+
+            // when & then
+            assertThatThrownBy(() -> userService.recoverPassword(비밀번호_찾기_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_NOT_FOUND);
         }
     }
 }
