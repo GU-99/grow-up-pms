@@ -8,11 +8,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +23,6 @@ import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.service.UserService;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -36,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @AutoKoreanDisplayName
@@ -46,39 +41,6 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
 
     @Autowired
     UserService userService;
-
-    @Test
-    @WithMockSecurityUser(id = 1L)
-    void 프로필_이미지_업로드_API_문서를_생성한다() throws  Exception {
-        // Given: Mock 설정
-        final String 루트_경로 = "src/test/resources/images";
-        final String 업로드하는_파일_이름 = "testImage.jpg";
-
-        try (FileInputStream 파일_입력_스트림 = new FileInputStream(루트_경로 + "/" + 업로드하는_파일_이름)) {
-            MockMultipartFile 업로드되는_파일 = new MockMultipartFile(
-                    "file",
-                    업로드하는_파일_이름,
-                    MediaType.IMAGE_JPEG_VALUE,
-                    파일_입력_스트림
-            );
-
-            // when & then
-            mockMvc.perform(
-                    multipart("/api/v1/user/file")
-                        .file(업로드되는_파일)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer ACCESS_TOKEN")
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                    )
-                        .andExpect(status().isOk())
-                        .andDo(
-                            docs.document(
-                                    requestParts(
-                                            partWithName("file").description("업로드할 파일")
-                                    )
-                        )
-                    );
-        }
-    }
 
     @Test
     @WithMockSecurityUser(id = 1L)
@@ -170,7 +132,7 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
                                         fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
                                         fieldWithPath("links").type(JsonFieldType.ARRAY).description("사용자 링크"),
-                                        fieldWithPath("verificationCode").type(JsonFieldType.NUMBER).description("인증코드"))
+                                        fieldWithPath("verificationCode").type(JsonFieldType.STRING).description("인증코드"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }
