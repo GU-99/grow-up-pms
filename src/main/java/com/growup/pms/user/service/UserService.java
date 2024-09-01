@@ -20,6 +20,7 @@ import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
+import com.growup.pms.user.service.dto.VerificationCodeCreateCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -52,8 +53,8 @@ public class UserService {
     }
 
     @Transactional(propagation = Propagation.NEVER)
-    public void sendVerificationCode(String email) {
-        emailVerificationService.sendVerificationCode(email);
+    public void sendVerificationCode(VerificationCodeCreateCommand command) {
+        emailVerificationService.sendVerificationCode(command.email());
     }
 
     @Transactional

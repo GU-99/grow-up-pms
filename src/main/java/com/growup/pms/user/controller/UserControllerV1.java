@@ -7,6 +7,7 @@ import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
 import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
+import com.growup.pms.user.controller.dto.request.VerificationCodeCreateRequest;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
@@ -75,8 +76,8 @@ public class UserControllerV1 {
     }
 
     @PostMapping("/verify/send")
-    public ResponseEntity<Void> sendVerificationCode(String email) {
-        userService.sendVerificationCode(email);
+    public ResponseEntity<Void> sendVerificationCode(@Valid @RequestBody VerificationCodeCreateRequest request) {
+        userService.sendVerificationCode(request.toCommand());
         return ResponseEntity.ok().build();
     }
 
