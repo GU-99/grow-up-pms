@@ -1,13 +1,9 @@
 package com.growup.pms.user.service;
 
-import static com.growup.pms.user.domain.User.MIN_PASSWORD_LENGTH;
-
 import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.storage.service.StorageService;
-import com.growup.pms.common.util.RandomPasswordGenerator;
-import com.growup.pms.common.util.RandomPasswordGenerator.PasswordOptions;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
@@ -104,16 +100,8 @@ public class UserService {
 
         validateUsername(command.username(), user.getUsername());
 
-        String newPassword = RandomPasswordGenerator.generatePassword(MIN_PASSWORD_LENGTH,
-                PasswordOptions.builder()
-                        .includeLower(true)
-                        .includeUpper(true)
-                        .includeDigits(true)
-                        .includeSpecial(true)
-                        .build());
-
-        user.changePassword(passwordEncoder, newPassword);
-        return new RecoverPasswordResponse(newPassword);
+        String temporaryPassword = user.renewPassword(passwordEncoder);
+        return new RecoverPasswordResponse(temporaryPassword);
     }
 
     private void validateUsername(String inputUsername, String storedUsername) {

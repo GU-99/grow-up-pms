@@ -1,6 +1,8 @@
 package com.growup.pms.user.domain;
 
 import com.growup.pms.common.BaseEntity;
+import com.growup.pms.common.util.RandomPasswordGenerator;
+import com.growup.pms.common.util.RandomPasswordGenerator.PasswordOptions;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -87,6 +89,18 @@ public class User extends BaseEntity {
     public void changePassword(PasswordEncoder passwordEncoder, String newPassword) {
         password = passwordEncoder.encode(newPassword);
         passwordChangeDate = LocalDateTime.now();
+    }
+
+    public String renewPassword(PasswordEncoder passwordEncoder) {
+        String newPassword = RandomPasswordGenerator.generatePassword(MIN_PASSWORD_LENGTH,
+                PasswordOptions.builder()
+                        .includeLower(true)
+                        .includeUpper(true)
+                        .includeDigits(true)
+                        .includeSpecial(true)
+                        .build());
+        changePassword(passwordEncoder, newPassword);
+        return newPassword;
     }
 
     public void replaceProfileImage(String image) {
