@@ -1,5 +1,8 @@
 package com.growup.pms.common.util;
 
+import static com.growup.pms.user.domain.User.MAX_PASSWORD_LENGTH;
+import static com.growup.pms.user.domain.User.MIN_PASSWORD_LENGTH;
+
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -37,8 +40,9 @@ public final class RandomPasswordGenerator {
     }
 
     private static void validatePasswordPolicy(int length, PasswordOptions options) {
-        if (length < 8 || length > 16) {
-            throw new IllegalArgumentException("비밀번호 길이는 8 이상 16 이하여야 합니다.");
+        if (length < MIN_PASSWORD_LENGTH || length > MAX_PASSWORD_LENGTH) {
+            throw new IllegalArgumentException("비밀번호 길이는 %d 이상 %d 이하여야 합니다."
+                    .formatted(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
         }
 
         if (!(options.includeLower() || options.includeUpper() || options.includeDigits() || options.includeSpecial())) {
