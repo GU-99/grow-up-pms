@@ -15,7 +15,7 @@ public record UserCreateCommand(
         String bio,
         String imageUrl,
         List<String> links,
-        int verificationCode
+        String verificationCode
 ) {
     public User toEntity() {
         User user = User.builder()
