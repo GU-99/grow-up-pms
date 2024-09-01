@@ -10,9 +10,9 @@ import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
-import com.growup.pms.user.service.dto.RecoverCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
+import com.growup.pms.user.service.dto.UserRecoveryCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +81,7 @@ public class UserService {
         user.changePassword(passwordEncoder, command.newPassword());
     }
 
-    public RecoverUsernameResponse recoverUsername(RecoverCommand command) {
+    public RecoverUsernameResponse recoverUsername(UserRecoveryCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
 
         User user = userRepository.findByEmailOrThrow(command.email());
