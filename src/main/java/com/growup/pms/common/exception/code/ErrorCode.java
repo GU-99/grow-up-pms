@@ -19,7 +19,7 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "AT_002", "리프레시 토큰이 유효하지 않습니다. 다시 로그인해 주세요."),
     REFRESH_TOKEN_NOT_FOUND(UNAUTHORIZED, "AT_003", "리프레시 토큰이 존재하지 않습니다."),
     EMAIL_SENDING_FAILURE(INTERNAL_SERVER_ERROR, "AT_004", "이메일 전송에 실패했습니다. 잠시 후 다시 시도해 주세요."),
-    INVALID_EMAIL_VERIFICATION_CODE(BAD_REQUEST, "AT_005", "이메일 인증 번호가 일치하지 않습니다. 다시 확인해 주세요."),
+    INVALID_EMAIL_VERIFICATION_CODE(UNAUTHORIZED, "AT_005", "이메일 인증 번호가 일치하지 않습니다. 다시 확인해 주세요."),
 
     // 인가(Authorization) - ATZ
     ACCESS_DENIED(FORBIDDEN, "ATZ_001", "해당 리소스에 대한 접근 권한이 없습니다. 관리자에게 문의해 주세요."),
