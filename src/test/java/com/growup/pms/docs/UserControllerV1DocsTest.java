@@ -168,7 +168,7 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
                                         fieldWithPath("links").type(JsonFieldType.ARRAY).description("사용자 링크"),
                                         fieldWithPath("verificationCode").type(JsonFieldType.NUMBER).description("인증코드"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
