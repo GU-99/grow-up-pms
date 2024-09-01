@@ -89,7 +89,6 @@ public final class RandomPasswordGenerator {
                 .collect(Collectors.joining());
     }
 
-    @Getter
     @Builder
     public record PasswordOptions(
             boolean includeLower,
