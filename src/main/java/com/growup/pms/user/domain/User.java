@@ -87,21 +87,22 @@ public class User extends BaseEntity {
     }
 
     public void replaceProfileImage(String image) {
-        this.profile.setImage(image);
+        this.profile.changeImage(image);
     }
 
     public void updateImageName(String imageName) {
-        this.profile.setImageName(imageName);
+        this.profile.changeImageName(imageName);
     }
   
-    public void addLink(String link) {
-        if (links.size() > MAX_LINKS_PER_USER) {
+    private void addLink(String link) {
+        if (links.size() >= MAX_LINKS_PER_USER) {
             throw new IllegalStateException("더 이상 링크를 등록할 수 없습니다.");
         }
         links.add(new UserLink(this, link));
     }
 
     public void addLinks(List<String> links) {
+        this.links.clear();
         if (links != null) {
             links.forEach(this::addLink);
         }
@@ -109,5 +110,11 @@ public class User extends BaseEntity {
 
     public void removeLink(String link) {
         links.removeIf(item -> item.getLink().equals(link));
+    }
+
+    public void updateProfile(String nickname, String bio, String imageUrl) {
+        this.profile.changeNickname(nickname);
+        this.profile.changeBio(bio);
+        this.profile.changeImage(imageUrl);
     }
 }

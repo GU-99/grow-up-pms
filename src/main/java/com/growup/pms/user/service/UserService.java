@@ -6,11 +6,14 @@ import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
+import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
+import com.growup.pms.user.domain.UserLink;
 import com.growup.pms.user.repository.UserRepository;
+import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
-import com.growup.pms.user.service.dto.PasswordUpdateCommand;
+import com.growup.pms.user.service.dto.UserUpdateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -77,6 +80,17 @@ public class UserService {
         validateCurrentPassword(user.getPassword(), command.password());
 
         user.changePassword(passwordEncoder, command.newPassword());
+    }
+
+    @Transactional
+    public UserUpdateResponse updateUserDetails(Long userId, UserUpdateCommand command) {
+        User user = userRepository.findByIdOrThrow(userId);
+
+        user.updateProfile(command.nickname(), command.bio(), command.imageUrl());
+        user.addLinks(command.links());
+
+        List<String> userLinks = user.getLinks().stream().map(UserLink::getLink).toList();
+        return UserUpdateResponse.of(user, userLinks);
     }
 
     private void validateCurrentPassword(String inputPassword, String storedPassword) {
