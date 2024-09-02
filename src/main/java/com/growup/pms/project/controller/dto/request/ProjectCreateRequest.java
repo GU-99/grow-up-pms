@@ -1,5 +1,7 @@
 package com.growup.pms.project.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.LOCAL_DATE_PATTERN;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.growup.pms.project.service.dto.ProjectCreateCommand;
 import jakarta.validation.constraints.NotBlank;
@@ -23,10 +25,10 @@ public class ProjectCreateRequest {
     @Size(max = 200)
     private String content;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = LOCAL_DATE_PATTERN)
     private LocalDate startDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = LOCAL_DATE_PATTERN)
     private LocalDate endDate;
 
     private List<ProjectUserCreateRequest> coworkers;

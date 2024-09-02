@@ -1,6 +1,6 @@
 package com.growup.pms.task.controller.dto.response;
 
-import static com.growup.pms.common.constant.RegexConstants.DATE_TIME_PATTERN;
+import static com.growup.pms.common.constant.RegexConstants.LOCAL_DATE_PATTERN;
 
 import com.growup.pms.task.domain.Task;
 import java.time.LocalDate;
@@ -50,6 +50,6 @@ public class TaskDetailResponse {
     }
 
     private static String formatDateOrNull(LocalDate localDAte) {
-        return localDAte != null ? localDAte.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)) : null;
+        return localDAte != null ? localDAte.format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN)) : null;
     }
 }
