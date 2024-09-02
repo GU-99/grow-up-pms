@@ -7,6 +7,7 @@ import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static com.growup.pms.test.fixture.user.UserUpdateRequestTestBuilder.사용자_정보_변경_요청은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -182,10 +183,12 @@ class UserServiceTest {
             UserUpdateResponse 변경된_유저_정보 = userService.updateUserDetails(기존_사용자.getId(), 사용자_정보_변경_요청);
 
             //then
-            assertThat(변경된_유저_정보.links()).hasSize(2);
-            assertThat(변경된_유저_정보)
-                    .extracting("userId", "nickname", "imageUrl", "bio", "links")
-                    .contains(1L, 변경할_닉네임, 변경할_자기소개, 변경할_프로필_이미지_URL, 링크);
+            assertSoftly(softly -> {
+                softly.assertThat(변경된_유저_정보.links()).hasSize(2);
+                softly.assertThat(변경된_유저_정보)
+                        .extracting("userId", "nickname", "imageUrl", "bio", "links")
+                        .contains(1L, 변경할_닉네임, 변경할_자기소개, 변경할_프로필_이미지_URL, 링크);
+            });
         }
 
         @Test
