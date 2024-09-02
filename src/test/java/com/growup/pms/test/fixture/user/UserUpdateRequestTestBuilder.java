@@ -15,7 +15,9 @@ public class UserUpdateRequestTestBuilder {
     private String imageUrl = "http://example.com/profile.png";
     private List<String> links = List.of("http://github.com", "http://blog.example.com");
 
-    public static UserUpdateRequestTestBuilder 사용자_정보_변경_요청은() {return new UserUpdateRequestTestBuilder(); }
+    public static UserUpdateRequestTestBuilder 사용자_정보_변경_요청은() {
+        return new UserUpdateRequestTestBuilder();
+    }
 
     public UserUpdateRequestTestBuilder 닉네임이(String 닉네임) {
         this.nickname = 닉네임;
