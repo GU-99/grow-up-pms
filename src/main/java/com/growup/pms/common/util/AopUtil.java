@@ -3,11 +3,15 @@ package com.growup.pms.common.util;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.stream.IntStream;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
-public interface AopUtil {
-    static List<Parameter> extractAnnotatedParameters(JoinPoint joinPoint, Class<? extends Annotation> clazz) {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class AopUtil {
+
+    public static List<Parameter> extractAnnotatedParameters(JoinPoint joinPoint, Class<? extends Annotation> clazz) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         java.lang.reflect.Parameter[] parameters = signature.getMethod().getParameters();
         Object[] args = joinPoint.getArgs();
@@ -18,14 +22,14 @@ public interface AopUtil {
                 .toList();
     }
 
-    static List<Parameter> filterAnnotatedParametersByType(JoinPoint joinPoint, Class<? extends Annotation> annotationClass, Class<?> parameterType) {
+    public static List<Parameter> filterAnnotatedParametersByType(JoinPoint joinPoint, Class<? extends Annotation> annotationClass, Class<?> parameterType) {
         return extractAnnotatedParameters(joinPoint, annotationClass).stream()
                 .filter(param -> parameterType.isAssignableFrom(param.type))
                 .toList();
     }
 
     @SuppressWarnings("unchecked")
-    static <T> T findFirstAnnotatedParameterOfType(JoinPoint joinPoint, Class<? extends Annotation> annotationClass, Class<T> parameterType) {
+    public static <T> T findFirstAnnotatedParameterOfType(JoinPoint joinPoint, Class<? extends Annotation> annotationClass, Class<T> parameterType) {
         return filterAnnotatedParametersByType(joinPoint, annotationClass, parameterType).stream()
                 .findFirst()
                 .map(param -> (T) param.value)
@@ -33,5 +37,5 @@ public interface AopUtil {
                         .formatted(annotationClass.getSimpleName(), parameterType.getSimpleName())));
     }
 
-    record Parameter(String name, Object value, Class<?> type) { }
+    public record Parameter(String name, Object value, Class<?> type) { }
 }

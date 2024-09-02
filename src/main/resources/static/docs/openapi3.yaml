@@ -78,7 +78,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-user-1578985727'
+              $ref: '#/components/schemas/api-v1-user624768080'
             examples:
               user-controller-v1-docs-test/사용자_일반_회원가입_api_문서를_생성한다:
                 value: |-
@@ -88,9 +88,9 @@ paths:
                     "email" : "brown@example.com",
                     "nickname" : "브라운",
                     "bio" : "안녕하세요, 브라운입니다!",
-                    "imageUrl" : "https://example.org/attachments/img1.png",
+                    "profileImageUrl" : "https://example.org/attachments/img1.png",
                     "links" : [ "http://example.com" ],
-                    "verificationCode" : 123456
+                    "verificationCode" : "123456"
                   }
       responses:
         "201":
@@ -940,6 +940,36 @@ paths:
               description: 새 리프레시 토큰
               schema:
                 type: string
+  /api/v1/user/team:
+    get:
+      tags:
+      - User
+      summary: 가입한 팀 목록 조회
+      description: 가입한 팀이거나 가입 대기 중인 팀의 목록을 조회합니다.
+      operationId: user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Content-Type:
+              description: application/json
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-user-team1301002808'
+              examples:
+                user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "teamId" : 1,
+                      "name" : "팀 이름",
+                      "content" : "팀 소개",
+                      "creator" : "팀장 닉네임",
+                      "isPendingApproval" : true,
+                      "role" : "MATE"
+                    } ]
   /api/v1/project/{projectId}/status:
     get:
       tags:
@@ -1057,18 +1087,18 @@ paths:
                 task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
                   value: |-
                     {
-                      "2" : [ {
-                        "taskId" : 2,
-                        "statusId" : 2,
-                        "taskName" : "프로젝트 일정 등록 기능 구현",
-                        "username" : "Hello2",
-                        "sortOrder" : 1
-                      } ],
                       "1" : [ {
                         "taskId" : 1,
                         "statusId" : 1,
                         "taskName" : "환경설정 마치기",
                         "username" : "Hello나는팀원1",
+                        "sortOrder" : 1
+                      } ],
+                      "2" : [ {
+                        "taskId" : 2,
+                        "statusId" : 2,
+                        "taskName" : "프로젝트 일정 등록 기능 구현",
+                        "username" : "Hello2",
                         "sortOrder" : 1
                       } ]
                     }
@@ -1297,6 +1327,87 @@ paths:
               description: 생성된 프로젝트 URL
               schema:
                 type: string
+  /api/v1/user/recover/password:
+    post:
+      tags:
+      - User
+      summary: 비밀번호 찾기
+      description: 이메일 인증과 아이디를 통해서 사용자에게 임시 비밀번호를 발급한다.
+      operationId: user-controller-v1-docs-test/비밀번호_찾기_api_문서를_생성한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-user-recover-password546453054'
+            examples:
+              user-controller-v1-docs-test/비밀번호_찾기_api_문서를_생성한다:
+                value: |-
+                  {
+                    "email" : "brown@example.com",
+                    "username" : "brown",
+                    "verificationCode" : "123456"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-user-recover-password1699166416'
+              examples:
+                user-controller-v1-docs-test/비밀번호_찾기_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "password" : "napl1m!A"
+                    }
+  /api/v1/user/recover/username:
+    post:
+      tags:
+      - User
+      summary: 아이디 찾기
+      description: 이메일 인증을 통해 사용자의 아이디를 찾는다.
+      operationId: user-controller-v1-docs-test/아이디_찾기_api_문서를_생성한다
+      parameters:
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-user-recover-username-1963233032'
+            examples:
+              user-controller-v1-docs-test/아이디_찾기_api_문서를_생성한다:
+                value: |-
+                  {
+                    "email" : "brown@example.com",
+                    "verificationCode" : "123456"
+                  }
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-user-recover-username1645263616'
+              examples:
+                user-controller-v1-docs-test/아이디_찾기_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "username" : "brown"
+                    }
   /api/v1/user/verify/send:
     post:
       tags:
@@ -1622,39 +1733,15 @@ components:
         colorCode:
           type: string
           description: 변경할 색상 코드
-    api-v1-user-1578985727:
+    api-v1-user-recover-username-1963233032:
       type: object
       properties:
-        password:
-          type: string
-          description: 비밀번호
-        imageUrl:
-          type: string
-          description: 프로필 이미지 URL
-        nickname:
-          type: string
-          description: 닉네임
-        bio:
-          type: string
-          description: 자기소개
-        links:
-          type: array
-          description: 사용자 링크
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
         email:
           type: string
-          description: 이메일
+          description: 가입 시 입력한 이메일
         verificationCode:
-          type: number
-          description: 인증코드
-        username:
           type: string
-          description: 사용자 아이디
+          description: 이메일로 전송된 인증번호
     프로젝트 일정 생성 요청 예시입니다.:
       title: 프로젝트 일정 생성 요청 예시입니다.
       type: object
@@ -1723,6 +1810,51 @@ components:
         username:
           type: string
           description: 회원 이름
+    api-v1-user-recover-password546453054:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 가입 시 입력한 이메일
+        verificationCode:
+          type: string
+          description: 이메일로 전송된 인증번호
+        username:
+          type: string
+          description: 가입 시 입력한 아이디
+    api-v1-user624768080:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        nickname:
+          type: string
+          description: 닉네임
+        bio:
+          type: string
+          description: 자기소개
+        links:
+          type: array
+          description: 사용자 링크
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        profileImageUrl:
+          type: string
+          description: 프로필 이미지 URL
+        email:
+          type: string
+          description: 이메일
+        verificationCode:
+          type: string
+          description: 인증코드
+        username:
+          type: string
+          description: 사용자 아이디
     api-v1-team-teamId-project-557506802:
       type: array
       description: 팀 ID에 해당하는 프로젝트 목록
@@ -1775,6 +1907,12 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
+    api-v1-user-recover-username1645263616:
+      type: object
+      properties:
+        username:
+          type: string
+          description: 복구된 사용자의 아이디
     api-v1-team-id-1408924108:
       type: object
       properties:
@@ -1808,6 +1946,29 @@ components:
         colorCode:
           type: string
           description: 색상 코드
+    api-v1-user-team1301002808:
+      type: array
+      items:
+        type: object
+        properties:
+          creator:
+            type: string
+            description: 팀장 닉네임
+          role:
+            type: string
+            description: 팀 내에서의 역할
+          teamId:
+            type: number
+            description: 팀 ID
+          name:
+            type: string
+            description: 팀 이름
+          isPendingApproval:
+            type: boolean
+            description: 가입 대기 여부
+          content:
+            type: string
+            description: 팀 소개
     api-v1-project-projectId-status1220278061:
       type: array
       items:
@@ -1853,6 +2014,12 @@ components:
         content:
           type: string
           description: 일정 내용
+    api-v1-user-recover-password1699166416:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 임시로 발급된 비밀번호
     api-v1-team2045834793:
       type: object
       properties:

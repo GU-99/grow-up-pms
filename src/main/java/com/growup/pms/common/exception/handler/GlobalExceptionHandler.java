@@ -1,5 +1,6 @@
 package com.growup.pms.common.exception.handler;
 
+import com.growup.pms.GrowUpPmsApplication;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.dto.ErrorResponse;
 import com.growup.pms.common.exception.exceptions.BusinessException;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = GrowUpPmsApplication.class)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
