@@ -1091,14 +1091,12 @@ paths:
                         "taskId" : 1,
                         "statusId" : 1,
                         "taskName" : "환경설정 마치기",
-                        "username" : "Hello나는팀원1",
                         "sortOrder" : 1
                       } ],
                       "2" : [ {
                         "taskId" : 2,
                         "statusId" : 2,
                         "taskName" : "프로젝트 일정 등록 기능 구현",
-                        "username" : "Hello2",
                         "sortOrder" : 1
                       } ]
                     }
@@ -1132,7 +1130,7 @@ paths:
                 value: |-
                   {
                     "statusId" : 1,
-                    "userId" : 1,
+                    "assigneeIds" : [ 1, 2, 3 ],
                     "taskName" : "환경설정 마치기",
                     "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                     "sortOrder" : 1,
@@ -1157,7 +1155,6 @@ paths:
                     {
                       "taskId" : 1,
                       "statusId" : 1,
-                      "username" : "Hello나는팀원1",
                       "taskName" : "환경설정 마치기",
                       "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                       "sortOrder" : 1,
@@ -1535,7 +1532,6 @@ paths:
                     {
                       "taskId" : 1,
                       "statusId" : 1,
-                      "username" : "Hello나는팀원1",
                       "taskName" : "환경설정 마치기",
                       "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
                       "sortOrder" : 1,
@@ -1599,7 +1595,6 @@ paths:
               task-controller-v1-docs-test/일정_변경_api_문서를_작성한다:
                 value: |-
                   {
-                    "userId" : 1,
                     "statusId" : 1,
                     "taskName" : "환경설정 마치기",
                     "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
@@ -1721,18 +1716,6 @@ paths:
           description: "200"
 components:
   schemas:
-    api-v1-project-projectId-status-statusId-1514376740:
-      type: object
-      properties:
-        sortOrder:
-          type: number
-          description: 변경할 정렬 순서
-        statusName:
-          type: string
-          description: 변경할 상태의 이름
-        colorCode:
-          type: string
-          description: 변경할 색상 코드
     api-v1-user-recover-username-1963233032:
       type: object
       properties:
@@ -1742,119 +1725,6 @@ components:
         verificationCode:
           type: string
           description: 이메일로 전송된 인증번호
-    프로젝트 일정 생성 요청 예시입니다.:
-      title: 프로젝트 일정 생성 요청 예시입니다.
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        userId:
-          type: number
-          description: 담당할 팀원의 회원 식별자
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
-    api-v1-user-login-434021498:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 비밀번호
-        username:
-          type: string
-          description: 아이디
-    api-v1-team-teamId-user-targetMemberId-role-892778194:
-      type: object
-      properties:
-        role:
-          type: string
-          description: 부여할 역할명
-    프로젝트 일정 상세 조회 성공 시 응답 예시입니다.:
-      title: 프로젝트 일정 상세 조회 성공 시 응답 예시입니다.
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
-        taskId:
-          type: number
-          description: 프로젝트 일정 식별자
-        username:
-          type: string
-          description: 회원 이름
-    api-v1-user-recover-password546453054:
-      type: object
-      properties:
-        email:
-          type: string
-          description: 가입 시 입력한 이메일
-        verificationCode:
-          type: string
-          description: 이메일로 전송된 인증번호
-        username:
-          type: string
-          description: 가입 시 입력한 아이디
-    api-v1-user624768080:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 비밀번호
-        nickname:
-          type: string
-          description: 닉네임
-        bio:
-          type: string
-          description: 자기소개
-        links:
-          type: array
-          description: 사용자 링크
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        profileImageUrl:
-          type: string
-          description: 프로필 이미지 URL
-        email:
-          type: string
-          description: 이메일
-        verificationCode:
-          type: string
-          description: 인증코드
-        username:
-          type: string
-          description: 사용자 아이디
     api-v1-team-teamId-project-557506802:
       type: array
       description: 팀 ID에 해당하는 프로젝트 목록
@@ -1883,92 +1753,59 @@ components:
             type: string
             description: 프로젝트 변경일시
         description: 팀 ID에 해당하는 프로젝트 목록
-    api-v1-user-verify-send1365830936:
-      type: object
-      properties:
-        email:
-          type: string
-          description: 인증하려는 사용자 이메일
-    api-v1-project-projectId-status1214003116:
+    프로젝트 일정 상세 조회 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 상세 조회 성공 시 응답 예시입니다.
       type: object
       properties:
         statusId:
           type: number
-          description: 생성퇸 상태 식별자
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
         sortOrder:
           type: number
-          description: 정렬순서
-        name:
+          description: 정렬 순서
+        taskName:
           type: string
-          description: 상태 이름
-        colorCode:
+          description: 일정 이름
+        startDate:
           type: string
-          description: 색상 코드
-        projectId:
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+        taskId:
           type: number
-          description: 프로젝트 식별자
+          description: 프로젝트 일정 식별자
+    프로젝트 일정 변경 요청 예시입니다.:
+      title: 프로젝트 일정 변경 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-user-recover-username1645263616:
       type: object
       properties:
         username:
           type: string
           description: 복구된 사용자의 아이디
-    api-v1-team-id-1408924108:
-      type: object
-      properties:
-        creatorId:
-          type: number
-          description: 팀 생성자 ID
-        name:
-          type: string
-          description: 팀 이름
-        content:
-          type: string
-          description: 팀 소개
-    api-v1-team-teamId-invitation-1262545139:
-      type: object
-      properties:
-        roleName:
-          type: string
-          description: 초대할 사용자의 역할명
-        userId:
-          type: number
-          description: 초대할 사용자 ID
-    api-v1-project-projectId-status816001105:
-      type: object
-      properties:
-        sortOrder:
-          type: number
-          description: 정렬순서
-        name:
-          type: string
-          description: 상태 이름
-        colorCode:
-          type: string
-          description: 색상 코드
-    api-v1-user-team1301002808:
-      type: array
-      items:
-        type: object
-        properties:
-          creator:
-            type: string
-            description: 팀장 닉네임
-          role:
-            type: string
-            description: 팀 내에서의 역할
-          teamId:
-            type: number
-            description: 팀 ID
-          name:
-            type: string
-            description: 팀 이름
-          isPendingApproval:
-            type: boolean
-            description: 가입 대기 여부
-          content:
-            type: string
-            description: 팀 소개
     api-v1-project-projectId-status1220278061:
       type: array
       items:
@@ -1989,31 +1826,6 @@ components:
           projectId:
             type: number
             description: 프로젝트 식별자
-    프로젝트 일정 변경 요청 예시입니다.:
-      title: 프로젝트 일정 변경 요청 예시입니다.
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        userId:
-          type: number
-          description: 회원 식별자
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
     api-v1-user-recover-password1699166416:
       type: object
       properties:
@@ -2081,6 +1893,213 @@ components:
         content:
           type: string
           description: 프로젝트 설명
+    프로젝트 일정 전체 조회 성공 시 응답 예시입니다.:
+      title: 프로젝트 일정 전체 조회 성공 시 응답 예시입니다.
+      type: object
+      properties:
+        '*':
+          type: array
+          description: 상태별 프로젝트 일정 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 프로젝트 상태 식별자
+              sortOrder:
+                type: number
+                description: 정렬 순서
+              taskName:
+                type: string
+                description: 일정 이름
+              taskId:
+                type: number
+                description: 프로젝트 일정 식별자
+    api-v1-user-file486549215:
+      type: object
+    api-v1-project-projectId-status-statusId-1514376740:
+      type: object
+      properties:
+        sortOrder:
+          type: number
+          description: 변경할 정렬 순서
+        statusName:
+          type: string
+          description: 변경할 상태의 이름
+        colorCode:
+          type: string
+          description: 변경할 색상 코드
+    api-v1-user-login-434021498:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        username:
+          type: string
+          description: 아이디
+    api-v1-team-teamId-user-targetMemberId-role-892778194:
+      type: object
+      properties:
+        role:
+          type: string
+          description: 부여할 역할명
+    api-v1-user-recover-password546453054:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 가입 시 입력한 이메일
+        verificationCode:
+          type: string
+          description: 이메일로 전송된 인증번호
+        username:
+          type: string
+          description: 가입 시 입력한 아이디
+    api-v1-user624768080:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        nickname:
+          type: string
+          description: 닉네임
+        bio:
+          type: string
+          description: 자기소개
+        links:
+          type: array
+          description: 사용자 링크
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        profileImageUrl:
+          type: string
+          description: 프로필 이미지 URL
+        email:
+          type: string
+          description: 이메일
+        verificationCode:
+          type: string
+          description: 인증코드
+        username:
+          type: string
+          description: 사용자 아이디
+    프로젝트 일정 생성 요청 예시입니다.:
+      title: 프로젝트 일정 생성 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        sortOrder:
+          type: number
+          description: 정렬 순서
+        taskName:
+          type: string
+          description: 일정 이름
+        assigneeIds:
+          type: array
+          description: 담당할 팀원의 회원 식별자 목록
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
+    api-v1-user-verify-send1365830936:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 인증하려는 사용자 이메일
+    api-v1-project-projectId-status1214003116:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 생성퇸 상태 식별자
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
+        projectId:
+          type: number
+          description: 프로젝트 식별자
+    api-v1-team-id-1408924108:
+      type: object
+      properties:
+        creatorId:
+          type: number
+          description: 팀 생성자 ID
+        name:
+          type: string
+          description: 팀 이름
+        content:
+          type: string
+          description: 팀 소개
+    api-v1-team-teamId-invitation-1262545139:
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 초대할 사용자의 역할명
+        userId:
+          type: number
+          description: 초대할 사용자 ID
+    api-v1-project-projectId-status816001105:
+      type: object
+      properties:
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
+    api-v1-user-team1301002808:
+      type: array
+      items:
+        type: object
+        properties:
+          creator:
+            type: string
+            description: 팀장 닉네임
+          role:
+            type: string
+            description: 팀 내에서의 역할
+          teamId:
+            type: number
+            description: 팀 ID
+          name:
+            type: string
+            description: 팀 이름
+          isPendingApproval:
+            type: boolean
+            description: 가입 대기 여부
+          content:
+            type: string
+            description: 팀 소개
     프로젝트 일정 생성 성공 시 응답 예시입니다.:
       title: 프로젝트 일정 생성 성공 시 응답 예시입니다.
       type: object
@@ -2106,33 +2125,3 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
-        username:
-          type: string
-          description: 회원 이름
-    프로젝트 일정 전체 조회 성공 시 응답 예시입니다.:
-      title: 프로젝트 일정 전체 조회 성공 시 응답 예시입니다.
-      type: object
-      properties:
-        '*':
-          type: array
-          description: 상태별 프로젝트 일정 목록
-          items:
-            type: object
-            properties:
-              statusId:
-                type: number
-                description: 프로젝트 상태 식별자
-              sortOrder:
-                type: number
-                description: 정렬 순서
-              taskName:
-                type: string
-                description: 일정 이름
-              taskId:
-                type: number
-                description: 프로젝트 일정 식별자
-              username:
-                type: string
-                description: 회원 이름
-    api-v1-user-file486549215:
-      type: object

@@ -9,6 +9,7 @@ import static com.growup.pms.test.fixture.task.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -23,6 +24,7 @@ import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.repository.TaskRepository;
+import com.growup.pms.task.repository.TaskUserRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -32,7 +34,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,6 +55,9 @@ class TaskServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    TaskUserRepository taskUserRepository;
+
     @InjectMocks
     TaskService taskService;
 
@@ -66,14 +70,14 @@ class TaskServiceTest {
             Long 예상_일정_ID = 1L;
             Long 예상_프로젝트_ID = 1L;
             Long 예상_상태_ID = 1L;
-            Long 예상_담당자_ID = 1L;
+            List<Long> 예상_담당자_ID_목록 = List.of(1L, 2L, 3L);
             Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
-            User 예상_담당자 = 사용자는().식별자가(예상_담당자_ID).이다();
+            List<User> 예상_담당자_목록 = List.of(사용자는().식별자가(1L).이다(), 사용자는().식별자가(2L).이다(), 사용자는().식별자가(3L).이다());
             Task 예상_일정 = 일정은().이다();
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
             when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
-            when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.of(예상_담당자));
+            when(userRepository.findAllById(예상_담당자_ID_목록)).thenReturn(예상_담당자_목록);
             when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
             // when
@@ -88,13 +92,14 @@ class TaskServiceTest {
             Long 예상_일정_ID = 1L;
             Long 예상_프로젝트_ID = 1L;
             Long 예상_상태_ID = 1L;
-            Long 예상_담당자_ID = 1L;
+            List<Long> 예상_담당자_ID_목록 = Collections.emptyList();
             Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
-            Task 예상_일정 = 일정은().회원은(null).이다();
-            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
+            List<User> 예상_담당자_목록 = Collections.emptyList();
+            Task 예상_일정 = 일정은().이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().담당자_ID_목록은(예상_담당자_ID_목록).이다().toCommand();
 
             when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
-            when(userRepository.findById(예상_담당자_ID)).thenReturn(Optional.empty());
+            when(userRepository.findAllById(예상_담당자_ID_목록)).thenReturn(예상_담당자_목록);
             when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
             // when
@@ -103,7 +108,6 @@ class TaskServiceTest {
             // then
             assertThat(실제_결과.getTaskId()).isEqualTo(예상_일정_ID);
             assertThat(실제_결과.getStatusId()).isEqualTo(예상_상태_ID);
-            assertThat(실제_결과.getUsername()).isNull();
         }
 
         @Test
@@ -136,7 +140,6 @@ class TaskServiceTest {
             TaskResponse 예상_일정_1 = 일정_전체조회_응답은()
                     .일정_식별자는(1L)
                     .상태_식별자는(예상_상태_ID_1)
-                    .회원_닉네임은("브라운")
                     .일정이름은("PMS 프로젝트의 환경설정을 진행함")
                     .정렬순서는((short) 1)
                     .이다();
@@ -144,7 +147,6 @@ class TaskServiceTest {
             TaskResponse 예상_일정_2 = 일정_전체조회_응답은()
                     .일정_식별자는(2L)
                     .상태_식별자는(예상_상태_ID_1)
-                    .회원_닉네임은("레니")
                     .일정이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
                     .정렬순서는((short) 2)
                     .이다();
@@ -152,7 +154,6 @@ class TaskServiceTest {
             TaskResponse 예상_일정_3 = 일정_전체조회_응답은()
                     .일정_식별자는(3L)
                     .상태_식별자는(예상_상태_ID_2)
-                    .회원_닉네임은("브라운")
                     .일정이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
                     .정렬순서는((short) 3)
                     .이다();
@@ -235,8 +236,6 @@ class TaskServiceTest {
             // given
             Long 기존_일정_ID = 1L;
             Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
-            Long 변경할_담당자_ID = 2L;
-            User 변경할_담당자 = 사용자는().식별자가(변경할_담당자_ID).이다();
             Long 변경할_상태_ID = 2L;
             Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
             String 변경할_일정_이름 = "변경할 이름 입니다!";
@@ -245,7 +244,6 @@ class TaskServiceTest {
             LocalDate 변경할_시작일자 = LocalDate.of(2023, 1, 1);
             LocalDate 변경할_종료일자 = LocalDate.of(2023, 3, 1);
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
-                    .회원_식별자는(변경할_담당자_ID)
                     .상태_식별자는(변경할_상태_ID)
                     .일정이름은(변경할_일정_이름)
                     .본문내용은(변경할_내용)
@@ -255,20 +253,20 @@ class TaskServiceTest {
                     .이다().toCommand();
 
             when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
-            when(userRepository.findByIdOrThrow(변경할_담당자_ID)).thenReturn(변경할_담당자);
             when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
 
             // when
             taskService.editTask(기존_일정_ID, 일정_변경_요청);
 
             // then
-            assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
-            assertThat(기존_일정.getUser().getId()).isEqualTo(변경할_담당자_ID);
-            assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
-            assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
-            assertThat(기존_일정.getSortOrder()).isEqualTo(변경할_정렬순서);
-            assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
-            assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
+            assertSoftly(softly -> {
+                assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
+                assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
+                assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
+                assertThat(기존_일정.getSortOrder()).isEqualTo(변경할_정렬순서);
+                assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
+                assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
+            });
         }
 
         @Test
@@ -284,24 +282,6 @@ class TaskServiceTest {
             assertThatThrownBy(() -> taskService.editTask(잘못된_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
-        }
-
-        @Test
-        void 변경하려는_회원이_존재하지_않으면_예외가_발생한다() {
-            // given
-            Long 기존_일정_ID = 1L;
-            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
-            Long 잘못된_담당자_ID = 2L;
-            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().회원_식별자는(잘못된_담당자_ID).이다().toCommand();
-
-            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
-            doThrow(new BusinessException(ErrorCode.USER_NOT_FOUND))
-                    .when(userRepository).findByIdOrThrow(잘못된_담당자_ID);
-
-            // when & then
-            assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
-                    .isInstanceOf(BusinessException.class)
-                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_NOT_FOUND);
         }
 
         @Test

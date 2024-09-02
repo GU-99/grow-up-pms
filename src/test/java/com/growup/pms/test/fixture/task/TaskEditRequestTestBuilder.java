@@ -13,7 +13,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public class TaskEditRequestTestBuilder {
 
     private Long statusId = 1L;
-    private Long userId = 1L;
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
@@ -22,11 +21,6 @@ public class TaskEditRequestTestBuilder {
 
     public static TaskEditRequestTestBuilder 일정_수정_요청은() {
         return new TaskEditRequestTestBuilder();
-    }
-
-    public TaskEditRequestTestBuilder 회원_식별자는(Long userId) {
-        this.userId = userId;
-        return this;
     }
 
     public TaskEditRequestTestBuilder 상태_식별자는(Long statusId) {
@@ -61,7 +55,6 @@ public class TaskEditRequestTestBuilder {
 
     public TaskEditRequest 이다() {
         return TaskEditRequest.builder()
-                .userId(JsonNullable.of(userId))
                 .statusId(JsonNullable.of(statusId))
                 .taskName(JsonNullable.of(taskName))
                 .content(JsonNullable.of(content))

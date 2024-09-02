@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
@@ -17,8 +18,7 @@ public record TaskCreateRequest(
         @Positive
         Long statusId,
 
-        @Positive
-        Long userId,
+        List<Long> assigneeIds,
 
         @NotBlank
         @Size(max = 128)
@@ -39,7 +39,7 @@ public record TaskCreateRequest(
 
     public TaskCreateCommand toCommand() {
         return TaskCreateCommand.builder()
-                .userId(userId)
+                .assigneeIds(assigneeIds)
                 .statusId(statusId)
                 .taskName(taskName)
                 .content(content)

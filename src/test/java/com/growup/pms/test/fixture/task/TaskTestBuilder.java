@@ -3,8 +3,6 @@ package com.growup.pms.test.fixture.task;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.test.fixture.status.StatusTestBuilder;
-import com.growup.pms.test.fixture.user.UserTestBuilder;
-import com.growup.pms.user.domain.User;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,6 @@ public class TaskTestBuilder {
 
     private Long id = 1L;
     private Status status = StatusTestBuilder.상태는().이다();
-    private User user = UserTestBuilder.사용자는().이다();
     private String name = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
@@ -36,11 +33,6 @@ public class TaskTestBuilder {
 
     public TaskTestBuilder 상태는(Status status) {
         this.status = status;
-        return this;
-    }
-
-    public TaskTestBuilder 회원은(User user) {
-        this.user = user;
         return this;
     }
 
@@ -73,7 +65,6 @@ public class TaskTestBuilder {
 
         var build = Task.builder()
                 .status(status)
-                .user(user)
                 .name(name)
                 .content(content)
                 .sortOrder(sortOrder)

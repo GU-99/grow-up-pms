@@ -12,7 +12,6 @@ public class TaskResponseTestBuilder {
 
     private Long taskId = 1L;
     private Long statusId = 1L;
-    private String userNickname = "Hello나는팀원1";
     private String taskName = "환경설정 마치기";
     private Short sortOrder = 1;
 
@@ -30,11 +29,6 @@ public class TaskResponseTestBuilder {
         return this;
     }
 
-    public TaskResponseTestBuilder 회원_닉네임은(String userNickname) {
-        this.userNickname = userNickname;
-        return this;
-    }
-
     public TaskResponseTestBuilder 일정이름은(String taskName) {
         this.taskName = taskName;
         return this;
@@ -49,7 +43,6 @@ public class TaskResponseTestBuilder {
         return TaskResponse.builder()
                 .taskId(taskId)
                 .statusId(statusId)
-                .username(userNickname)
                 .taskName(taskName)
                 .sortOrder(sortOrder)
                 .build();

@@ -3,7 +3,6 @@ package com.growup.pms.task.repository;
 import static com.growup.pms.project.domain.QProject.project;
 import static com.growup.pms.status.domain.QStatus.status;
 import static com.growup.pms.task.domain.QTask.task;
-import static com.growup.pms.user.domain.QUser.user;
 import static java.util.stream.Collectors.groupingBy;
 
 import com.growup.pms.task.controller.dto.response.TaskResponse;
@@ -33,7 +32,6 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
         List<Long> ids = queryFactory
                 .select(task.id)
                 .from(task)
-                .leftJoin(task.user, user)
                 .join(task.status, status)
                 .join(task.status.project, project)
                 .where(
@@ -51,11 +49,9 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                         task.id,
                         task.status.id,
                         task.name,
-                        task.user.username,
                         task.sortOrder
                 ))
                 .from(task)
-                .leftJoin(task.user, user)
                 .join(task.status, status)
                 .join(task.status.project, project)
                 .where(
