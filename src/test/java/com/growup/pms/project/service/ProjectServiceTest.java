@@ -1,6 +1,7 @@
 package com.growup.pms.project.service;
 
 import static com.growup.pms.test.fixture.project.ProjectCreateRequestTestBuilder.프로젝트_생성_요청은;
+import static com.growup.pms.test.fixture.project.ProjectResponseTestBuilder.프로젝트_목록조회_응답은;
 import static com.growup.pms.test.fixture.project.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.project.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
 import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
+import com.growup.pms.project.controller.dto.response.ProjectResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.project.repository.ProjectUserRepository;
@@ -28,6 +30,7 @@ import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.role.RoleTestBuilder;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -127,6 +130,41 @@ class ProjectServiceTest {
             assertThatThrownBy(() -> projectService.createProject(예상_팀_ID, 잘못된_생성자_ID, 예상_프로젝트_생성_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasMessage("해당 사용자를 찾을 수 없습니다. 입력 정보를 확인해 주세요.");
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_목록_조회시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 예상_팀_ID = 1L;
+            ProjectResponse 예상_프로젝트_1 = 프로젝트_목록조회_응답은().프로젝트_식별자는(1L).이다();
+            ProjectResponse 예상_프로젝트_2 = 프로젝트_목록조회_응답은().프로젝트_식별자는(2L).이다();
+            ProjectResponse 예상_프로젝트_3 = 프로젝트_목록조회_응답은().프로젝트_식별자는(3L).이다();
+            List<ProjectResponse> 예상_결과 = List.of(예상_프로젝트_1, 예상_프로젝트_2, 예상_프로젝트_3);
+            when(projectRepository.getProjectsByTeamId(예상_팀_ID)).thenReturn(예상_결과);
+
+            // when
+            List<ProjectResponse> 실제_결과 = projectService.getProjects(예상_팀_ID);
+
+            // then
+            assertThat(실제_결과.size()).isEqualTo(예상_결과.size());
+        }
+
+        @Test
+        void 팀에_프로젝트가_없으면_빈리스트를_반환한다() {
+            // given
+            Long 잘못된_팀_ID = Long.MIN_VALUE;
+            List<ProjectResponse> 예상_결과 = Collections.emptyList();
+            when(projectRepository.getProjectsByTeamId(잘못된_팀_ID)).thenReturn(예상_결과);
+
+            // when
+            List<ProjectResponse> 실제_결과 = projectService.getProjects(잘못된_팀_ID);
+
+            // then
+            assertThat(실제_결과).isEmpty();
         }
     }
 }

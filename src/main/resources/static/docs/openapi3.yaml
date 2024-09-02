@@ -1196,6 +1196,61 @@ paths:
         "200":
           description: "200"
   /api/v1/team/{teamId}/project:
+    get:
+      tags:
+      - Project
+      summary: 프로젝트 목록조회
+      description: 팀 내에 존재하는 모든 프로젝트의 목록을 조회합니다.
+      operationId: project-controller-v1-docs-test/프로젝트_목록조회_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-team-teamId-project-557506802'
+              examples:
+                project-controller-v1-docs-test/프로젝트_목록조회_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "projectId" : 1,
+                      "projectName" : "PMS 프로젝트",
+                      "content" : "프로젝트 관리 서비스를 개발하는 프로젝트",
+                      "startDate" : "2024-01-01",
+                      "endDate" : "2024-12-31",
+                      "createdAt" : "2024-08-31 22:30:00",
+                      "updatedAt" : "2024-08-31 22:30:00"
+                    }, {
+                      "projectId" : 2,
+                      "projectName" : "PMS 프로젝트",
+                      "content" : "프로젝트 관리 서비스를 개발하는 프로젝트",
+                      "startDate" : "2024-01-01",
+                      "endDate" : "2024-12-31",
+                      "createdAt" : "2024-08-31 22:30:00",
+                      "updatedAt" : "2024-08-31 22:30:00"
+                    }, {
+                      "projectId" : 3,
+                      "projectName" : "PMS 프로젝트",
+                      "content" : "프로젝트 관리 서비스를 개발하는 프로젝트",
+                      "startDate" : "2024-01-01",
+                      "endDate" : "2024-12-31",
+                      "createdAt" : "2024-08-31 22:30:00",
+                      "updatedAt" : "2024-08-31 22:30:00"
+                    } ]
     post:
       tags:
       - Project
@@ -1668,6 +1723,34 @@ components:
         username:
           type: string
           description: 회원 이름
+    api-v1-team-teamId-project-557506802:
+      type: array
+      description: 팀 ID에 해당하는 프로젝트 목록
+      items:
+        type: object
+        properties:
+          createdAt:
+            type: string
+            description: 프로젝트 생성일시
+          endDate:
+            type: string
+            description: 프로젝트 종료 일자
+          projectName:
+            type: string
+            description: 프로젝트 이름
+          projectId:
+            type: number
+            description: 프로젝트 ID
+          startDate:
+            type: string
+            description: 프로젝트 시작 일자
+          content:
+            type: string
+            description: 프로젝트 설명
+          updatedAt:
+            type: string
+            description: 프로젝트 변경일시
+        description: 팀 ID에 해당하는 프로젝트 목록
     api-v1-user-verify-send1365830936:
       type: object
       properties:
