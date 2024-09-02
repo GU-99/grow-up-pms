@@ -87,10 +87,15 @@ public class UserService {
         User user = userRepository.findByIdOrThrow(userId);
 
         user.updateProfile(command.nickname(), command.bio(), command.imageUrl());
-        user.addLinks(command.links());
+        updateLinks(command.links(), user);
 
         List<String> userLinks = user.getLinks().stream().map(UserLink::getLink).toList();
         return UserUpdateResponse.of(user, userLinks);
+    }
+
+    private static void updateLinks(List<String> inputLinks, User user) {
+        user.resetLinks();
+        user.addLinks(inputLinks);
     }
 
     private void validateCurrentPassword(String inputPassword, String storedPassword) {

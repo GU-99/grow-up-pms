@@ -102,10 +102,13 @@ public class User extends BaseEntity {
     }
 
     public void addLinks(List<String> links) {
-        this.links.clear();
         if (links != null) {
             links.forEach(this::addLink);
         }
+    }
+
+    public void resetLinks() {
+        this.links.clear();
     }
 
     public void removeLink(String link) {
