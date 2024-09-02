@@ -21,7 +21,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "task_users")
 @SQLDelete(sql = "UPDATE task_users SET is_deleted = true WHERE id = ?")
 @SQLRestriction(("is_deleted = false"))
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TaskUser extends BaseEntity {
 
     @Id
@@ -35,7 +35,7 @@ public class TaskUser extends BaseEntity {
     private Task task;
 
     @Builder
-    public TaskUser(User user, Task task) {
+    private TaskUser(User user, Task task) {
         this.user = user;
         this.task = task;
     }
