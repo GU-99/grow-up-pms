@@ -998,7 +998,7 @@ paths:
                       "statusId" : 1,
                       "projectId" : 1,
                       "name" : "대기중",
-                      "colorCode" : "FFFFFF",
+                      "colorCode" : "#FFFFFF",
                       "sortOrder" : 0
                     }, {
                       "statusId" : 2,
@@ -1037,7 +1037,7 @@ paths:
                 value: |-
                   {
                     "name" : "대기중",
-                    "colorCode" : "FFFFFF",
+                    "colorCode" : "#FFFFFF",
                     "sortOrder" : 0
                   }
       responses:
@@ -1059,7 +1059,7 @@ paths:
                       "statusId" : 1,
                       "projectId" : 1,
                       "name" : "대기중",
-                      "colorCode" : "FFFFFF",
+                      "colorCode" : "#FFFFFF",
                       "sortOrder" : 0
                     }
   /api/v1/project/{projectId}/task:
@@ -1087,16 +1087,16 @@ paths:
                 task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
                   value: |-
                     {
-                      "1" : [ {
-                        "taskId" : 1,
-                        "statusId" : 1,
-                        "taskName" : "환경설정 마치기",
-                        "sortOrder" : 1
-                      } ],
                       "2" : [ {
                         "taskId" : 2,
                         "statusId" : 2,
                         "taskName" : "프로젝트 일정 등록 기능 구현",
+                        "sortOrder" : 1
+                      } ],
+                      "1" : [ {
+                        "taskId" : 1,
+                        "statusId" : 1,
+                        "taskName" : "환경설정 마치기",
                         "sortOrder" : 1
                       } ]
                     }
@@ -1493,7 +1493,7 @@ paths:
                 value: |-
                   {
                     "statusName" : "대기중",
-                    "colorCode" : "FFFFFF",
+                    "colorCode" : "#FFFFFF",
                     "sortOrder" : 3
                   }
       responses:
