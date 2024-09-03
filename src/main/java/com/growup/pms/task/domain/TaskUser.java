@@ -22,7 +22,7 @@ import org.hibernate.annotations.SQLRestriction;
 @IdClass(TaskUserId.class)
 @Table(name = "task_users")
 @SQLDelete(sql = "UPDATE task_users SET is_deleted = true WHERE id = ?")
-@SQLRestriction(("is_deleted = false"))
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TaskUser extends BaseEntity {
 
