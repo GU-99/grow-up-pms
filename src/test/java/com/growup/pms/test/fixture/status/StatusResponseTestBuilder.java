@@ -13,7 +13,7 @@ public class StatusResponseTestBuilder {
     private Long statusId = 1L;
     private Long projectId = 1L;
     private String name = "대기중";
-    private String colorCode = "FFFFFF";
+    private String colorCode = "#FFFFFF";
     private Short sortOrder = 0;
 
     public static StatusResponseTestBuilder 상태_응답은() {

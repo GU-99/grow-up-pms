@@ -36,7 +36,7 @@ public class Status extends BaseEntity {
     @Column(nullable = false, length = 32)
     private String name;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, length = 7)
     private String colorCode;
 
     @Column(nullable = false)
