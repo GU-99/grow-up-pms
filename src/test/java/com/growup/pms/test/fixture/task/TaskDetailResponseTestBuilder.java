@@ -12,7 +12,6 @@ public class TaskDetailResponseTestBuilder {
 
     private Long taskId = 1L;
     private Long statusId = 1L;
-    private String username = "Hello나는팀원1";
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
@@ -30,11 +29,6 @@ public class TaskDetailResponseTestBuilder {
 
     public TaskDetailResponseTestBuilder 상태_식별자는(Long statusId) {
         this.statusId = statusId;
-        return this;
-    }
-
-    public TaskDetailResponseTestBuilder 회원_닉네임은(String username) {
-        this.username = username;
         return this;
     }
 
@@ -67,7 +61,6 @@ public class TaskDetailResponseTestBuilder {
         return TaskDetailResponse.builder()
                 .taskId(taskId)
                 .statusId(statusId)
-                .username(username)
                 .taskName(taskName)
                 .content(content)
                 .sortOrder(sortOrder)

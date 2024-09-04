@@ -2,6 +2,7 @@ package com.growup.pms.test.fixture.task;
 
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class TaskCreateRequestTestBuilder {
 
     private Long statusId = 1L;
-    private Long userId = 1L;
+    private List<Long> assigneeIds = List.of(1L, 2L, 3L);
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
@@ -28,8 +29,8 @@ public class TaskCreateRequestTestBuilder {
         return this;
     }
 
-    public TaskCreateRequestTestBuilder 회원_식별자는(Long userId) {
-        this.userId = userId;
+    public TaskCreateRequestTestBuilder 담당자_ID_목록은(List<Long> assigneeIds) {
+        this.assigneeIds = assigneeIds;
         return this;
     }
 
@@ -61,7 +62,7 @@ public class TaskCreateRequestTestBuilder {
     public TaskCreateRequest 이다() {
         return TaskCreateRequest.builder()
                 .statusId(statusId)
-                .userId(userId)
+                .assigneeIds(assigneeIds)
                 .taskName(taskName)
                 .content(content)
                 .sortOrder(sortOrder)
