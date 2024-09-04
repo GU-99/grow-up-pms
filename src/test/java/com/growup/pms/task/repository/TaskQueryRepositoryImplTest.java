@@ -126,7 +126,6 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         PMS_환경설정 = taskRepository.save(
                 일정은().식별자는(1L)
                         .상태는(PMS_완료)
-                        .회원은(브라운)
                         .이름은("PMS 프로젝트의 환경설정을 진행함")
                         .내용은("- build.gradle 의존성 추가 <br> - Config 클래스 추가")
                         .정렬순서는((short) 2)
@@ -137,7 +136,6 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         PMS_등록기능 = taskRepository.save(
                 일정은().식별자는(2L)
                         .상태는(PMS_완료)
-                        .회원은(레니)
                         .이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
                         .내용은("- ProjectRepository 구현 <br> - ProjectService 클래스 내부 구현")
                         .정렬순서는((short) 1)
@@ -148,7 +146,6 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         PMS_조회기능 = taskRepository.save(
                 일정은().식별자는(3L)
                         .상태는(PMS_진행중)
-                        .회원은(브라운)
                         .이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
                         .내용은("- 조회 레포지토리 구현 <br> - 조회 쿼리 구현 및 테스트 작성")
                         .정렬순서는((short) 3)
@@ -159,7 +156,6 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         PMS_수정기능 = taskRepository.save(
                 일정은().식별자는(4L)
                         .상태는(PMS_할일)
-                        .회원은(레너드)
                         .이름은("PMS 프로젝트의 수정 기능 구현을 진행함")
                         .내용은(null)
                         .정렬순서는((short) 5)
@@ -170,7 +166,6 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         PMS_삭제기능 = taskRepository.save(
                 일정은().식별자는(5L)
                         .상태는(PMS_할일)
-                        .회원은(null)
                         .이름은("PMS 프로젝트의 삭제 기능 구현을 진행함")
                         .내용은("- 누가누가 이 기능에 먼저 도착할까")
                         .정렬순서는((short) 4)

@@ -5,7 +5,7 @@ import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.domain.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectQueryRepository {
 
     default Project findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.PROJECT_NOT_FOUND));

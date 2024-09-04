@@ -17,10 +17,10 @@ public class ProjectTestBuilder {
 
     private Long id = 1L;
     private Team team = 팀은().이다();
-    private String name = "그로우업";
-    private String content = "프로젝트 관리 서비스입니다.";
-    private LocalDate startDate = LocalDate.now();
-    private LocalDate endDate = LocalDate.now();
+    private String name = "GU-PMS 프로젝트";
+    private String content = "프로젝트 관리 서비스 개발 프로젝트";
+    private LocalDate startDate = LocalDate.of(2024, 1, 1);
+    private LocalDate endDate = LocalDate.of(2024, 12, 31);
 
     public static ProjectTestBuilder 프로젝트는() {
         return new ProjectTestBuilder();

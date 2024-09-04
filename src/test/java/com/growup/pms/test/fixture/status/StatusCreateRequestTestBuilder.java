@@ -12,7 +12,7 @@ public class StatusCreateRequestTestBuilder {
 
     private Long projectId = 1L;
     private String name = "대기중";
-    private String colorCode = "FFFFFF";
+    private String colorCode = "#FFFFFF";
     private Short sortOrder = 0;
 
     public static StatusCreateRequestTestBuilder 상태_생성_요청은() {

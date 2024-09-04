@@ -91,9 +91,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .optional()
                                                 .description("프로젝트 상태 식별자"),
-                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
-                                                .optional()
-                                                .description("담당할 팀원의 회원 식별자"),
+                                        fieldWithPath("assigneeIds").type(JsonFieldType.ARRAY)
+                                                .description("담당할 팀원의 회원 식별자 목록"),
                                         fieldWithPath("taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
@@ -112,8 +111,6 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("프로젝트 일정 식별자"),
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 상태 식별자"),
-                                        fieldWithPath("username").type(JsonFieldType.STRING)
-                                                .description("회원 이름"),
                                         fieldWithPath("taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
@@ -144,7 +141,6 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                 .일정_식별자는(2L)
                 .상태_식별자는(예상_상태_ID_2)
                 .일정이름은("프로젝트 일정 등록 기능 구현")
-                .회원_닉네임은("Hello2")
                 .이다();
 
         List<TaskResponse> 예상_일정_목록_1 = List.of(예상_일정_1);
@@ -180,8 +176,6 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("프로젝트 상태 식별자"),
                                         fieldWithPath("*.[].taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
-                                        fieldWithPath("*.[].username").type(JsonFieldType.STRING)
-                                                .description("회원 이름"),
                                         fieldWithPath("*.[].sortOrder").type(JsonFieldType.NUMBER)
                                                 .description("정렬 순서")
                                 )
@@ -222,8 +216,6 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("프로젝트 일정 식별자"),
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 상태 식별자"),
-                                        fieldWithPath("username").type(JsonFieldType.STRING)
-                                                .description("회원 이름"),
                                         fieldWithPath("taskName").type(JsonFieldType.STRING)
                                                 .description("일정 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
@@ -271,9 +263,6 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                         org.springframework.http.HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
                                 .requestFields(
-                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
-                                                .optional()
-                                                .description("회원 식별자"),
                                         fieldWithPath("statusId").type(JsonFieldType.NUMBER)
                                                 .optional()
                                                 .description("프로젝트 상태 식별자"),

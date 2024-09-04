@@ -32,13 +32,13 @@ public record UserCreateRequest(
         String bio,
 
         @Length(max = 255)
-        String imageUrl,
+        String profileImageUrl,
 
         @NotNull
         List<@URL @Length(max = 255) String> links,
 
         @NotNull
-        Integer verificationCode
+        String verificationCode
 ) {
     public UserCreateCommand toCommand() {
         return UserCreateCommand.builder()
@@ -47,7 +47,7 @@ public record UserCreateRequest(
                 .email(email)
                 .nickname(nickname)
                 .bio(bio)
-                .imageUrl(imageUrl)
+                .profileImageUrl(profileImageUrl)
                 .links(links)
                 .verificationCode(verificationCode)
                 .build();

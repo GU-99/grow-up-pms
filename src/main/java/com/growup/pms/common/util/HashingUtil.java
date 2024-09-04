@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HashingUtil {
+
     private static final String DEFAULT_HASHING_ALGORITHM = "SHA-256";
 
     public static String generateHash(final String input) {
@@ -19,7 +20,7 @@ public final class HashingUtil {
             byte[] hash = md.digest(input.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException ex) {
-            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new BusinessException(ErrorCode.APPLICATION_ERROR);
         }
     }
 }

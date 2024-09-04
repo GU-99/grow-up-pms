@@ -2,7 +2,6 @@ package com.growup.pms.task.domain;
 
 import com.growup.pms.common.BaseEntity;
 import com.growup.pms.status.domain.Status;
-import com.growup.pms.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,10 +35,6 @@ public class Task extends BaseEntity {
     @JoinColumn(name = "project_status_id", foreignKey = @ForeignKey(name = "fk_task_status"), nullable = false)
     private Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", foreignKey = @ForeignKey(name = "fk_task_user"))
-    private User user;
-
     @Column(nullable = false, length = 128)
     private String name;
 
@@ -54,10 +49,9 @@ public class Task extends BaseEntity {
     private LocalDate endDate;
 
     @Builder
-    public Task(Status status, User user, String name, String content, Short sortOrder, LocalDate startDate,
+    public Task(Status status, String name, String content, Short sortOrder, LocalDate startDate,
                 LocalDate endDate) {
         this.status = status;
-        this.user = user;
         this.name = name;
         this.content = content;
         this.sortOrder = sortOrder;
@@ -68,10 +62,6 @@ public class Task extends BaseEntity {
     // Business Logics //
     public void editStatus(Status status) {
         this.status = status;
-    }
-
-    public void editAssignee(User user) {
-        this.user = user;
     }
 
     public void editName(String name) {
@@ -92,9 +82,5 @@ public class Task extends BaseEntity {
 
     public void editEndDate(LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    public String getAssignee() {
-        return user != null ? user.getUsername() : null;
     }
 }

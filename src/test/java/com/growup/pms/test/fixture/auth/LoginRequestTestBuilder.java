@@ -1,6 +1,7 @@
 package com.growup.pms.test.fixture.auth;
 
 import com.growup.pms.auth.controller.dto.request.LoginRequest;
+import com.growup.pms.user.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,12 @@ public class LoginRequestTestBuilder {
 
     public static LoginRequestTestBuilder 로그인_하는_사용자는() {
         return new LoginRequestTestBuilder();
+    }
+
+    public static LoginRequestTestBuilder 로그인_하는_사용자는(User 사용자) {
+        return new LoginRequestTestBuilder()
+                .아이디가(사용자.getUsername())
+                .비밀번호가(사용자.getPassword());
     }
 
     public LoginRequestTestBuilder 아이디가(String 아이디) {

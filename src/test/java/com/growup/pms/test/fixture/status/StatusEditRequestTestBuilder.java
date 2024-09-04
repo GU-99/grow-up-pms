@@ -12,7 +12,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public class StatusEditRequestTestBuilder {
 
     private String name = "대기중";
-    private String colorCode = "FFFFFF";
+    private String colorCode = "#FFFFFF";
     private Short sortOrder = 3;
 
     public static StatusEditRequestTestBuilder 상태_변경_요청은() {

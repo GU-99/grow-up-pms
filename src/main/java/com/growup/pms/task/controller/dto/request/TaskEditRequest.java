@@ -1,5 +1,7 @@
 package com.growup.pms.task.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.LOCAL_DATE_PATTERN;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import jakarta.validation.constraints.Positive;
@@ -17,8 +19,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @ToString
 public class TaskEditRequest {
 
-    private JsonNullable<Long> userId = JsonNullable.undefined();
-
     private JsonNullable<Long> statusId = JsonNullable.undefined();
 
     @Size(max = 128)
@@ -29,18 +29,16 @@ public class TaskEditRequest {
     @Positive
     private JsonNullable<Short> sortOrder = JsonNullable.undefined();
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = LOCAL_DATE_PATTERN)
     private JsonNullable<LocalDate> startDate = JsonNullable.undefined();
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = LOCAL_DATE_PATTERN)
     private JsonNullable<LocalDate> endDate = JsonNullable.undefined();
 
     @Builder
-    public TaskEditRequest(JsonNullable<Long> userId, JsonNullable<Long> statusId, JsonNullable<String> taskName,
+    public TaskEditRequest(JsonNullable<Long> statusId, JsonNullable<String> taskName,
                            JsonNullable<String> content, JsonNullable<Short> sortOrder,
-                           JsonNullable<LocalDate> startDate,
-                           JsonNullable<LocalDate> endDate) {
-        this.userId = userId;
+                           JsonNullable<LocalDate> startDate, JsonNullable<LocalDate> endDate) {
         this.statusId = statusId;
         this.taskName = taskName;
         this.content = content;
@@ -51,7 +49,6 @@ public class TaskEditRequest {
 
     public TaskEditCommand toCommand() {
         return TaskEditCommand.builder()
-                .userId(userId)
                 .statusId(statusId)
                 .content(content)
                 .taskName(taskName)

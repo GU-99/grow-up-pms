@@ -2,17 +2,16 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.growup.pms.test.fixture.user.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
+import static com.growup.pms.test.fixture.user.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
 import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
 import static com.growup.pms.test.fixture.user.UserTeamResponseTestBuilder.가입한_팀_응답은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,12 +20,17 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
+import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
+import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
+import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
+import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.service.UserService;
+import com.growup.pms.user.service.dto.RecoverPasswordCommand;
+import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -36,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @AutoKoreanDisplayName
@@ -46,39 +49,6 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
 
     @Autowired
     UserService userService;
-
-    @Test
-    @WithMockSecurityUser(id = 1L)
-    void 프로필_이미지_업로드_API_문서를_생성한다() throws  Exception {
-        // Given: Mock 설정
-        final String 루트_경로 = "src/test/resources/images";
-        final String 업로드하는_파일_이름 = "testImage.jpg";
-
-        try (FileInputStream 파일_입력_스트림 = new FileInputStream(루트_경로 + "/" + 업로드하는_파일_이름)) {
-            MockMultipartFile 업로드되는_파일 = new MockMultipartFile(
-                    "file",
-                    업로드하는_파일_이름,
-                    MediaType.IMAGE_JPEG_VALUE,
-                    파일_입력_스트림
-            );
-
-            // when & then
-            mockMvc.perform(
-                    multipart("/api/v1/user/file")
-                        .file(업로드되는_파일)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer ACCESS_TOKEN")
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                    )
-                        .andExpect(status().isOk())
-                        .andDo(
-                            docs.document(
-                                    requestParts(
-                                            partWithName("file").description("업로드할 파일")
-                                    )
-                        )
-                    );
-        }
-    }
 
     @Test
     @WithMockSecurityUser(id = 1L)
@@ -115,6 +85,8 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                 );
     }
 
+    @Test
+    @WithMockSecurityUser(id = 1L)
     void 가입한_팀_목록_조회_API_문서를_생성한다() throws Exception {
         // given
         Long 사용자_ID = 1L;
@@ -168,9 +140,9 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
                                         fieldWithPath("links").type(JsonFieldType.ARRAY).description("사용자 링크"),
-                                        fieldWithPath("verificationCode").type(JsonFieldType.NUMBER).description("인증코드"))
+                                        fieldWithPath("verificationCode").type(JsonFieldType.STRING).description("인증코드"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }
@@ -195,6 +167,61 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .description("사용자의 이메일에 인증코드를 전송합니다. 만료기간은 3분입니다.")
                                 .requestFields(fieldWithPath("email").type(JsonFieldType.STRING).description("인증하려는 사용자 이메일"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .build())));
+    }
+
+    @Test
+    void 아이디_찾기_API_문서를_생성한다() throws Exception {
+        // given
+        String 복구된_아이디 = "brown";
+        RecoverUsernameRequest 아이디_찾기_요청 = 아이디_찾기_요청은().이다();
+        RecoverUsernameResponse 아이디_찾기_응답 = new RecoverUsernameResponse(복구된_아이디);
+
+        when(userService.recoverUsername(any(RecoverUsernameCommand.class))).thenReturn(아이디_찾기_응답);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/user/recover/username")
+                        .content(objectMapper.writeValueAsString(아이디_찾기_요청))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("아이디 찾기")
+                                .description("이메일 인증을 통해 사용자의 아이디를 찾는다.")
+                                .requestFields(
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("가입 시 입력한 이메일"),
+                                        fieldWithPath("verificationCode").type(JsonFieldType.STRING).description("이메일로 전송된 인증번호"))
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .responseFields(fieldWithPath("username").type(JsonFieldType.STRING).description("복구된 사용자의 아이디"))
+                                .build())));
+    }
+
+    @Test
+    void 비밀번호_찾기_API_문서를_생성한다() throws Exception {
+        // given
+        String 새로_발급된_비밀번호 = "napl1m!A";
+        RecoverPasswordRequest 비밀번호_찾기_요청 = 비밀번호_찾기_요청은().이다();
+        RecoverPasswordResponse 비밀번호_찾기_응답 = new RecoverPasswordResponse(새로_발급된_비밀번호);
+
+        when(userService.recoverPassword(any(RecoverPasswordCommand.class))).thenReturn(비밀번호_찾기_응답);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/user/recover/password")
+                        .content(objectMapper.writeValueAsString(비밀번호_찾기_요청))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("비밀번호 찾기")
+                                .description("이메일 인증과 아이디를 통해서 사용자에게 임시 비밀번호를 발급한다.")
+                                .requestFields(
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("가입 시 입력한 이메일"),
+                                        fieldWithPath("username").type(JsonFieldType.STRING).description("가입 시 입력한 아이디"),
+                                        fieldWithPath("verificationCode").type(JsonFieldType.STRING).description("이메일로 전송된 인증번호"))
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .responseFields(fieldWithPath("password").type(JsonFieldType.STRING).description("임시로 발급된 비밀번호"))
                                 .build())));
     }
 }

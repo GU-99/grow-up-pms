@@ -1,6 +1,9 @@
 package com.growup.pms.status.controller.dto.request;
 
+import static com.growup.pms.common.constant.RegexConstants.COLOR_CODE_PATTERN;
+
 import com.growup.pms.status.service.dto.StatusEditCommand;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +18,8 @@ public class StatusEditRequest {
     @Size(min = 1, max = 32)
     private JsonNullable<String> statusName = JsonNullable.undefined();
 
-    @Size(min = 1, max = 6)
+    @Size(min = 7, max = 7)
+    @Pattern(regexp = COLOR_CODE_PATTERN)
     private JsonNullable<String> colorCode = JsonNullable.undefined();
 
     private JsonNullable<Short> sortOrder = JsonNullable.undefined();

@@ -2,10 +2,16 @@ package com.growup.pms.user.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
+import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
+import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
+import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
 import com.growup.pms.user.controller.dto.request.UserUpdateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
+import com.growup.pms.user.controller.dto.request.VerificationCodeCreateRequest;
+import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
+import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
@@ -18,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,13 +45,13 @@ public class UserControllerV1 {
     }
 
     @PostMapping("/file")
-    public ResponseEntity<Void> upload(@AuthenticationPrincipal SecurityUser user, @Valid UserUploadRequest request) {
+    public ResponseEntity<Void> upload(@CurrentUser SecurityUser user, @Valid @RequestBody UserUploadRequest request) {
         userService.uploadImage(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/file")
-    public ResponseEntity<Resource> download(@AuthenticationPrincipal SecurityUser user) {
+    public ResponseEntity<Resource> download(@CurrentUser SecurityUser user) {
         UserDownloadCommand command = userService.imageDownload(user.getId());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + command.imageName() + "\"")
@@ -63,9 +68,28 @@ public class UserControllerV1 {
         return ResponseEntity.ok().body(userService.getAllUserTeams(user.getId()));
     }
 
+    @PostMapping("/recover/username")
+    public ResponseEntity<RecoverUsernameResponse> recoverUsername(@Valid @RequestBody RecoverUsernameRequest request) {
+        return ResponseEntity.ok().body(userService.recoverUsername(request.toCommand()));
+    }
+
+    @PostMapping("/recover/password")
+    public ResponseEntity<RecoverPasswordResponse> recoverPassword(@Valid @RequestBody RecoverPasswordRequest request) {
+        return ResponseEntity.ok().body(userService.recoverPassword(request.toCommand()));
+    }
+
     @PostMapping("/verify/send")
-    public ResponseEntity<Void> sendVerificationCode(String email) {
-        userService.sendVerificationCode(email);
+    public ResponseEntity<Void> sendVerificationCode(@Valid @RequestBody VerificationCodeCreateRequest request) {
+        userService.sendVerificationCode(request.toCommand());
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(
+            @CurrentUser SecurityUser user,
+            @Valid @RequestBody PasswordUpdateRequest request
+    ) {
+        userService.updatePassword(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }
 

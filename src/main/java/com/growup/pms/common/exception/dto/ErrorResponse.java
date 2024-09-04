@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Getter
@@ -40,6 +41,10 @@ public class ErrorResponse {
 
     public static ErrorResponse of(MethodArgumentTypeMismatchException ex) {
         return new ErrorResponse(ErrorCode.INVALID_DATA_FORMAT, FieldError.of(ex.getName(), ex.getErrorCode()));
+    }
+
+    public static ErrorResponse of(MissingRequestCookieException ex) {
+        return new ErrorResponse(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
     }
 
     @Getter
