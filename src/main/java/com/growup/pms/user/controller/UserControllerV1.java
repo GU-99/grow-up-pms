@@ -6,7 +6,6 @@ import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
 import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
 import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
-import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
 import com.growup.pms.user.controller.dto.request.UserUpdateRequest;
 import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.request.VerificationCodeCreateRequest;
@@ -89,13 +88,6 @@ public class UserControllerV1 {
             @CurrentUser SecurityUser user,
             @Valid @RequestBody PasswordUpdateRequest request
     ) {
-        userService.updatePassword(user.getId(), request.toCommand());
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@CurrentUser SecurityUser user,
-                                               @Valid @RequestBody PasswordUpdateRequest request) {
         userService.updatePassword(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }
