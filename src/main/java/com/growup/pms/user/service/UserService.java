@@ -102,6 +102,7 @@ public class UserService {
     private static void updateLinks(List<String> inputLinks, User user) {
         user.resetLinks();
         user.addLinks(inputLinks);
+    }
       
     public RecoverUsernameResponse recoverUsername(RecoverUsernameCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
