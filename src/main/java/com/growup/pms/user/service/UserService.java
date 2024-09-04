@@ -8,13 +8,16 @@ import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
+import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
+import com.growup.pms.user.domain.UserLink;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
 import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
+import com.growup.pms.user.service.dto.UserUpdateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import com.growup.pms.user.service.dto.VerificationCodeCreateCommand;
 import java.util.List;
@@ -84,6 +87,23 @@ public class UserService {
         user.changePassword(passwordEncoder, command.newPassword());
     }
 
+
+    @Transactional
+    public UserUpdateResponse updateUserDetails(Long userId, UserUpdateCommand command) {
+        User user = userRepository.findByIdOrThrow(userId);
+
+        user.updateProfile(command.nickname(), command.bio(), command.imageUrl());
+        updateLinks(command.links(), user);
+
+        List<String> userLinks = user.getLinks().stream().map(UserLink::getLink).toList();
+        return UserUpdateResponse.of(user, userLinks);
+    }
+
+    private static void updateLinks(List<String> inputLinks, User user) {
+        user.resetLinks();
+        user.addLinks(inputLinks);
+    }
+      
     public RecoverUsernameResponse recoverUsername(RecoverUsernameCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
 

@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Embeddable
 @Getter
@@ -17,10 +16,8 @@ public class UserProfile {
 
     private String bio;
 
-    @Setter
     private String image;
 
-    @Setter
     private String imageName;
 
     @Builder
@@ -28,6 +25,22 @@ public class UserProfile {
         this.nickname = nickname;
         this.bio = bio;
         this.image = image;
+        this.imageName = imageName;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void changeImage(String image) {
+        this.image = image;
+    }
+
+    public void changeImageName(String imageName) {
         this.imageName = imageName;
     }
 }
