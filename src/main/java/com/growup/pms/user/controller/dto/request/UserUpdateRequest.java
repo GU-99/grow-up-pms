@@ -3,33 +3,39 @@ package com.growup.pms.user.controller.dto.request;
 import static com.growup.pms.common.constant.RegexConstants.NICKNAME_PATTERN;
 
 import com.growup.pms.user.service.dto.UserUpdateCommand;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import java.util.List;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.URL;
+import org.openapitools.jackson.nullable.JsonNullable;
 
-@Builder
-public record UserUpdateRequest(
-        @Pattern(regexp = NICKNAME_PATTERN)
-        String nickname,
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class UserUpdateRequest {
+    @Pattern(regexp = NICKNAME_PATTERN)
+    JsonNullable<String> nickname = JsonNullable.undefined();
 
-        @Length(max = 300)
-        String bio,
+    @Length(max = 300)
+    JsonNullable<String> bio = JsonNullable.undefined();
 
-        @Length(max = 255)
-        String imageUrl,
+    @Length(max = 255)
+    JsonNullable<String> profileImageUrl = JsonNullable.undefined();
 
-        @NotNull
-        List<@URL @Length(max = 255) String> links
-) {
+    @Builder
+    public UserUpdateRequest(JsonNullable<String> nickname, JsonNullable<String> bio, JsonNullable<String> profileImageUrl) {
+        this.nickname = nickname;
+        this.bio = bio;
+        this.profileImageUrl = profileImageUrl;
+    }
+
     public UserUpdateCommand toCommand() {
         return UserUpdateCommand.builder()
                 .nickname(nickname)
                 .bio(bio)
-                .imageUrl(imageUrl)
-                .links(links)
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 }
+
