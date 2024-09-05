@@ -104,11 +104,11 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .description("가입한 팀이거나 가입 대기 중인 팀의 목록을 조회합니다.")
                                 .responseFields(
                                         fieldWithPath("[].teamId").type(JsonFieldType.NUMBER).description("팀 ID"),
-                                        fieldWithPath("[].name").type(JsonFieldType.STRING).description("팀 이름"),
+                                        fieldWithPath("[].teamName").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("[].content").type(JsonFieldType.STRING).description("팀 소개"),
                                         fieldWithPath("[].creator").type(JsonFieldType.STRING).description("팀장 닉네임"),
                                         fieldWithPath("[].isPendingApproval").type(JsonFieldType.BOOLEAN).description("가입 대기 여부"),
-                                        fieldWithPath("[].role").type(JsonFieldType.STRING).description("팀 내에서의 역할"))
+                                        fieldWithPath("[].roleName").type(JsonFieldType.STRING).description("팀 내에서의 역할"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }

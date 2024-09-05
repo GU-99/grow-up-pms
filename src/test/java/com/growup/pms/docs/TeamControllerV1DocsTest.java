@@ -67,12 +67,11 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .description("사용자가 새로운 팀을 생성합니다. 생성 시, 다른 사용자를 함께 팀으로 초대할 수 있습니다.")
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .requestFields(
-                                        fieldWithPath("name").type(JsonFieldType.STRING).description("팀 이름"),
+                                        fieldWithPath("teamName").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개"),
-                                        fieldWithPath("creatorId").type(JsonFieldType.NUMBER).description("팀 생성자 ID"),
                                         fieldWithPath("coworkers").type(JsonFieldType.ARRAY).description("초대된 사용자 목록"),
-                                        fieldWithPath("coworkers[].id").type(JsonFieldType.NUMBER).description("초대된 사용자 ID"),
-                                        fieldWithPath("coworkers[].role").type(JsonFieldType.STRING).description("초대된 사용자의 역할"))
+                                        fieldWithPath("coworkers[].userId").type(JsonFieldType.NUMBER).description("초대된 사용자 ID"),
+                                        fieldWithPath("coworkers[].roleName").type(JsonFieldType.STRING).description("초대된 사용자의 역할"))
                                 .responseHeaders(headerWithName(HttpHeaders.LOCATION).description("생성된 팀의 URL")).build())));
     }
 
@@ -88,7 +87,7 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
         mockMvc.perform(get("/api/v1/team/{id}", 기존_팀_ID))
                 .andExpectAll(
                         status().isOk(),
-                        jsonPath("$.name").value(예상_응답.name()),
+                        jsonPath("$.teamName").value(예상_응답.teamName()),
                         jsonPath("$.content").value(예상_응답.content()),
                         jsonPath("$.creatorId").value(예상_응답.creatorId()))
                 .andDo(docs.document(resource(
@@ -98,7 +97,7 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .description("해당 팀 정보를 조회합니다.")
                                 .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("팀 아이디"))
                                 .responseFields(
-                                        fieldWithPath("name").type(JsonFieldType.STRING).description("팀 이름"),
+                                        fieldWithPath("teamName").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개"),
                                         fieldWithPath("creatorId").type(JsonFieldType.NUMBER).description("팀 생성자 ID"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)).build())));
@@ -125,7 +124,7 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("팀 아이디"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .requestFields(
-                                        fieldWithPath("name").type(JsonFieldType.STRING).description("팀 이름"),
+                                        fieldWithPath("teamName").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING).description("팀 소개")).build())));
     }
 

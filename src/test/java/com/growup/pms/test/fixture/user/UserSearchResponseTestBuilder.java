@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserSearchResponseTestBuilder {
-    private Long id = 1L;
+    private Long userId = 1L;
     private String nickname = "브라운";
 
     public static UserSearchResponseTestBuilder 사용자_검색_응답은() {
@@ -17,7 +17,7 @@ public class UserSearchResponseTestBuilder {
     }
 
     public UserSearchResponseTestBuilder 식별자가(Long 식별자가) {
-        this.id = 식별자가;
+        this.userId = 식별자가;
         return this;
     }
 
@@ -28,7 +28,7 @@ public class UserSearchResponseTestBuilder {
 
     public UserSearchResponse 이다() {
         return UserSearchResponse.builder()
-                .id(id)
+                .userId(userId)
                 .nickname(nickname)
                 .build();
     }

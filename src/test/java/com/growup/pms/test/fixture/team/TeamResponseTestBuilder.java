@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TeamResponseTestBuilder {
-    private String name = "커피러버스";
+    private String teamName = "커피러버스";
     private String content = "코드 한 줄에 커피 한 잔, 우리는 카페인으로 움직이는 팀입니다!";
     private Long creatorId = 1L;
 
@@ -18,7 +18,7 @@ public class TeamResponseTestBuilder {
     }
 
     public TeamResponseTestBuilder 이름이(String 이름) {
-        this.name = 이름;
+        this.teamName = 이름;
         return this;
     }
 
@@ -34,7 +34,7 @@ public class TeamResponseTestBuilder {
 
     public TeamResponse 이다() {
         return TeamResponse.builder()
-                .name(name)
+                .teamName(teamName)
                 .content(content)
                 .creatorId(creatorId)
                 .build();

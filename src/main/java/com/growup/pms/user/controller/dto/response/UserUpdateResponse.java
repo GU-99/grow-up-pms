@@ -8,7 +8,7 @@ import lombok.Builder;
 public record UserUpdateResponse(
         Long userId,
         String nickname,
-        String imageUrl,
+        String profileImageUrl,
         String bio,
         List<String> links
 ) {
@@ -17,7 +17,7 @@ public record UserUpdateResponse(
         return UserUpdateResponse.builder()
                 .userId(user.getId())
                 .bio(user.getProfile().getBio())
-                .imageUrl(user.getProfile().getImage())
+                .profileImageUrl(user.getProfile().getImage())
                 .nickname(user.getProfile().getNickname())
                 .links(links)
                 .build();

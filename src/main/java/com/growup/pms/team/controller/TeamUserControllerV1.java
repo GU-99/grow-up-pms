@@ -39,7 +39,7 @@ public class TeamUserControllerV1 {
             @Positive @PathVariable Long targetMemberId,
             @Valid @RequestBody RoleUpdateRequest request
     ) {
-        teamUserService.changeRole(teamId, targetMemberId, request.role());
+        teamUserService.changeRole(teamId, targetMemberId, request.roleName());
         return ResponseEntity.ok().build();
     }
 }

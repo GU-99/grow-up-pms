@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserUpdateRequestTestBuilder {
     private String nickname = "growUp";
     private String bio = "안녕하세요 저는 grow up입니다. 잘부탁드려요~";
-    private String imageUrl = "http://example.com/profile.png";
+    private String profileImageUrl = "http://example.com/profile.png";
     private List<String> links = List.of("http://github.com", "http://blog.example.com");
 
     public static UserUpdateRequestTestBuilder 사용자_정보_변경_요청은() {
@@ -30,7 +30,7 @@ public class UserUpdateRequestTestBuilder {
     }
 
     public UserUpdateRequestTestBuilder 프로필_이미지_URL이(String 프로필_이미지_URL) {
-        this.imageUrl = 프로필_이미지_URL;
+        this.profileImageUrl = 프로필_이미지_URL;
         return this;
     }
 
@@ -43,7 +43,7 @@ public class UserUpdateRequestTestBuilder {
         return UserUpdateRequest.builder()
                 .nickname(nickname)
                 .bio(bio)
-                .imageUrl(imageUrl)
+                .profileImageUrl(profileImageUrl)
                 .links(links)
                 .build();
     }

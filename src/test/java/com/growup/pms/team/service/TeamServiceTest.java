@@ -103,7 +103,7 @@ class TeamServiceTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(실제_결과.name()).isEqualTo(예상_결과.name());
+                softly.assertThat(실제_결과.teamName()).isEqualTo(예상_결과.teamName());
                 softly.assertThat(실제_결과.content()).isEqualTo(예상_결과.content());
             });
         }

@@ -38,17 +38,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-team2045834793'
+              $ref: '#/components/schemas/api-v1-team-750252047'
             examples:
               team-controller-v1-docs-test/팀_생성_api_문서를_생성한다:
                 value: |-
                   {
-                    "name" : "커피러버스",
+                    "teamName" : "커피러버스",
                     "content" : "코드 한 줄에 커피 한 잔, 우리는 카페인으로 움직이는 팀입니다!",
-                    "creatorId" : 1,
                     "coworkers" : [ {
-                      "id" : 2,
-                      "role" : "Mate"
+                      "userId" : 2,
+                      "roleName" : "Mate"
                     } ]
                   }
       responses:
@@ -121,12 +120,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-team-id-1408924108'
+                $ref: '#/components/schemas/api-v1-team-id594896981'
               examples:
                 team-controller-v1-docs-test/팀_조회_api_문서를_생성한다:
                   value: |-
                     {
-                      "name" : "커피러버스",
+                      "teamName" : "커피러버스",
                       "content" : "코드 한 줄에 커피 한 잔, 우리는 카페인으로 움직이는 팀입니다!",
                       "creatorId" : 1
                     }
@@ -155,12 +154,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-team-id666486821'
+              $ref: '#/components/schemas/api-v1-team-id-1624659386'
             examples:
               team-controller-v1-docs-test/팀_변경_api_문서를_생성한다:
                 value: |-
                   {
-                    "name" : "구구구",
+                    "teamName" : "구구구",
                     "content" : "안녕하세요, 구구구입니다!"
                   }
       responses:
@@ -958,17 +957,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-user-team1301002808'
+                $ref: '#/components/schemas/api-v1-user-team-1051270522'
               examples:
                 user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다:
                   value: |-
                     [ {
                       "teamId" : 1,
-                      "name" : "팀 이름",
+                      "teamName" : "팀 이름",
                       "content" : "팀 소개",
                       "creator" : "팀장 닉네임",
                       "isPendingApproval" : true,
-                      "role" : "MATE"
+                      "roleName" : "MATE"
                     } ]
   /api/v1/project/{projectId}/status:
     get:
@@ -1185,7 +1184,7 @@ paths:
       - Team Invitation
       summary: 팀 초대
       description: 해당 사용자를 특정 팀에 초대합니다.
-      operationId: team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다
+      operationId: "team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다{class-teamName}/{method-teamName}"
       parameters:
       - name: teamId
         in: path
@@ -1214,6 +1213,12 @@ paths:
               $ref: '#/components/schemas/api-v1-team-teamId-invitation-1262545139'
             examples:
               team-invitation-controller-v1-docs-test/팀_초대_api_문서를_생성한다:
+                value: |-
+                  {
+                    "userId" : 1,
+                    "roleName" : "LEADER"
+                  }
+              '{class-teamName}/{method-teamName}':
                 value: |-
                   {
                     "userId" : 1,
@@ -1704,12 +1709,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-team-teamId-user-targetMemberId-role-892778194'
+              $ref: '#/components/schemas/api-v1-team-teamId-user-targetMemberId-role-1605929895'
             examples:
               team-user-controller-v1-test/팀원_역할_변경_api_문서를_생성한다:
                 value: |-
                   {
-                    "role" : "MATE"
+                    "roleName" : "MATE"
                   }
       responses:
         "200":
@@ -1800,6 +1805,29 @@ components:
         content:
           type: string
           description: 일정 내용
+    api-v1-user-team-1051270522:
+      type: array
+      items:
+        type: object
+        properties:
+          teamName:
+            type: string
+            description: 팀 이름
+          creator:
+            type: string
+            description: 팀장 닉네임
+          teamId:
+            type: number
+            description: 팀 ID
+          roleName:
+            type: string
+            description: 팀 내에서의 역할
+          isPendingApproval:
+            type: boolean
+            description: 가입 대기 여부
+          content:
+            type: string
+            description: 팀 소개
     api-v1-user-recover-username1645263616:
       type: object
       properties:
@@ -1832,39 +1860,6 @@ components:
         password:
           type: string
           description: 임시로 발급된 비밀번호
-    api-v1-team2045834793:
-      type: object
-      properties:
-        coworkers:
-          type: array
-          description: 초대된 사용자 목록
-          items:
-            type: object
-            properties:
-              role:
-                type: string
-                description: 초대된 사용자의 역할
-              id:
-                type: number
-                description: 초대된 사용자 ID
-        creatorId:
-          type: number
-          description: 팀 생성자 ID
-        name:
-          type: string
-          description: 팀 이름
-        content:
-          type: string
-          description: 팀 소개
-    api-v1-team-id666486821:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 팀 이름
-        content:
-          type: string
-          description: 팀 소개
     프로젝트 생성 요청 예시입니다.:
       title: 프로젝트 생성 요청 예시입니다.
       type: object
@@ -1893,6 +1888,12 @@ components:
         content:
           type: string
           description: 프로젝트 설명
+    api-v1-team-teamId-user-targetMemberId-role-1605929895:
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 부여할 역할명
     프로젝트 일정 전체 조회 성공 시 응답 예시입니다.:
       title: 프로젝트 일정 전체 조회 성공 시 응답 예시입니다.
       type: object
@@ -1929,6 +1930,18 @@ components:
         colorCode:
           type: string
           description: 변경할 색상 코드
+    api-v1-team-id594896981:
+      type: object
+      properties:
+        teamName:
+          type: string
+          description: 팀 이름
+        creatorId:
+          type: number
+          description: 팀 생성자 ID
+        content:
+          type: string
+          description: 팀 소개
     api-v1-user-login-434021498:
       type: object
       properties:
@@ -1938,12 +1951,6 @@ components:
         username:
           type: string
           description: 아이디
-    api-v1-team-teamId-user-targetMemberId-role-892778194:
-      type: object
-      properties:
-        role:
-          type: string
-          description: 부여할 역할명
     api-v1-user-recover-password546453054:
       type: object
       properties:
@@ -2020,6 +2027,15 @@ components:
         content:
           type: string
           description: 일정 내용
+    api-v1-team-id-1624659386:
+      type: object
+      properties:
+        teamName:
+          type: string
+          description: 팀 이름
+        content:
+          type: string
+          description: 팀 소개
     api-v1-user-verify-send1365830936:
       type: object
       properties:
@@ -2044,27 +2060,6 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
-    api-v1-team-id-1408924108:
-      type: object
-      properties:
-        creatorId:
-          type: number
-          description: 팀 생성자 ID
-        name:
-          type: string
-          description: 팀 이름
-        content:
-          type: string
-          description: 팀 소개
-    api-v1-team-teamId-invitation-1262545139:
-      type: object
-      properties:
-        roleName:
-          type: string
-          description: 초대할 사용자의 역할명
-        userId:
-          type: number
-          description: 초대할 사용자 ID
     api-v1-project-projectId-status816001105:
       type: object
       properties:
@@ -2077,29 +2072,36 @@ components:
         colorCode:
           type: string
           description: 색상 코드
-    api-v1-user-team1301002808:
-      type: array
-      items:
-        type: object
-        properties:
-          creator:
-            type: string
-            description: 팀장 닉네임
-          role:
-            type: string
-            description: 팀 내에서의 역할
-          teamId:
-            type: number
-            description: 팀 ID
-          name:
-            type: string
-            description: 팀 이름
-          isPendingApproval:
-            type: boolean
-            description: 가입 대기 여부
-          content:
-            type: string
-            description: 팀 소개
+    api-v1-team-teamId-invitation-1262545139:
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 초대할 사용자의 역할명
+        userId:
+          type: number
+          description: 초대할 사용자 ID
+    api-v1-team-750252047:
+      type: object
+      properties:
+        teamName:
+          type: string
+          description: 팀 이름
+        coworkers:
+          type: array
+          description: 초대된 사용자 목록
+          items:
+            type: object
+            properties:
+              roleName:
+                type: string
+                description: 초대된 사용자의 역할
+              userId:
+                type: number
+                description: 초대된 사용자 ID
+        content:
+          type: string
+          description: 팀 소개
     프로젝트 일정 생성 성공 시 응답 예시입니다.:
       title: 프로젝트 일정 생성 성공 시 응답 예시입니다.
       type: object

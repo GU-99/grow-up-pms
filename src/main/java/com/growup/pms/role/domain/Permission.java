@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "permissions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Permission {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
