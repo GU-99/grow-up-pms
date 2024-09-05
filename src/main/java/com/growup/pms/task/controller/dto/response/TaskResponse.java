@@ -1,5 +1,7 @@
 package com.growup.pms.task.controller.dto.response;
 
+import com.growup.pms.user.controller.dto.response.UserSearchResponse;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
@@ -8,6 +10,7 @@ public record TaskResponse(
         Long taskId,
         Long statusId,
         String taskName,
-        Short sortOrder
+        Short sortOrder,
+        List<UserSearchResponse> assignees
 ) {
 }
