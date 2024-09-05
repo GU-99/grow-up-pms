@@ -2,8 +2,8 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-import static com.growup.pms.test.fixture.auth.LoginRequestTestBuilder.로그인_하는_사용자는;
-import static com.growup.pms.test.fixture.auth.TokenResponseTestBuilder.발급된_토큰은;
+import static com.growup.pms.test.fixture.auth.builder.LoginRequestTestBuilder.로그인_하는_사용자는;
+import static com.growup.pms.test.fixture.auth.builder.TokenResponseTestBuilder.발급된_토큰은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;

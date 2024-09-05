@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "roles", uniqueConstraints = @UniqueConstraint(columnNames = {"type", "name"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

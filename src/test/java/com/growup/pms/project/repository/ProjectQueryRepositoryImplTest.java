@@ -1,8 +1,8 @@
 package com.growup.pms.project.repository;
 
-import static com.growup.pms.test.fixture.project.ProjectTestBuilder.프로젝트는;
-import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
+import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.growup.pms.project.controller.dto.response.ProjectResponse;

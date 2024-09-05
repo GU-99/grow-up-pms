@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.user.data;
 
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 
 import com.growup.pms.user.domain.Provider;
 import com.growup.pms.user.domain.User;

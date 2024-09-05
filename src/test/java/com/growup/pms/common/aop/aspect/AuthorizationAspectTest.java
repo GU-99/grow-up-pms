@@ -1,6 +1,6 @@
 package com.growup.pms.common.aop.aspect;
 
-import static com.growup.pms.test.fixture.auth.SecurityUserTestBuilder.인증된_사용자는;
+import static com.growup.pms.test.fixture.auth.builder.SecurityUserTestBuilder.인증된_사용자는;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;

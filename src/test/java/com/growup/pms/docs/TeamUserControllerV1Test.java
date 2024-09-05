@@ -58,7 +58,7 @@ class TeamUserControllerV1Test extends ControllerSliceTestSupport {
         Long 역할_변경할_팀원_ID = 2L;
         RoleUpdateRequest 역할_변경_요청 = new RoleUpdateRequest(TeamRole.MATE.getRoleName());
 
-        doNothing().when(teamUserService).changeRole(팀_ID, 역할_변경할_팀원_ID, 역할_변경_요청.role());
+        doNothing().when(teamUserService).changeRole(팀_ID, 역할_변경할_팀원_ID, 역할_변경_요청.roleName());
 
         // when & then
         mockMvc.perform(put("/api/v1/team/{teamId}/user/{targetMemberId}/role", 팀_ID, 역할_변경할_팀원_ID)
@@ -73,7 +73,7 @@ class TeamUserControllerV1Test extends ControllerSliceTestSupport {
                                 .pathParameters(
                                         parameterWithName("teamId").type(SimpleType.INTEGER).description("팀 ID"),
                                         parameterWithName("targetMemberId").type(SimpleType.INTEGER).description("역할을 변경할 팀원 ID"))
-                                .requestFields(fieldWithPath("role").type(JsonFieldType.STRING).description("부여할 역할명")).build())));
+                                .requestFields(fieldWithPath("roleName").type(JsonFieldType.STRING).description("부여할 역할명")).build())));
     }
 }
 

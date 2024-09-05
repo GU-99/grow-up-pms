@@ -1,12 +1,12 @@
 package com.growup.pms.task.service;
 
-import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
-import static com.growup.pms.test.fixture.task.TaskCreateRequestTestBuilder.일정_생성_요청은;
-import static com.growup.pms.test.fixture.task.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
-import static com.growup.pms.test.fixture.task.TaskEditRequestTestBuilder.일정_수정_요청은;
-import static com.growup.pms.test.fixture.task.TaskResponseTestBuilder.일정_전체조회_응답은;
-import static com.growup.pms.test.fixture.task.TaskTestBuilder.일정은;
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.status.builder.StatusTestBuilder.상태는;
+import static com.growup.pms.test.fixture.task.builder.TaskCreateRequestTestBuilder.일정_생성_요청은;
+import static com.growup.pms.test.fixture.task.builder.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
+import static com.growup.pms.test.fixture.task.builder.TaskEditRequestTestBuilder.일정_수정_요청은;
+import static com.growup.pms.test.fixture.task.builder.TaskResponseTestBuilder.일정_전체조회_응답은;
+import static com.growup.pms.test.fixture.task.builder.TaskTestBuilder.일정은;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;

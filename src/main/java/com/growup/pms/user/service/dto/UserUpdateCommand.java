@@ -7,7 +7,7 @@ import lombok.Builder;
 public record UserUpdateCommand(
         String nickname,
         String bio,
-        String imageUrl,
+        String profileImageUrl,
         List<String> links
 ) {
 }

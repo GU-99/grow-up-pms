@@ -92,7 +92,7 @@ public class UserService {
     public UserUpdateResponse updateUserDetails(Long userId, UserUpdateCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
 
-        user.updateProfile(command.nickname(), command.bio(), command.imageUrl());
+        user.updateProfile(command.nickname(), command.bio(), command.profileImageUrl());
         updateLinks(command.links(), user);
 
         List<String> userLinks = user.getLinks().stream().map(UserLink::getLink).toList();

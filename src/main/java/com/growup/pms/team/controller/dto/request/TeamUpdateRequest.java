@@ -15,20 +15,20 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TeamUpdateRequest {
     @Pattern(regexp = TEAM_NAME_PATTERN)
-    private JsonNullable<String> name = JsonNullable.undefined();
+    private JsonNullable<String> teamName = JsonNullable.undefined();
 
     @Length(max = 300)
     private JsonNullable<String> content = JsonNullable.undefined();
 
     @Builder
-    public TeamUpdateRequest(JsonNullable<String> name, JsonNullable<String> content) {
-        this.name = name;
+    public TeamUpdateRequest(JsonNullable<String> teamName, JsonNullable<String> content) {
+        this.teamName = teamName;
         this.content = content;
     }
 
     public TeamUpdateCommand toCommand() {
         return TeamUpdateCommand.builder()
-                .name(name)
+                .teamName(teamName)
                 .content(content)
                 .build();
     }

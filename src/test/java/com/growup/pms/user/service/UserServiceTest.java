@@ -1,12 +1,12 @@
 package com.growup.pms.user.service;
 
-import static com.growup.pms.test.fixture.user.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
-import static com.growup.pms.test.fixture.user.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
-import static com.growup.pms.test.fixture.user.UserCreateRequestTestBuilder.가입하는_사용자는;
-import static com.growup.pms.test.fixture.user.UserPasswordUpdateTestBuilder.비밀번호_변경은;
-import static com.growup.pms.test.fixture.user.UserSearchResponseTestBuilder.사용자_검색_응답은;
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
-import static com.growup.pms.test.fixture.user.UserUpdateRequestTestBuilder.사용자_정보_변경_요청은;
+import static com.growup.pms.test.fixture.user.builder.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
+import static com.growup.pms.test.fixture.user.builder.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
+import static com.growup.pms.test.fixture.user.builder.UserCreateRequestTestBuilder.가입하는_사용자는;
+import static com.growup.pms.test.fixture.user.builder.UserPasswordUpdateTestBuilder.비밀번호_변경은;
+import static com.growup.pms.test.fixture.user.builder.UserSearchResponseTestBuilder.사용자_검색_응답은;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.user.builder.UserUpdateRequestTestBuilder.사용자_정보_변경_요청은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -27,10 +27,10 @@ import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
-import com.growup.pms.user.service.dto.UserUpdateCommand;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
 import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
+import com.growup.pms.user.service.dto.UserUpdateCommand;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -192,7 +192,7 @@ class UserServiceTest {
             assertSoftly(softly -> {
                 softly.assertThat(변경된_유저_정보.links()).hasSize(2);
                 softly.assertThat(변경된_유저_정보)
-                        .extracting("userId", "nickname", "imageUrl", "bio", "links")
+                        .extracting("userId", "nickname", "profileImageUrl", "bio", "links")
                         .contains(1L, 변경할_닉네임, 변경할_자기소개, 변경할_프로필_이미지_URL, 링크);
             });
         }
