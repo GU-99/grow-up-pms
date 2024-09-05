@@ -88,6 +88,24 @@ CREATE TABLE IF NOT EXISTS projects (
     CONSTRAINT fk_project_team FOREIGN KEY (team_id) REFERENCES teams(id)
 );
 
+-- 프로젝트 유저
+CREATE TABLE project_users (
+    project_id          BIGINT  NOT NULL,
+    user_id             BIGINT  NOT NULL,
+    role_id             BIGINT  NOT NULL,
+    is_pending_approval BOOLEAN NOT NULL,
+    is_deleted          BOOLEAN   DEFAULT FALSE,
+    created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (project_id, user_id),
+
+    CONSTRAINT fk_project_user_project FOREIGN KEY (project_id) REFERENCES projects (id),
+    CONSTRAINT fk_project_user_user FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_project_user_role FOREIGN KEY (role_id) REFERENCES roles (id)
+);
+
+-- 프로젝트 상태
 CREATE TABLE IF NOT EXISTS project_status (
     id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
     project_id  BIGINT          NOT NULL,
@@ -115,4 +133,18 @@ CREATE TABLE IF NOT EXISTS status_tasks (
     updated_at          DATETIME,
     CONSTRAINT fk_task_status FOREIGN KEY (project_status_id)  REFERENCES project_status (id),
     CONSTRAINT fk_task_user   FOREIGN KEY (user_id)            REFERENCES users (id)
+);
+
+-- 프로젝트 일정 유저
+CREATE TABLE IF NOT EXISTS task_users (
+    user_id    BIGINT NOT NULL,
+    task_id    BIGINT NOT NULL,
+    is_deleted BOOLEAN   DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (user_id, task_id),
+
+    CONSTRAINT fk_task_users_user FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_task_users_task FOREIGN KEY (task_id) REFERENCES status_tasks (id)
 );
