@@ -1,13 +1,12 @@
 package com.growup.pms.user.service.dto;
 
-import java.util.List;
 import lombok.Builder;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @Builder
 public record UserUpdateCommand(
-        String nickname,
-        String bio,
-        String imageUrl,
-        List<String> links
+        JsonNullable<String> nickname,
+        JsonNullable<String> bio,
+        JsonNullable<String> profileImageUrl
 ) {
 }
