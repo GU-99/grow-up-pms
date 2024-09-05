@@ -1,4 +1,4 @@
-package com.growup.pms.test.fixture.user;
+package com.growup.pms.test.fixture.user.builder;
 
 import com.growup.pms.user.controller.dto.request.UserLinksUpdateRequest;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.growup.pms.user.service;
 
-import static com.growup.pms.test.fixture.user.UserLinksUpdateRequestTestBuilder.사용자_링크_변경_요청은;
+import static com.growup.pms.test.fixture.user.builder.UserLinksUpdateRequestTestBuilder.사용자_링크_변경_요청은;
 import static com.growup.pms.test.fixture.user.builder.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.UserCreateRequestTestBuilder.가입하는_사용자는;
@@ -377,4 +377,3 @@ class UserServiceTest {
         }
     }
 }
-
