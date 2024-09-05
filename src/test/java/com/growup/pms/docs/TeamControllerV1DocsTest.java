@@ -2,9 +2,9 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-import static com.growup.pms.test.fixture.team.TeamCreateRequestTestBuilder.팀_생성_요청은;
-import static com.growup.pms.test.fixture.team.TeamResponseTestBuilder.팀_생성_응답은;
-import static com.growup.pms.test.fixture.team.TeamUpdateRequestTestBuilder.팀_변경_요청은;
+import static com.growup.pms.test.fixture.team.builder.TeamCreateRequestTestBuilder.팀_생성_요청은;
+import static com.growup.pms.test.fixture.team.builder.TeamResponseTestBuilder.팀_생성_응답은;
+import static com.growup.pms.test.fixture.team.builder.TeamUpdateRequestTestBuilder.팀_변경_요청은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;

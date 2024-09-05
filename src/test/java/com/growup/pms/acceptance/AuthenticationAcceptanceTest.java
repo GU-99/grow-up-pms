@@ -1,7 +1,7 @@
 package com.growup.pms.acceptance;
 
-import static com.growup.pms.test.fixture.auth.LoginRequestTestBuilder.로그인_하는_사용자는;
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.auth.builder.LoginRequestTestBuilder.로그인_하는_사용자는;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static com.growup.pms.test.fixture.user.data.UserTestData.라이언;
 import static com.growup.pms.test.fixture.user.data.UserTestData.소피아;
 import static com.growup.pms.test.fixture.user.data.UserTestData.알렉스;

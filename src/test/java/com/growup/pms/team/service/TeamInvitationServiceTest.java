@@ -1,8 +1,8 @@
 package com.growup.pms.team.service;
 
-import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
-import static com.growup.pms.test.fixture.team.TeamUserTestBuilder.팀원은;
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
+import static com.growup.pms.test.fixture.team.builder.TeamUserTestBuilder.팀원은;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
