@@ -94,9 +94,9 @@ public class UserService {
     public UserUpdateResponse updateUserDetails(Long userId, UserUpdateCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
 
-        editField(command.nickname(), (v, u) -> u.editNickname(v.get()), user);
-        editField(command.bio(), (v, u) -> u.editBio(v.get()), user);
-        editField(command.profileImageUrl(), (v, u) -> u.editProfileImageUrl(v.get()), user);
+        editFieldIfPresent(command.nickname(), (v, u) -> u.editNickname(v.get()), user);
+        editFieldIfPresent(command.bio(), (v, u) -> u.editBio(v.get()), user);
+        editFieldIfPresent(command.profileImageUrl(), (v, u) -> u.editProfileImageUrl(v.get()), user);
 
         return UserUpdateResponse.of(user);
     }
@@ -105,10 +105,10 @@ public class UserService {
     public void updateUserLinks(Long userId, UserLinksUpdateCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
 
-        editField(command.links(), (v, u) -> u.editLinks(v.get()), user);
+        editFieldIfPresent(command.links(), (v, u) -> u.editLinks(v.get()), user);
     }
 
-    private <T> void editField(JsonNullable<T> value, BiConsumer<JsonNullable<T>, User> updater, User user) {
+    private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, User> updater, User user) {
         value.ifPresent(v -> updater.accept(JsonNullable.of(v), user));
     }
 
@@ -158,4 +158,3 @@ public class UserService {
         }
     }
 }
-
