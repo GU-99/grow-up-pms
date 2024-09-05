@@ -5,10 +5,10 @@ import lombok.Builder;
 @Builder
 public record UserTeamResponse(
         Long teamId,
-        String name,
+        String teamName,
         String content,
         String creator,
         boolean isPendingApproval,
-        String role
+        String roleName
 ) {
 }

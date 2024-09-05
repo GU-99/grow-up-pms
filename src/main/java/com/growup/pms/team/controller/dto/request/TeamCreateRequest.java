@@ -15,15 +15,12 @@ import lombok.Builder;
 
 @Builder
 public record TeamCreateRequest(
+        @NotNull
         @Pattern(regexp = TEAM_NAME_PATTERN)
-        String name,
+        String teamName,
 
         @Size(max = 300)
         String content,
-
-        @NotNull
-        @Positive
-        Long creatorId,
 
         @Valid
         @NotNull
@@ -31,9 +28,8 @@ public record TeamCreateRequest(
 ) {
     public TeamCreateCommand toCommand() {
         return TeamCreateCommand.builder()
-                .name(name())
+                .teamName(teamName())
                 .content(content)
-                .creatorId(creatorId)
                 .coworkers(coworkers.stream()
                         .map(TeamCoworkerRequest::toCommand)
                         .toList())
@@ -44,15 +40,15 @@ public record TeamCreateRequest(
     public record TeamCoworkerRequest(
             @NotNull
             @Positive
-            Long id,
+            Long userId,
 
             @NotBlank
-            String role
+            String roleName
     ) {
         public TeamCoworkerCommand toCommand() {
             return TeamCoworkerCommand.builder()
-                    .id(id)
-                    .role(role)
+                    .userId(userId)
+                    .roleName(roleName)
                     .build();
         }
     }

@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "role_permissions")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RolePermission {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_role_permission_role"))

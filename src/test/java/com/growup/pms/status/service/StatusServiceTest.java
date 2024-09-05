@@ -1,10 +1,10 @@
 package com.growup.pms.status.service;
 
-import static com.growup.pms.test.fixture.project.ProjectTestBuilder.프로젝트는;
-import static com.growup.pms.test.fixture.status.StatusCreateRequestTestBuilder.상태_생성_요청은;
-import static com.growup.pms.test.fixture.status.StatusEditRequestTestBuilder.상태_변경_요청은;
-import static com.growup.pms.test.fixture.status.StatusResponseTestBuilder.상태_응답은;
-import static com.growup.pms.test.fixture.status.StatusTestBuilder.상태는;
+import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
+import static com.growup.pms.test.fixture.status.builder.StatusCreateRequestTestBuilder.상태_생성_요청은;
+import static com.growup.pms.test.fixture.status.builder.StatusEditRequestTestBuilder.상태_변경_요청은;
+import static com.growup.pms.test.fixture.status.builder.StatusResponseTestBuilder.상태_응답은;
+import static com.growup.pms.test.fixture.status.builder.StatusTestBuilder.상태는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;

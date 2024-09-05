@@ -1,9 +1,9 @@
 package com.growup.pms.user.repository;
 
-import static com.growup.pms.test.fixture.role.RoleTestBuilder.역할은;
-import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
-import static com.growup.pms.test.fixture.team.TeamUserTestBuilder.팀원은;
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
+import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
+import static com.growup.pms.test.fixture.team.builder.TeamUserTestBuilder.팀원은;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.growup.pms.role.domain.Role;

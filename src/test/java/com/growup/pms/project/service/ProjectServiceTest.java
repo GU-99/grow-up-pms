@@ -1,11 +1,11 @@
 package com.growup.pms.project.service;
 
-import static com.growup.pms.test.fixture.project.ProjectCreateRequestTestBuilder.프로젝트_생성_요청은;
-import static com.growup.pms.test.fixture.project.ProjectResponseTestBuilder.프로젝트_목록조회_응답은;
-import static com.growup.pms.test.fixture.project.ProjectTestBuilder.프로젝트는;
-import static com.growup.pms.test.fixture.project.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
-import static com.growup.pms.test.fixture.team.TeamTestBuilder.팀은;
-import static com.growup.pms.test.fixture.user.UserTestBuilder.사용자는;
+import static com.growup.pms.test.fixture.project.builder.ProjectCreateRequestTestBuilder.프로젝트_생성_요청은;
+import static com.growup.pms.test.fixture.project.builder.ProjectResponseTestBuilder.프로젝트_목록조회_응답은;
+import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
+import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
+import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
+import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +27,7 @@ import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.role.RoleTestBuilder;
+import com.growup.pms.test.fixture.role.builder.RoleTestBuilder;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.util.Collections;

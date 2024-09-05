@@ -46,8 +46,8 @@ public class TeamService {
     public void updateTeam(Long teamId, TeamUpdateCommand command) {
         Team team = teamRepository.findByIdOrThrow(teamId);
 
-        if (command.name().isPresent()) {
-            team.updateName(command.name().get());
+        if (command.teamName().isPresent()) {
+            team.updateName(command.teamName().get());
         }
         if (command.content().isPresent()) {
             team.updateContent(command.content().get());

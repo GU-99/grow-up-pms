@@ -1,6 +1,6 @@
 package com.growup.pms.team.service;
 
-import static com.growup.pms.test.fixture.role.RoleTestBuilder.역할은;
+import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
