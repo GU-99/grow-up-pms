@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class LoginControllerV1 {
-    
+
     private final RefreshTokenService redisRefreshTokenService;
     private final JwtLoginService loginService;
     private final JwtTokenProvider tokenProvider;
@@ -58,20 +58,29 @@ public class LoginControllerV1 {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             @CurrentUser SecurityUser user,
-            @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken
+            @CookieValue(JwtConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
+            HttpServletResponse response
     ) {
         redisRefreshTokenService.revoke(user.getId(), refreshToken);
+        expireRefreshTokenCookie(response);
         return ResponseEntity.ok().build();
     }
 
     private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         Cookie refreshTokenCookie = new Cookie(JwtConstants.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
-
         refreshTokenCookie.setHttpOnly(true);
         // TODO: 서비스가 HTTPS로 배포된 후에 보안 강화를 위해 주석을 해제해야 함
         // refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge((int) (tokenProvider.refreshTokenExpirationMillis / 1000));
+        response.addCookie(refreshTokenCookie);
+    }
+
+    private void expireRefreshTokenCookie(HttpServletResponse response) {
+        Cookie refreshTokenCookie = new Cookie(JwtConstants.REFRESH_TOKEN_COOKIE_NAME, null);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(0);
         response.addCookie(refreshTokenCookie);
     }
 }
