@@ -10,18 +10,20 @@ import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
-import com.growup.pms.user.domain.UserLink;
 import com.growup.pms.user.repository.UserRepository;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
 import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserDownloadCommand;
+import com.growup.pms.user.service.dto.UserLinksUpdateCommand;
 import com.growup.pms.user.service.dto.UserUpdateCommand;
 import com.growup.pms.user.service.dto.UserUploadCommand;
 import com.growup.pms.user.service.dto.VerificationCodeCreateCommand;
 import java.util.List;
+import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -92,18 +94,24 @@ public class UserService {
     public UserUpdateResponse updateUserDetails(Long userId, UserUpdateCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
 
-        user.updateProfile(command.nickname(), command.bio(), command.profileImageUrl());
-        updateLinks(command.links(), user);
+        editFieldIfPresent(command.nickname(), (v, u) -> u.editNickname(v.get()), user);
+        editFieldIfPresent(command.bio(), (v, u) -> u.editBio(v.get()), user);
+        editFieldIfPresent(command.profileImageUrl(), (v, u) -> u.editProfileImageUrl(v.get()), user);
 
-        List<String> userLinks = user.getLinks().stream().map(UserLink::getLink).toList();
-        return UserUpdateResponse.of(user, userLinks);
+        return UserUpdateResponse.of(user);
     }
 
-    private static void updateLinks(List<String> inputLinks, User user) {
-        user.resetLinks();
-        user.addLinks(inputLinks);
+    @Transactional
+    public void updateUserLinks(Long userId, UserLinksUpdateCommand command) {
+        User user = userRepository.findByIdOrThrow(userId);
+
+        editFieldIfPresent(command.links(), (v, u) -> u.editLinks(v.get()), user);
     }
-      
+
+    private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, User> updater, User user) {
+        value.ifPresent(v -> updater.accept(JsonNullable.of(v), user));
+    }
+
     public RecoverUsernameResponse recoverUsername(RecoverUsernameCommand command) {
         validateVerificationCode(command.email(), command.verificationCode());
 
@@ -150,4 +158,3 @@ public class UserService {
         }
     }
 }
-
