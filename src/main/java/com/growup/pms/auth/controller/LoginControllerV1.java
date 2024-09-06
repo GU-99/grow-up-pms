@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class LoginControllerV1 {
+    
     private final RefreshTokenService redisRefreshTokenService;
     private final JwtLoginService loginService;
     private final JwtTokenProvider tokenProvider;

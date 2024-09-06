@@ -20,7 +20,7 @@ import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.RedisRefreshTokenService;
-import com.growup.pms.auth.service.dto.LoginCommand;
+import com.growup.pms.auth.service.dto.UserLoginCommand;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
@@ -49,7 +49,7 @@ class LoginControllerV1DocsTest extends ControllerSliceTestSupport {
         LoginRequest 유효한_요청 = 로그인_하는_사용자는().이다();
         TokenResponse 예상하는_발급된_토큰 = 발급된_토큰은().이다();
 
-        when(loginService.authenticateUser(any(LoginCommand.class))).thenReturn(예상하는_발급된_토큰);
+        when(loginService.authenticateUser(any(UserLoginCommand.class))).thenReturn(예상하는_발급된_토큰);
 
         // when & then
         mockMvc.perform(post("/api/v1/user/login")
