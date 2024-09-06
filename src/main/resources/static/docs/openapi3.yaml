@@ -917,7 +917,7 @@ paths:
       tags:
       - Auth
       summary: 토큰 재발급
-      description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.
+      description: 쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 액세스 토큰을 발급합니다.
       operationId: login-controller-v1-docs-test/토큰_재발급_api_문서를_생성한다
       parameters:
       - name: Content-Type
@@ -933,10 +933,6 @@ paths:
           headers:
             Authorization:
               description: 새 액세스 토큰
-              schema:
-                type: string
-            Set-Cookie:
-              description: 새 리프레시 토큰
               schema:
                 type: string
   /api/v1/user/team:

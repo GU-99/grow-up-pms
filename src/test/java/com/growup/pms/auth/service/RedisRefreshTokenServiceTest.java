@@ -98,9 +98,6 @@ class RedisRefreshTokenServiceTest {
             when(tokenProvider.getAuthentication(기존_리프레시_토큰)).thenReturn(인증_정보);
             when(tokenProvider.generateToken(인증된_사용자)).thenReturn(예상하는_새_토큰);
             when(stringRedisTemplate.hasKey(anyString())).thenReturn(true);
-            when(stringRedisTemplate.delete(anyString())).thenReturn(true);
-            when(stringRedisTemplate.opsForValue()).thenReturn(valueOperations);
-            doNothing().when(valueOperations).set(anyString(), eq(""), any(Duration.class));
 
             // when & then
             assertThatCode(() -> refreshTokenService.refreshJwtTokens(기존_리프레시_토큰))

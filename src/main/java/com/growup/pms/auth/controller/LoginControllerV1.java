@@ -35,7 +35,6 @@ public class LoginControllerV1 {
             HttpServletResponse response
     ) {
         TokenResponse authTokens = loginService.authenticateUser(request.toCommand());
-
         setRefreshTokenCookie(response, authTokens.refreshToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
@@ -48,8 +47,6 @@ public class LoginControllerV1 {
             HttpServletResponse response
     ) {
         TokenResponse authTokens = redisRefreshTokenService.refreshJwtTokens(refreshToken);
-
-        setRefreshTokenCookie(response, authTokens.refreshToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
                 .build();

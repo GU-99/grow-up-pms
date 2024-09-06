@@ -105,16 +105,14 @@ class LoginControllerV1DocsTest extends ControllerSliceTestSupport {
                         .cookie(new Cookie("refreshToken", 유효한_리프레시_토큰)))
                 .andExpectAll(
                         status().isOk(),
-                        header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 발급된_새_토큰.accessToken()),
-                        cookie().value("refreshToken", 발급된_새_토큰.refreshToken()))
+                        header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 발급된_새_토큰.accessToken()))
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("토큰 재발급")
-                                .description("쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.")
+                                .description("쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 액세스 토큰을 발급합니다.")
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .responseHeaders(
-                                        headerWithName(HttpHeaders.AUTHORIZATION).type(SimpleType.STRING).description("새 액세스 토큰"),
-                                        headerWithName(HttpHeaders.SET_COOKIE).type(SimpleType.STRING).description("새 리프레시 토큰")).build())));
+                                        headerWithName(HttpHeaders.AUTHORIZATION).type(SimpleType.STRING).description("새 액세스 토큰")).build())));
     }
 }
