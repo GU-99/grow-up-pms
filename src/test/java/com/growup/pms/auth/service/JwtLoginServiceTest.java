@@ -8,7 +8,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
-import com.growup.pms.auth.service.dto.LoginCommand;
+import com.growup.pms.auth.service.dto.UserLoginCommand;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -60,7 +60,7 @@ class JwtLoginServiceTest {
         void 성공한다() {
             // given
             Long 기존_사용자_ID = 1L;
-            LoginCommand 유효한_로그인_요청 = 로그인_하는_사용자는().이다().toCommand();
+            UserLoginCommand 유효한_로그인_요청 = 로그인_하는_사용자는().이다().toCommand();
             UsernamePasswordAuthenticationToken 인증_토큰 = new UsernamePasswordAuthenticationToken(유효한_로그인_요청.username(), 유효한_로그인_요청.password());
             TokenResponse 예상하는_새_토큰 = 발급된_토큰은().이다();
 
@@ -82,7 +82,7 @@ class JwtLoginServiceTest {
         @Test
         void 실패하면_예외가_발생한다() {
             // given
-            LoginCommand 잘못된_요청 = 로그인_하는_사용자는().아이디가("존재하지 않는 아이디").이다().toCommand();
+            UserLoginCommand 잘못된_요청 = 로그인_하는_사용자는().아이디가("존재하지 않는 아이디").이다().toCommand();
             UsernamePasswordAuthenticationToken 인증_토큰 = new UsernamePasswordAuthenticationToken(잘못된_요청.username(), 잘못된_요청.password());
 
             doThrow(new RuntimeException()).when(authenticationManager).authenticate(인증_토큰);

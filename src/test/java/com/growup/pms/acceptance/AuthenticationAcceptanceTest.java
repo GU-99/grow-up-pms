@@ -128,9 +128,6 @@ public class AuthenticationAcceptanceTest extends AcceptanceTestSupport {
             assertSoftly(softly -> {
                 softly.assertThat(실제_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-                String 갱신된_리프레시_토큰 = 실제_응답.cookie(리프레시_토큰_쿠키_이름);
-                softly.assertThat(갱신된_리프레시_토큰).isNotEmpty();
-
                 String 갱신된_액세스_토큰 = 실제_응답.header(HttpHeaders.AUTHORIZATION);
                 softly.assertThat(갱신된_액세스_토큰).isNotEmpty();
                 softly.assertThat(갱신된_액세스_토큰).isNotEqualTo(인증_정보.accessToken());

@@ -1,7 +1,7 @@
 package com.growup.pms.auth.service;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
-import com.growup.pms.auth.service.dto.LoginCommand;
+import com.growup.pms.auth.service.dto.UserLoginCommand;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
@@ -17,12 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class JwtLoginService {
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider tokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
 
     @Transactional
-    public TokenResponse authenticateUser(LoginCommand command) {
+    public TokenResponse authenticateUser(UserLoginCommand command) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(command.username(), command.password());
         Authentication authentication = authenticate(authenticationToken);
         SecurityUser principal = (SecurityUser) authentication.getPrincipal();
