@@ -12,7 +12,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserLinkTestBuilder {
     private Long id = 1L;
-    private User user;
     private String link = "https://github.com/growup";
 
     public static UserLinkTestBuilder 링크는() {
@@ -24,17 +23,12 @@ public class UserLinkTestBuilder {
         return this;
     }
 
-    public UserLinkTestBuilder 사용자가(User 사용자) {
-        this.user = 사용자;
-        return this;
-    }
-
     public UserLinkTestBuilder 링크가(String 링크) {
         this.link = 링크;
         return this;
     }
 
-    public UserLink 이다() {
+    public UserLink 이다(User user) {
         var userLink = UserLink.builder()
                 .user(user)
                 .link(link)

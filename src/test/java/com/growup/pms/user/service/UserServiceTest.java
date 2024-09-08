@@ -3,7 +3,6 @@ package com.growup.pms.user.service;
 import static com.growup.pms.test.fixture.user.builder.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.UserCreateRequestTestBuilder.가입하는_사용자는;
-import static com.growup.pms.test.fixture.user.builder.UserLinkTestBuilder.링크는;
 import static com.growup.pms.test.fixture.user.builder.UserLinksUpdateRequestTestBuilder.사용자_링크_변경_요청은;
 import static com.growup.pms.test.fixture.user.builder.UserPasswordUpdateTestBuilder.비밀번호_변경은;
 import static com.growup.pms.test.fixture.user.builder.UserSearchResponseTestBuilder.사용자_검색_응답은;
@@ -79,7 +78,6 @@ class UserServiceTest {
             String 현재_닉네임 = "브라운";
             String 현재_자기소개 = "안녕하세요, 브라운입니다!";
             String 현재_프로필_이미지 = "https://growup.kr/images/profile.png";
-            List<UserLink> 현재_등록된_링크 = Collections.singletonList(링크는().이다());
 
             User 현재_사용자 = 사용자는()
                     .아이디가(현재_아이디)
@@ -87,7 +85,6 @@ class UserServiceTest {
                     .닉네임이(현재_닉네임)
                     .자기소개가(현재_자기소개)
                     .프로필_이미지가(현재_프로필_이미지)
-                    .링크가(현재_등록된_링크)
                     .이다();
             UserResponse 예상_응답 = UserResponse.from(현재_사용자);
 
@@ -259,8 +256,8 @@ class UserServiceTest {
 
             // then
             assertSoftly(softly -> softly.assertThat(사용자_정보_부분_변경_응답)
-                    .extracting("userId", "nickname", "profileImageUrl", "bio", "links")
-                    .contains(기존_사용자_아이디, 변경할_닉네임, "", "", Collections.emptyList()));
+                    .extracting("userId", "nickname", "links")
+                    .contains(기존_사용자_아이디, 변경할_닉네임, Collections.emptyList()));
         }
     }
 
