@@ -11,6 +11,7 @@ import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.request.VerificationCodeCreateRequest;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
+import com.growup.pms.user.controller.dto.response.UserResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
@@ -37,6 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserControllerV1 {
 
     private final UserService userService;
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getMe(@CurrentUser SecurityUser user) {
+        return ResponseEntity.ok().body(userService.getUser(user.getId()));
+    }
 
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request) {
