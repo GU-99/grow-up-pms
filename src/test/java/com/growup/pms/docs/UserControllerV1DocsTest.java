@@ -5,6 +5,7 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.growup.pms.test.fixture.user.builder.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.UserCreateRequestTestBuilder.가입하는_사용자는;
+import static com.growup.pms.test.fixture.user.builder.UserResponseTestBuilder.사용자_조회_응답은;
 import static com.growup.pms.test.fixture.user.builder.UserTeamResponseTestBuilder.가입한_팀_응답은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -25,6 +26,7 @@ import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
+import com.growup.pms.user.controller.dto.response.UserResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.service.UserService;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
@@ -49,6 +51,34 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
 
     @Autowired
     UserService userService;
+
+    @Test
+    @WithMockSecurityUser(id = 1L)
+    void 현재_사용자_정보_조회_API_문서를_생성한다() throws Exception {
+        // given
+        Long 현재_사용자_ID = 1L;
+        UserResponse 예상_응답 = 사용자_조회_응답은().이다();
+
+        when(userService.getUser(현재_사용자_ID)).thenReturn(예상_응답);
+
+        // when & then
+        mockMvc.perform(get("/api/v1/user/me"))
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("현재 사용자 정보 조회")
+                                .description("현재 로그인한 사용자의 정보를 조회합니다.")
+                                .responseFields(
+                                        fieldWithPath("username").type(JsonFieldType.STRING).description("아이디"),
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
+                                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 주소"),
+                                        fieldWithPath("links").type(JsonFieldType.ARRAY).description("링크 목록"))
+                                .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .build())));
+    }
 
     @Test
     @WithMockSecurityUser(id = 1L)

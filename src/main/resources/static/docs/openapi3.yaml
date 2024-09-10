@@ -912,6 +912,36 @@ paths:
       responses:
         "200":
           description: "200"
+  /api/v1/user/me:
+    get:
+      tags:
+      - User
+      summary: 현재 사용자 정보 조회
+      description: 현재 로그인한 사용자의 정보를 조회합니다.
+      operationId: user-controller-v1-docs-test/현재_사용자_정보_조회_api_문서를_생성한다
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Content-Type:
+              description: application/json
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-user-me2145976213'
+              examples:
+                user-controller-v1-docs-test/현재_사용자_정보_조회_api_문서를_생성한다:
+                  value: |-
+                    {
+                      "username" : "brown",
+                      "email" : "brown@growup.kr",
+                      "nickname" : "브라운",
+                      "bio" : "안녕하세요, 브라운입니다!",
+                      "profileImageUrl" : "https://growup.kr/images/image.png",
+                      "links" : [ "https://github.com/growup" ]
+                    }
   /api/v1/user/refresh:
     post:
       tags:
@@ -1082,16 +1112,16 @@ paths:
                 task-controller-v1-docs-test/일정_전체조회_api_문서를_생성한다:
                   value: |-
                     {
-                      "2" : [ {
-                        "taskId" : 2,
-                        "statusId" : 2,
-                        "taskName" : "프로젝트 일정 등록 기능 구현",
-                        "sortOrder" : 1
-                      } ],
                       "1" : [ {
                         "taskId" : 1,
                         "statusId" : 1,
                         "taskName" : "환경설정 마치기",
+                        "sortOrder" : 1
+                      } ],
+                      "2" : [ {
+                        "taskId" : 2,
+                        "statusId" : 2,
+                        "taskName" : "프로젝트 일정 등록 기능 구현",
                         "sortOrder" : 1
                       } ]
                     }
@@ -2123,3 +2153,30 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
+    api-v1-user-me2145976213:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: 닉네임
+        bio:
+          type: string
+          description: 자기소개
+        links:
+          type: array
+          description: 링크 목록
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        profileImageUrl:
+          type: string
+          description: 프로필 이미지 주소
+        email:
+          type: string
+          description: 이메일
+        username:
+          type: string
+          description: 아이디

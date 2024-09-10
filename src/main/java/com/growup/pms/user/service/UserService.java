@@ -6,6 +6,7 @@ import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
+import com.growup.pms.user.controller.dto.response.UserResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
@@ -40,6 +41,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
     private final RedisEmailVerificationService emailVerificationService;
+
+    public UserResponse getUser(Long userId) {
+        User foundUser = userRepository.findByIdOrThrow(userId);
+        return UserResponse.from(foundUser);
+    }
 
     @Transactional
     public Long save(UserCreateCommand command) {

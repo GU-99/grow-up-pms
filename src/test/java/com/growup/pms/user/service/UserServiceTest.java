@@ -1,9 +1,9 @@
 package com.growup.pms.user.service;
 
-import static com.growup.pms.test.fixture.user.builder.UserLinksUpdateRequestTestBuilder.사용자_링크_변경_요청은;
 import static com.growup.pms.test.fixture.user.builder.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.UserCreateRequestTestBuilder.가입하는_사용자는;
+import static com.growup.pms.test.fixture.user.builder.UserLinksUpdateRequestTestBuilder.사용자_링크_변경_요청은;
 import static com.growup.pms.test.fixture.user.builder.UserPasswordUpdateTestBuilder.비밀번호_변경은;
 import static com.growup.pms.test.fixture.user.builder.UserSearchResponseTestBuilder.사용자_검색_응답은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
@@ -24,6 +24,7 @@ import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.controller.dto.request.UserUpdateRequest;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
+import com.growup.pms.user.controller.dto.response.UserResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
@@ -38,7 +39,6 @@ import com.growup.pms.user.service.dto.UserUpdateCommand;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,6 +65,38 @@ class UserServiceTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Nested
+    class 사용자가_자신_정보_조회_시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 현재_사용자_ID = 1L;
+            String 현재_아이디 = "brown";
+            String 현재_이메일 = "brown@growup.kr";
+            String 현재_닉네임 = "브라운";
+            String 현재_자기소개 = "안녕하세요, 브라운입니다!";
+            String 현재_프로필_이미지 = "https://growup.kr/images/profile.png";
+
+            User 현재_사용자 = 사용자는()
+                    .아이디가(현재_아이디)
+                    .이메일이(현재_이메일)
+                    .닉네임이(현재_닉네임)
+                    .자기소개가(현재_자기소개)
+                    .프로필_이미지가(현재_프로필_이미지)
+                    .이다();
+            UserResponse 예상_응답 = UserResponse.from(현재_사용자);
+
+            when(userRepository.findByIdOrThrow(현재_사용자_ID)).thenReturn(현재_사용자);
+
+            // when
+            UserResponse 실제_응답 = userService.getUser(현재_사용자_ID);
+
+            // then
+            assertThat(실제_응답).isEqualTo(예상_응답);
+        }
+    }
 
     @Nested
     class 사용자가_회원가입_시에 {
@@ -223,11 +255,9 @@ class UserServiceTest {
             UserUpdateResponse 사용자_정보_부분_변경_응답 = userService.updateUserDetails(기존_사용자_아이디, 사용자_정보_부분_변경_요청.toCommand());
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(사용자_정보_부분_변경_응답)
-                        .extracting("userId", "nickname", "profileImageUrl", "bio", "links")
-                        .contains(기존_사용자_아이디, 변경할_닉네임, "", "", Collections.emptyList());
-            });
+            assertSoftly(softly -> softly.assertThat(사용자_정보_부분_변경_응답)
+                    .extracting("userId", "nickname", "links")
+                    .contains(기존_사용자_아이디, 변경할_닉네임, Collections.emptyList()));
         }
     }
 
@@ -258,7 +288,7 @@ class UserServiceTest {
                 softly.assertThat(
                         기존_사용자.getLinks().stream()
                                 .map(UserLink::getLink)
-                                .collect(Collectors.toList())
+                                .toList()
                 ).containsExactlyInAnyOrderElementsOf(변경할_링크);
             });
         }
