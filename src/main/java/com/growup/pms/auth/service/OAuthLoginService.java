@@ -74,7 +74,6 @@ public class OAuthLoginService {
                 .profile(UserProfile.builder()
                         .nickname(nickname)
                         .bio(null)
-                        .image(null)
                         .imageName(null)
                         .build())
                 .password(null)
