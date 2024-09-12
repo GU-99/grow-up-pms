@@ -37,11 +37,12 @@ public enum ErrorCode {
     INVALID_DATA_FORMAT(BAD_REQUEST, "DF_001", "입력한 데이터 형식이 올바르지 않습니다. 입력 형식을 확인해 주세요."),
 
     // 스토리지(Storage) - ST
-    FILE_STORAGE_ERROR(INTERNAL_SERVER_ERROR, "ST_001", "파일을 저장할 수 없습니다. 잠시 후 다시 시도해 주세요."),
-    EMPTY_FILE_ERROR(BAD_REQUEST, "ST_002", "업로드된 파일이 비어 있습니다. 유효한 파일을 선택해 주세요."),
-    FOLDER_CREATION_ERROR(INTERNAL_SERVER_ERROR, "ST_003", "저장 폴더를 생성하지 못했습니다. 시스템 관리자에게 문의해 주세요."),
-    READ_FILE_ERROR(INTERNAL_SERVER_ERROR, "ST_004", "저장된 파일을 읽을 수 없습니다."),
-    FILE_NOT_FOUND(NOT_FOUND, "ST_005", "파일을 찾을 수 없습니다."),
+    FILE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "ST_001", "파일 업로드에 실패했습니다."),
+    FILE_DOWNLOAD_FAILED(INTERNAL_SERVER_ERROR, "ST_002", "파일 다운로드에 실패했습니다."),
+    FILE_DELETE_FAILED(INTERNAL_SERVER_ERROR, "ST_003", "파일 삭제에 실패했습니다."),
+    EMPTY_FILE(BAD_REQUEST, "ST_004", "업로드된 파일이 비어 있습니다."),
+    MISSING_FILE_NAME(BAD_REQUEST, "ST_005", "파일 이름이 누락되었습니다."),
+    FILE_CONVERSION_FAILED(INTERNAL_SERVER_ERROR, "ST_006", "파일 변환에 실패했습니다."),
 
     // 팀(Team) - TM
     USER_ALREADY_IN_TEAM(BAD_REQUEST, "TM_001", "해당 사용자가 이미 팀에 속해 있습니다."),

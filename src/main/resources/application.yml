@@ -27,9 +27,6 @@ server:
     whitelabel:
       enabled: false
 
-storage:
-  root-path: uploads
-
 jasypt:
   encryptor:
     bean: jasyptEncryptorAES

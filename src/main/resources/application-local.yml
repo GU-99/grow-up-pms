@@ -24,3 +24,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+aws:
+  access-key: dummy-access-key
+  secret-key: dummy-secret-key
+  s3:
+    region: dummy-region
+    bucket-name: dummy-bucket-name
