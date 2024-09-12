@@ -20,21 +20,21 @@ public class UserUpdateRequest {
     @Size(max = 200)
     JsonNullable<String> bio = JsonNullable.undefined();
 
-    @Size(max = 255)
-    JsonNullable<String> profileImageUrl = JsonNullable.undefined();
+    @Size(max = 64)
+    JsonNullable<String> profileImageName = JsonNullable.undefined();
 
     @Builder
-    public UserUpdateRequest(JsonNullable<String> nickname, JsonNullable<String> bio, JsonNullable<String> profileImageUrl) {
+    public UserUpdateRequest(JsonNullable<String> nickname, JsonNullable<String> bio, JsonNullable<String> profileImageName) {
         this.nickname = nickname;
         this.bio = bio;
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageName = profileImageName;
     }
 
     public UserUpdateCommand toCommand() {
         return UserUpdateCommand.builder()
                 .nickname(nickname)
                 .bio(bio)
-                .profileImageUrl(profileImageUrl)
+                .profileImageName(profileImageName)
                 .build();
     }
 }

@@ -12,7 +12,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public class UserUpdateRequestTestBuilder {
     private String nickname = "growUp";
     private String bio;
-    private String profileImageUrl;
+    private String profileImageName;
     public static UserUpdateRequestTestBuilder 사용자_정보_변경_요청은() {
         return new UserUpdateRequestTestBuilder();
     }
@@ -27,8 +27,8 @@ public class UserUpdateRequestTestBuilder {
         return this;
     }
 
-    public UserUpdateRequestTestBuilder 프로필_이미지_URL이(String 프로필_이미지_URL) {
-        this.profileImageUrl = 프로필_이미지_URL;
+    public UserUpdateRequestTestBuilder 프로필_이미지_이름이(String 프로필_이미지_이름) {
+        this.profileImageName = 프로필_이미지_이름;
         return this;
     }
 
@@ -36,7 +36,7 @@ public class UserUpdateRequestTestBuilder {
         return UserUpdateRequest.builder()
                 .nickname(JsonNullable.of(nickname))
                 .bio(JsonNullable.of(bio))
-                .profileImageUrl(JsonNullable.of(profileImageUrl))
+                .profileImageName(JsonNullable.of(profileImageName))
                 .build();
     }
 }

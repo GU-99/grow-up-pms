@@ -13,6 +13,7 @@ public class UserTeamResponseTestBuilder {
     private String name = "팀 이름";
     private String content = "팀 소개";
     private String creator = "팀장 닉네임";
+    private Long creatorId = 1L;
     private boolean isPendingApproval = true;
     private String role = "MATE";
 
@@ -40,6 +41,11 @@ public class UserTeamResponseTestBuilder {
         return this;
     }
 
+    public UserTeamResponseTestBuilder 팀장_식별자가(Long 팀장_식별자) {
+        this.creatorId = 팀장_식별자;
+        return this;
+    }
+
     public UserTeamResponseTestBuilder 가입_대기_여부가(boolean 가입_대기_여부) {
         this.isPendingApproval = 가입_대기_여부;
         return this;
@@ -51,6 +57,6 @@ public class UserTeamResponseTestBuilder {
     }
 
     public UserTeamResponse 이다() {
-        return new UserTeamResponse(teamId, name, content, creator, isPendingApproval, role);
+        return new UserTeamResponse(teamId, name, content, creator, creatorId, isPendingApproval, role);
     }
 }

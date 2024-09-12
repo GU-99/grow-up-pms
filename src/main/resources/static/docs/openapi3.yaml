@@ -77,7 +77,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-user624768080'
+              $ref: '#/components/schemas/api-v1-user-257767709'
             examples:
               user-controller-v1-docs-test/사용자_일반_회원가입_api_문서를_생성한다:
                 value: |-
@@ -87,7 +87,7 @@ paths:
                     "email" : "brown@example.com",
                     "nickname" : "브라운",
                     "bio" : "안녕하세요, 브라운입니다!",
-                    "profileImageUrl" : "https://example.org/attachments/img1.png",
+                    "profileImageName" : "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png",
                     "links" : [ "http://example.com" ],
                     "verificationCode" : "123456"
                   }
@@ -930,7 +930,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-user-me2145976213'
+                $ref: '#/components/schemas/api-v1-user-me1697810197'
               examples:
                 user-controller-v1-docs-test/현재_사용자_정보_조회_api_문서를_생성한다:
                   value: |-
@@ -939,7 +939,7 @@ paths:
                       "email" : "brown@growup.kr",
                       "nickname" : "브라운",
                       "bio" : "안녕하세요, 브라운입니다!",
-                      "profileImageUrl" : "https://growup.kr/images/image.png",
+                      "profileImageName" : "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png",
                       "links" : [ "https://github.com/growup" ]
                     }
   /api/v1/user/refresh:
@@ -983,7 +983,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-user-team-1051270522'
+                $ref: '#/components/schemas/api-v1-user-team-928817730'
               examples:
                 user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다:
                   value: |-
@@ -992,6 +992,7 @@ paths:
                       "teamName" : "팀 이름",
                       "content" : "팀 소개",
                       "creator" : "팀장 닉네임",
+                      "creatorId" : 1,
                       "isPendingApproval" : true,
                       "roleName" : "MATE"
                     } ]
@@ -1747,6 +1748,39 @@ paths:
           description: "200"
 components:
   schemas:
+    api-v1-user-257767709:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        profileImageName:
+          type: string
+          description: 프로필 이미지 이름
+        nickname:
+          type: string
+          description: 닉네임
+        bio:
+          type: string
+          description: 자기소개
+        links:
+          type: array
+          description: 사용자 링크
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        email:
+          type: string
+          description: 이메일
+        verificationCode:
+          type: string
+          description: 인증코드
+        username:
+          type: string
+          description: 사용자 아이디
     api-v1-user-recover-username-1963233032:
       type: object
       properties:
@@ -1831,29 +1865,6 @@ components:
         content:
           type: string
           description: 일정 내용
-    api-v1-user-team-1051270522:
-      type: array
-      items:
-        type: object
-        properties:
-          teamName:
-            type: string
-            description: 팀 이름
-          creator:
-            type: string
-            description: 팀장 닉네임
-          teamId:
-            type: number
-            description: 팀 ID
-          roleName:
-            type: string
-            description: 팀 내에서의 역할
-          isPendingApproval:
-            type: boolean
-            description: 가입 대기 여부
-          content:
-            type: string
-            description: 팀 소개
     api-v1-user-recover-username1645263616:
       type: object
       properties:
@@ -1914,6 +1925,32 @@ components:
         content:
           type: string
           description: 프로젝트 설명
+    api-v1-user-team-928817730:
+      type: array
+      items:
+        type: object
+        properties:
+          teamName:
+            type: string
+            description: 팀 이름
+          creator:
+            type: string
+            description: 팀장 닉네임
+          teamId:
+            type: number
+            description: 팀 ID
+          roleName:
+            type: string
+            description: 팀 내에서의 역할
+          creatorId:
+            type: number
+            description: 팀장 ID
+          isPendingApproval:
+            type: boolean
+            description: 가입 대기 여부
+          content:
+            type: string
+            description: 팀 소개
     api-v1-team-teamId-user-targetMemberId-role-1605929895:
       type: object
       properties:
@@ -1977,6 +2014,33 @@ components:
         username:
           type: string
           description: 아이디
+    api-v1-user-me1697810197:
+      type: object
+      properties:
+        profileImageName:
+          type: string
+          description: 프로필 이미지 이름
+        nickname:
+          type: string
+          description: 닉네임
+        bio:
+          type: string
+          description: 자기소개
+        links:
+          type: array
+          description: 링크 목록
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        email:
+          type: string
+          description: 이메일
+        username:
+          type: string
+          description: 아이디
     api-v1-user-recover-password546453054:
       type: object
       properties:
@@ -1989,39 +2053,6 @@ components:
         username:
           type: string
           description: 가입 시 입력한 아이디
-    api-v1-user624768080:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 비밀번호
-        nickname:
-          type: string
-          description: 닉네임
-        bio:
-          type: string
-          description: 자기소개
-        links:
-          type: array
-          description: 사용자 링크
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        profileImageUrl:
-          type: string
-          description: 프로필 이미지 URL
-        email:
-          type: string
-          description: 이메일
-        verificationCode:
-          type: string
-          description: 인증코드
-        username:
-          type: string
-          description: 사용자 아이디
     프로젝트 일정 생성 요청 예시입니다.:
       title: 프로젝트 일정 생성 요청 예시입니다.
       type: object
@@ -2153,30 +2184,3 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
-    api-v1-user-me2145976213:
-      type: object
-      properties:
-        nickname:
-          type: string
-          description: 닉네임
-        bio:
-          type: string
-          description: 자기소개
-        links:
-          type: array
-          description: 링크 목록
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        profileImageUrl:
-          type: string
-          description: 프로필 이미지 주소
-        email:
-          type: string
-          description: 이메일
-        username:
-          type: string
-          description: 아이디

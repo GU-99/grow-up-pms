@@ -36,8 +36,8 @@ public record UserCreateRequest(
         @Length(max = 200)
         String bio,
 
-        @Length(max = 255)
-        String profileImageUrl,
+        @Length(max = 64)
+        String profileImageName,
 
         @NotNull
         List<@NotNull @URL @Size(max = 255) String> links,
@@ -52,7 +52,7 @@ public record UserCreateRequest(
                 .email(email)
                 .nickname(nickname)
                 .bio(bio)
-                .profileImageUrl(profileImageUrl)
+                .profileImageName(profileImageName)
                 .links(links)
                 .verificationCode(verificationCode)
                 .build();

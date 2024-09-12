@@ -10,7 +10,7 @@ import lombok.Builder;
 public record UserUpdateResponse(
         Long userId,
         String nickname,
-        String profileImageUrl,
+        String profileImageName,
         String bio,
         List<String> links
 ) {
@@ -19,7 +19,7 @@ public record UserUpdateResponse(
         return UserUpdateResponse.builder()
                 .userId(user.getId())
                 .bio(getOrEmptyString(user.getProfile().getBio()))
-                .profileImageUrl(getOrEmptyString(user.getProfile().getImage()))
+                .profileImageName(getOrEmptyString(user.getProfile().getImageName()))
                 .nickname(user.getProfile().getNickname())
                 .links(getLinkFromUserLink(user.getLinks()))
                 .build();

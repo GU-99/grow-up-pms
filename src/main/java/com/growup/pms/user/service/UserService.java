@@ -3,7 +3,6 @@ package com.growup.pms.user.service;
 import com.growup.pms.auth.service.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
-import com.growup.pms.common.storage.service.StorageService;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
 import com.growup.pms.user.controller.dto.response.UserResponse;
@@ -16,10 +15,8 @@ import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
 import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
-import com.growup.pms.user.service.dto.UserDownloadCommand;
 import com.growup.pms.user.service.dto.UserLinksUpdateCommand;
 import com.growup.pms.user.service.dto.UserUpdateCommand;
-import com.growup.pms.user.service.dto.UserUploadCommand;
 import com.growup.pms.user.service.dto.VerificationCodeCreateCommand;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -30,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +35,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final StorageService storageService;
     private final RedisEmailVerificationService emailVerificationService;
 
     public UserResponse getUser(Long userId) {
@@ -65,29 +60,6 @@ public class UserService {
     }
 
     @Transactional
-    public void uploadImage(Long userId, UserUploadCommand command) {
-        User user = userRepository.findByIdOrThrow(userId);
-
-        String path = "users";
-        MultipartFile image = command.file();
-
-        String imagePath = storageService.upload(image, path);
-        user.replaceProfileImage(path + "/" + imagePath);
-        user.updateImageName(image.getOriginalFilename());
-
-        userRepository.save(user);
-    }
-
-    @Transactional
-    public UserDownloadCommand imageDownload(Long userId) {
-        User user = userRepository.findByIdOrThrow(userId);
-
-        String path = user.getProfile().getImage();
-
-        return new UserDownloadCommand(user.getProfile().getImageName(), storageService.getFileResource(path));
-    }
-
-    @Transactional
     public void updatePassword(Long userId, PasswordUpdateCommand command) {
         User user = userRepository.findByIdOrThrow(userId);
         validateCurrentPassword(user.getPassword(), command.password());
@@ -102,7 +74,7 @@ public class UserService {
 
         editFieldIfPresent(command.nickname(), (v, u) -> u.editNickname(v.get()), user);
         editFieldIfPresent(command.bio(), (v, u) -> u.editBio(v.get()), user);
-        editFieldIfPresent(command.profileImageUrl(), (v, u) -> u.editProfileImageUrl(v.get()), user);
+        editFieldIfPresent(command.profileImageName(), (v, u) -> u.updateImageName(v.get()), user);
 
         return UserUpdateResponse.of(user);
     }

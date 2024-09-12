@@ -8,12 +8,10 @@ import static com.growup.pms.test.fixture.user.builder.UserCreateRequestTestBuil
 import static com.growup.pms.test.fixture.user.builder.UserResponseTestBuilder.사용자_조회_응답은;
 import static com.growup.pms.test.fixture.user.builder.UserTeamResponseTestBuilder.가입한_팀_응답은;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,14 +30,10 @@ import com.growup.pms.user.service.UserService;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
 import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
-import com.growup.pms.user.service.dto.UserDownloadCommand;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -74,45 +68,10 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 주소"),
+                                        fieldWithPath("profileImageName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
                                         fieldWithPath("links").type(JsonFieldType.ARRAY).description("링크 목록"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
-    }
-
-    @Test
-    @WithMockSecurityUser(id = 1L)
-    void 프로필_이미지_다운로드_API_문서를_생성한다() throws  Exception {
-        // Given: Mock 설정
-        Path 다운로드할_파일_경로 = Path.of("src/test/resources/images/testImage.jpg");
-        String 다운로드할_파일_이름 = "download.jpg";
-        byte[] 다운로드한_파일의_Bytes = Files.readAllBytes(다운로드할_파일_경로);
-        UserDownloadCommand 다운로드할_파일_정보 = new UserDownloadCommand(다운로드할_파일_이름, new UrlResource(다운로드할_파일_경로.toUri()));
-
-        when(userService.imageDownload(anyLong())).thenReturn(다운로드할_파일_정보);
-
-        // when & then
-        mockMvc.perform(
-                        get("/api/v1/user/file")
-                                .header(HttpHeaders.AUTHORIZATION, "Bearer ACCESS_TOKEN")
-                ).andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + 다운로드할_파일_이름+ "\""))
-                .andExpect(content().bytes(다운로드한_파일의_Bytes))
-                .andDo(
-                        docs.document(resource(
-                                ResourceSnippetParameters.builder()
-                                        .tag(TAG)
-                                        .summary("사용자 프로필 다운로드")
-                                        .description("사용자의 프로필을 다운로드합니다.")
-                                        .requestHeaders(
-                                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 액세스 토큰")
-                                        )
-                                        .responseHeaders(
-                                                headerWithName(HttpHeaders.CONTENT_DISPOSITION).description("attachment; filename=\"" + 다운로드할_파일_이름+ "\"")
-                                        )
-                                        .build()
-                        ))
-                );
     }
 
     @Test
@@ -137,6 +96,7 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("[].teamName").type(JsonFieldType.STRING).description("팀 이름"),
                                         fieldWithPath("[].content").type(JsonFieldType.STRING).description("팀 소개"),
                                         fieldWithPath("[].creator").type(JsonFieldType.STRING).description("팀장 닉네임"),
+                                        fieldWithPath("[].creatorId").type(JsonFieldType.NUMBER).description("팀장 ID"),
                                         fieldWithPath("[].isPendingApproval").type(JsonFieldType.BOOLEAN).description("가입 대기 여부"),
                                         fieldWithPath("[].roleName").type(JsonFieldType.STRING).description("팀 내에서의 역할"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
@@ -170,7 +130,7 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("profileImageName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
                                         fieldWithPath("links").type(JsonFieldType.ARRAY).description("사용자 링크"),
                                         fieldWithPath("verificationCode").type(JsonFieldType.STRING).description("인증코드"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))

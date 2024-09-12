@@ -40,6 +40,7 @@ public class QueryDslUserRepositoryImpl implements QueryDslUserRepository {
                         team.name,
                         team.content,
                         user.profile.nickname,
+                        user.id,
                         teamUser.isPendingApproval,
                         role.name
                 ))

@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice(basePackageClasses = GrowUpPmsApplication.class)
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
         LogFormatter.info(ex, request);
         return ResponseEntity.status(ex.getErrorCode().getStatus())
                 .body(ErrorResponse.of(ex.getErrorCode()));
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorResponse> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpServletRequest request) {
+        ErrorResponse response = ErrorResponse.of(ex.getAllValidationResults());
+        LogFormatter.info(ex, request);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

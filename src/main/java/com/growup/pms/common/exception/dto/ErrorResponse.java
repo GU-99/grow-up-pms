@@ -3,10 +3,14 @@ package com.growup.pms.common.exception.dto;
 import com.growup.pms.common.exception.code.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -39,6 +43,10 @@ public class ErrorResponse {
         return new ErrorResponse(errorCode, FieldError.of(bindingResult));
     }
 
+    public static ErrorResponse of(List<ParameterValidationResult> parameterValidationResults) {
+        return new ErrorResponse(ErrorCode.INVALID_DATA_FORMAT, FieldError.of(parameterValidationResults));
+    }
+
     public static ErrorResponse of(MethodArgumentTypeMismatchException ex) {
         return new ErrorResponse(ErrorCode.INVALID_DATA_FORMAT, FieldError.of(ex.getName(), ex.getErrorCode()));
     }
@@ -64,12 +72,24 @@ public class ErrorResponse {
             return fieldErrors;
         }
 
-        private static List<FieldError> of(BindingResult bindingResult) {
+        public static List<FieldError> of(BindingResult bindingResult) {
             List<org.springframework.validation.FieldError> fieldErrors = bindingResult.getFieldErrors();
             return fieldErrors.stream()
                     .map(error -> new FieldError(
                             error.getField(),
                             error.getDefaultMessage()))
+                    .toList();
+        }
+
+        public static List<FieldError> of(List<ParameterValidationResult> parameterValidationResults) {
+            return parameterValidationResults.stream()
+                    .flatMap(result -> result.getResolvableErrors().stream()
+                        .map(error -> {
+                            String param = (error instanceof ObjectError objectError
+                                    ? objectError.getObjectName() :
+                                    ((MessageSourceResolvable) Objects.requireNonNull(error.getArguments())[0]).getDefaultMessage());
+                            return new FieldError(param, error.getDefaultMessage());
+                        }))
                     .toList();
         }
     }

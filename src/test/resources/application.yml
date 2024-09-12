@@ -21,9 +21,6 @@ spring:
       host: localhost
       port: 6379
 
-storage:
-  root-path: src/test/resources/
-
 jasypt:
   encryptor:
     bean: jasyptEncryptorAES
@@ -37,3 +34,10 @@ security:
 
 mailtrap:
   from: mailtrap@demomailtrap.com
+
+aws:
+  access-key: test-access-key
+  secret-key: test-secret-key
+  s3:
+    region: test-region
+    bucket-name: test-bucket-name
