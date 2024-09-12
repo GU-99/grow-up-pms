@@ -7,6 +7,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public record UserUpdateCommand(
         JsonNullable<String> nickname,
         JsonNullable<String> bio,
-        JsonNullable<String> profileImageUrl
+        JsonNullable<String> profileImageName
 ) {
 }

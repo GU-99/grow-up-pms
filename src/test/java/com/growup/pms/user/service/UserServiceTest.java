@@ -77,14 +77,14 @@ class UserServiceTest {
             String 현재_이메일 = "brown@growup.kr";
             String 현재_닉네임 = "브라운";
             String 현재_자기소개 = "안녕하세요, 브라운입니다!";
-            String 현재_프로필_이미지 = "https://growup.kr/images/profile.png";
+            String 현재_프로필_이미지 = "dfc52089-d1ce-4652-b810-ab07ecd342ce.png";
 
             User 현재_사용자 = 사용자는()
                     .아이디가(현재_아이디)
                     .이메일이(현재_이메일)
                     .닉네임이(현재_닉네임)
                     .자기소개가(현재_자기소개)
-                    .프로필_이미지가(현재_프로필_이미지)
+                    .프로필_이미지_이름이(현재_프로필_이미지)
                     .이다();
             UserResponse 예상_응답 = UserResponse.from(현재_사용자);
 
@@ -217,10 +217,10 @@ class UserServiceTest {
             User 기존_사용자 = 사용자는().이다();
             String 변경할_닉네임 = "wlshooo";
             String 변경할_자기소개 = "신입입니다. 잘 부탁드려요!";
-            String 변경할_프로필_이미지_URL = "http://example.com/profile.png";
+            String 변경할_프로필_이미지_이름 = "d4657d96-064e-4899-b13d-9bdda2840adc.png";
 
             UserUpdateCommand 사용자_정보_변경_요청 = 사용자_정보_변경_요청은()
-                    .닉네임이(변경할_닉네임).자기소개는(변경할_자기소개).프로필_이미지_URL이(변경할_프로필_이미지_URL).이다().toCommand();
+                    .닉네임이(변경할_닉네임).자기소개는(변경할_자기소개).프로필_이미지_이름이(변경할_프로필_이미지_이름).이다().toCommand();
 
             when(userRepository.findByIdOrThrow(기존_사용자_아이디)).thenReturn(기존_사용자);
 
@@ -231,8 +231,8 @@ class UserServiceTest {
             assertSoftly(softly -> {
                 softly.assertThat(변경된_유저_정보.links()).hasSize(0);
                 softly.assertThat(변경된_유저_정보)
-                        .extracting("userId", "nickname", "profileImageUrl", "bio", "links")
-                        .contains(기존_사용자_아이디, 변경할_닉네임, 변경할_자기소개, 변경할_프로필_이미지_URL, Collections.emptyList());
+                        .extracting("userId", "nickname", "profileImageName", "bio", "links")
+                        .contains(기존_사용자_아이디, 변경할_닉네임, 변경할_자기소개, 변경할_프로필_이미지_이름, Collections.emptyList());
             });
         }
 
@@ -246,7 +246,7 @@ class UserServiceTest {
             UserUpdateRequest 사용자_정보_부분_변경_요청 = UserUpdateRequest.builder()
                     .nickname(JsonNullable.of(변경할_닉네임))
                     .bio(JsonNullable.undefined())
-                    .profileImageUrl(JsonNullable.undefined())
+                    .profileImageName(JsonNullable.undefined())
                     .build();
 
             when(userRepository.findByIdOrThrow(기존_사용자_아이디)).thenReturn(기존_사용자);

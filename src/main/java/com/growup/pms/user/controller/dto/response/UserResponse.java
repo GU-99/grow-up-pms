@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record UserResponse(String username, String email, String nickname, String bio, String profileImageUrl, List<String> links) {
+public record UserResponse(String username, String email, String nickname, String bio, String profileImageName, List<String> links) {
 
     public static UserResponse from(User user) {
         return UserResponse.builder()
@@ -14,7 +14,7 @@ public record UserResponse(String username, String email, String nickname, Strin
                 .email(user.getEmail())
                 .nickname(user.getProfile().getNickname())
                 .bio(user.getProfile().getBio())
-                .profileImageUrl(user.getProfile().getImage())
+                .profileImageName(user.getProfile().getImageName())
                 .links(user.getLinks().stream().map(UserLink::getLink).toList())
                 .build();
     }
