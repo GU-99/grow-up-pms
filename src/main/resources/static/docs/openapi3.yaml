@@ -983,7 +983,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-user-team-1051270522'
+                $ref: '#/components/schemas/api-v1-user-team-928817730'
               examples:
                 user-controller-v1-docs-test/가입한_팀_목록_조회_api_문서를_생성한다:
                   value: |-
@@ -992,6 +992,7 @@ paths:
                       "teamName" : "팀 이름",
                       "content" : "팀 소개",
                       "creator" : "팀장 닉네임",
+                      "creatorId" : 1,
                       "isPendingApproval" : true,
                       "roleName" : "MATE"
                     } ]
@@ -1831,29 +1832,6 @@ components:
         content:
           type: string
           description: 일정 내용
-    api-v1-user-team-1051270522:
-      type: array
-      items:
-        type: object
-        properties:
-          teamName:
-            type: string
-            description: 팀 이름
-          creator:
-            type: string
-            description: 팀장 닉네임
-          teamId:
-            type: number
-            description: 팀 ID
-          roleName:
-            type: string
-            description: 팀 내에서의 역할
-          isPendingApproval:
-            type: boolean
-            description: 가입 대기 여부
-          content:
-            type: string
-            description: 팀 소개
     api-v1-user-recover-username1645263616:
       type: object
       properties:
@@ -1914,6 +1892,32 @@ components:
         content:
           type: string
           description: 프로젝트 설명
+    api-v1-user-team-928817730:
+      type: array
+      items:
+        type: object
+        properties:
+          teamName:
+            type: string
+            description: 팀 이름
+          creator:
+            type: string
+            description: 팀장 닉네임
+          teamId:
+            type: number
+            description: 팀 ID
+          roleName:
+            type: string
+            description: 팀 내에서의 역할
+          creatorId:
+            type: number
+            description: 팀장 ID
+          isPendingApproval:
+            type: boolean
+            description: 가입 대기 여부
+          content:
+            type: string
+            description: 팀 소개
     api-v1-team-teamId-user-targetMemberId-role-1605929895:
       type: object
       properties:
