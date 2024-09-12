@@ -38,3 +38,10 @@ management:
     metrics:
       export:
         enabled: true
+
+aws:
+  access-key: ENC(e6gMLdiSQvEgCqzQ7JRDNosVbW//CnDVkV8caxgYwfb8MEm5lj8m0fsc8I2bxsaEReR1BoIPxI0qISJ+sgxm5g==)
+  secret-key: ENC(Z835JZnyCMeatP7CdJDrWiCqaNr2jsNFhCCWc5MhkVfMM3WwUt6wMqKOfuvV83jYuSEJqfBdcrBScNH9B7XUT+DFXfta4/G0MpsBOl7kuZM=)
+  s3:
+    region: ENC(u9xNdlCO2E+c+SOkV5wcv0pA2h3I5K5LGCy0qKmziQQJBop6PvKWpn6VZb35EJsv)
+    bucket-name: ENC(n9BhDd0eubOZLL7wWEBmsfC/okUQwUDzqJWuU4bXtIR9d3i3LstwERRxTWnekLopl4KgKw5h7CJQ5Jpm/fSdmQ==)
