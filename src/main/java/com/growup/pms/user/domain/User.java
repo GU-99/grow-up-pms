@@ -105,10 +105,6 @@ public class User extends BaseEntity {
         return newPassword;
     }
 
-    public void replaceProfileImage(String image) {
-        this.profile.changeImage(image);
-    }
-
     public void updateImageName(String imageName) {
         this.profile.changeImageName(imageName);
     }
@@ -140,10 +136,6 @@ public class User extends BaseEntity {
 
     public void editBio(String bio) {
         profile.changeBio(bio);
-    }
-
-    public void editProfileImageUrl(String profileImageUrl) {
-        profile.changeImage(profileImageUrl);
     }
 
     public void editLinks(List<String> links) {

@@ -2,6 +2,7 @@ package com.growup.pms.file.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.common.util.FileNameUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -105,12 +106,7 @@ public class S3FileStorageService implements FileStorageService {
     }
 
     private String generateUniqueFileName(String originalFileName) {
-        String extension = getFileExtension(originalFileName);
+        String extension = FileNameUtil.getFileExtension(originalFileName);
         return UUID.randomUUID() + (extension.isEmpty() ? "" : "." + extension);
-    }
-
-    private String getFileExtension(String filename) {
-        int lastDotIndex = filename.lastIndexOf(".");
-        return lastDotIndex == -1 ? "" : filename.substring(lastDotIndex + 1);
     }
 }

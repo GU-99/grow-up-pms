@@ -9,15 +9,15 @@ INSERT INTO roles(type, name) VALUES('PROJECT', 'ASSIGNEE'); -- 수행자
 INSERT INTO roles(type, name) VALUES('PROJECT', 'VIEWER');   -- 이 외(읽기 전용)
 
 -- 사용자 삽입 (테스트 시 사용되는 계정 비밀번호는 test1234!로 모두 동일)
-INSERT INTO users (username, password, email, provider, nickname, bio, image, password_change_date, password_failure_count) VALUES
-    ('brown', '{noop}test1234!', 'brown@example.com', 'LOCAL', '브라운', '게임을 좋아하는 개발자', 'Image1', '2024-01-01 00:00:00', 0),
-    ('cony', '{noop}test1234!', 'cony@example.com', 'KAKAO', '코니', '커피와 책을 사랑하는 디자이너', 'Image2', '2024-01-02 00:00:00', 0),
-    ('leonard', '{noop}test1234!', 'leonard@example.com', 'GOOGLE', '레너드', '자연을 사랑하는 사진작가', 'Image3', '2024-01-03 00:00:00', 0),
-    ('sally', '{noop}test1234!', 'sally@example.com', 'LOCAL', '샐리', '24시간이 모자란 워커홀릭 개발자', 'Image1', '2024-01-01 00:00:00', 0),
-    ('james', '{noop}test1234!', 'james@example.com', 'KAKAO', '제임스', '커피를 코드로 바꾸는 마법사', 'Image2', '2024-01-02 00:00:00', 0),
-    ('edward', '{noop}test1234!', 'edward@example.com', 'GOOGLE', '에드워드', '버그를 춤추게 하는 디버깅의 달인', 'Image3', '2024-01-03 00:00:00', 0),
-    ('mary', '{noop}test1234!', 'mary@example.com', 'LOCAL', '메리', '픽셀을 요리하는 디자인 셰프', 'Image4', '2024-01-04 00:00:00', 0),
-    ('tom', '{noop}test1234!', 'tom@example.com', 'LOCAL', '톰', '알고리즘으로 세상을 정복하려는 꿈나무', 'Image5', '2024-01-05 00:00:00', 0);
+INSERT INTO users (username, password, email, provider, nickname, bio, image_name, password_change_date, password_failure_count) VALUES
+    ('brown', '{noop}test1234!', 'brown@example.com', 'LOCAL', '브라운', '게임을 좋아하는 개발자', 'Image1.jpg', '2024-01-01 00:00:00', 0),
+    ('cony', '{noop}test1234!', 'cony@example.com', 'KAKAO', '코니', '커피와 책을 사랑하는 디자이너', 'Image2.png', '2024-01-02 00:00:00', 0),
+    ('leonard', '{noop}test1234!', 'leonard@example.com', 'GOOGLE', '레너드', '자연을 사랑하는 사진작가', 'Image3.jpeg', '2024-01-03 00:00:00', 0),
+    ('sally', '{noop}test1234!', 'sally@example.com', 'LOCAL', '샐리', '24시간이 모자란 워커홀릭 개발자', 'Image1.webp', '2024-01-01 00:00:00', 0),
+    ('james', '{noop}test1234!', 'james@example.com', 'KAKAO', '제임스', '커피를 코드로 바꾸는 마법사', 'Image2.png', '2024-01-02 00:00:00', 0),
+    ('edward', '{noop}test1234!', 'edward@example.com', 'GOOGLE', '에드워드', '버그를 춤추게 하는 디버깅의 달인', 'Image3.jpeg', '2024-01-03 00:00:00', 0),
+    ('mary', '{noop}test1234!', 'mary@example.com', 'LOCAL', '메리', '픽셀을 요리하는 디자인 셰프', 'Image4.jpg', '2024-01-04 00:00:00', 0),
+    ('tom', '{noop}test1234!', 'tom@example.com', 'LOCAL', '톰', '알고리즘으로 세상을 정복하려는 꿈나무', 'Image5.jpeg', '2024-01-05 00:00:00', 0);
 
 -- 팀 삽입
 INSERT INTO teams (creator_id, name, content) VALUES
