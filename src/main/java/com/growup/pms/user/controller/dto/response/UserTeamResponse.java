@@ -8,6 +8,7 @@ public record UserTeamResponse(
         String teamName,
         String content,
         String creator,
+        Long creatorId,
         boolean isPendingApproval,
         String roleName
 ) {
