@@ -1,6 +1,6 @@
 package com.growup.pms.common.validator;
 
-import com.growup.pms.common.util.FilenameUtil;
+import com.growup.pms.common.util.FileNameUtil;
 import com.growup.pms.common.validator.annotation.File;
 import com.growup.pms.file.domain.FileType;
 import jakarta.validation.ConstraintValidator;
@@ -28,7 +28,7 @@ public class FileValidator implements ConstraintValidator<File, MultipartFile> {
             return false;
         }
 
-        String extension = FilenameUtil.getFileExtension(file.getOriginalFilename());
+        String extension = FileNameUtil.getFileExtension(file.getOriginalFilename());
         return allowedExtensions.contains(extension.toLowerCase());
     }
 }
