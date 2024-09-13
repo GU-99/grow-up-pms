@@ -1,11 +1,12 @@
-package com.growup.pms.common.util;
+package com.growup.pms.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
 import com.growup.pms.auth.service.dto.oauth.kakao.KakaoAccessToken;
+import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtConstants;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +17,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-@Slf4j
 @Component
-public class KakaoUtil {
+public class KakaoOAuth2Service {
 
     @Value("${oauth2.kakao.clientId}")
     private String clientId;
@@ -52,13 +52,13 @@ public class KakaoUtil {
                 HttpMethod.POST,
                 tokenRequest,
                 String.class);
-        log.info("OauthToken = {}", response);
+
         KakaoAccessToken kakaoAccessToken;
 
         try {
             kakaoAccessToken = objectMapper.readValue(response.getBody(), KakaoAccessToken.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(ErrorCode.OAUTH2_AUTHENTICATION_FAILED);
         }
         return kakaoAccessToken;
     }
@@ -69,7 +69,7 @@ public class KakaoUtil {
         ObjectMapper objectMapper = new ObjectMapper();
 
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        headers.add("Authorization", JwtConstants.BEARER_PREFIX + kakaoAccessToken.getAccess_token());
+        headers.add("Authorization", JwtConstants.BEARER_PREFIX + kakaoAccessToken.getAccessToken());
 
         HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
 
@@ -78,13 +78,13 @@ public class KakaoUtil {
                 HttpMethod.GET,
                 kakaoProfileRequest,
                 String.class);
-        log.info("kakaoProfile = {}", response);
+
         KakaoProfile kaKaoProfile;
 
         try {
             kaKaoProfile = objectMapper.readValue(response.getBody(), KakaoProfile.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(ErrorCode.OAUTH2_AUTHENTICATION_FAILED);
         }
         return kaKaoProfile;
     }

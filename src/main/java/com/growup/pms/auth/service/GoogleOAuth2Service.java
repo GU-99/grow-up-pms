@@ -1,11 +1,12 @@
-package com.growup.pms.common.util;
+package com.growup.pms.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.growup.pms.auth.service.dto.oauth.google.GoogleAccessToken;
 import com.growup.pms.auth.service.dto.oauth.google.GoogleProfile;
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtConstants;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,9 +17,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-@Slf4j
 @Component
-public class GoogleUtil {
+public class GoogleOAuth2Service {
 
     @Value("${oauth2.google.clientId}")
     private String clientId;
@@ -66,7 +66,7 @@ public class GoogleUtil {
         try {
             googleAccessToken = objectMapper.readValue(response.getBody(), GoogleAccessToken.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(ErrorCode.OAUTH2_AUTHENTICATION_FAILED);
         }
 
         return googleAccessToken;
@@ -77,7 +77,7 @@ public class GoogleUtil {
         ObjectMapper objectMapper = new ObjectMapper();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", JwtConstants.BEARER_PREFIX + googleAccessToken.getAccess_token());
+        headers.add("Authorization", JwtConstants.BEARER_PREFIX + googleAccessToken.getAccessToken());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity(headers);
 
@@ -91,7 +91,7 @@ public class GoogleUtil {
         try {
             googleProfile = objectMapper.readValue(response.getBody(), GoogleProfile.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(ErrorCode.OAUTH2_AUTHENTICATION_FAILED);
         }
 
         return googleProfile;
