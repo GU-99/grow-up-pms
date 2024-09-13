@@ -1,28 +1,30 @@
 package com.growup.pms.auth.service.dto.oauth.google;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class GoogleAccessToken {
-    private String access_token;
-    private String expires_in;
-    private String refresh_token;
+    private String accessToken;
+    private String expiresIn;
+    private String refreshToken;
     private String scope;
-    private String token_type;
-    private String id_token;
+    private String tokenType;
+    private String idToken;
 
     @Builder
-    public GoogleAccessToken(String access_token, String expires_in, String refresh_token, String scope,
-                             String token_type,
-                             String id_token) {
-        this.access_token = access_token;
-        this.expires_in = expires_in;
-        this.refresh_token = refresh_token;
+    public GoogleAccessToken(String accessToken, String expiresIn, String refreshToken,
+                             String scope, String tokenType, String idToken) {
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
+        this.refreshToken = refreshToken;
         this.scope = scope;
-        this.token_type = token_type;
-        this.id_token = id_token;
+        this.tokenType = tokenType;
+        this.idToken = idToken;
     }
 }

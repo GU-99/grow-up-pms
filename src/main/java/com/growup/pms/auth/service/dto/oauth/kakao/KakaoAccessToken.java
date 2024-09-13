@@ -1,27 +1,30 @@
 package com.growup.pms.auth.service.dto.oauth.kakao;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
+@JsonNaming(value = SnakeCaseStrategy.class)
 public class KakaoAccessToken {
-    private String access_token;
-    private String token_type;
-    private String refresh_token;
+    private String accessToken;
+    private String tokenType;
+    private String refreshToken;
     private String scope;
-    private int expires_in;
-    private int refresh_token_expires_in;
+    private int expiresIn;
+    private int refreshTokenExpiresIn;
 
     @Builder
-    public KakaoAccessToken(String access_token, String token_type, String refresh_token, String scope, int expires_in,
-                            int refresh_token_expires_in) {
-        this.access_token = access_token;
-        this.token_type = token_type;
-        this.refresh_token = refresh_token;
+    public KakaoAccessToken(String accessToken, String tokenType, String refreshToken, String scope, int expiresIn,
+                            int refreshTokenExpiresIn) {
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
+        this.refreshToken = refreshToken;
         this.scope = scope;
-        this.expires_in = expires_in;
-        this.refresh_token_expires_in = refresh_token_expires_in;
+        this.expiresIn = expiresIn;
+        this.refreshTokenExpiresIn = refreshTokenExpiresIn;
     }
 }

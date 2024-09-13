@@ -3,6 +3,7 @@ package com.growup.pms.auth.service.dto.oauth.kakao;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 @Getter
 @NoArgsConstructor
 public class KakaoProfile {

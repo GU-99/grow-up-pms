@@ -1,20 +1,23 @@
 package com.growup.pms.auth.service.dto.oauth.kakao;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class Properties {
     private String nickname;
-    private String profile_image;
-    private String thumbnail_image;
+    private String profileImage;
+    private String thumbnailImage;
 
     @Builder
-    public Properties(String nickname, String profile_image, String thumbnail_image) {
+    public Properties(String nickname, String profileImage, String thumbnailImage) {
         this.nickname = nickname;
-        this.profile_image = profile_image;
-        this.thumbnail_image = thumbnail_image;
+        this.profileImage = profileImage;
+        this.thumbnailImage = thumbnailImage;
     }
 }

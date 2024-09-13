@@ -53,11 +53,11 @@ public class GoogleAccessTokenTestBuilder {
 
     public GoogleAccessToken 이다() {
         return GoogleAccessToken.builder()
-                .access_token(accessToken)
-                .refresh_token(refreshToken)
-                .id_token(idToken)
-                .expires_in(expiresIn)
-                .token_type(tokenType)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .idToken(idToken)
+                .expiresIn(expiresIn)
+                .tokenType(tokenType)
                 .scope(scope)
                 .build();
     }

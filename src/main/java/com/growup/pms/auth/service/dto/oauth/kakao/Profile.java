@@ -1,25 +1,28 @@
 package com.growup.pms.auth.service.dto.oauth.kakao;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class Profile {
     private String nickname;
-    private String profile_image_url;
-    private String thumbnail_image_url;
-    private Boolean is_default_image;
-    private Boolean is_default_nickname;
+    private String profileImageUrl;
+    private String thumbnailImageUrl;
+    private Boolean isDefaultImage;
+    private Boolean isDefaultNickname;
 
     @Builder
-    public Profile(String nickname, String profile_image_url, String thumbnail_image_url, Boolean is_default_image,
-                   Boolean is_default_nickname) {
+    public Profile(String nickname, String profileImageUrl, String thumbnailImageUrl, Boolean isDefaultImage,
+                   Boolean isDefaultNickname) {
         this.nickname = nickname;
-        this.profile_image_url = profile_image_url;
-        this.thumbnail_image_url = thumbnail_image_url;
-        this.is_default_image = is_default_image;
-        this.is_default_nickname = is_default_nickname;
+        this.profileImageUrl = profileImageUrl;
+        this.thumbnailImageUrl = thumbnailImageUrl;
+        this.isDefaultImage = isDefaultImage;
+        this.isDefaultNickname = isDefaultNickname;
     }
 }
