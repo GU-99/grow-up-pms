@@ -64,8 +64,10 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .summary("현재 사용자 정보 조회")
                                 .description("현재 로그인한 사용자의 정보를 조회합니다.")
                                 .responseFields(
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("식별자"),
                                         fieldWithPath("username").type(JsonFieldType.STRING).description("아이디"),
                                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                                        fieldWithPath("provider").type(JsonFieldType.STRING).description("인증 프로바이더"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
                                         fieldWithPath("profileImageName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
