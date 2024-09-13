@@ -6,8 +6,7 @@ import static com.growup.pms.test.fixture.auth.builder.KakaoAccessTokenTestBuild
 import static com.growup.pms.test.fixture.auth.builder.KakaoProfileTestBuilder.카카오_프로필은;
 import static com.growup.pms.test.fixture.auth.builder.TokenResponseTestBuilder.발급된_토큰은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -20,8 +19,6 @@ import com.growup.pms.auth.service.dto.oauth.kakao.KakaoAccessToken;
 import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
-import com.growup.pms.common.util.GoogleUtil;
-import com.growup.pms.common.util.KakaoUtil;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.Provider;
 import com.growup.pms.user.domain.User;
@@ -39,10 +36,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class OAuthLoginServiceTest {
     @Mock
-    private KakaoUtil kakaoUtil;
+    private KakaoOAuth2Service kakaoOAuth2Service;
 
     @Mock
-    private GoogleUtil googleUtil;
+    private GoogleOAuth2Service googleOAuth2Service;
 
     @Mock
     private UserRepository userRepository;
@@ -68,8 +65,8 @@ class OAuthLoginServiceTest {
             TokenResponse 예상하는_새_토큰 = 발급된_토큰은().이다();
             User 유저 = 사용자는().닉네임이("tester").이메일이("test@test.com").인증_프로바이더가(Provider.KAKAO).이다();
 
-            when(kakaoUtil.requestToken(anyString())).thenReturn(카카오_액세스_토큰);
-            when(kakaoUtil.requestProfile(카카오_액세스_토큰)).thenReturn(카카오_프로필);
+            when(kakaoOAuth2Service.requestToken(anyString())).thenReturn(카카오_액세스_토큰);
+            when(kakaoOAuth2Service.requestProfile(카카오_액세스_토큰)).thenReturn(카카오_프로필);
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.ofNullable(유저));
             when(jwtTokenProvider.generateToken(any())).thenReturn(예상하는_새_토큰);
 
@@ -77,12 +74,15 @@ class OAuthLoginServiceTest {
             TokenResponse response = oAuthLoginService.authenticateOfKakao(인가코드);
 
             // then
-            assertNotNull(response);
-            assertEquals("액세스 토큰", response.accessToken());
-            assertEquals("리프레시 토큰", response.refreshToken());
+            assertSoftly(softly -> {
+                softly.assertThat(response).isNotNull();
+                softly.assertThat(response)
+                        .extracting("accessToken", "refreshToken")
+                        .contains("액세스 토큰", "리프레시 토큰");
+            });
 
-            verify(kakaoUtil, times(1)).requestToken(anyString());
-            verify(kakaoUtil, times(1)).requestProfile(카카오_액세스_토큰);
+            verify(kakaoOAuth2Service, times(1)).requestToken(anyString());
+            verify(kakaoOAuth2Service, times(1)).requestProfile(카카오_액세스_토큰);
             verify(userRepository, times(1)).findByEmail(anyString());
             verify(jwtTokenProvider, times(1)).generateToken(any());
         }
@@ -96,8 +96,8 @@ class OAuthLoginServiceTest {
             GoogleAccessToken 구글_액세스_토큰 = 구글_액세스_토큰은().이다();
             GoogleProfile 구글_프로필 = 구글_프로필은().이다();
 
-            when(googleUtil.requestToken(anyString())).thenReturn(구글_액세스_토큰);
-            when(googleUtil.requestProfile(구글_액세스_토큰)).thenReturn(구글_프로필);
+            when(googleOAuth2Service.requestToken(anyString())).thenReturn(구글_액세스_토큰);
+            when(googleOAuth2Service.requestProfile(구글_액세스_토큰)).thenReturn(구글_프로필);
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(유저));
             when(jwtTokenProvider.generateToken(any())).thenReturn(예상하는_새_토큰);
 
@@ -105,12 +105,15 @@ class OAuthLoginServiceTest {
             TokenResponse response = oAuthLoginService.authenticateOfGoogle(인가코드);
 
             // then
-            assertNotNull(response);
-            assertEquals("액세스 토큰", response.accessToken());
-            assertEquals("리프레시 토큰", response.refreshToken());
+            assertSoftly(softly -> {
+                softly.assertThat(response).isNotNull();
+                softly.assertThat(response)
+                        .extracting("accessToken", "refreshToken")
+                        .contains("액세스 토큰", "리프레시 토큰");
+            });
 
-            verify(googleUtil, times(1)).requestToken(anyString());
-            verify(googleUtil, times(1)).requestProfile(구글_액세스_토큰);
+            verify(googleOAuth2Service, times(1)).requestToken(anyString());
+            verify(googleOAuth2Service, times(1)).requestProfile(구글_액세스_토큰);
             verify(userRepository, times(1)).findByEmail(anyString());
             verify(jwtTokenProvider, times(1)).generateToken(any());
         }
