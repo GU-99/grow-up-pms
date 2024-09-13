@@ -7,8 +7,6 @@ import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
 import com.growup.pms.auth.service.dto.oauth.kakao.KakaoAccessToken;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
-import com.growup.pms.common.util.GoogleUtil;
-import com.growup.pms.common.util.KakaoUtil;
 import com.growup.pms.user.domain.Provider;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.domain.UserProfile;
@@ -20,15 +18,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OAuthLoginService {
 
-    private final KakaoUtil kakaoUtil;
-    private final GoogleUtil googleUtil;
+    private final KakaoOAuth2Service kakaoOAuth2Service;
+    private final GoogleOAuth2Service googleOAuth2Service;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
 
     public TokenResponse authenticateOfKakao(String code) {
-        KakaoAccessToken kakaoAccessToken = kakaoUtil.requestToken(code);
-        KakaoProfile kaKaoProfile = kakaoUtil.requestProfile(kakaoAccessToken);
+        KakaoAccessToken kakaoAccessToken = kakaoOAuth2Service.requestToken(code);
+        KakaoProfile kaKaoProfile = kakaoOAuth2Service.requestProfile(kakaoAccessToken);
 
         String email = kaKaoProfile.getKakao_account().getEmail();
         String nickname = kaKaoProfile.getKakao_account().getProfile().getNickname();
@@ -43,8 +41,8 @@ public class OAuthLoginService {
     }
 
     public TokenResponse authenticateOfGoogle(String code) {
-        GoogleAccessToken googleAccessToken = googleUtil.requestToken(code);
-        GoogleProfile googleProfile = googleUtil.requestProfile(googleAccessToken);
+        GoogleAccessToken googleAccessToken = googleOAuth2Service.requestToken(code);
+        GoogleProfile googleProfile = googleOAuth2Service.requestProfile(googleAccessToken);
 
         String email = googleProfile.getEmail();
         String id = googleProfile.getId();
@@ -62,7 +60,6 @@ public class OAuthLoginService {
         return SecurityUser.builder()
                 .username(user.getUsername())
                 .id(user.getId())
-                .password(null)
                 .build();
     }
 
@@ -73,11 +70,7 @@ public class OAuthLoginService {
                 .username(email)
                 .profile(UserProfile.builder()
                         .nickname(nickname)
-                        .bio(null)
-                        .imageName(null)
                         .build())
-                .password(null)
-                .links(null)
                 .build();
 
         return userRepository.save(user);
