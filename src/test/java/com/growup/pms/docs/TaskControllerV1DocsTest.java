@@ -4,7 +4,7 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
-import static com.growup.pms.test.fixture.task.builder.TaskResponseTestBuilder.일정_전체조회_응답은;
+import static com.growup.pms.test.fixture.task.builder.TaskKanbanResponseTestBuilder.일정_칸반_응답은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
-import com.growup.pms.task.controller.dto.response.TaskResponse;
+import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.service.TaskService;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.task.service.dto.TaskEditCommand;
@@ -35,7 +35,6 @@ import com.growup.pms.test.fixture.task.builder.TaskDetailResponseTestBuilder;
 import com.growup.pms.test.fixture.task.builder.TaskEditRequestTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
-import java.util.Map;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,21 +131,10 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
     void 일정_전체조회_API_문서를_생성한다() throws Exception {
         // given
         Long 예상_프로젝트_ID = 1L;
-        Long 예상_상태_ID_1 = 1L;
-        Long 예상_상태_ID_2 = 2L;
-        TaskResponse 예상_일정_1 = 일정_전체조회_응답은()
-                .상태_식별자는(예상_상태_ID_1)
-                .이다();
-        TaskResponse 예상_일정_2 = 일정_전체조회_응답은()
-                .일정_식별자는(2L)
-                .상태_식별자는(예상_상태_ID_2)
-                .일정이름은("프로젝트 일정 등록 기능 구현")
-                .이다();
+        TaskKanbanResponse 예상_응답1 = 일정_칸반_응답은().이다();
+        TaskKanbanResponse 예상_응답2 = 일정_칸반_응답은().상태_식별자는(2L).정렬순서는((short) 2).상태_이름은("할일").이다();
 
-        List<TaskResponse> 예상_일정_목록_1 = List.of(예상_일정_1);
-        List<TaskResponse> 예상_일정_목록_2 = List.of(예상_일정_2);
-
-        Map<Long, List<TaskResponse>> 예상_결과 = Map.of(예상_상태_ID_1, 예상_일정_목록_1, 예상_상태_ID_2, 예상_일정_목록_2);
+        List<TaskKanbanResponse> 예상_결과 = List.of(예상_응답1, 예상_응답2);
 
         // when
         when(taskService.getTasks(anyLong())).thenReturn(예상_결과);
@@ -168,16 +156,32 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("조회할 프로젝트 식별자")
                                 )
                                 .responseFields(
-                                        fieldWithPath("*").type(JsonFieldType.ARRAY)
+                                        fieldWithPath("[]").type(JsonFieldType.ARRAY)
                                                 .description("상태별 프로젝트 일정 목록"),
-                                        fieldWithPath("*.[].taskId").type(JsonFieldType.NUMBER)
-                                                .description("프로젝트 일정 식별자"),
-                                        fieldWithPath("*.[].statusId").type(JsonFieldType.NUMBER)
+                                        fieldWithPath("[].statusId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 상태 식별자"),
-                                        fieldWithPath("*.[].taskName").type(JsonFieldType.STRING)
-                                                .description("일정 이름"),
-                                        fieldWithPath("*.[].sortOrder").type(JsonFieldType.NUMBER)
-                                                .description("정렬 순서")
+                                        fieldWithPath("[].statusName").type(JsonFieldType.STRING)
+                                                .description("프로젝트 상태 이름"),
+                                        fieldWithPath("[].colorCode").type(JsonFieldType.STRING)
+                                                .description("프로젝트 상태 색상코드"),
+                                        fieldWithPath("[].sortOrder").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트 상태 정렬순서"),
+                                        fieldWithPath("[].tasks[]").type(JsonFieldType.ARRAY)
+                                                .description("프로젝트 일정 목록"),
+                                        fieldWithPath("[].tasks[].taskId").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트 일정 식별자"),
+                                        fieldWithPath("[].tasks[].statusId").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트 상태 식별자"),
+                                        fieldWithPath("[].tasks[].taskName").type(JsonFieldType.STRING)
+                                                .description("프로젝트 일정 이름"),
+                                        fieldWithPath("[].tasks[].content").type(JsonFieldType.STRING)
+                                                .description("프로젝트 일정 내용"),
+                                        fieldWithPath("[].tasks[].sortOrder").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트 일정 정렬 순서"),
+                                        fieldWithPath("[].tasks[].startDate").type(JsonFieldType.STRING)
+                                                .description("프로젝트 일정 시작 일자"),
+                                        fieldWithPath("[].tasks[].endDate").type(JsonFieldType.STRING)
+                                                .description("프로젝트 일정 종료 일자")
                                 )
                                 .build()
                 )));

@@ -17,8 +17,8 @@ public class StatusTestBuilder {
     private Long id = 1L;
     private Project project = 프로젝트는().이다();
     private String name = "대기중";
-    private String color = "FFFFFF";
-    private Short sortOrder = 0;
+    private String color = "#FFFFFF";
+    private Short sortOrder = (short) 1;
 
     public static StatusTestBuilder 상태는() {
         return new StatusTestBuilder();
