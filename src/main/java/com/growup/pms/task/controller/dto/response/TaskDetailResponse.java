@@ -46,7 +46,7 @@ public class TaskDetailResponse {
                 .build();
     }
 
-    private static String formatDateOrNull(LocalDate localDAte) {
-        return localDAte != null ? localDAte.format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN)) : null;
+    private static String formatDateOrNull(LocalDate localDate) {
+        return localDate != null ? localDate.format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN)) : null;
     }
 }
