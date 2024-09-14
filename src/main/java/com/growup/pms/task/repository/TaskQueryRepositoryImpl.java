@@ -27,8 +27,6 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
 
     @Override
     public Map<Long, List<TaskResponse>> getTasksByProjectId(Long projectId) {
-        // TODO: 성능테스트 후 쿼리 수정에 대한 논의 필요함
-        //  projectId 를 통해 statusId 리스트를 만들고 taskId 리스트를 추출 후 조회하는 방식
         List<Long> ids = queryFactory
                 .select(task.id)
                 .from(task)
@@ -45,12 +43,16 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
         }
 
         List<Tuple> results = queryFactory
-                .select(task.status.id, Projections.constructor(TaskResponse.class,
-                        task.id,
-                        task.status.id,
-                        task.name,
-                        task.sortOrder
-                ))
+                .select(task.status.id,
+                        Projections.constructor(TaskResponse.class,
+                                task.id,
+                                task.status.id,
+                                task.name,
+                                task.content,
+                                task.sortOrder,
+                                task.startDate,
+                                task.endDate
+                        ))
                 .from(task)
                 .join(task.status, status)
                 .join(task.status.project, project)
@@ -62,7 +64,7 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
 
         return results.stream()
                 .map(tuple -> tuple.get(1, TaskResponse.class))
-                .collect(groupingBy(task -> Objects.requireNonNull(task).statusId()));
+                .collect(groupingBy(task -> Objects.requireNonNull(task).getStatusId()));
     }
 
     private BooleanExpression isProjectId(Long projectId) {

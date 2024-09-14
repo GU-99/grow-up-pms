@@ -5,6 +5,7 @@ import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
+import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.domain.TaskUser;
@@ -63,10 +64,14 @@ public class TaskService {
         taskUserRepository.saveAll(assignees);
     }
 
-    public Map<Long, List<TaskResponse>> getTasks(Long projectId) {
-        // TODO: Project 의 유무에 대한 검증 로직 추가 여부에 대해서 논의 필요
-        // TODO: 담당자 목록을 반환하도록 수정 & 새로 픽스된 API 명세서에 따라 수정
-        return taskRepository.getTasksByProjectId(projectId);
+    public List<TaskKanbanResponse> getTasks(Long projectId) {
+        List<TaskKanbanResponse> responses = new ArrayList<>();
+        Map<Long, List<TaskResponse>> statusTaskMap = taskRepository.getTasksByProjectId(projectId);
+        statusTaskMap.forEach((statusId, tasks) -> {
+            Status status = statusRepository.findByIdOrThrow(statusId);
+            responses.add(TaskKanbanResponse.of(status, tasks));
+        });
+        return responses;
     }
 
     public TaskDetailResponse getTask(Long taskId) {
