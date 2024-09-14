@@ -20,7 +20,7 @@ import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.auth.controller.dto.request.LoginRequest;
 import com.growup.pms.auth.service.JwtLoginService;
 import com.growup.pms.auth.service.RedisRefreshTokenService;
-import com.growup.pms.auth.service.dto.LoginCommand;
+import com.growup.pms.auth.service.dto.UserLoginCommand;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
@@ -49,7 +49,7 @@ class LoginControllerV1DocsTest extends ControllerSliceTestSupport {
         LoginRequest 유효한_요청 = 로그인_하는_사용자는().이다();
         TokenResponse 예상하는_발급된_토큰 = 발급된_토큰은().이다();
 
-        when(loginService.authenticateUser(any(LoginCommand.class))).thenReturn(예상하는_발급된_토큰);
+        when(loginService.authenticateUser(any(UserLoginCommand.class))).thenReturn(예상하는_발급된_토큰);
 
         // when & then
         mockMvc.perform(post("/api/v1/user/login")
@@ -105,16 +105,14 @@ class LoginControllerV1DocsTest extends ControllerSliceTestSupport {
                         .cookie(new Cookie("refreshToken", 유효한_리프레시_토큰)))
                 .andExpectAll(
                         status().isOk(),
-                        header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 발급된_새_토큰.accessToken()),
-                        cookie().value("refreshToken", 발급된_새_토큰.refreshToken()))
+                        header().string(HttpHeaders.AUTHORIZATION, "Bearer " + 발급된_새_토큰.accessToken()))
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("토큰 재발급")
-                                .description("쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 토큰을 발급합니다.")
+                                .description("쿠키를 통해 전달된 리프레시 토큰(refreshToken)을 통해 새로운 액세스 토큰을 발급합니다.")
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .responseHeaders(
-                                        headerWithName(HttpHeaders.AUTHORIZATION).type(SimpleType.STRING).description("새 액세스 토큰"),
-                                        headerWithName(HttpHeaders.SET_COOKIE).type(SimpleType.STRING).description("새 리프레시 토큰")).build())));
+                                        headerWithName(HttpHeaders.AUTHORIZATION).type(SimpleType.STRING).description("새 액세스 토큰")).build())));
     }
 }

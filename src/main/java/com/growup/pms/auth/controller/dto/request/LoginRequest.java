@@ -3,7 +3,7 @@ package com.growup.pms.auth.controller.dto.request;
 import static com.growup.pms.common.constant.RegexConstants.PASSWORD_PATTERN;
 import static com.growup.pms.common.constant.RegexConstants.USERNAME_PATTERN;
 
-import com.growup.pms.auth.service.dto.LoginCommand;
+import com.growup.pms.auth.service.dto.UserLoginCommand;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
@@ -18,8 +18,8 @@ public record LoginRequest(
         @Pattern(regexp = PASSWORD_PATTERN)
         String password
 ) {
-    public LoginCommand toCommand() {
-        return LoginCommand.builder()
+    public UserLoginCommand toCommand() {
+        return UserLoginCommand.builder()
                 .username(username)
                 .password(password)
                 .build();

@@ -1,6 +1,8 @@
 package com.growup.pms.user.domain;
 
 import com.growup.pms.common.BaseEntity;
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.util.RandomPasswordGenerator;
 import com.growup.pms.common.util.RandomPasswordGenerator.PasswordOptions;
 import jakarta.persistence.CascadeType;
@@ -103,17 +105,13 @@ public class User extends BaseEntity {
         return newPassword;
     }
 
-    public void replaceProfileImage(String image) {
-        this.profile.changeImage(image);
-    }
-
     public void updateImageName(String imageName) {
         this.profile.changeImageName(imageName);
     }
   
     private void addLink(String link) {
         if (links.size() >= MAX_LINKS_PER_USER) {
-            throw new IllegalStateException("더 이상 링크를 등록할 수 없습니다.");
+            throw new BusinessException(ErrorCode.EXCEEDED_LINKS);
         }
         links.add(new UserLink(this, link));
     }
@@ -124,7 +122,7 @@ public class User extends BaseEntity {
         }
     }
 
-    public void resetLinks() {
+    private void resetLinks() {
         this.links.clear();
     }
 
@@ -132,9 +130,16 @@ public class User extends BaseEntity {
         links.removeIf(item -> item.getLink().equals(link));
     }
 
-    public void updateProfile(String nickname, String bio, String imageUrl) {
-        this.profile.changeNickname(nickname);
-        this.profile.changeBio(bio);
-        this.profile.changeImage(imageUrl);
+    public void editNickname(String nickname) {
+        profile.changeNickname(nickname);
+    }
+
+    public void editBio(String bio) {
+        profile.changeBio(bio);
+    }
+
+    public void editLinks(List<String> links) {
+        resetLinks();
+        addLinks(links);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 @Service
 @RequiredArgsConstructor
 public class RedisRefreshTokenService implements RefreshTokenService {
+
     private static final String REDIS_KEYSPACE_REFRESH_TOKEN = "user:%s:refresh-token:%s";
 
     private final JwtTokenProvider tokenProvider;
@@ -35,7 +36,8 @@ public class RedisRefreshTokenService implements RefreshTokenService {
         SecurityUser currentUser = (SecurityUser) tokenProvider.getAuthentication(oldRefreshToken).getPrincipal();
         TokenResponse newToken = tokenProvider.generateToken(currentUser);
 
-        renew(currentUser.getId(), oldRefreshToken, newToken.refreshToken());
+        String refreshTokenKey = generateRedisKey(currentUser.getId(), oldRefreshToken);
+        validateRefreshTokenExists(refreshTokenKey);
         return newToken;
     }
 
@@ -43,7 +45,6 @@ public class RedisRefreshTokenService implements RefreshTokenService {
         String oldKey = generateRedisKey(userId, oldRefreshToken);
         validateRefreshTokenExists(oldKey);
         revoke(userId, oldRefreshToken);
-
         save(userId, newRefreshToken);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MailtrapClient implements MailClient {
+
     private final JavaMailSender mailSender;
     private final String sandboxSenderEmail;
 

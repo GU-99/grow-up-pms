@@ -16,15 +16,12 @@ public class UserProfile {
 
     private String bio;
 
-    private String image;
-
     private String imageName;
 
     @Builder
-    public UserProfile(String nickname, String bio, String image, String imageName) {
+    public UserProfile(String nickname, String bio, String imageName) {
         this.nickname = nickname;
         this.bio = bio;
-        this.image = image;
         this.imageName = imageName;
     }
 
@@ -34,10 +31,6 @@ public class UserProfile {
 
     public void changeBio(String bio) {
         this.bio = bio;
-    }
-
-    public void changeImage(String image) {
-        this.image = image;
     }
 
     public void changeImageName(String imageName) {

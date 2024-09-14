@@ -3,36 +3,38 @@ package com.growup.pms.user.controller.dto.request;
 import static com.growup.pms.common.constant.RegexConstants.NICKNAME_PATTERN;
 
 import com.growup.pms.user.service.dto.UserUpdateCommand;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import java.util.List;
+import lombok.AccessLevel;
 import lombok.Builder;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.URL;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.openapitools.jackson.nullable.JsonNullable;
 
-@Builder
-public record UserUpdateRequest(
-        @NotNull
-        @Pattern(regexp = NICKNAME_PATTERN)
-        String nickname,
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class UserUpdateRequest {
+    @Pattern(regexp = NICKNAME_PATTERN)
+    JsonNullable<String> nickname = JsonNullable.undefined();
 
-        @NotNull
-        @Length(max = 200)
-        String bio,
+    @Size(max = 200)
+    JsonNullable<String> bio = JsonNullable.undefined();
 
-        @Length(max = 255)
-        String profileImageUrl,
+    @Size(max = 64)
+    JsonNullable<String> profileImageName = JsonNullable.undefined();
 
-        @NotNull
-        List<@NotNull @URL @Size(max = 255) String> links
-) {
+    @Builder
+    public UserUpdateRequest(JsonNullable<String> nickname, JsonNullable<String> bio, JsonNullable<String> profileImageName) {
+        this.nickname = nickname;
+        this.bio = bio;
+        this.profileImageName = profileImageName;
+    }
+
     public UserUpdateCommand toCommand() {
         return UserUpdateCommand.builder()
                 .nickname(nickname)
                 .bio(bio)
-                .profileImageUrl(profileImageUrl)
-                .links(links)
+                .profileImageName(profileImageName)
                 .build();
     }
 }

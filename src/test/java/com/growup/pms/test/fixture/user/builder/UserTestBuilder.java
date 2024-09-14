@@ -19,6 +19,7 @@ public class UserTestBuilder {
     private String nickname = "브라운";
     private Provider provider = Provider.LOCAL;
     private String bio = "안녕하세요, 브라운입니다!";
+    private String profileImageName = "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png";
 
     public static UserTestBuilder 사용자는() {
         return new UserTestBuilder();
@@ -59,8 +60,13 @@ public class UserTestBuilder {
         return this;
     }
 
+    public UserTestBuilder 프로필_이미지_이름이(String 프로필_이미지_이름) {
+        this.profileImageName = 프로필_이미지_이름;
+        return this;
+    }
+
     public User 이다() {
-        var build = User.builder()
+        var user = User.builder()
                 .username(username)
                 .password(password)
                 .email(email)
@@ -68,9 +74,10 @@ public class UserTestBuilder {
                 .profile(UserProfile.builder()
                         .nickname(nickname)
                         .bio(bio)
+                        .imageName(profileImageName)
                         .build())
                 .build();
-        ReflectionTestUtils.setField(build, "id", id);
-        return build;
+        ReflectionTestUtils.setField(user, "id", id);
+        return user;
     }
 }

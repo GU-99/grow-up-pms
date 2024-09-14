@@ -136,12 +136,12 @@ class QueryDslUserRepositoryImplTest extends RepositoryTestSupport {
 
         UserTeamResponse 팀에_가입한_상태일_것으로_예상한다(Team 가입한_팀, String 팀_역할) {
             return new UserTeamResponse(가입한_팀.getId(), 가입한_팀.getName(), 가입한_팀.getContent(),
-                    가입한_팀.getCreator().getProfile().getNickname(), false, 팀_역할);
+                    가입한_팀.getCreator().getProfile().getNickname(), 가입한_팀.getCreator().getId(), false, 팀_역할);
         }
 
         UserTeamResponse 팀에_가입_대기_중인_상태일_것으로_예상한다(Team 가입한_팀, String 팀_역할) {
             return new UserTeamResponse(가입한_팀.getId(), 가입한_팀.getName(), 가입한_팀.getContent(),
-                    가입한_팀.getCreator().getProfile().getNickname(), true, 팀_역할);
+                    가입한_팀.getCreator().getProfile().getNickname(), 가입한_팀.getCreator().getId(), true, 팀_역할);
         }
     }
 }

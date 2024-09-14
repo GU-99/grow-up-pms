@@ -7,21 +7,18 @@ import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
 import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
 import com.growup.pms.user.controller.dto.request.UserUpdateRequest;
-import com.growup.pms.user.controller.dto.request.UserUploadRequest;
 import com.growup.pms.user.controller.dto.request.VerificationCodeCreateRequest;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
 import com.growup.pms.user.controller.dto.response.RecoverUsernameResponse;
+import com.growup.pms.user.controller.dto.response.UserResponse;
 import com.growup.pms.user.controller.dto.response.UserSearchResponse;
 import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.service.UserService;
-import com.growup.pms.user.service.dto.UserDownloadCommand;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,23 +35,14 @@ public class UserControllerV1 {
 
     private final UserService userService;
 
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getMe(@CurrentUser SecurityUser user) {
+        return ResponseEntity.ok().body(userService.getUser(user.getId()));
+    }
+
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request) {
         return ResponseEntity.created(URI.create("/api/v1/user/" + userService.save(request.toCommand()))).build();
-    }
-
-    @PostMapping("/file")
-    public ResponseEntity<Void> upload(@CurrentUser SecurityUser user, @Valid @RequestBody UserUploadRequest request) {
-        userService.uploadImage(user.getId(), request.toCommand());
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/file")
-    public ResponseEntity<Resource> download(@CurrentUser SecurityUser user) {
-        UserDownloadCommand command = userService.imageDownload(user.getId());
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + command.imageName() + "\"")
-                .body(command.resource());
     }
 
     @GetMapping("/search")

@@ -18,29 +18,32 @@ public final class UserTestData {
                 .이메일이("emily_jung@gu99.com")
                 .인증_프로바이더가(Provider.GOOGLE)
                 .자기소개가("안녕하세요! 25살 대학원생입니다. 문학과 커피를 사랑합니다.")
+                .프로필_이미지_이름이("5046c524-4db9-41c3-842b-70132d9de2f4.jpg")
                 .이다();
     }
 
     public static User 알렉스() {
         return 사용자는()
-            .닉네임이("Alex")
-            .아이디가("alex_lee")
-            .비밀번호가("fitnessFreak9@")
-            .이메일이("alex_lee@gu99.com")
-            .인증_프로바이더가(Provider.LOCAL)
-            .자기소개가("30대 초반 직장인입니다. 운동과 건강한 라이프스타일에 관심이 많아요.")
-            .이다();
+                .닉네임이("Alex")
+                .아이디가("alex_lee")
+                .비밀번호가("fitnessFreak9@")
+                .이메일이("alex_lee@gu99.com")
+                .인증_프로바이더가(Provider.LOCAL)
+                .자기소개가("30대 초반 직장인입니다. 운동과 건강한 라이프스타일에 관심이 많아요.")
+                .프로필_이미지_이름이("346c4f8e-1829-41ca-85dc-fdf22118c2f9.jpeg")
+                .이다();
     }
 
     public static User 소피아() {
         return 사용자는()
-            .닉네임이("Sophia")
-            .아이디가("sophia_p")
-            .비밀번호가("artL@ver1234")
-            .이메일이("sophia_park@gu99.com")
-            .인증_프로바이더가(Provider.KAKAO)
-            .자기소개가("28살 프리랜서 디자이너입니다. 미술관 투어와 여행을 좋아해요.")
-            .이다();
+                .닉네임이("Sophia")
+                .아이디가("sophia_p")
+                .비밀번호가("artL@ver1234")
+                .이메일이("sophia_park@gu99.com")
+                .인증_프로바이더가(Provider.KAKAO)
+                .자기소개가("28살 프리랜서 디자이너입니다. 미술관 투어와 여행을 좋아해요.")
+                .프로필_이미지_이름이("cbe41aed-569d-42c1-8598-82b5a000bede.svg")
+                .이다();
     }
 
     public static User 마이클() {
@@ -51,6 +54,7 @@ public final class UserTestData {
                 .이메일이("michael_kim@gu99.com")
                 .인증_프로바이더가(Provider.LOCAL)
                 .자기소개가("35살 소프트웨어 엔지니어입니다. 새로운 기술과 오픈소스 프로젝트에 관심이 많아요.")
+                .프로필_이미지_이름이("25844520-60c4-4a24-9ad3-4e200a568d07.webp")
                 .이다();
     }
 
@@ -62,6 +66,7 @@ public final class UserTestData {
                 .이메일이("olivia_choi@gu99.com")
                 .인증_프로바이더가(Provider.GOOGLE)
                 .자기소개가("32살 요가 강사입니다. 명상과 건강한 식단에 관심이 많아요.")
+                .프로필_이미지_이름이("28186fc8-f1c8-4bc9-9666-7d05f54461cd.png")
                 .이다();
     }
 
@@ -73,6 +78,7 @@ public final class UserTestData {
                 .이메일이("david_song@gu99.com")
                 .인증_프로바이더가(Provider.KAKAO)
                 .자기소개가("27살 음악 프로듀서입니다. 다양한 장르의 음악을 만들고 공연하는 것을 좋아해요.")
+                .프로필_이미지_이름이("329d35c4-9f11-489e-b1db-785f3954e03f.jpg")
                 .이다();
     }
 
@@ -84,6 +90,7 @@ public final class UserTestData {
                 .이메일이("emma_han@gu99.com")
                 .인증_프로바이더가(Provider.LOCAL)
                 .자기소개가("29살 여행 블로거입니다. 세계 각국의 문화와 음식을 경험하는 것을 좋아해요.")
+                .프로필_이미지_이름이("804df407-3b79-47a6-afe5-7859f47a917a.jpeg")
                 .이다();
     }
 
@@ -95,6 +102,7 @@ public final class UserTestData {
                 .이메일이("ryan_park@gu99.com")
                 .인증_프로바이더가(Provider.GOOGLE)
                 .자기소개가("23살 프로 게이머입니다. e스포츠와 스트리밍에 열정을 가지고 있어요.")
+                .프로필_이미지_이름이("90a83b07-2264-44b1-ac5b-b81ecd2b195a.webp")
                 .이다();
     }
 }
