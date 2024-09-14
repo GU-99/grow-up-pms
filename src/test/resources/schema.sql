@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS projects (
 );
 
 -- 프로젝트 유저
-CREATE TABLE project_users (
+CREATE TABLE IF NOT EXISTS project_users (
     project_id          BIGINT  NOT NULL,
     user_id             BIGINT  NOT NULL,
     role_id             BIGINT  NOT NULL,
