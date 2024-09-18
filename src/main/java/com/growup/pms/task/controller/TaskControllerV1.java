@@ -6,13 +6,12 @@ import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
-import com.growup.pms.task.controller.dto.response.TaskResponse;
+import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.service.TaskService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -56,11 +55,11 @@ public class TaskControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<Map<Long, List<TaskResponse>>> getTasks(@Positive @ProjectId @PathVariable Long projectId) {
+    public ResponseEntity<List<TaskKanbanResponse>> getTasks(@Positive @ProjectId @PathVariable Long projectId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("일정 전체 조회를 위한 projectId={}", projectId);
 
-        Map<Long, List<TaskResponse>> response = taskService.getTasks(projectId);
+        List<TaskKanbanResponse> response = taskService.getTasks(projectId);
 
         return ResponseEntity.ok(response);
     }

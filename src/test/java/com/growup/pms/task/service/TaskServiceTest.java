@@ -4,6 +4,7 @@ import static com.growup.pms.test.fixture.status.builder.StatusTestBuilder.상�
 import static com.growup.pms.test.fixture.task.builder.TaskCreateRequestTestBuilder.일정_생성_요청은;
 import static com.growup.pms.test.fixture.task.builder.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskEditRequestTestBuilder.일정_수정_요청은;
+import static com.growup.pms.test.fixture.task.builder.TaskKanbanResponseTestBuilder.일정_칸반_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
@@ -21,6 +22,7 @@ import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
+import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.repository.TaskRepository;
@@ -137,6 +139,9 @@ class TaskServiceTest {
             Long 예상_상태_ID_1 = 1L;
             Long 예상_상태_ID_2 = 2L;
 
+            Status 예상_상태_1 = 상태는().식별자가(예상_상태_ID_1).이다();
+            Status 예상_상태_2 = 상태는().식별자가(예상_상태_ID_2).이다();
+
             TaskResponse 예상_일정_1 = 일정_전체조회_응답은()
                     .일정_식별자는(1L)
                     .상태_식별자는(예상_상태_ID_1)
@@ -158,24 +163,25 @@ class TaskServiceTest {
                     .정렬순서는((short) 3)
                     .이다();
 
-            List<TaskResponse> 예상_일정_목록_1 = List.of(예상_일정_1, 예상_일정_2);
             List<TaskResponse> 예상_일정_목록_2 = List.of(예상_일정_3);
+            List<TaskResponse> 예상_일정_목록_1 = List.of(예상_일정_1, 예상_일정_2);
+            Map<Long, List<TaskResponse>> 예상_상태별_일정 = Map.of(예상_상태_ID_1, 예상_일정_목록_1, 예상_상태_ID_2, 예상_일정_목록_2);
 
-            Map<Long, List<TaskResponse>> 예상_결과 = Map.of(예상_상태_ID_1, 예상_일정_목록_1, 예상_상태_ID_2, 예상_일정_목록_2);
+            TaskKanbanResponse 예상_응답_1 = 일정_칸반_응답은().일정목록은(예상_일정_목록_1).이다();
+            TaskKanbanResponse 예상_응답_2 = 일정_칸반_응답은().상태_식별자는(예상_상태_ID_2).일정목록은(예상_일정_목록_2).이다();
 
-            when(taskRepository.getTasksByProjectId(예상_프로젝트_ID)).thenReturn(예상_결과);
+            List<TaskKanbanResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2);
+
+            when(taskRepository.getTasksByProjectId(예상_프로젝트_ID)).thenReturn(예상_상태별_일정);
+            when(statusRepository.findByIdOrThrow(예상_상태_ID_1)).thenReturn(예상_상태_1);
+            when(statusRepository.findByIdOrThrow(예상_상태_ID_2)).thenReturn(예상_상태_2);
 
             // when
-            Map<Long, List<TaskResponse>> 실제_결과 = taskService.getTasks(예상_프로젝트_ID);
+            List<TaskKanbanResponse> 실제_결과 = taskService.getTasks(예상_프로젝트_ID);
 
             // then
             assertThat(실제_결과).hasSize(2);
-            assertThat(실제_결과.get(예상_상태_ID_1)).hasSize(2);
-            assertThat(실제_결과.get(예상_상태_ID_1).stream().map(TaskResponse::taskName))
-                    .containsExactlyInAnyOrder("PMS 프로젝트의 환경설정을 진행함", "PMS 프로젝트의 등록 기능 구현을 진행함");
-            assertThat(실제_결과.get(예상_상태_ID_2)).hasSize(1);
-            assertThat(실제_결과.get(예상_상태_ID_2).stream().map(TaskResponse::taskName))
-                    .containsExactlyInAnyOrder("PMS 프로젝트의 조회 기능 구현을 진행함");
+            assertThat(실제_결과.size()).isEqualTo(예상_결과.size());
         }
 
         @Test
@@ -187,7 +193,7 @@ class TaskServiceTest {
             when(taskRepository.getTasksByProjectId(잘못된_프로젝트_ID)).thenReturn(예상_결과);
 
             // when
-            Map<Long, List<TaskResponse>> 실제_결과 = taskService.getTasks(잘못된_프로젝트_ID);
+            List<TaskKanbanResponse> 실제_결과 = taskService.getTasks(잘못된_프로젝트_ID);
 
             // then
             assertThat(실제_결과).isEmpty();

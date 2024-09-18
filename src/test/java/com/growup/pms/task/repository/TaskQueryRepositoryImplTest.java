@@ -192,15 +192,15 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
             // then
             assertThat(실제_결과.get(완료_상태_ID)).hasSize(2);
-            assertThat(실제_결과.get(완료_상태_ID).stream().map(TaskResponse::taskName))
+            assertThat(실제_결과.get(완료_상태_ID).stream().map(TaskResponse::getTaskName))
                     .containsExactly("PMS 프로젝트의 등록 기능 구현을 진행함", "PMS 프로젝트의 환경설정을 진행함");
 
             assertThat(실제_결과.get(진행중_상태_ID)).hasSize(1);
-            assertThat(실제_결과.get(진행중_상태_ID).stream().map(TaskResponse::taskName))
+            assertThat(실제_결과.get(진행중_상태_ID).stream().map(TaskResponse::getTaskName))
                     .containsExactly("PMS 프로젝트의 조회 기능 구현을 진행함");
 
             assertThat(실제_결과.get(할일_상태_ID)).hasSize(2);
-            assertThat(실제_결과.get(할일_상태_ID).stream().map(TaskResponse::taskName))
+            assertThat(실제_결과.get(할일_상태_ID).stream().map(TaskResponse::getTaskName))
                     .containsExactly("PMS 프로젝트의 삭제 기능 구현을 진행함", "PMS 프로젝트의 수정 기능 구현을 진행함");
 
             assertThat(실제_결과.get(보류_상태_ID)).isNull();
