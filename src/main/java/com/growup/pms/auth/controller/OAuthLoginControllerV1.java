@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,22 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/user/login")
 @RequiredArgsConstructor
 public class OAuthLoginControllerV1 {
+
     private final OAuthLoginService oAuthLoginService;
     private final JwtTokenProvider tokenProvider;
 
-    @GetMapping("/kakao")
-    public ResponseEntity<Void> kakaoLogin(@RequestParam("code") String code, HttpServletResponse response) {
-        TokenResponse authTokens = oAuthLoginService.authenticateOfKakao(code);
-        setRefreshTokenCookie(response, authTokens.refreshToken());
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
-                .build();
-    }
-
-    @GetMapping("/google")
-    public ResponseEntity<Void> googleLogin(@RequestParam("code") String code, HttpServletResponse response) {
-        TokenResponse authTokens = oAuthLoginService.authenticateOfGoogle(code);
+    @GetMapping("/{provider}")
+    public ResponseEntity<Void> login(@PathVariable String provider, @RequestParam("code") String code,
+                                      HttpServletResponse response) {
+        TokenResponse authTokens = oAuthLoginService.authenticate(provider, code);
         setRefreshTokenCookie(response, authTokens.refreshToken());
 
         return ResponseEntity.ok()
