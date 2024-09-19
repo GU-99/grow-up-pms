@@ -1,22 +1,26 @@
 package com.growup.pms.auth.service.dto.oauth.kakao;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public class KakaoProfile {
-    private Long id;
-    private String connected_at;
-    private Properties properties;
-    private KakaoAccount kakao_account;
+@Builder
+@JsonNaming(SnakeCaseStrategy.class)
+public record KakaoProfile(
+        Long id,
+        String connectedAt,
+        Properties properties,
+        KakaoAccount kakaoAccount
+) implements OAuthProfile {
 
-    @Builder
-    public KakaoProfile(Long id, String connected_at, Properties properties, KakaoAccount kakao_account) {
-        this.id = id;
-        this.connected_at = connected_at;
-        this.properties = properties;
-        this.kakao_account = kakao_account;
+    @Override
+    public String getNickname() {
+        return kakaoAccount.profile().nickname();
+    }
+
+    @Override
+    public String getEmail() {
+        return kakaoAccount.email();
     }
 }

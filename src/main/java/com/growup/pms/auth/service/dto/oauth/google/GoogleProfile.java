@@ -1,24 +1,27 @@
 package com.growup.pms.auth.service.dto.oauth.google;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public class GoogleProfile {
-    private String id;
-    private String email;
-    private Boolean verified_email;
-    private String picture;
-    private String hd;
+@Builder
+@JsonNaming(SnakeCaseStrategy.class)
+public record GoogleProfile(
+        String id,
+        String email,
+        Boolean verifiedEmail,
+        String picture,
+        String hd
+) implements OAuthProfile {
 
-    @Builder
-    public GoogleProfile(String id, String email, Boolean verified_email, String picture, String hd) {
-        this.id = id;
-        this.email = email;
-        this.verified_email = verified_email;
-        this.picture = picture;
-        this.hd = hd;
+    @Override
+    public String getNickname() {
+        return id;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
     }
 }
