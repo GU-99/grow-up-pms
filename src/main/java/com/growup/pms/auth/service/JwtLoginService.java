@@ -37,7 +37,7 @@ public class JwtLoginService {
         try {
             return authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         } catch (AuthenticationException ex) {
-            throw new BusinessException(ErrorCode.AUTHENTICATION_FAILED);
+            throw new BusinessException(ErrorCode.AUTHENTICATION_FAILED, ex);
         }
     }
 }
