@@ -34,9 +34,9 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
     private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded;charset=utf-8";
     private static final String AUTHORIZATION_CODE = "authorization_code";
 
-    protected abstract String getAccessTokenRequestUrl();
+    protected abstract String getAccessTokenRequestUri();
 
-    protected abstract String getUserInfoRequestUrl();
+    protected abstract String getUserInfoRequestUri();
 
     protected abstract String getClientId();
 
@@ -53,7 +53,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
 
         HttpEntity<LinkedMultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        return (OAuthAccessToken) sendRequest(getAccessTokenRequestUrl(), HttpMethod.POST,
+        return (OAuthAccessToken) sendRequest(getAccessTokenRequestUri(), HttpMethod.POST,
                 request, getAccessTokenClass(provider));
     }
 
@@ -64,7 +64,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
-        return (OAuthProfile) sendRequest(getUserInfoRequestUrl(), HttpMethod.GET, request, getProfileClass(provider));
+        return (OAuthProfile) sendRequest(getUserInfoRequestUri(), HttpMethod.GET, request, getProfileClass(provider));
     }
 
     @NotNull

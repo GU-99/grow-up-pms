@@ -26,12 +26,12 @@ public class KakaoOAuth2Service extends OAuth2ServiceImpl {
     }
 
     @Override
-    protected String getAccessTokenRequestUrl() {
+    protected String getAccessTokenRequestUri() {
         return accessTokenRequestUri;
     }
 
     @Override
-    protected String getUserInfoRequestUrl() {
+    protected String getUserInfoRequestUri() {
         return userInfoRequestUri;
     }
 
