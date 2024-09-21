@@ -24,7 +24,7 @@ public class OAuthLoginService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
 
-    public TokenResponse authenticate(String provider, String code) {
+    public TokenResponse authenticate(Provider provider, String code) {
         OAuth2Service oAuth2Service = getOAuth2Service(provider);
 
         OAuthAccessToken accessToken = oAuth2Service.requestToken(provider, code);
@@ -33,7 +33,7 @@ public class OAuthLoginService {
         String email = profile.getEmail();
         String nickname = profile.getNickname();
 
-        User user = userRepository.findByEmail(email).orElseGet(() -> joinUser(email, nickname, Provider.valueOf(provider.toUpperCase())));
+        User user = userRepository.findByEmail(email).orElseGet(() -> joinUser(email, nickname, provider));
         SecurityUser securityUser = convertSecurityUser(user);
 
         TokenResponse newToken = jwtTokenProvider.generateToken(securityUser);
@@ -42,10 +42,10 @@ public class OAuthLoginService {
         return newToken;
     }
 
-    private OAuth2Service getOAuth2Service(String provider) {
-        return switch (provider.toLowerCase()) {
-            case "kakao" -> kakaoOAuth2Service;
-            case "google" -> googleOAuth2Service;
+    private OAuth2Service getOAuth2Service(Provider provider) {
+        return switch (provider) {
+            case KAKAO -> kakaoOAuth2Service;
+            case GOOGLE -> googleOAuth2Service;
             default -> throw new BusinessException(ErrorCode.INVALID_PROVIDER);
         };
     }

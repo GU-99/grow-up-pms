@@ -4,6 +4,7 @@ import com.growup.pms.auth.service.OAuthLoginService;
 import com.growup.pms.common.security.jwt.JwtConstants;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
+import com.growup.pms.user.domain.Provider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,8 @@ public class OAuthLoginControllerV1 {
     @GetMapping("/{provider}")
     public ResponseEntity<Void> login(@PathVariable String provider, @RequestParam("code") String code,
                                       HttpServletResponse response) {
-        TokenResponse authTokens = oAuthLoginService.authenticate(provider, code);
+        Provider providerEnum = Provider.valueOf(provider.toUpperCase());
+        TokenResponse authTokens = oAuthLoginService.authenticate(providerEnum, code);
         setRefreshTokenCookie(response, authTokens.refreshToken());
 
         return ResponseEntity.ok()
