@@ -20,11 +20,11 @@ public class GoogleOAuth2Service extends OAuth2ServiceImpl {
     @Value("${oauth2.google.scope}")
     private String scope;
 
-    @Value("${oauth2.google.accessToken-request-url}")
-    private String accessTokenRequestUrl;
+    @Value("${oauth2.google.accessToken-request-uri}")
+    private String accessTokenRequestUri;
 
-    @Value("${oauth2.google.userinfo-request-url}")
-    private String userInfoRequestUrl;
+    @Value("${oauth2.google.userinfo-request-uri}")
+    private String userInfoRequestUri;
 
     public GoogleOAuth2Service(RestTemplate restTemplate,
                                ObjectMapper objectMapper) {
@@ -33,12 +33,12 @@ public class GoogleOAuth2Service extends OAuth2ServiceImpl {
 
     @Override
     protected String getAccessTokenRequestUrl() {
-        return accessTokenRequestUrl;
+        return accessTokenRequestUri;
     }
 
     @Override
     protected String getUserInfoRequestUrl() {
-        return userInfoRequestUrl;
+        return userInfoRequestUri;
     }
 
     @Override

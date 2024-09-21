@@ -11,14 +11,14 @@ public class KakaoOAuth2Service extends OAuth2ServiceImpl {
     @Value("${oauth2.kakao.clientId}")
     private String clientId;
 
-    @Value("${oauth2.kakao.redirect-url}")
+    @Value("${oauth2.kakao.redirect-uri}")
     private String redirectUri;
 
-    @Value("${oauth2.kakao.accessToken-request-url}")
-    private String accessTokenRequestUrl;
+    @Value("${oauth2.kakao.accessToken-request-uri}")
+    private String accessTokenRequestUri;
 
-    @Value("${oauth2.kakao.userinfo-request-url}")
-    private String userInfoRequestUrl;
+    @Value("${oauth2.kakao.userinfo-request-uri}")
+    private String userInfoRequestUri;
 
     public KakaoOAuth2Service(RestTemplate restTemplate,
                               ObjectMapper objectMapper) {
@@ -27,12 +27,12 @@ public class KakaoOAuth2Service extends OAuth2ServiceImpl {
 
     @Override
     protected String getAccessTokenRequestUrl() {
-        return accessTokenRequestUrl;
+        return accessTokenRequestUri;
     }
 
     @Override
     protected String getUserInfoRequestUrl() {
-        return userInfoRequestUrl;
+        return userInfoRequestUri;
     }
 
     @Override

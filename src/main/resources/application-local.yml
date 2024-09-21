@@ -28,17 +28,17 @@ spring:
 oauth2:
   kakao:
     clientId: ENC(lU3WDCJvRNuPhLlqzlhJAJR5/bnhVKlYRKgfGBu/OhsPkf+I+tsYXgQTo3J5F9xeKalQVvsBrzZXC+CeRe+N3l9cAgA7ldYmHAcEfy5A0no=)
-    redirect-url: http://localhost:8080/api/v1/user/login/kakao
-    accessToken-request-url: https://kauth.kakao.com/oauth/token
-    userinfo-request-url: https://kapi.kakao.com/v2/user/me
+    redirect-uri: http://localhost:8080/api/v1/user/login/kakao
+    accessToken-request-uri: https://kauth.kakao.com/oauth/token
+    userinfo-request-uri: https://kapi.kakao.com/v2/user/me
 
   google:
     clientId: ENC(fNrqSGUZ1XIS8cCyPlved2E4LhAkhUA/hSNGGr3+QAxYcGxKqnOuDVO+mVQ6bynpHcWCKS1ejijZ/coeMzL9fwbgJWcrnWqT/VrzOrSKDiSwnMJuy6ZyQGW7DAsrqT/3Un5DemmfuDfcplS1vWZ7oA==)
     clientSecret: ENC(sx7EcQL+9+wE0QTlmpF24t1EX+nr9yndtQmrmJbqxOIzGsC/TLR8mA5W78YCotRfmEBCmlGr6vEWta9FrXqP2D4rENLlHIuZx97Upih1LPg=)
     redirect-uri: http://localhost:8080/api/v1/user/login/google
     scope: https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile
-    accessToken-request-url: https://oauth2.googleapis.com/token
-    userinfo-request-url: https://www.googleapis.com/oauth2/v2/userinfo
+    accessToken-request-uri: https://oauth2.googleapis.com/token
+    userinfo-request-uri: https://www.googleapis.com/oauth2/v2/userinfo
 
 aws:
   access-key: dummy-access-key
