@@ -1,5 +1,7 @@
 package com.growup.pms.auth.service;
 
+import static org.springframework.http.HttpHeaders.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.growup.pms.auth.service.dto.oauth.OAuthAccessToken;
@@ -11,6 +13,7 @@ import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtConstants;
+import com.growup.pms.user.domain.Provider;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -28,9 +31,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    private static final String CONTENT_TYPE = "Content-type";
     private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded;charset=utf-8";
-    private static final String AUTHORIZATION = "Authorization";
     private static final String AUTHORIZATION_CODE = "authorization_code";
 
     protected abstract String getAccessTokenRequestUrl();
@@ -46,7 +47,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
     protected abstract String getScope();
 
     @Override
-    public OAuthAccessToken requestToken(String provider, String code) {
+    public OAuthAccessToken requestToken(Provider provider, String code) {
         HttpHeaders headers = createHeaders();
         LinkedMultiValueMap<String, String> params = createTokenRequestParams(code);
 
@@ -57,7 +58,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
     }
 
     @Override
-    public OAuthProfile requestProfile(String provider, OAuthAccessToken accessToken) {
+    public OAuthProfile requestProfile(Provider provider, OAuthAccessToken accessToken) {
         HttpHeaders headers = createHeaders();
         headers.add(AUTHORIZATION, JwtConstants.BEARER_PREFIX + accessToken.getAccessToken());
 
@@ -85,21 +86,21 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
     }
 
     @NotNull
-    private static Class<?> getClassForProvider(String provider, Class<?> kakaoClass, Class<?> googleClass) {
-        return switch (provider.toLowerCase()) {
-            case "kakao" -> kakaoClass;
-            case "google" -> googleClass;
+    private static Class<?> getClassForProvider(Provider provider, Class<?> kakaoClass, Class<?> googleClass) {
+        return switch (provider) {
+            case KAKAO -> kakaoClass;
+            case GOOGLE -> googleClass;
             default -> throw new BusinessException(ErrorCode.INVALID_PROVIDER);
         };
     }
 
     @NotNull
-    private static Class<?> getAccessTokenClass(String provider) {
+    private static Class<?> getAccessTokenClass(Provider provider) {
         return getClassForProvider(provider, KakaoAccessToken.class, GoogleAccessToken.class);
     }
 
     @NotNull
-    private static Class<?> getProfileClass(String provider) {
+    private static Class<?> getProfileClass(Provider provider) {
         return getClassForProvider(provider, KakaoProfile.class, GoogleProfile.class);
     }
 
