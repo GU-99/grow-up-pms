@@ -6,16 +6,16 @@ import static com.growup.pms.test.fixture.auth.builder.KakaoAccessTokenTestBuild
 import static com.growup.pms.test.fixture.auth.builder.KakaoProfileTestBuilder.카카오_프로필은;
 import static com.growup.pms.test.fixture.auth.builder.TokenResponseTestBuilder.발급된_토큰은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
+import static com.growup.pms.user.domain.Provider.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.growup.pms.auth.service.dto.oauth.google.GoogleAccessToken;
-import com.growup.pms.auth.service.dto.oauth.google.GoogleProfile;
-import com.growup.pms.auth.service.dto.oauth.kakao.KakaoAccessToken;
+import com.growup.pms.auth.controller.dto.SecurityUser;
+import com.growup.pms.auth.service.dto.oauth.OAuthAccessToken;
+import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
 import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
@@ -35,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class OAuthLoginServiceTest {
+
     @Mock
     private KakaoOAuth2Service kakaoOAuth2Service;
 
@@ -58,64 +59,68 @@ class OAuthLoginServiceTest {
 
         @Test
         void 카카오_로그인으로_성공한다() {
-            // given
-            String 인가코드 = "mock-code";
-            KakaoAccessToken 카카오_액세스_토큰 = 카카오_액세스_토큰은().이다();
-            KakaoProfile 카카오_프로필 = 카카오_프로필은().이다();
-            TokenResponse 예상하는_새_토큰 = 발급된_토큰은().이다();
-            User 유저 = 사용자는().닉네임이("tester").이메일이("test@test.com").인증_프로바이더가(Provider.KAKAO).이다();
 
-            when(kakaoOAuth2Service.requestToken(anyString())).thenReturn(카카오_액세스_토큰);
-            when(kakaoOAuth2Service.requestProfile(카카오_액세스_토큰)).thenReturn(카카오_프로필);
-            when(userRepository.findByEmail(anyString())).thenReturn(Optional.ofNullable(유저));
-            when(jwtTokenProvider.generateToken(any())).thenReturn(예상하는_새_토큰);
+            // Given
+            OAuthAccessToken 카카오_액세스_토큰 = 카카오_액세스_토큰은().이다();
+            KakaoProfile 카카오_프로필 = 카카오_프로필은().이메일이("test@gmail.com").이다();
+            User 유저 = 사용자는().이메일이("test@gmail.com").아이디가("test@gmail.com").인증_프로바이더가(KAKAO).이다();
+            TokenResponse 발급될_토큰 = 발급된_토큰은().이다();
+            Provider 공급자 = KAKAO;
+            String 인가코드 = "test_code";
 
-            // when
-            TokenResponse response = oAuthLoginService.authenticateOfKakao(인가코드);
+            when(kakaoOAuth2Service.requestToken(공급자, 인가코드)).thenReturn(카카오_액세스_토큰);
+            when(kakaoOAuth2Service.requestProfile(공급자, 카카오_액세스_토큰)).thenReturn(카카오_프로필);
 
-            // then
+            when(userRepository.findByEmail("test@gmail.com")).thenReturn(Optional.of(유저));
+            when(jwtTokenProvider.generateToken(any(SecurityUser.class))).thenReturn(발급될_토큰);
+
+            // When
+            TokenResponse tokenResponse = oAuthLoginService.authenticate(공급자, 인가코드);
+
+            // Then
             assertSoftly(softly -> {
-                softly.assertThat(response).isNotNull();
-                softly.assertThat(response)
-                        .extracting("accessToken", "refreshToken")
-                        .contains("액세스 토큰", "리프레시 토큰");
+                softly.assertThat(tokenResponse).isNotNull();
+                softly.assertThat(tokenResponse.accessToken()).isEqualTo("액세스 토큰");
+                softly.assertThat(tokenResponse.refreshToken()).isEqualTo("리프레시 토큰");
             });
 
-            verify(kakaoOAuth2Service, times(1)).requestToken(anyString());
-            verify(kakaoOAuth2Service, times(1)).requestProfile(카카오_액세스_토큰);
-            verify(userRepository, times(1)).findByEmail(anyString());
-            verify(jwtTokenProvider, times(1)).generateToken(any());
+            verify(kakaoOAuth2Service, times(1)).requestToken(공급자, 인가코드);
+            verify(kakaoOAuth2Service, times(1)).requestProfile(공급자, 카카오_액세스_토큰);
+            verify(userRepository, times(1)).findByEmail("test@gmail.com");
+            verify(jwtTokenProvider, times(1)).generateToken(any(SecurityUser.class));
         }
 
         @Test
         void 구글_로그인으로_성공한다() {
-            // given
-            String 인가코드 = "mock-code";
-            User 유저 = 사용자는().닉네임이("tester").이메일이("test@test.com").인증_프로바이더가(Provider.GOOGLE).이다();
-            TokenResponse 예상하는_새_토큰 = 발급된_토큰은().이다();
-            GoogleAccessToken 구글_액세스_토큰 = 구글_액세스_토큰은().이다();
-            GoogleProfile 구글_프로필 = 구글_프로필은().이다();
 
-            when(googleOAuth2Service.requestToken(anyString())).thenReturn(구글_액세스_토큰);
-            when(googleOAuth2Service.requestProfile(구글_액세스_토큰)).thenReturn(구글_프로필);
-            when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(유저));
-            when(jwtTokenProvider.generateToken(any())).thenReturn(예상하는_새_토큰);
+            // Given
+            OAuthAccessToken 구글_액세스_토큰 = 구글_액세스_토큰은().이다();
+            OAuthProfile 구글_프로필 = 구글_프로필은().이메일이("test@gmail.com").이다();
+            TokenResponse 발급될_토큰 = 발급된_토큰은().이다();
+            User 유저 = 사용자는().이메일이("test@gmail.com").아이디가("test@gmail.com").인증_프로바이더가(GOOGLE).이다();
+            Provider 공급자 = GOOGLE;
+            String 인가코드 = "test_code";
 
-            // when
-            TokenResponse response = oAuthLoginService.authenticateOfGoogle(인가코드);
+            when(googleOAuth2Service.requestToken(공급자, 인가코드)).thenReturn(구글_액세스_토큰);
+            when(googleOAuth2Service.requestProfile(공급자, 구글_액세스_토큰)).thenReturn(구글_프로필);
 
-            // then
+            when(userRepository.findByEmail("test@gmail.com")).thenReturn(Optional.of(유저));
+            when(jwtTokenProvider.generateToken(any(SecurityUser.class))).thenReturn(발급될_토큰);
+
+            // When
+            TokenResponse tokenResponse = oAuthLoginService.authenticate(공급자, 인가코드);
+
+            // Then
             assertSoftly(softly -> {
-                softly.assertThat(response).isNotNull();
-                softly.assertThat(response)
-                        .extracting("accessToken", "refreshToken")
-                        .contains("액세스 토큰", "리프레시 토큰");
+                softly.assertThat(tokenResponse).isNotNull();
+                softly.assertThat(tokenResponse.accessToken()).isEqualTo("액세스 토큰");
+                softly.assertThat(tokenResponse.refreshToken()).isEqualTo("리프레시 토큰");
             });
 
-            verify(googleOAuth2Service, times(1)).requestToken(anyString());
-            verify(googleOAuth2Service, times(1)).requestProfile(구글_액세스_토큰);
-            verify(userRepository, times(1)).findByEmail(anyString());
-            verify(jwtTokenProvider, times(1)).generateToken(any());
+            verify(googleOAuth2Service, times(1)).requestToken(공급자, 인가코드);
+            verify(googleOAuth2Service, times(1)).requestProfile(공급자, 구글_액세스_토큰);
+            verify(userRepository, times(1)).findByEmail("test@gmail.com");
+            verify(jwtTokenProvider, times(1)).generateToken(any(SecurityUser.class));
         }
     }
 }

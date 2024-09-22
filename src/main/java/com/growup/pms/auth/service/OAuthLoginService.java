@@ -1,10 +1,10 @@
 package com.growup.pms.auth.service;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
-import com.growup.pms.auth.service.dto.oauth.google.GoogleAccessToken;
-import com.growup.pms.auth.service.dto.oauth.google.GoogleProfile;
-import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
-import com.growup.pms.auth.service.dto.oauth.kakao.KakaoAccessToken;
+import com.growup.pms.auth.service.dto.oauth.OAuthAccessToken;
+import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
+import com.growup.pms.common.exception.code.ErrorCode;
+import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
 import com.growup.pms.user.domain.Provider;
@@ -24,14 +24,16 @@ public class OAuthLoginService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
 
-    public TokenResponse authenticateOfKakao(String code) {
-        KakaoAccessToken kakaoAccessToken = kakaoOAuth2Service.requestToken(code);
-        KakaoProfile kaKaoProfile = kakaoOAuth2Service.requestProfile(kakaoAccessToken);
+    public TokenResponse authenticate(Provider provider, String code) {
+        OAuth2Service oAuth2Service = getOAuth2Service(provider);
 
-        String email = kaKaoProfile.getKakao_account().getEmail();
-        String nickname = kaKaoProfile.getKakao_account().getProfile().getNickname();
+        OAuthAccessToken accessToken = oAuth2Service.requestToken(provider, code);
+        OAuthProfile profile = oAuth2Service.requestProfile(provider, accessToken);
 
-        User user = userRepository.findByEmail(email).orElseGet(() -> joinUser(email, nickname, Provider.KAKAO));
+        String email = profile.getEmail();
+        String nickname = profile.getNickname();
+
+        User user = userRepository.findByEmail(email).orElseGet(() -> joinUser(email, nickname, provider));
         SecurityUser securityUser = convertSecurityUser(user);
 
         TokenResponse newToken = jwtTokenProvider.generateToken(securityUser);
@@ -40,20 +42,12 @@ public class OAuthLoginService {
         return newToken;
     }
 
-    public TokenResponse authenticateOfGoogle(String code) {
-        GoogleAccessToken googleAccessToken = googleOAuth2Service.requestToken(code);
-        GoogleProfile googleProfile = googleOAuth2Service.requestProfile(googleAccessToken);
-
-        String email = googleProfile.getEmail();
-        String id = googleProfile.getId();
-
-        User user = userRepository.findByEmail(email).orElseGet(() -> joinUser(email, id, Provider.GOOGLE));
-        SecurityUser securityUser = convertSecurityUser(user);
-
-        TokenResponse newToken = jwtTokenProvider.generateToken(securityUser);
-        redisRefreshTokenService.save(securityUser.getId(), newToken.refreshToken());
-
-        return newToken;
+    private OAuth2Service getOAuth2Service(Provider provider) {
+        return switch (provider) {
+            case KAKAO -> kakaoOAuth2Service;
+            case GOOGLE -> googleOAuth2Service;
+            default -> throw new BusinessException(ErrorCode.INVALID_PROVIDER);
+        };
     }
 
     private SecurityUser convertSecurityUser(User user) {

@@ -3,6 +3,7 @@ package com.growup.pms.test.fixture.auth.builder;
 import com.growup.pms.auth.service.dto.oauth.kakao.KakaoAccount;
 import com.growup.pms.auth.service.dto.oauth.kakao.KakaoProfile;
 import com.growup.pms.auth.service.dto.oauth.kakao.Profile;
+import com.growup.pms.auth.service.dto.oauth.kakao.Properties;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class KakaoProfileTestBuilder {
 
-    private Long id = 3701574100L;
+    private Long id = 12345L;
+    private String connectedAt = "2023-01-01T00:00:00Z";
+    private String profileImage = "http://profile-image.com";
+    private String thumbnailImage = "http://thumbnail-image.com";
+    private Boolean isEmailVerified = true;
+    private Boolean hasEmail = true;
+    private String profileImageUrl = "http://profile-image.com";
     private String nickname = "tester";
     private String email = "test@test.com";
 
@@ -38,10 +45,19 @@ public class KakaoProfileTestBuilder {
     public KakaoProfile 이다() {
         return KakaoProfile.builder()
                 .id(id)
-                .kakao_account(KakaoAccount.builder()
+                .connectedAt(connectedAt)
+                .properties(Properties.builder()
+                        .nickname(nickname)
+                        .profileImage(profileImage)
+                        .thumbnailImage(thumbnailImage)
+                        .build())
+                .kakaoAccount(KakaoAccount.builder()
                         .email(email)
+                        .isEmailVerified(isEmailVerified)
+                        .hasEmail(hasEmail)
                         .profile(Profile.builder()
                                 .nickname(nickname)
+                                .profileImageUrl(profileImageUrl)
                                 .build())
                         .build()
                 )
