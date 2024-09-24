@@ -87,7 +87,6 @@ public class TaskService {
         editField(command.statusId(), this::changeStatus, task);
         editField(command.taskName(), (v, t) -> t.editName(v.get()), task);
         editField(command.content(), (v, t) -> t.editContent(v.get()), task);
-        editField(command.sortOrder(), (v, t) -> t.editSortOrder(v.get()), task);
         editField(command.startDate(), (v, t) -> t.editStartDate(v.get()), task);
         editField(command.endDate(), (v, t) -> t.editEndDate(v.get()), task);
     }

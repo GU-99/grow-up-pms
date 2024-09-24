@@ -4,7 +4,6 @@ import static com.growup.pms.common.constant.RegexConstants.LOCAL_DATE_PATTERN;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.growup.pms.task.service.dto.TaskEditCommand;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.AccessLevel;
@@ -26,9 +25,6 @@ public class TaskEditRequest {
 
     private JsonNullable<String> content = JsonNullable.undefined();
 
-    @Positive
-    private JsonNullable<Short> sortOrder = JsonNullable.undefined();
-
     @JsonFormat(pattern = LOCAL_DATE_PATTERN)
     private JsonNullable<LocalDate> startDate = JsonNullable.undefined();
 
@@ -37,12 +33,11 @@ public class TaskEditRequest {
 
     @Builder
     public TaskEditRequest(JsonNullable<Long> statusId, JsonNullable<String> taskName,
-                           JsonNullable<String> content, JsonNullable<Short> sortOrder,
-                           JsonNullable<LocalDate> startDate, JsonNullable<LocalDate> endDate) {
+                           JsonNullable<String> content, JsonNullable<LocalDate> startDate,
+                           JsonNullable<LocalDate> endDate) {
         this.statusId = statusId;
         this.taskName = taskName;
         this.content = content;
-        this.sortOrder = sortOrder;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -52,7 +47,6 @@ public class TaskEditRequest {
                 .statusId(statusId)
                 .content(content)
                 .taskName(taskName)
-                .sortOrder(sortOrder)
                 .startDate(startDate)
                 .endDate(endDate)
                 .build();

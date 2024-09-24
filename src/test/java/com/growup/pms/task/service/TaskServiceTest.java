@@ -246,14 +246,12 @@ class TaskServiceTest {
             Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
             String 변경할_일정_이름 = "변경할 이름 입니다!";
             String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
-            Short 변경할_정렬순서 = (short) 2;
             LocalDate 변경할_시작일자 = LocalDate.of(2023, 1, 1);
             LocalDate 변경할_종료일자 = LocalDate.of(2023, 3, 1);
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
                     .상태_식별자는(변경할_상태_ID)
                     .일정이름은(변경할_일정_이름)
                     .본문내용은(변경할_내용)
-                    .정렬순서는(변경할_정렬순서)
                     .시작일자는(변경할_시작일자)
                     .종료일자는(변경할_종료일자)
                     .이다().toCommand();
@@ -269,7 +267,6 @@ class TaskServiceTest {
                 assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
                 assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
                 assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
-                assertThat(기존_일정.getSortOrder()).isEqualTo(변경할_정렬순서);
                 assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
                 assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
             });

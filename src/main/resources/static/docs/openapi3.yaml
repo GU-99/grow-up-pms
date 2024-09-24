@@ -1681,7 +1681,6 @@ paths:
                     "statusId" : 1,
                     "taskName" : "환경설정 마치기",
                     "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
-                    "sortOrder" : 1,
                     "startDate" : "2023-01-01",
                     "endDate" : "2023-12-31"
                   }
@@ -1897,6 +1896,25 @@ components:
         colorCode:
           type: string
           description: 변경할 색상 코드
+    프로젝트 일정 변경 요청 예시입니다.:
+      title: 프로젝트 일정 변경 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-team-teamId-project-557506802:
       type: array
       description: 팀 ID에 해당하는 프로젝트 목록
@@ -1983,28 +2001,6 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
-    프로젝트 일정 변경 요청 예시입니다.:
-      title: 프로젝트 일정 변경 요청 예시입니다.
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
     api-v1-user-recover-username1645263616:
       type: object
       properties:

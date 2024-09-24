@@ -274,8 +274,6 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("일정 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
                                                 .description("일정 내용"),
-                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
-                                                .description("정렬 순서"),
                                         fieldWithPath("startDate").type(JsonFieldType.STRING)
                                                 .description("시작일자"),
                                         fieldWithPath("endDate").type(JsonFieldType.STRING)

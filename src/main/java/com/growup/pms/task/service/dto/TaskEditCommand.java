@@ -9,7 +9,6 @@ public record TaskEditCommand(
         JsonNullable<Long> statusId,
         JsonNullable<String> taskName,
         JsonNullable<String> content,
-        JsonNullable<Short> sortOrder,
         JsonNullable<LocalDate> startDate,
         JsonNullable<LocalDate> endDate
 ) {
