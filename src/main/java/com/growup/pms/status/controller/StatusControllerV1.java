@@ -6,6 +6,8 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import com.growup.pms.status.controller.dto.request.StatusEditRequest;
+import com.growup.pms.status.controller.dto.request.StatusOrderEditRequest;
+import com.growup.pms.status.controller.dto.request.StatusOrderListEditRequest;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
 import jakarta.validation.Valid;
@@ -75,6 +77,21 @@ public class StatusControllerV1 {
         log.debug("request={}", request);
 
         statusService.editStatus(request.toCommand(statusId));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/order")
+    @RequirePermission(PermissionType.PROJECT_STATUS_UPDATE)
+    public ResponseEntity<Void> editStatusOrder(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Valid @RequestBody StatusOrderListEditRequest request
+    ) {
+        log.debug("StatusControllerV1#editStatusOrder called.");
+        log.debug("projectId={}", projectId);
+        log.debug("request={}", request);
+
+        statusService.editStatusOrder(request.statuses().stream().map(StatusOrderEditRequest::toCommand).toList());
 
         return ResponseEntity.noContent().build();
     }

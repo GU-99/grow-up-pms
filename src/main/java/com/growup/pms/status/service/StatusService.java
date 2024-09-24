@@ -7,6 +7,7 @@ import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
 import com.growup.pms.status.service.dto.StatusEditCommand;
+import com.growup.pms.status.service.dto.StatusOrderEditCommand;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,14 @@ public class StatusService {
         if (command.colorCode().isPresent()) {
             status.editColorCode(command.colorCode().get());
         }
+    }
+
+    @Transactional
+    public void editStatusOrder(List<StatusOrderEditCommand> commands) {
+        commands.forEach(command -> {
+            Status status = statusRepository.findByIdOrThrow(command.statusId());
+            status.editSortOrder(command.sortOrder());
+        });
     }
 
     @Transactional
