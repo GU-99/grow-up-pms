@@ -1477,6 +1477,47 @@ paths:
       responses:
         "200":
           description: "200"
+  /api/v1/project/{projectId}/status/order:
+    patch:
+      tags:
+      - Status
+      summary: 프로젝트 상태 정렬순서 일괄 변경
+      description: 프로젝트 상태의 정렬순서를 변경합니다.
+      operationId: status-controller-v1-docs-test/상태_순서_변경_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-status-order1030631579'
+            examples:
+              status-controller-v1-docs-test/상태_순서_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "statuses" : [ {
+                      "statusId" : 1,
+                      "sortOrder" : 3
+                    }, {
+                      "statusId" : 2,
+                      "sortOrder" : 4
+                    } ]
+                  }
+      responses:
+        "204":
+          description: "204"
   /api/v1/project/{projectId}/status/{statusId}:
     delete:
       tags:
@@ -2176,6 +2217,21 @@ components:
         colorCode:
           type: string
           description: 색상 코드
+    api-v1-project-projectId-status-order1030631579:
+      type: object
+      properties:
+        statuses:
+          type: array
+          description: 변경할 상태 정렬순서 변경 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 변경할 상태 식별자
+              sortOrder:
+                type: number
+                description: 변경할 정렬 순서
     api-v1-team-750252047:
       type: object
       properties:
