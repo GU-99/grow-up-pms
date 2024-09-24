@@ -2,6 +2,7 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.growup.pms.test.fixture.status.builder.StatusEditRequestTestBuilder.상태_변경_요청은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -25,7 +26,6 @@ import com.growup.pms.status.service.dto.StatusCreateCommand;
 import com.growup.pms.status.service.dto.StatusEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.status.builder.StatusCreateRequestTestBuilder;
-import com.growup.pms.test.fixture.status.builder.StatusEditRequestTestBuilder;
 import com.growup.pms.test.fixture.status.builder.StatusResponseTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
@@ -149,7 +149,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         // given
         Long 예상_프로젝트_식별자 = 2L;
         Long 변경할_상태_ID = 1L;
-        StatusEditRequest 상태_변경_요청 = StatusEditRequestTestBuilder.상태_변경_요청은().이다();
+        StatusEditRequest 상태_변경_요청 = 상태_변경_요청은().이다();
 
         // when
         doNothing().when(statusService).editStatus(any(StatusEditCommand.class));
@@ -164,7 +164,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("프로젝트 상태 변경")
-                                .description("프로젝트 상태의 이름, 색상 코드, 정렬 순서를 변경합니다.")
+                                .description("프로젝트 상태의 이름, 색상 코드를 변경합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").description("프로젝트 식별자"),
                                         parameterWithName("statusId").description("변경할 상태 식별자")
@@ -175,9 +175,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("statusName").type(JsonFieldType.STRING)
                                                 .description("변경할 상태의 이름"),
                                         fieldWithPath("colorCode").type(JsonFieldType.STRING)
-                                                .description("변경할 색상 코드"),
-                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
-                                                .description("변경할 정렬 순서")
+                                                .description("변경할 색상 코드")
                                 )
                                 .build()
                 )));

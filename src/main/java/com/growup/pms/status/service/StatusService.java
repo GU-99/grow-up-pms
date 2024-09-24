@@ -44,9 +44,6 @@ public class StatusService {
         if (command.colorCode().isPresent()) {
             status.editColorCode(command.colorCode().get());
         }
-        if (command.sortOrder().isPresent()) {
-            status.editSortOrder(command.sortOrder().get());
-        }
     }
 
     @Transactional

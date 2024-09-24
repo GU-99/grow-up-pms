@@ -22,14 +22,10 @@ public class StatusEditRequest {
     @Pattern(regexp = COLOR_CODE_PATTERN)
     private JsonNullable<String> colorCode = JsonNullable.undefined();
 
-    private JsonNullable<Short> sortOrder = JsonNullable.undefined();
-
     @Builder
-    public StatusEditRequest(JsonNullable<String> statusName, JsonNullable<String> colorCode,
-                             JsonNullable<Short> sortOrder) {
+    public StatusEditRequest(JsonNullable<String> statusName, JsonNullable<String> colorCode) {
         this.statusName = statusName;
         this.colorCode = colorCode;
-        this.sortOrder = sortOrder;
     }
 
     public StatusEditCommand toCommand(Long statusId) {
@@ -37,7 +33,6 @@ public class StatusEditRequest {
                 .statusId(statusId)
                 .statusName(statusName)
                 .colorCode(colorCode)
-                .sortOrder(sortOrder)
                 .build();
     }
 }

@@ -150,11 +150,9 @@ class StatusServiceTest {
             Status 기존_상태 = 상태는().식별자가(기존_상태_ID).이다();
             String 새로운_상태_이름 = "새로운 이름입니다!";
             String 새로운_색상코드 = "A0B1C2";
-            Short 새로운_정렬순서 = 1;
             StatusEditCommand 상태_변경_요청 = 상태_변경_요청은()
                     .이름은(새로운_상태_이름)
                     .색상코드는(새로운_색상코드)
-                    .정렬순서는(새로운_정렬순서)
                     .이다()
                     .toCommand(기존_상태_ID);
 
@@ -168,7 +166,6 @@ class StatusServiceTest {
             assertSoftly(softly -> {
                 softly.assertThat(기존_상태.getName()).isEqualTo(새로운_상태_이름);
                 softly.assertThat(기존_상태.getColorCode()).isEqualTo(새로운_색상코드);
-                softly.assertThat(기존_상태.getSortOrder()).isEqualTo(새로운_정렬순서);
             });
         }
 
@@ -178,11 +175,9 @@ class StatusServiceTest {
             Long 잘못된_상태_ID = 1L;
             String 새로운_상태_이름 = "새로운 이름입니다!";
             String 새로운_색상코드 = "A0B1C2";
-            Short 새로운_정렬순서 = 1;
             StatusEditCommand 상태_변경_요청 = 상태_변경_요청은()
                     .이름은(새로운_상태_이름)
                     .색상코드는(새로운_색상코드)
-                    .정렬순서는(새로운_정렬순서)
                     .이다()
                     .toCommand(잘못된_상태_ID);
 

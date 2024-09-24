@@ -13,7 +13,6 @@ public class StatusEditRequestTestBuilder {
 
     private String name = "대기중";
     private String colorCode = "#FFFFFF";
-    private Short sortOrder = 3;
 
     public static StatusEditRequestTestBuilder 상태_변경_요청은() {
         return new StatusEditRequestTestBuilder();
@@ -29,16 +28,10 @@ public class StatusEditRequestTestBuilder {
         return this;
     }
 
-    public StatusEditRequestTestBuilder 정렬순서는(Short sortOrder) {
-        this.sortOrder = sortOrder;
-        return this;
-    }
-
     public StatusEditRequest 이다() {
         return StatusEditRequest.builder()
                 .statusName(JsonNullable.of(name))
                 .colorCode(JsonNullable.of(colorCode))
-                .sortOrder(JsonNullable.of(sortOrder))
                 .build();
     }
 }
