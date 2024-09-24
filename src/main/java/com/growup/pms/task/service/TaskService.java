@@ -13,6 +13,7 @@ import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.repository.TaskUserRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.task.service.dto.TaskEditCommand;
+import com.growup.pms.task.service.dto.TaskOrderEditCommand;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.util.ArrayList;
@@ -89,6 +90,16 @@ public class TaskService {
         editField(command.content(), (v, t) -> t.editContent(v.get()), task);
         editField(command.startDate(), (v, t) -> t.editStartDate(v.get()), task);
         editField(command.endDate(), (v, t) -> t.editEndDate(v.get()), task);
+    }
+
+    @Transactional
+    public void editTaskOrder(List<TaskOrderEditCommand> commands) {
+        commands.forEach(command -> {
+            Status status = statusRepository.findByIdOrThrow(command.statusId());
+            Task task = taskRepository.findByIdOrThrow(command.taskId());
+            task.editStatus(status);
+            task.editSortOrder(command.sortOrder());
+        });
     }
 
     @Transactional

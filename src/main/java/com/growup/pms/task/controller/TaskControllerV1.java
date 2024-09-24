@@ -5,6 +5,8 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
+import com.growup.pms.task.controller.dto.request.TaskOrderEditRequest;
+import com.growup.pms.task.controller.dto.request.TaskOrderListEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.service.TaskService;
@@ -81,7 +83,7 @@ public class TaskControllerV1 {
     }
 
     @PatchMapping("/{taskId}")
-    @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
+    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
     public ResponseEntity<Void> editTask(
             @Positive @ProjectId @PathVariable Long projectId,
             @Positive @PathVariable Long taskId,
@@ -93,6 +95,21 @@ public class TaskControllerV1 {
         log.debug("일정 변경을 위한 TaskEditRequest={}", request);
 
         taskService.editTask(taskId, request.toCommand());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/order")
+    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
+    public ResponseEntity<Void> editTaskOrder(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Valid @RequestBody TaskOrderListEditRequest request
+    ) {
+        log.debug("TaskControllerV1#editTaskOrder called.");
+        log.debug("일정 순서 변경을 위한 projectId={}", projectId);
+        log.debug("일정 변경을 위한 TaskOrderListEditRequest={}", request);
+
+        taskService.editTaskOrder(request.tasks().stream().map(TaskOrderEditRequest::toCommand).toList());
 
         return ResponseEntity.noContent().build();
     }
