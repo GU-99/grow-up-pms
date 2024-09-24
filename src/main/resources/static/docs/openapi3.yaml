@@ -1582,6 +1582,49 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/project/{projectId}/task/order:
+    patch:
+      tags:
+      - Task
+      summary: 프로젝트 일정 내용 변경
+      description: 칸반보드에서의 프로젝트 일정 위치 변경에 따라 상태 및 정렬순서를 변경합니다.
+      operationId: task-controller-v1-docs-test/일정_순서변경_api_문서를_작성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/프로젝트 일정 순서변경 요청 예시입니다.'
+            examples:
+              task-controller-v1-docs-test/일정_순서변경_api_문서를_작성한다:
+                value: |-
+                  {
+                    "tasks" : [ {
+                      "statusId" : 1,
+                      "taskId" : 1,
+                      "sortOrder" : 1
+                    }, {
+                      "statusId" : 3,
+                      "taskId" : 2,
+                      "sortOrder" : 5
+                    } ]
+                  }
+      responses:
+        "204":
+          description: "204"
   /api/v1/project/{projectId}/task/{taskId}:
     get:
       tags:
@@ -1943,6 +1986,25 @@ components:
             type: string
             description: 프로젝트 변경일시
         description: 팀 ID에 해당하는 프로젝트 목록
+    프로젝트 일정 순서변경 요청 예시입니다.:
+      title: 프로젝트 일정 순서변경 요청 예시입니다.
+      type: object
+      properties:
+        tasks:
+          type: array
+          description: 프로젝트 일정 순서 변경 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 상태 PK
+              sortOrder:
+                type: number
+                description: 일정 정렬 순서
+              taskId:
+                type: number
+                description: 일정 PK
     api-v1-user-me-752510290:
       type: object
       properties:
