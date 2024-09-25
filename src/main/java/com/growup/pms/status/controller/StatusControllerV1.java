@@ -6,7 +6,6 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import com.growup.pms.status.controller.dto.request.StatusEditRequest;
-import com.growup.pms.status.controller.dto.request.StatusOrderEditRequest;
 import com.growup.pms.status.controller.dto.request.StatusOrderListEditRequest;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
@@ -91,7 +90,7 @@ public class StatusControllerV1 {
         log.debug("projectId={}", projectId);
         log.debug("request={}", request);
 
-        statusService.editStatusOrder(request.statuses().stream().map(StatusOrderEditRequest::toCommand).toList());
+        statusService.editStatusOrder(request.toCommands());
 
         return ResponseEntity.noContent().build();
     }

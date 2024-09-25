@@ -221,7 +221,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
                                 .requestFields(
-                                        fieldWithPath("statuses[]").type(JsonFieldType.ARRAY)
+                                        fieldWithPath("statuses").type(JsonFieldType.ARRAY)
                                                 .description("변경할 상태 정렬순서 변경 목록"),
                                         fieldWithPath("statuses[].statusId").type(JsonFieldType.NUMBER)
                                                 .description("변경할 상태 식별자"),

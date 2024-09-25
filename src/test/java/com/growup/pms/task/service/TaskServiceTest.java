@@ -266,11 +266,11 @@ class TaskServiceTest {
 
             // then
             assertSoftly(softly -> {
-                assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
-                assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
-                assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
-                assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
-                assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
+                softly.assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
+                softly.assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
+                softly.assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
+                softly.assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
+                softly.assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
             });
         }
 
@@ -344,10 +344,10 @@ class TaskServiceTest {
 
             // then
             assertSoftly(softly -> {
-                assertThat(기존_일정_1.getSortOrder()).isEqualTo(상태_순서변경_요청_1.sortOrder());
-                assertThat(기존_일정_2.getSortOrder()).isEqualTo(상태_순서변경_요청_2.sortOrder());
-                assertThat(기존_일정_1.getStatus().getId()).isEqualTo(변경할_상태_ID_1);
-                assertThat(기존_일정_2.getStatus().getId()).isEqualTo(변경할_상태_ID_2);
+                softly.assertThat(기존_일정_1.getSortOrder()).isEqualTo(상태_순서변경_요청_1.sortOrder());
+                softly.assertThat(기존_일정_2.getSortOrder()).isEqualTo(상태_순서변경_요청_2.sortOrder());
+                softly.assertThat(기존_일정_1.getStatus().getId()).isEqualTo(변경할_상태_ID_1);
+                softly.assertThat(기존_일정_2.getStatus().getId()).isEqualTo(변경할_상태_ID_2);
             });
         }
 

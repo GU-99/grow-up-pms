@@ -314,7 +314,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .summary("프로젝트 일정 내용 변경")
+                                .summary("프로젝트 일정 정렬순서 변경")
                                 .requestSchema(schema("프로젝트 일정 순서변경 요청 예시입니다."))
                                 .description("칸반보드에서의 프로젝트 일정 위치 변경에 따라 상태 및 정렬순서를 변경합니다.")
                                 .pathParameters(
