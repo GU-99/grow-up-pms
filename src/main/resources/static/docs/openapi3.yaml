@@ -1586,7 +1586,7 @@ paths:
     patch:
       tags:
       - Task
-      summary: 프로젝트 일정 내용 변경
+      summary: 프로젝트 일정 정렬순서 변경
       description: 칸반보드에서의 프로젝트 일정 위치 변경에 따라 상태 및 정렬순서를 변경합니다.
       operationId: task-controller-v1-docs-test/일정_순서변경_api_문서를_작성한다
       parameters:
