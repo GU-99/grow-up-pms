@@ -15,7 +15,6 @@ public class TaskEditRequestTestBuilder {
     private Long statusId = 1L;
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
-    private Short sortOrder = 1;
     private LocalDate startDate = LocalDate.of(2023, 1, 1);
     private LocalDate endDate = LocalDate.of(2023, 12, 31);
 
@@ -38,11 +37,6 @@ public class TaskEditRequestTestBuilder {
         return this;
     }
 
-    public TaskEditRequestTestBuilder 정렬순서는(Short sortOrder) {
-        this.sortOrder = sortOrder;
-        return this;
-    }
-
     public TaskEditRequestTestBuilder 시작일자는(LocalDate startDate) {
         this.startDate = startDate;
         return this;
@@ -58,7 +52,6 @@ public class TaskEditRequestTestBuilder {
                 .statusId(JsonNullable.of(statusId))
                 .taskName(JsonNullable.of(taskName))
                 .content(JsonNullable.of(content))
-                .sortOrder(JsonNullable.of(sortOrder))
                 .startDate(JsonNullable.of(startDate))
                 .endDate(JsonNullable.of(endDate))
                 .build();

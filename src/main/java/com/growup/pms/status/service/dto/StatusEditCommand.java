@@ -7,7 +7,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public record StatusEditCommand(
         Long statusId,
         JsonNullable<String> statusName,
-        JsonNullable<String> colorCode,
-        JsonNullable<Short> sortOrder
+        JsonNullable<String> colorCode
 ) {
 }

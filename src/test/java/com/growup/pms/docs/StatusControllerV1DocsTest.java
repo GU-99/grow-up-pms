@@ -2,7 +2,11 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.growup.pms.test.fixture.status.builder.StatusEditRequestTestBuilder.상태_변경_요청은;
+import static com.growup.pms.test.fixture.status.builder.StatusOrderEditRequestTestBuilder.상태_정렬순서_변경_요청은;
+import static com.growup.pms.test.fixture.status.builder.StatusOrderListEditRequestTestBuilder.상태_정렬순서_목록_변경_요청은;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -19,13 +23,14 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.status.controller.dto.request.StatusCreateRequest;
 import com.growup.pms.status.controller.dto.request.StatusEditRequest;
+import com.growup.pms.status.controller.dto.request.StatusOrderEditRequest;
+import com.growup.pms.status.controller.dto.request.StatusOrderListEditRequest;
 import com.growup.pms.status.controller.dto.response.StatusResponse;
 import com.growup.pms.status.service.StatusService;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
 import com.growup.pms.status.service.dto.StatusEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.fixture.status.builder.StatusCreateRequestTestBuilder;
-import com.growup.pms.test.fixture.status.builder.StatusEditRequestTestBuilder;
 import com.growup.pms.test.fixture.status.builder.StatusResponseTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
@@ -149,7 +154,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         // given
         Long 예상_프로젝트_식별자 = 2L;
         Long 변경할_상태_ID = 1L;
-        StatusEditRequest 상태_변경_요청 = StatusEditRequestTestBuilder.상태_변경_요청은().이다();
+        StatusEditRequest 상태_변경_요청 = 상태_변경_요청은().이다();
 
         // when
         doNothing().when(statusService).editStatus(any(StatusEditCommand.class));
@@ -164,7 +169,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("프로젝트 상태 변경")
-                                .description("프로젝트 상태의 이름, 색상 코드, 정렬 순서를 변경합니다.")
+                                .description("프로젝트 상태의 이름, 색상 코드를 변경합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").description("프로젝트 식별자"),
                                         parameterWithName("statusId").description("변경할 상태 식별자")
@@ -175,8 +180,52 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("statusName").type(JsonFieldType.STRING)
                                                 .description("변경할 상태의 이름"),
                                         fieldWithPath("colorCode").type(JsonFieldType.STRING)
-                                                .description("변경할 색상 코드"),
-                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
+                                                .description("변경할 색상 코드")
+                                )
+                                .build()
+                )));
+    }
+
+    @Test
+    void 상태_순서_변경_API_문서를_생성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_식별자 = 2L;
+        StatusOrderEditRequest 정렬순서_변경_요청_1 = 상태_정렬순서_변경_요청은()
+                .상태식별자는(1L)
+                .정렬순서는((short) 3)
+                .이다();
+        StatusOrderEditRequest 정렬순서_변경_요청_2 = 상태_정렬순서_변경_요청은()
+                .상태식별자는(2L)
+                .정렬순서는((short) 4)
+                .이다();
+        List<StatusOrderEditRequest> 상태_정렬순서_변경_요청_리스트 = List.of(정렬순서_변경_요청_1, 정렬순서_변경_요청_2);
+        StatusOrderListEditRequest 상태_정렬순서_목록_변경_요청 = 상태_정렬순서_목록_변경_요청은().정렬순서_변경_목록은(상태_정렬순서_변경_요청_리스트).이다();
+
+        // when
+        doNothing().when(statusService).editStatusOrder(anyList());
+
+        // then
+        mockMvc.perform(patch("/api/v1/project/{projectId}/status/order", 예상_프로젝트_식별자)
+                        .content(objectMapper.writeValueAsString(상태_정렬순서_목록_변경_요청))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 상태 정렬순서 일괄 변경")
+                                .description("프로젝트 상태의 정렬순서를 변경합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").description("프로젝트 식별자")
+                                )
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
+                                        MediaType.APPLICATION_JSON_VALUE))
+                                .requestFields(
+                                        fieldWithPath("statuses").type(JsonFieldType.ARRAY)
+                                                .description("변경할 상태 정렬순서 변경 목록"),
+                                        fieldWithPath("statuses[].statusId").type(JsonFieldType.NUMBER)
+                                                .description("변경할 상태 식별자"),
+                                        fieldWithPath("statuses[].sortOrder").type(JsonFieldType.NUMBER)
                                                 .description("변경할 정렬 순서")
                                 )
                                 .build()

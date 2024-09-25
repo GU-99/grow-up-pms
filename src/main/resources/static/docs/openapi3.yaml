@@ -1132,7 +1132,7 @@ paths:
                       "statusId" : 2,
                       "statusName" : "할일",
                       "colorCode" : "#FFFFFF",
-                      "sortOrder" : 1,
+                      "sortOrder" : 2,
                       "tasks" : [ {
                         "taskId" : 1,
                         "statusId" : 1,
@@ -1477,6 +1477,47 @@ paths:
       responses:
         "200":
           description: "200"
+  /api/v1/project/{projectId}/status/order:
+    patch:
+      tags:
+      - Status
+      summary: 프로젝트 상태 정렬순서 일괄 변경
+      description: 프로젝트 상태의 정렬순서를 변경합니다.
+      operationId: status-controller-v1-docs-test/상태_순서_변경_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-project-projectId-status-order1030631579'
+            examples:
+              status-controller-v1-docs-test/상태_순서_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "statuses" : [ {
+                      "statusId" : 1,
+                      "sortOrder" : 3
+                    }, {
+                      "statusId" : 2,
+                      "sortOrder" : 4
+                    } ]
+                  }
+      responses:
+        "204":
+          description: "204"
   /api/v1/project/{projectId}/status/{statusId}:
     delete:
       tags:
@@ -1504,7 +1545,7 @@ paths:
       tags:
       - Status
       summary: 프로젝트 상태 변경
-      description: "프로젝트 상태의 이름, 색상 코드, 정렬 순서를 변경합니다."
+      description: "프로젝트 상태의 이름, 색상 코드를 변경합니다."
       operationId: status-controller-v1-docs-test/상태_변경_api_문서를_생성한다
       parameters:
       - name: projectId
@@ -1530,14 +1571,56 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-status-statusId-1514376740'
+              $ref: '#/components/schemas/api-v1-project-projectId-status-statusId75349813'
             examples:
               status-controller-v1-docs-test/상태_변경_api_문서를_생성한다:
                 value: |-
                   {
                     "statusName" : "대기중",
-                    "colorCode" : "#FFFFFF",
-                    "sortOrder" : 3
+                    "colorCode" : "#FFFFFF"
+                  }
+      responses:
+        "204":
+          description: "204"
+  /api/v1/project/{projectId}/task/order:
+    patch:
+      tags:
+      - Task
+      summary: 프로젝트 일정 정렬순서 변경
+      description: 칸반보드에서의 프로젝트 일정 위치 변경에 따라 상태 및 정렬순서를 변경합니다.
+      operationId: task-controller-v1-docs-test/일정_순서변경_api_문서를_작성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/프로젝트 일정 순서변경 요청 예시입니다.'
+            examples:
+              task-controller-v1-docs-test/일정_순서변경_api_문서를_작성한다:
+                value: |-
+                  {
+                    "tasks" : [ {
+                      "statusId" : 1,
+                      "taskId" : 1,
+                      "sortOrder" : 1
+                    }, {
+                      "statusId" : 3,
+                      "taskId" : 2,
+                      "sortOrder" : 5
+                    } ]
                   }
       responses:
         "204":
@@ -1641,7 +1724,6 @@ paths:
                     "statusId" : 1,
                     "taskName" : "환경설정 마치기",
                     "content" : "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입",
-                    "sortOrder" : 1,
                     "startDate" : "2023-01-01",
                     "endDate" : "2023-12-31"
                   }
@@ -1759,39 +1841,6 @@ paths:
           description: "200"
 components:
   schemas:
-    api-v1-user-257767709:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 비밀번호
-        profileImageName:
-          type: string
-          description: 프로필 이미지 이름
-        nickname:
-          type: string
-          description: 닉네임
-        bio:
-          type: string
-          description: 자기소개
-        links:
-          type: array
-          description: 사용자 링크
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
-        email:
-          type: string
-          description: 이메일
-        verificationCode:
-          type: string
-          description: 인증코드
-        username:
-          type: string
-          description: 사용자 아이디
     프로젝트 일정 전체 조회 성공 시 응답 예시입니다.:
       title: 프로젝트 일정 전체 조회 성공 시 응답 예시입니다.
       type: array
@@ -1839,6 +1888,39 @@ components:
                   type: number
                   description: 프로젝트 일정 식별자
         description: 상태별 프로젝트 일정 목록
+    api-v1-user-257767709:
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        profileImageName:
+          type: string
+          description: 프로필 이미지 이름
+        nickname:
+          type: string
+          description: 닉네임
+        bio:
+          type: string
+          description: 자기소개
+        links:
+          type: array
+          description: 사용자 링크
+          items:
+            oneOf:
+            - type: object
+            - type: boolean
+            - type: string
+            - type: number
+        email:
+          type: string
+          description: 이메일
+        verificationCode:
+          type: string
+          description: 인증코드
+        username:
+          type: string
+          description: 사용자 아이디
     api-v1-user-recover-username-1963233032:
       type: object
       properties:
@@ -1848,6 +1930,34 @@ components:
         verificationCode:
           type: string
           description: 이메일로 전송된 인증번호
+    api-v1-project-projectId-status-statusId75349813:
+      type: object
+      properties:
+        statusName:
+          type: string
+          description: 변경할 상태의 이름
+        colorCode:
+          type: string
+          description: 변경할 색상 코드
+    프로젝트 일정 변경 요청 예시입니다.:
+      title: 프로젝트 일정 변경 요청 예시입니다.
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 프로젝트 상태 식별자
+        endDate:
+          type: string
+          description: 종료일자
+        taskName:
+          type: string
+          description: 일정 이름
+        startDate:
+          type: string
+          description: 시작일자
+        content:
+          type: string
+          description: 일정 내용
     api-v1-team-teamId-project-557506802:
       type: array
       description: 팀 ID에 해당하는 프로젝트 목록
@@ -1876,6 +1986,25 @@ components:
             type: string
             description: 프로젝트 변경일시
         description: 팀 ID에 해당하는 프로젝트 목록
+    프로젝트 일정 순서변경 요청 예시입니다.:
+      title: 프로젝트 일정 순서변경 요청 예시입니다.
+      type: object
+      properties:
+        tasks:
+          type: array
+          description: 프로젝트 일정 순서 변경 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 상태 PK
+              sortOrder:
+                type: number
+                description: 일정 정렬 순서
+              taskId:
+                type: number
+                description: 일정 PK
     api-v1-user-me-752510290:
       type: object
       properties:
@@ -1934,28 +2063,6 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
-    프로젝트 일정 변경 요청 예시입니다.:
-      title: 프로젝트 일정 변경 요청 예시입니다.
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 프로젝트 상태 식별자
-        endDate:
-          type: string
-          description: 종료일자
-        sortOrder:
-          type: number
-          description: 정렬 순서
-        taskName:
-          type: string
-          description: 일정 이름
-        startDate:
-          type: string
-          description: 시작일자
-        content:
-          type: string
-          description: 일정 내용
     api-v1-user-recover-username1645263616:
       type: object
       properties:
@@ -2050,18 +2157,6 @@ components:
           description: 부여할 역할명
     api-v1-user-file486549215:
       type: object
-    api-v1-project-projectId-status-statusId-1514376740:
-      type: object
-      properties:
-        sortOrder:
-          type: number
-          description: 변경할 정렬 순서
-        statusName:
-          type: string
-          description: 변경할 상태의 이름
-        colorCode:
-          type: string
-          description: 변경할 색상 코드
     api-v1-team-id594896981:
       type: object
       properties:
@@ -2180,6 +2275,21 @@ components:
         colorCode:
           type: string
           description: 색상 코드
+    api-v1-project-projectId-status-order1030631579:
+      type: object
+      properties:
+        statuses:
+          type: array
+          description: 변경할 상태 정렬순서 변경 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 변경할 상태 식별자
+              sortOrder:
+                type: number
+                description: 변경할 정렬 순서
     api-v1-team-750252047:
       type: object
       properties:

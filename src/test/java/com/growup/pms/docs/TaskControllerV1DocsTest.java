@@ -5,7 +5,10 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithNam
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
 import static com.growup.pms.test.fixture.task.builder.TaskKanbanResponseTestBuilder.일정_칸반_응답은;
+import static com.growup.pms.test.fixture.task.builder.TaskOrderEditRequestTestBuilder.일정_순서변경_요청은;
+import static com.growup.pms.test.fixture.task.builder.TaskOrderListEditRequestTestBuilder.일정_순서변경_목록_요청은;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -23,6 +26,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
+import com.growup.pms.task.controller.dto.request.TaskOrderEditRequest;
+import com.growup.pms.task.controller.dto.request.TaskOrderListEditRequest;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.service.TaskService;
@@ -274,12 +279,59 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("일정 이름"),
                                         fieldWithPath("content").type(JsonFieldType.STRING)
                                                 .description("일정 내용"),
-                                        fieldWithPath("sortOrder").type(JsonFieldType.NUMBER)
-                                                .description("정렬 순서"),
                                         fieldWithPath("startDate").type(JsonFieldType.STRING)
                                                 .description("시작일자"),
                                         fieldWithPath("endDate").type(JsonFieldType.STRING)
                                                 .description("종료일자")
+                                )
+                                .build()
+                )));
+    }
+
+    @Test
+    @WithMockSecurityUser
+    void 일정_순서변경_API_문서를_작성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_식별자 = 1L;
+        TaskOrderEditRequest 상태_순서변경_요청_1 = 일정_순서변경_요청은().이다();
+        TaskOrderEditRequest 상태_순서변경_요청_2 = 일정_순서변경_요청은()
+                .일정_식별자는(2L)
+                .상태_식별자는(3L)
+                .정렬순서는((short) 5)
+                .이다();
+        List<TaskOrderEditRequest> 상태_순서변경_요청_리스트 = List.of(상태_순서변경_요청_1, 상태_순서변경_요청_2);
+        TaskOrderListEditRequest 상태_순서변경_목록_요청 = 일정_순서변경_목록_요청은().일정_목록은(상태_순서변경_요청_리스트).이다();
+
+        // when
+        doNothing().when(taskService).editTaskOrder(anyList());
+
+        // then
+        mockMvc.perform(patch("/api/v1/project/{projectId}/task/order", 예상_프로젝트_식별자)
+                        .content(objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(상태_순서변경_목록_요청))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로젝트 일정 정렬순서 변경")
+                                .requestSchema(schema("프로젝트 일정 순서변경 요청 예시입니다."))
+                                .description("칸반보드에서의 프로젝트 일정 위치 변경에 따라 상태 및 정렬순서를 변경합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").description("프로젝트 식별자")
+                                )
+                                .requestHeaders(HeaderDocumentation.headerWithName(
+                                        org.springframework.http.HttpHeaders.CONTENT_TYPE).description(
+                                        MediaType.APPLICATION_JSON_VALUE))
+                                .requestFields(
+                                        fieldWithPath("tasks").type(JsonFieldType.ARRAY)
+                                                .description("프로젝트 일정 순서 변경 목록"),
+                                        fieldWithPath("tasks[].statusId").type(JsonFieldType.NUMBER)
+                                                .description("상태 PK"),
+                                        fieldWithPath("tasks[].taskId").type(JsonFieldType.NUMBER)
+                                                .description("일정 PK"),
+                                        fieldWithPath("tasks[].sortOrder").type(JsonFieldType.NUMBER)
+                                                .description("일정 정렬 순서")
                                 )
                                 .build()
                 )));

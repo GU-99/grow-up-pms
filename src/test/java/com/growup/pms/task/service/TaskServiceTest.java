@@ -5,6 +5,7 @@ import static com.growup.pms.test.fixture.task.builder.TaskCreateRequestTestBuil
 import static com.growup.pms.test.fixture.task.builder.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskEditRequestTestBuilder.일정_수정_요청은;
 import static com.growup.pms.test.fixture.task.builder.TaskKanbanResponseTestBuilder.일정_칸반_응답은;
+import static com.growup.pms.test.fixture.task.builder.TaskOrderEditRequestTestBuilder.일정_순서변경_요청은;
 import static com.growup.pms.test.fixture.task.builder.TaskResponseTestBuilder.일정_전체조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskTestBuilder.일정은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
@@ -29,6 +30,7 @@ import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.repository.TaskUserRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.task.service.dto.TaskEditCommand;
+import com.growup.pms.task.service.dto.TaskOrderEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
@@ -246,14 +248,12 @@ class TaskServiceTest {
             Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
             String 변경할_일정_이름 = "변경할 이름 입니다!";
             String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
-            Short 변경할_정렬순서 = (short) 2;
             LocalDate 변경할_시작일자 = LocalDate.of(2023, 1, 1);
             LocalDate 변경할_종료일자 = LocalDate.of(2023, 3, 1);
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
                     .상태_식별자는(변경할_상태_ID)
                     .일정이름은(변경할_일정_이름)
                     .본문내용은(변경할_내용)
-                    .정렬순서는(변경할_정렬순서)
                     .시작일자는(변경할_시작일자)
                     .종료일자는(변경할_종료일자)
                     .이다().toCommand();
@@ -266,12 +266,11 @@ class TaskServiceTest {
 
             // then
             assertSoftly(softly -> {
-                assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
-                assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
-                assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
-                assertThat(기존_일정.getSortOrder()).isEqualTo(변경할_정렬순서);
-                assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
-                assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
+                softly.assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
+                softly.assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
+                softly.assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
+                softly.assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
+                softly.assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
             });
         }
 
@@ -306,6 +305,109 @@ class TaskServiceTest {
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.STATUS_NOT_FOUND);
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_일정_순서_변경시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 기존_일정_ID_1 = 1L;
+            Long 기존_일정_ID_2 = 2L;
+            Task 기존_일정_1 = 일정은().식별자는(기존_일정_ID_1).이다();
+            Task 기존_일정_2 = 일정은().식별자는(기존_일정_ID_2).정렬순서는((short) 2).이다();
+            Long 변경할_상태_ID_1 = 2L;
+            Long 변경할_상태_ID_2 = 3L;
+            Status 변경할_상태_1 = 상태는().식별자가(변경할_상태_ID_1).이름이("진행중").이다();
+            Status 변경할_상태_2 = 상태는().식별자가(변경할_상태_ID_2).이름이("완료").이다();
+
+            TaskOrderEditCommand 상태_순서변경_요청_1 = 일정_순서변경_요청은()
+                    .상태_식별자는(변경할_상태_ID_1)
+                    .정렬순서는((short) 4)
+                    .이다().toCommand();
+            TaskOrderEditCommand 상태_순서변경_요청_2 = 일정_순서변경_요청은()
+                    .일정_식별자는(기존_일정_ID_2)
+                    .상태_식별자는(변경할_상태_ID_2)
+                    .정렬순서는((short) 5)
+                    .이다().toCommand();
+            List<TaskOrderEditCommand> 상태_순서변경_요청_리스트 = List.of(상태_순서변경_요청_1, 상태_순서변경_요청_2);
+
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID_1)).thenReturn(변경할_상태_1);
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID_2)).thenReturn(변경할_상태_2);
+            when(taskRepository.findByIdOrThrow(기존_일정_ID_1)).thenReturn(기존_일정_1);
+            when(taskRepository.findByIdOrThrow(기존_일정_ID_2)).thenReturn(기존_일정_2);
+
+            // when
+            taskService.editTaskOrder(상태_순서변경_요청_리스트);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(기존_일정_1.getSortOrder()).isEqualTo(상태_순서변경_요청_1.sortOrder());
+                softly.assertThat(기존_일정_2.getSortOrder()).isEqualTo(상태_순서변경_요청_2.sortOrder());
+                softly.assertThat(기존_일정_1.getStatus().getId()).isEqualTo(변경할_상태_ID_1);
+                softly.assertThat(기존_일정_2.getStatus().getId()).isEqualTo(변경할_상태_ID_2);
+            });
+        }
+
+        @Test
+        void 일정이_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_일정_ID = Long.MAX_VALUE;
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            Long 변경할_상태_ID_1 = 2L;
+            Long 변경할_상태_ID_2 = 3L;
+            Status 변경할_상태_1 = 상태는().식별자가(변경할_상태_ID_1).이름이("진행중").이다();
+
+            TaskOrderEditCommand 상태_순서변경_요청_1 = 일정_순서변경_요청은()
+                    .상태_식별자는(변경할_상태_ID_1)
+                    .정렬순서는((short) 4)
+                    .이다().toCommand();
+            TaskOrderEditCommand 상태_순서변경_요청_2 = 일정_순서변경_요청은()
+                    .일정_식별자는(잘못된_일정_ID)
+                    .상태_식별자는(변경할_상태_ID_2)
+                    .정렬순서는((short) 5)
+                    .이다().toCommand();
+            List<TaskOrderEditCommand> 상태_순서변경_요청_리스트 = List.of(상태_순서변경_요청_1, 상태_순서변경_요청_2);
+
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID_1)).thenReturn(변경할_상태_1);
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            doThrow(new BusinessException(ErrorCode.TASK_NOT_FOUND))
+                    .when(taskRepository).findByIdOrThrow(잘못된_일정_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTaskOrder(상태_순서변경_요청_리스트))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
+        }
+
+        @Test
+        void 변경하려는_상태가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 기존_일정_ID = 2L;
+            Long 잘못된_상태_ID = Long.MAX_VALUE;
+            Long 변경할_상태_ID = 3L;
+
+            TaskOrderEditCommand 상태_순서변경_요청_1 = 일정_순서변경_요청은()
+                    .상태_식별자는(잘못된_상태_ID)
+                    .정렬순서는((short) 4)
+                    .이다().toCommand();
+            TaskOrderEditCommand 상태_순서변경_요청_2 = 일정_순서변경_요청은()
+                    .일정_식별자는(기존_일정_ID)
+                    .상태_식별자는(변경할_상태_ID)
+                    .정렬순서는((short) 5)
+                    .이다().toCommand();
+            List<TaskOrderEditCommand> 상태_순서변경_요청_리스트 = List.of(상태_순서변경_요청_1, 상태_순서변경_요청_2);
+
+            doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
+                    .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTaskOrder(상태_순서변경_요청_리스트))
+                    .isInstanceOf(BusinessException.class);
+
         }
     }
 

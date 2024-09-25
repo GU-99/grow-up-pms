@@ -3,6 +3,7 @@ package com.growup.pms.status.service;
 import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.status.builder.StatusCreateRequestTestBuilder.상태_생성_요청은;
 import static com.growup.pms.test.fixture.status.builder.StatusEditRequestTestBuilder.상태_변경_요청은;
+import static com.growup.pms.test.fixture.status.builder.StatusOrderEditRequestTestBuilder.상태_정렬순서_변경_요청은;
 import static com.growup.pms.test.fixture.status.builder.StatusResponseTestBuilder.상태_응답은;
 import static com.growup.pms.test.fixture.status.builder.StatusTestBuilder.상태는;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +24,7 @@ import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
 import com.growup.pms.status.service.dto.StatusEditCommand;
+import com.growup.pms.status.service.dto.StatusOrderEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,11 +152,9 @@ class StatusServiceTest {
             Status 기존_상태 = 상태는().식별자가(기존_상태_ID).이다();
             String 새로운_상태_이름 = "새로운 이름입니다!";
             String 새로운_색상코드 = "A0B1C2";
-            Short 새로운_정렬순서 = 1;
             StatusEditCommand 상태_변경_요청 = 상태_변경_요청은()
                     .이름은(새로운_상태_이름)
                     .색상코드는(새로운_색상코드)
-                    .정렬순서는(새로운_정렬순서)
                     .이다()
                     .toCommand(기존_상태_ID);
 
@@ -168,7 +168,6 @@ class StatusServiceTest {
             assertSoftly(softly -> {
                 softly.assertThat(기존_상태.getName()).isEqualTo(새로운_상태_이름);
                 softly.assertThat(기존_상태.getColorCode()).isEqualTo(새로운_색상코드);
-                softly.assertThat(기존_상태.getSortOrder()).isEqualTo(새로운_정렬순서);
             });
         }
 
@@ -178,11 +177,9 @@ class StatusServiceTest {
             Long 잘못된_상태_ID = 1L;
             String 새로운_상태_이름 = "새로운 이름입니다!";
             String 새로운_색상코드 = "A0B1C2";
-            Short 새로운_정렬순서 = 1;
             StatusEditCommand 상태_변경_요청 = 상태_변경_요청은()
                     .이름은(새로운_상태_이름)
                     .색상코드는(새로운_색상코드)
-                    .정렬순서는(새로운_정렬순서)
                     .이다()
                     .toCommand(잘못된_상태_ID);
 
@@ -196,7 +193,62 @@ class StatusServiceTest {
     }
 
     @Nested
+    class 사용자가_프로젝트_상태_정렬순서_변경시에 {
+
+        @Test
+        void 성공한다() {
+            Long 기존_상태_ID_1 = 1L;
+            Long 기존_상태_ID_2 = 2L;
+            Status 기존_상태_1 = 상태는().식별자가(기존_상태_ID_1).정렬순서가((short) 1).이다();
+            Status 기존_상태_2 = 상태는().식별자가(기존_상태_ID_2).정렬순서가((short) 2).이다();
+            StatusOrderEditCommand 상태_정렬순서_변경_요청_1 = 상태_정렬순서_변경_요청은()
+                    .상태식별자는(1L)
+                    .정렬순서는((short) 3)
+                    .이다().toCommand();
+            StatusOrderEditCommand 상태_정렬순서_변경_요청_2 = 상태_정렬순서_변경_요청은()
+                    .상태식별자는(2L)
+                    .정렬순서는((short) 4)
+                    .이다().toCommand();
+
+            List<StatusOrderEditCommand> 상태_정렬순서_변경_요청_리스트 = List.of(상태_정렬순서_변경_요청_1, 상태_정렬순서_변경_요청_2);
+
+            when(statusRepository.findByIdOrThrow(기존_상태_ID_1))
+                    .thenReturn(기존_상태_1);
+            when(statusRepository.findByIdOrThrow(기존_상태_ID_2))
+                    .thenReturn(기존_상태_2);
+
+            // when
+            statusService.editStatusOrder(상태_정렬순서_변경_요청_리스트);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(기존_상태_1.getSortOrder()).isEqualTo(상태_정렬순서_변경_요청_1.sortOrder());
+                softly.assertThat(기존_상태_2.getSortOrder()).isEqualTo(상태_정렬순서_변경_요청_2.sortOrder());
+            });
+        }
+
+        @Test
+        void 상태가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_상태_ID = 1L;
+            StatusOrderEditCommand 상태_정렬순서_변경_요청 = 상태_정렬순서_변경_요청은()
+                    .상태식별자는(잘못된_상태_ID)
+                    .정렬순서는((short) 3)
+                    .이다().toCommand();
+            List<StatusOrderEditCommand> 상태_정렬순서_변경_요청_리스트 = List.of(상태_정렬순서_변경_요청);
+
+            doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
+                    .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
+
+            // when & then
+            assertThatThrownBy(() -> statusService.editStatusOrder(상태_정렬순서_변경_요청_리스트))
+                    .isInstanceOf(BusinessException.class);
+        }
+    }
+
+    @Nested
     class 사용자가_프로젝트_상태_삭제시에 {
+
         @Test
         void 성공한다() {
             // given
