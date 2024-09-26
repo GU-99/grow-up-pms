@@ -85,11 +85,11 @@ public class TaskService {
     public void editTask(Long taskId, TaskEditCommand command) {
         Task task = taskRepository.findByIdOrThrow(taskId);
 
-        editField(command.statusId(), this::changeStatus, task);
-        editField(command.taskName(), (v, t) -> t.editName(v.get()), task);
-        editField(command.content(), (v, t) -> t.editContent(v.get()), task);
-        editField(command.startDate(), (v, t) -> t.editStartDate(v.get()), task);
-        editField(command.endDate(), (v, t) -> t.editEndDate(v.get()), task);
+        editFieldIfPresent(command.statusId(), this::changeStatus, task);
+        editFieldIfPresent(command.taskName(), (v, t) -> t.editName(v.get()), task);
+        editFieldIfPresent(command.content(), (v, t) -> t.editContent(v.get()), task);
+        editFieldIfPresent(command.startDate(), (v, t) -> t.editStartDate(v.get()), task);
+        editFieldIfPresent(command.endDate(), (v, t) -> t.editEndDate(v.get()), task);
     }
 
     @Transactional
@@ -108,7 +108,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    private <T> void editField(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Task> updater, Task task) {
+    private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Task> updater, Task task) {
         value.ifPresent(v -> updater.accept(JsonNullable.of(v), task));
     }
 
