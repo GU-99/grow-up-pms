@@ -12,6 +12,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -208,6 +209,40 @@ public class ProjectControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("endDate").type(JsonFieldType.STRING)
                                                 .description("프로젝트 종료 일자")
                                 )
+                                .build())));
+    }
+
+    @Test
+    @WithMockSecurityUser
+    void 프로젝트_삭제_API_문서를_생성한다() throws Exception {
+        // given
+        Long 예상_팀_ID = 1L;
+        Long 예상_프로젝트_ID = 1L;
+
+        // when
+        doNothing().when(projectService).deleteProject(anyLong());
+
+        // then
+        mockMvc.perform(delete("/api/v1/team/{teamId}/project/{projectId}", 예상_팀_ID, 예상_프로젝트_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpectAll(
+                        status().isNoContent()
+                )
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .requestSchema(schema("프로젝트 삭제 요청 예시입니다."))
+                                .summary("프로젝트 삭제")
+                                .description("프로젝트 ID를 사용해 프로젝트를 삭제합니다.")
+                                .pathParameters(
+                                        parameterWithName("teamId").type(SimpleType.NUMBER)
+                                                .description("팀 ID"),
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 ID")
+                                )
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE)
+                                        .description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }
 }

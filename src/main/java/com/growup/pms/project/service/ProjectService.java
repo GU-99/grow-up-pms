@@ -98,6 +98,12 @@ public class ProjectService {
         value.ifPresent(v -> updater.accept(JsonNullable.of(v), project));
     }
 
+    @Transactional
+    public void deleteProject(Long projectId) {
+        Project project = projectRepository.findByIdOrThrow(projectId);
+        projectRepository.delete(project);
+    }
+
     public void deleteAllProjectsForTeam(Long teamId) {
         throw new UnsupportedOperationException("아직 구현되지 않은 기능입니다.");
     }

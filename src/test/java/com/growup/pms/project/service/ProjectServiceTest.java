@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
@@ -204,6 +205,36 @@ class ProjectServiceTest {
 
             // when & then
             assertThatThrownBy(() -> projectService.editProject(잘못된_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class);
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_삭제시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 예상_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().이다();
+            when(projectRepository.findByIdOrThrow(예상_프로젝트_ID)).thenReturn(기존_프로젝트);
+
+            // when
+            projectService.deleteProject(예상_프로젝트_ID);
+
+            // then
+            verify(projectRepository).delete(기존_프로젝트);
+        }
+
+        @Test
+        void 프로젝트가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_프로젝트_ID = Long.MAX_VALUE;
+            doThrow(new BusinessException(ErrorCode.PROJECT_NOT_FOUND))
+                    .when(projectRepository).findByIdOrThrow(잘못된_프로젝트_ID);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.deleteProject(잘못된_프로젝트_ID))
                     .isInstanceOf(BusinessException.class);
         }
     }
