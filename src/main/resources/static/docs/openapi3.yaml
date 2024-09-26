@@ -1779,6 +1779,35 @@ paths:
         "200":
           description: "200"
   /api/v1/team/{teamId}/project/{projectId}:
+    delete:
+      tags:
+      - Project
+      summary: 프로젝트 삭제
+      description: 프로젝트 ID를 사용해 프로젝트를 삭제합니다.
+      operationId: project-controller-v1-docs-test/프로젝트_삭제_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: projectId
+        in: path
+        description: 프로젝트 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "204":
+          description: "204"
     patch:
       tags:
       - Project
