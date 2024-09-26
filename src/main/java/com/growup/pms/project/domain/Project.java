@@ -52,4 +52,21 @@ public class Project extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    // Business Logics //
+    public void editName(String name) {
+        this.name = name;
+    }
+
+    public void editContent(String content) {
+        this.content = content;
+    }
+
+    public void editStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void editEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 }

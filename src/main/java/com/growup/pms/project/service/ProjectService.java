@@ -6,6 +6,7 @@ import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.project.repository.ProjectUserRepository;
 import com.growup.pms.project.service.dto.ProjectCreateCommand;
+import com.growup.pms.project.service.dto.ProjectEditCommand;
 import com.growup.pms.project.service.dto.ProjectUserCreateCommand;
 import com.growup.pms.role.domain.ProjectRole;
 import com.growup.pms.role.domain.Role;
@@ -15,8 +16,10 @@ import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.util.List;
+import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,11 +80,25 @@ public class ProjectService {
         return command.toEntity(project, user, role, true);
     }
 
-    public void deleteAllProjectsForTeam(Long teamId) {
-        throw new UnsupportedOperationException("아직 구현되지 않은 기능입니다.");
-    }
-
     public List<ProjectResponse> getProjects(Long teamId) {
         return projectRepository.getProjectsByTeamId(teamId);
+    }
+
+    @Transactional
+    public void editProject(Long projectId, ProjectEditCommand command) {
+        Project project = projectRepository.findByIdOrThrow(projectId);
+
+        editFieldIfPresent(command.projectName(), (v,t) -> t.editName(v.get()), project);
+        editFieldIfPresent(command.content(), (v, t) -> t.editContent(v.get()), project);
+        editFieldIfPresent(command.startDate(), (v, t) -> t.editStartDate(v.get()), project);
+        editFieldIfPresent(command.endDate(), (v, t) -> t.editEndDate(v.get()), project);
+    }
+
+    private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Project> updater, Project project) {
+        value.ifPresent(v -> updater.accept(JsonNullable.of(v), project));
+    }
+
+    public void deleteAllProjectsForTeam(Long teamId) {
+        throw new UnsupportedOperationException("아직 구현되지 않은 기능입니다.");
     }
 }

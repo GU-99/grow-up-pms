@@ -1,9 +1,11 @@
 package com.growup.pms.project.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
+import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.project.controller.dto.request.ProjectCreateRequest;
+import com.growup.pms.project.controller.dto.request.ProjectEditRequest;
 import com.growup.pms.project.controller.dto.response.ProjectResponse;
 import com.growup.pms.project.service.ProjectService;
 import com.growup.pms.role.domain.PermissionType;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,5 +63,16 @@ public class ProjectControllerV1 {
         List<ProjectResponse> responses = projectService.getProjects(teamId);
 
         return ResponseEntity.ok(responses);
+    }
+
+    @PatchMapping("/{projectId}")
+    @RequirePermission(PermissionType.PROJECT_UPDATE)
+    public ResponseEntity<Void> editProject(@PathVariable @TeamId Long teamId, @PathVariable @ProjectId Long projectId,
+                                            @Valid @RequestBody ProjectEditRequest request) {
+        log.debug("ProjectControllerV1#editProject called.");
+
+        projectService.editProject(projectId, request.toCommand());
+
+        return ResponseEntity.noContent().build();
     }
 }
