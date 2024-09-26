@@ -1,6 +1,7 @@
 package com.growup.pms.project.service;
 
 import static com.growup.pms.test.fixture.project.builder.ProjectCreateRequestTestBuilder.프로젝트_생성_요청은;
+import static com.growup.pms.test.fixture.project.builder.ProjectEditRequestTestBuilder.프로젝트_수정_요청은;
 import static com.growup.pms.test.fixture.project.builder.ProjectResponseTestBuilder.프로젝트_목록조회_응답은;
 import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
@@ -20,6 +21,7 @@ import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.project.repository.ProjectUserRepository;
 import com.growup.pms.project.service.dto.ProjectCreateCommand;
+import com.growup.pms.project.service.dto.ProjectEditCommand;
 import com.growup.pms.role.domain.ProjectRole;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.RoleType;
@@ -32,6 +34,7 @@ import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.util.Collections;
 import java.util.List;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -165,6 +168,43 @@ class ProjectServiceTest {
 
             // then
             assertThat(실제_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_수정시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().이다();
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은().이다().toCommand();
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+
+            // when
+            projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청);
+
+            // then
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(기존_프로젝트.getName()).isEqualTo(예상_프로젝트_수정_요청.projectName().get());
+                softly.assertThat(기존_프로젝트.getContent()).isEqualTo(예상_프로젝트_수정_요청.content().get());
+                softly.assertThat(기존_프로젝트.getStartDate()).isEqualTo(예상_프로젝트_수정_요청.startDate().get());
+                softly.assertThat(기존_프로젝트.getEndDate()).isEqualTo(예상_프로젝트_수정_요청.endDate().get());
+            });
+        }
+
+        @Test
+        void 프로젝트가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_프로젝트_ID = Long.MAX_VALUE;
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은().이다().toCommand();
+            doThrow(new BusinessException(ErrorCode.PROJECT_NOT_FOUND))
+                    .when(projectRepository).findByIdOrThrow(잘못된_프로젝트_ID);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.editProject(잘못된_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class);
         }
     }
 }
