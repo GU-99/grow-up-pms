@@ -4,12 +4,15 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.team.controller.dto.request.RoleUpdateRequest;
+import com.growup.pms.team.controller.dto.response.TeamUserResponse;
 import com.growup.pms.team.service.TeamUserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/team/{teamId}/user")
 public class TeamUserControllerV1 {
     private final TeamUserService teamUserService;
+
+    @GetMapping
+    public ResponseEntity<List<TeamUserResponse>> getAllTeamUsers(@Positive @PathVariable Long teamId) {
+        return ResponseEntity.ok(teamUserService.getAllTeamUsers(teamId));
+    }
 
     @DeleteMapping("/{targetMemberId}")
     @RequirePermission(PermissionType.TEAM_KICK_MEMBER)
