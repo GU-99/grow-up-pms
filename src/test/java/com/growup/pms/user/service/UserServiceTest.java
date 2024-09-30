@@ -1,5 +1,6 @@
 package com.growup.pms.user.service;
 
+import static com.growup.pms.test.fixture.user.builder.NicknameDuplicateCheckRequestTestBuilder.닉네임_중복_검사는;
 import static com.growup.pms.test.fixture.user.builder.RecoverPasswordRequestTestBuilder.비밀번호_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.RecoverUsernameRequestTestBuilder.아이디_찾기_요청은;
 import static com.growup.pms.test.fixture.user.builder.UserCreateRequestTestBuilder.가입하는_사용자는;
@@ -15,6 +16,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.service.RedisEmailVerificationService;
@@ -30,6 +33,7 @@ import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.domain.UserLink;
 import com.growup.pms.user.repository.UserRepository;
+import com.growup.pms.user.service.dto.NicknameDuplicateCheckCommand;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
 import com.growup.pms.user.service.dto.RecoverUsernameCommand;
@@ -404,6 +408,39 @@ class UserServiceTest {
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_NOT_FOUND);
 
+        }
+    }
+
+    @Nested
+    class 닉네임_중복_검사_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            String 새로운_닉네임 = "브라운";
+            NicknameDuplicateCheckCommand 닉네임_중복_검사_요청 = 닉네임_중복_검사는().닉네임이(새로운_닉네임).이다().toCommand();
+
+            when(userRepository.existsByProfileNickname(새로운_닉네임)).thenReturn(false);
+
+            // when
+            userService.duplicateCheckNickname(닉네임_중복_검사_요청);
+
+            // then
+            verify(userRepository, times(1)).existsByProfileNickname(새로운_닉네임);
+        }
+
+        @Test
+        void 닉네임_중복_시_예외가_발생한다() {
+            // given
+            String 새로운_닉네임 = "브라운";
+            NicknameDuplicateCheckCommand 닉네임_중복_검사_요청 = 닉네임_중복_검사는().닉네임이(새로운_닉네임).이다().toCommand();
+
+            when(userRepository.existsByProfileNickname(새로운_닉네임)).thenReturn(true);
+
+            // when & then
+            assertThatThrownBy(() -> userService.duplicateCheckNickname(닉네임_중복_검사_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
     }
 }
