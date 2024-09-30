@@ -2,6 +2,7 @@ package com.growup.pms.user.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
+import com.growup.pms.user.controller.dto.request.NicknameDuplicateCheckRequest;
 import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
 import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
 import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
@@ -83,5 +84,11 @@ public class UserControllerV1 {
     @PatchMapping
     public ResponseEntity<UserUpdateResponse> updateUser(@CurrentUser SecurityUser user, @Valid UserUpdateRequest request) {
         return ResponseEntity.ok().body(userService.updateUserDetails(user.getId(), request.toCommand()));
+    }
+
+    @PostMapping("/nickname")
+    public ResponseEntity<Void> duplicateCheckNickname(@Valid @RequestBody NicknameDuplicateCheckRequest request) {
+        userService.duplicateCheckNickname(request.toCommand());
+        return ResponseEntity.ok().build();
     }
 }

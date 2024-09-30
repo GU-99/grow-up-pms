@@ -11,6 +11,8 @@ public interface UserRepository extends JpaRepository<User, Long>, QueryDslUserR
 
     Optional<User> findByEmail(String email);
 
+    Boolean existsByProfileNickname(String nickname);
+
     default User findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
