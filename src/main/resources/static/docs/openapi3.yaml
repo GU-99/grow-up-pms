@@ -1941,6 +1941,36 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/team/{teamId}/project/{projectId}/leave:
+    delete:
+      tags:
+      - Project
+      summary: 프로젝트 탈퇴
+      description: 프로젝트에서 탈퇴합니다. 팀장의 경우는 탈퇴가 불가능합니다.
+      operationId: project-controller-v1-docs-test/프로젝트_탈퇴_api_문서를_생성한다
+      parameters:
+      - name: teamId
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: number
+      - name: projectId
+        in: path
+        description: 프로젝트 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "204":
+          description: "204"
   /api/v1/team/{teamId}/user/{targetMemberId}/role:
     put:
       tags:
