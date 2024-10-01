@@ -3,6 +3,7 @@ package com.growup.pms.project.service;
 import com.growup.pms.project.controller.dto.response.ProjectResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
+import com.growup.pms.project.domain.ProjectUserId;
 import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.project.repository.ProjectUserRepository;
 import com.growup.pms.project.service.dto.ProjectCreateCommand;
@@ -101,6 +102,19 @@ public class ProjectService {
     public void deleteProject(Long projectId) {
         Project project = projectRepository.findByIdOrThrow(projectId);
         projectRepository.delete(project);
+    }
+
+    @Transactional
+    public void leaveProject(Long teamId, Long projectId, Long userId) {
+        Team team = teamRepository.findByIdOrThrow(teamId);
+        ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, userId));
+        // TODO: 팀장이 탈퇴하는 경우에 대한 로직을 결정해야함
+        if (projectUser.getRole().getName().equals(ProjectRole.ADMIN.getRoleName())) {
+            if (userId.equals(team.getCreator().getId())) {
+                throw new UnsupportedOperationException("아직 구현되지 않은 기능입니다.");
+            }
+        }
+        projectUserRepository.delete(projectUser);
     }
 
     public void deleteAllProjectsForTeam(Long teamId) {

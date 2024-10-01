@@ -245,4 +245,38 @@ public class ProjectControllerV1DocsTest extends ControllerSliceTestSupport {
                                         .description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }
+
+    @Test
+    @WithMockSecurityUser
+    void 프로젝트_탈퇴_API_문서를_생성한다() throws Exception {
+        // given
+        Long 예상_팀_ID = 1L;
+        Long 예상_프로젝트_ID = 1L;
+
+        // when
+        doNothing().when(projectService).leaveProject(anyLong(), anyLong(), anyLong());
+
+        // then
+        mockMvc.perform(delete("/api/v1/team/{teamId}/project/{projectId}/leave", 예상_팀_ID, 예상_프로젝트_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpectAll(
+                        status().isNoContent()
+                )
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .requestSchema(schema("프로젝트 탈퇴 요청 예시입니다."))
+                                .summary("프로젝트 탈퇴")
+                                .description("프로젝트에서 탈퇴합니다. 팀장의 경우는 탈퇴가 불가능합니다.")
+                                .pathParameters(
+                                        parameterWithName("teamId").type(SimpleType.NUMBER)
+                                                .description("팀 ID"),
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 ID")
+                                )
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE)
+                                        .description(MediaType.APPLICATION_JSON_VALUE))
+                                .build())));
+    }
 }

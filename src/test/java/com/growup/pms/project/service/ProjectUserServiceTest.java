@@ -2,16 +2,19 @@ package com.growup.pms.project.service;
 
 import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
+import static com.growup.pms.test.fixture.project.builder.ProjectUserTestBuilder.프로젝트_유저는;
 import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.domain.Project;
+import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.project.domain.ProjectUserId;
 import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.project.repository.ProjectUserRepository;
@@ -136,6 +139,53 @@ public class ProjectUserServiceTest {
 
             // when & then
             assertThatThrownBy(() -> projectUserService.createProjectUser(기존_프로젝트_ID, 프로젝트원_생성_요청))
+                    .isInstanceOf(BusinessException.class);
+        }
+    }
+
+    @Nested
+    class 관리자가_프로젝트원_제거_시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Long 기존_회원_ID = 1L;
+            ProjectUser projectUser = 프로젝트_유저는().이다();
+            when(projectUserRepository.findByIdOrThrow(any(ProjectUserId.class)))
+                    .thenReturn(projectUser);
+
+            // when
+            projectUserService.kickProjectUser(기존_프로젝트_ID, 기존_회원_ID);
+
+            // then
+            verify(projectUserRepository).delete(projectUser);
+        }
+
+        @Test
+        void 해당_프로젝트원이_없으면_에외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Long 잘못된_회원_ID = 1L;
+            doThrow(BusinessException.class).when(projectUserRepository).findByIdOrThrow(any(ProjectUserId.class));
+
+            // when & then
+            assertThatThrownBy(() -> projectUserService.kickProjectUser(기존_프로젝트_ID, 잘못된_회원_ID))
+                    .isInstanceOf(BusinessException.class);
+        }
+
+        @Test
+        void 추방하려는_프로젝트원이_수행자가_아니면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Long 기존_회원_ID = 1L;
+            Role 기존_권한 = 역할은().타입이(RoleType.PROJECT).이름이(ProjectRole.LEADER.getRoleName()).이다();
+            ProjectUser projectUser = 프로젝트_유저는().권한이(기존_권한).이다();
+            when(projectUserRepository.findByIdOrThrow(any(ProjectUserId.class)))
+                    .thenReturn(projectUser);
+
+            // when & then
+            assertThatThrownBy(() -> projectUserService.kickProjectUser(기존_프로젝트_ID, 기존_회원_ID))
                     .isInstanceOf(BusinessException.class);
         }
     }
