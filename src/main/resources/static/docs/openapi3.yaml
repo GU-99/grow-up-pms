@@ -1776,7 +1776,7 @@ paths:
     delete:
       tags:
       - ProjectUser
-      summary: 프로젝트원 추가
+      summary: 프로젝트원 제거
       description: "프로젝트 ID, 프로젝트원의 회원 ID를 통해 프로젝트원을 제거합니다."
       operationId: project-user-controller-v1-docs-test/프로젝트원_제거_api_문서를_생성한다
       parameters:

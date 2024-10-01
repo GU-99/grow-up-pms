@@ -94,8 +94,8 @@ public class ProjectUserControllerV1DocsTest extends ControllerSliceTestSupport 
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .requestSchema(schema("프로젝트원 삭제 요청 예시 입니다."))
-                                .summary("프로젝트원 추가")
+                                .requestSchema(schema("프로젝트원 제거 요청 예시 입니다."))
+                                .summary("프로젝트원 제거")
                                 .description("프로젝트 ID, 프로젝트원의 회원 ID를 통해 프로젝트원을 제거합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").type(SimpleType.NUMBER)
