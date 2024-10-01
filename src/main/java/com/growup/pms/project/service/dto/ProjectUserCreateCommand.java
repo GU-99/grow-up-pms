@@ -11,12 +11,11 @@ public record ProjectUserCreateCommand(
         Long userId,
         String roleName
 ) {
-    public ProjectUser toEntity(Project project, User user, Role role, boolean isPendingApproval) {
+    public ProjectUser toEntity(Project project, User user, Role role) {
         return ProjectUser.builder()
                 .project(project)
                 .user(user)
                 .role(role)
-                .isPendingApproval(isPendingApproval)
                 .build();
     }
 }
