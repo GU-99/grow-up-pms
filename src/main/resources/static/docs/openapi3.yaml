@@ -1204,6 +1204,48 @@ paths:
                       "startDate" : "2023-01-01",
                       "endDate" : "2023-12-31"
                     }
+  /api/v1/project/{projectId}/user:
+    post:
+      tags:
+      - ProjectUser
+      summary: 프로젝트원 추가
+      description: "프로젝트 ID, 프로젝트원의 회원 ID, 프로젝트원 권한을 통해 프로젝트원을 추가합니다."
+      operationId: project-user-controller-v1-docs-test/
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/프로젝트원 추가 요청 예시 입니다.'
+            examples:
+              project-user-controller-v1-docs-test/test:
+                value: |-
+                  {
+                    "userId" : 1,
+                    "roleName" : "ASSIGNEE"
+                  }
+              project-user-controller-v1-docs-test/프로젝트원_추가_api_문서를_생성한다:
+                value: |-
+                  {
+                    "userId" : 1,
+                    "roleName" : "ASSIGNEE"
+                  }
+      responses:
+        "200":
+          description: "200"
   /api/v1/team/{id}/leave:
     post:
       tags:
@@ -2142,6 +2184,16 @@ components:
         username:
           type: string
           description: 복구된 사용자의 아이디
+    프로젝트원 추가 요청 예시 입니다.:
+      title: 프로젝트원 추가 요청 예시 입니다.
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 프로젝트원의 프로젝트 내 권한
+        userId:
+          type: number
+          description: 프로젝트원의 회원 ID
     api-v1-project-projectId-status1220278061:
       type: array
       items:

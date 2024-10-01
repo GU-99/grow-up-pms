@@ -62,7 +62,6 @@ public class ProjectService {
                 .user(user)
                 .project(savedProject)
                 .role(adminRole)
-                .isPendingApproval(false)
                 .build();
     }
 
@@ -77,7 +76,7 @@ public class ProjectService {
         User user = userRepository.findByIdOrThrow(command.userId());
         Role role = roleRepository.findProjectRoleByName(command.roleName());
 
-        return command.toEntity(project, user, role, true);
+        return command.toEntity(project, user, role);
     }
 
     public List<ProjectResponse> getProjects(Long teamId) {

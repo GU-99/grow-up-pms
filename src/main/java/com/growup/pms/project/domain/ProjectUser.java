@@ -3,7 +3,6 @@ package com.growup.pms.project.domain;
 import com.growup.pms.common.BaseEntity;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.user.domain.User;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -41,14 +40,10 @@ public class ProjectUser extends BaseEntity {
     @JoinColumn(name = "role_id", nullable = false, foreignKey = @ForeignKey(name = "fk_project_user_role"))
     private Role role;
 
-    @Column(nullable = false)
-    private boolean isPendingApproval;
-
     @Builder
-    public ProjectUser(Project project, User user, Role role, boolean isPendingApproval) {
+    public ProjectUser(Project project, User user, Role role) {
         this.project = project;
         this.user = user;
         this.role = role;
-        this.isPendingApproval = isPendingApproval;
     }
 }
