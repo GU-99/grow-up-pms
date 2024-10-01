@@ -1772,6 +1772,29 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/project/{projectId}/user/{userId}:
+    delete:
+      tags:
+      - ProjectUser
+      summary: 프로젝트원 추가
+      description: "프로젝트 ID, 프로젝트원의 회원 ID를 통해 프로젝트원을 제거합니다."
+      operationId: project-user-controller-v1-docs-test/프로젝트원_제거_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 ID
+        required: true
+        schema:
+          type: number
+      - name: userId
+        in: path
+        description: 제거할 회원 ID
+        required: true
+        schema:
+          type: number
+      responses:
+        "204":
+          description: "204"
   /api/v1/team/{teamId}/invitation/accept:
     post:
       tags:

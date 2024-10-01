@@ -8,6 +8,7 @@ import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateReque
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,6 +72,36 @@ public class ProjectUserControllerV1DocsTest extends ControllerSliceTestSupport 
                                                 .description("프로젝트원의 회원 ID"),
                                         fieldWithPath("roleName").type(JsonFieldType.STRING)
                                                 .description("프로젝트원의 프로젝트 내 권한")
+                                )
+                                .build())));
+    }
+
+    @Test
+    void 프로젝트원_제거_API_문서를_생성한다() throws Exception {
+        // given
+        Long 프로젝트_ID = 1L;
+        Long 제거할_팀원_ID = 1L;
+
+        // when
+        doNothing().when(projectUserService).kickProjectUser(프로젝트_ID, 제거할_팀원_ID);
+
+        // then
+        mockMvc.perform(delete("/api/v1/project/{projectId}/user/{userId}", 프로젝트_ID, 제거할_팀원_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
+                )
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .requestSchema(schema("프로젝트원 삭제 요청 예시 입니다."))
+                                .summary("프로젝트원 추가")
+                                .description("프로젝트 ID, 프로젝트원의 회원 ID를 통해 프로젝트원을 제거합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 ID"),
+                                        parameterWithName("userId").type(SimpleType.NUMBER)
+                                                .description("제거할 회원 ID")
                                 )
                                 .build())));
     }
