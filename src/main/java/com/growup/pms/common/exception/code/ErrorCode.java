@@ -57,6 +57,7 @@ public enum ErrorCode {
     INVALID_PROJECT(BAD_REQUEST, "PR_002", "유효하지 않은 프로젝트입니다. 프로젝트 정보를 확인해 주세요."),
     USER_ALREADY_IN_PROJECT(BAD_REQUEST, "PR_003", "해당 사용자가 이미 프로젝트에 속해 있습니다."),
     PROJECT_PERMISSION_DENIED(FORBIDDEN, "PR_004", "추가 권한이 없는 사용자입니다. 적절한 권한을 가진 사용자만 이용이 가능합니다."),
+    PROJECT_USER_NOT_FOUND(NOT_FOUND, "PR_005", "해당 프로젝트원을 찾을 수 없습니다. 회원 정보를 확인해주세요."),
 
     // 상태(Status) - STS
     STATUS_NOT_FOUND(NOT_FOUND, "STS_001", "해당 프로젝트 상태를 찾을 수 없습니다. 유효한 상태를 선택해 주세요."),

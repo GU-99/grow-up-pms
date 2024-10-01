@@ -43,6 +43,12 @@ public class ProjectUserService {
         projectUserRepository.save(projectUser);
     }
 
+    @Transactional
+    public void kickProjectUser(Long projectId, Long userId) {
+        ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, userId));
+        projectUserRepository.delete(projectUser);
+    }
+
     private void isUserAlreadyInProject(Long projectId, Long userId) {
         if (projectUserRepository.existsById(new ProjectUserId(projectId, userId))) {
             throw new BusinessException(ErrorCode.USER_ALREADY_IN_PROJECT);

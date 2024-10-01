@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,5 +35,18 @@ public class ProjectUserControllerV1 {
 
         projectUserService.createProjectUser(projectId, request.toCommand());
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{userId}")
+    @RequirePermission(PermissionType.PROJECT_KICK_MEMBER)
+    public ResponseEntity<Void> kickProjectUser(@Positive @ProjectId @PathVariable Long projectId,
+                                                @Positive @PathVariable Long userId) {
+        log.debug("ProjectUserControllerV1#kickProjectUser called.");
+        log.debug("프로젝트원 탈퇴를 위한 projectId: {}", projectId);
+        log.debug("프로젝트원 탈퇴를 위한 userId: {}", userId);
+
+        projectUserService.kickProjectUser(projectId, userId);
+
+        return ResponseEntity.noContent().build();
     }
 }
