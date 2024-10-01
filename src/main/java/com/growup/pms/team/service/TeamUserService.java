@@ -4,16 +4,23 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
+import com.growup.pms.team.controller.dto.response.TeamUserResponse;
 import com.growup.pms.team.domain.TeamUserId;
 import com.growup.pms.team.repository.TeamUserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TeamUserService {
     private final TeamUserRepository teamUserRepository;
+
+    public List<TeamUserResponse> getAllTeamUsers(Long teamId) {
+        return teamUserRepository.getAllTeamUsers(teamId);
+    }
 
     @Transactional
     public void kickMember(Long teamId, Long targetMemberId) {
@@ -44,3 +51,4 @@ public class TeamUserService {
         }
     }
 }
+

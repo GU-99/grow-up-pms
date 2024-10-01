@@ -1,6 +1,8 @@
 package com.growup.pms.team.service;
 
 import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
+import static com.growup.pms.test.fixture.team.builder.TeamUserResponseTestBuilder.팀원_응답은;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,9 +13,11 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
+import com.growup.pms.team.controller.dto.response.TeamUserResponse;
 import com.growup.pms.team.domain.TeamUserId;
 import com.growup.pms.team.repository.TeamUserRepository;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class TeamUserServiceTest {
+
     @Mock
     TeamUserRepository teamUserRepository;
 
@@ -35,7 +40,29 @@ class TeamUserServiceTest {
     TeamUserService teamUserService;
 
     @Nested
+    class 팀_유저_조회_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 팀_ID = 1L;
+            List<TeamUserResponse> 예상_결과 = List.of(
+                    팀원_응답은().사용자_식별자가(1L).닉네임이("브라운").역할명이(TeamRole.HEAD.getRoleName()).이다(),
+                    팀원_응답은().사용자_식별자가(2L).닉네임이("코니").역할명이(TeamRole.MATE.getRoleName()).이다());
+
+            when(teamUserRepository.getAllTeamUsers(팀_ID)).thenReturn(예상_결과);
+
+            // when
+            List<TeamUserResponse> 실제_결과 = teamUserService.getAllTeamUsers(팀_ID);
+
+            // then
+            assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+    }
+
+    @Nested
     class 팀_유저_추방_시 {
+
         @Test
         void 성공한다() {
             // given
@@ -83,6 +110,7 @@ class TeamUserServiceTest {
 
     @Nested
     class 팀원_역할_변경_시 {
+
         @ParameterizedTest
         @EnumSource(value = TeamRole.class, names = {"LEADER", "MATE"})
         void 성공한다(TeamRole 새로운_역할) {

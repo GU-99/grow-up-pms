@@ -4,8 +4,11 @@ import static com.growup.pms.role.domain.QPermission.permission;
 import static com.growup.pms.role.domain.QRole.role;
 import static com.growup.pms.role.domain.QRolePermission.rolePermission;
 import static com.growup.pms.team.domain.QTeamUser.teamUser;
+import static com.growup.pms.user.domain.QUser.user;
 
 import com.growup.pms.role.domain.Permission;
+import com.growup.pms.team.controller.dto.response.TeamUserResponse;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,19 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class QueryDslTeamUserRepositoryImpl implements QueryDslTeamUserRepository {
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<TeamUserResponse> getAllTeamUsers(Long teamId) {
+        return jpaQueryFactory.select(Projections.constructor(TeamUserResponse.class,
+                    teamUser.user.id,
+                    user.profile.nickname,
+                    role.name
+                )).from(teamUser)
+                .join(teamUser.user, user)
+                .join(teamUser.role, role)
+                .where(teamUser.team.id.eq(teamId))
+                .fetch();
+    }
 
     @Override
     public List<Permission> getPermissionsForTeamUser(Long teamId, Long userId) {
