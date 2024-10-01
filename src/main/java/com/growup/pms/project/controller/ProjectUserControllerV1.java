@@ -5,12 +5,14 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
 import com.growup.pms.project.service.ProjectUserService;
 import com.growup.pms.role.domain.PermissionType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +26,8 @@ public class ProjectUserControllerV1 {
 
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_INVITE_MEMBER)
-    public ResponseEntity<Void> createProjectUser(@Positive @ProjectId @PathVariable Long projectId, ProjectUserCreateRequest request) {
+    public ResponseEntity<Void> createProjectUser(@Positive @ProjectId @PathVariable Long projectId,
+                                                  @Valid @RequestBody ProjectUserCreateRequest request) {
         log.debug("ProjectUserControllerV1#createProjectUser called.");
         log.debug("프로젝트원 초대를 위한 projectId: {}", projectId);
         log.debug("프로젝트원 초대를 위한 ProjectInvitationRequest: {}", request);
