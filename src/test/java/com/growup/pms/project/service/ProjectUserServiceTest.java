@@ -173,5 +173,20 @@ public class ProjectUserServiceTest {
             assertThatThrownBy(() -> projectUserService.kickProjectUser(기존_프로젝트_ID, 잘못된_회원_ID))
                     .isInstanceOf(BusinessException.class);
         }
+
+        @Test
+        void 추방하려는_프로젝트원이_수행자가_아니면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Long 기존_회원_ID = 1L;
+            Role 기존_권한 = 역할은().타입이(RoleType.PROJECT).이름이(ProjectRole.LEADER.getRoleName()).이다();
+            ProjectUser projectUser = 프로젝트_유저는().권한이(기존_권한).이다();
+            when(projectUserRepository.findByIdOrThrow(any(ProjectUserId.class)))
+                    .thenReturn(projectUser);
+
+            // when & then
+            assertThatThrownBy(() -> projectUserService.kickProjectUser(기존_프로젝트_ID, 기존_회원_ID))
+                    .isInstanceOf(BusinessException.class);
+        }
     }
 }

@@ -46,7 +46,14 @@ public class ProjectUserService {
     @Transactional
     public void kickProjectUser(Long projectId, Long targetUserId) {
         ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, targetUserId));
+        ensureUserIsAssignee(projectUser.getRole().getName());
         projectUserRepository.delete(projectUser);
+    }
+
+    private void ensureUserIsAssignee(String targetUserRoleName) {
+        if (!ProjectRole.valueOf(targetUserRoleName).equals(ProjectRole.ASSIGNEE)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
+        }
     }
 
     private void isUserAlreadyInProject(Long projectId, Long userId) {
