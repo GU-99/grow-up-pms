@@ -46,7 +46,6 @@ public class ProjectUserControllerV1 {
         log.debug("프로젝트원 탈퇴를 위한 userId: {}", userId);
 
         projectUserService.kickProjectUser(projectId, userId);
-
         return ResponseEntity.noContent().build();
     }
 }
