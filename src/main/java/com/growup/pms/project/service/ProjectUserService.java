@@ -44,8 +44,8 @@ public class ProjectUserService {
     }
 
     @Transactional
-    public void kickProjectUser(Long projectId, Long userId) {
-        ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, userId));
+    public void kickProjectUser(Long projectId, Long targetUserId) {
+        ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, targetUserId));
         projectUserRepository.delete(projectUser);
     }
 
