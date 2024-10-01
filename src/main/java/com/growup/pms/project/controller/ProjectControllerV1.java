@@ -1,6 +1,7 @@
 package com.growup.pms.project.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
+import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
@@ -84,6 +85,15 @@ public class ProjectControllerV1 {
 
         projectService.deleteProject(projectId);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{projectId}/leave")
+    public ResponseEntity<Void> leaveProject(
+            @Positive @TeamId @PathVariable Long teamId,
+            @Positive @ProjectId @PathVariable Long projectId,
+            @CurrentUser SecurityUser user) {
+        projectService.leaveProject(teamId, projectId, user.getId());
         return ResponseEntity.noContent().build();
     }
 }
