@@ -56,86 +56,86 @@ public class ProjectUserServiceTest {
         @Test
         void 성공한다() {
             // given
-            Long projectId = 1L;
-            ProjectUserCreateCommand command = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            Long 기존_프로젝트_ID = 1L;
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
                     .이다().toCommand();
 
-            Project project = 프로젝트는().이다();
-            User user = 사용자는().이다();
-            Role role = 역할은()
+            Project 기존_프로젝트 = 프로젝트는().이다();
+            User 기존_회원 = 사용자는().이다();
+            Role 기존_역할 = 역할은()
                     .타입이(RoleType.PROJECT)
                     .이름이(ProjectRole.ADMIN.getRoleName())
                     .이다();
 
             when(projectUserRepository.existsById(any(ProjectUserId.class))).thenReturn(false);
-            when(projectRepository.findByIdOrThrow(projectId))
-                    .thenReturn(project);
-            when(userRepository.findByIdOrThrow(command.userId()))
-                    .thenReturn(user);
-            when(roleRepository.findProjectRoleByName(command.roleName()))
-                    .thenReturn(role);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID))
+                    .thenReturn(기존_프로젝트);
+            when(userRepository.findByIdOrThrow(프로젝트원_생성_요청.userId()))
+                    .thenReturn(기존_회원);
+            when(roleRepository.findProjectRoleByName(프로젝트원_생성_요청.roleName()))
+                    .thenReturn(기존_역할);
 
             // when & then
-            assertThatCode(() -> projectUserService.createProjectUser(projectId, command))
+            assertThatCode(() -> projectUserService.createProjectUser(기존_프로젝트_ID, 프로젝트원_생성_요청))
                     .doesNotThrowAnyException();
         }
 
         @Test
         void 프로젝트에_이미_존재하는_회원이면_예외가_발생한다() {
             // given
-            Long projectId = 1L;
-            ProjectUserCreateCommand command = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            Long 기존_프로젝트_ID = 1L;
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
                     .이다().toCommand();
 
             // when
             doThrow(BusinessException.class).when(projectUserRepository).existsById(any(ProjectUserId.class));
 
             // then
-            assertThatThrownBy(() -> projectUserService.createProjectUser(projectId, command))
+            assertThatThrownBy(() -> projectUserService.createProjectUser(기존_프로젝트_ID, 프로젝트원_생성_요청))
                     .isInstanceOf(BusinessException.class);
         }
 
         @Test
         void 권한이_없는_사용자면_예외가_발생한다() {
             // given
-            Long projectId = 1L;
-            ProjectUserCreateCommand command = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ASSIGNEE.getRoleName())
+            Long 기존_프로젝트_ID = 1L;
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ASSIGNEE.getRoleName())
                     .이다().toCommand();
 
             when(projectUserRepository.existsById(any(ProjectUserId.class))).thenReturn(false);
 
             // when & then
-            assertThatThrownBy(() -> projectUserService.createProjectUser(projectId, command))
+            assertThatThrownBy(() -> projectUserService.createProjectUser(기존_프로젝트_ID, 프로젝트원_생성_요청))
                     .isInstanceOf(BusinessException.class);
         }
 
         @Test
         void 회원이_존재하지_않으면_예외가_발생한다() {
             // given
-            Long projectId = 1L;
-            ProjectUserCreateCommand command = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            Long 기존_프로젝트_ID = 1L;
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
                     .이다().toCommand();
 
             when(projectUserRepository.existsById(any(ProjectUserId.class))).thenReturn(false);
-            doThrow(BusinessException.class).when(userRepository).findByIdOrThrow(command.userId());
+            doThrow(BusinessException.class).when(userRepository).findByIdOrThrow(프로젝트원_생성_요청.userId());
 
             // when & then
-            assertThatThrownBy(() -> projectUserService.createProjectUser(projectId, command))
+            assertThatThrownBy(() -> projectUserService.createProjectUser(기존_프로젝트_ID, 프로젝트원_생성_요청))
                     .isInstanceOf(BusinessException.class);
         }
 
         @Test
         void 권한이_존재하지_않으면_예외가_발생한다() {
             // given
-            Long projectId = 1L;
-            ProjectUserCreateCommand command = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            Long 기존_프로젝트_ID = 1L;
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
                     .이다().toCommand();
 
             when(projectUserRepository.existsById(any(ProjectUserId.class))).thenReturn(false);
-            doThrow(BusinessException.class).when(roleRepository).findProjectRoleByName(command.roleName());
+            doThrow(BusinessException.class).when(roleRepository).findProjectRoleByName(프로젝트원_생성_요청.roleName());
 
             // when & then
-            assertThatThrownBy(() -> projectUserService.createProjectUser(projectId, command))
+            assertThatThrownBy(() -> projectUserService.createProjectUser(기존_프로젝트_ID, 프로젝트원_생성_요청))
                     .isInstanceOf(BusinessException.class);
         }
     }
