@@ -420,13 +420,13 @@ class UserServiceTest {
             String 새로운_닉네임 = "브라운";
             NicknameDuplicationCheckCommand 닉네임_중복_검사_요청 = 닉네임_중복_검사는().닉네임이(새로운_닉네임).이다().toCommand();
 
-            when(userRepository.existsByProfileNickname(새로운_닉네임)).thenReturn(false);
+            when(userRepository.existsByNickname(새로운_닉네임)).thenReturn(false);
 
             // when
             userService.checkNicknameDuplication(닉네임_중복_검사_요청);
 
             // then
-            verify(userRepository, times(1)).existsByProfileNickname(새로운_닉네임);
+            verify(userRepository, times(1)).existsByNickname(새로운_닉네임);
         }
 
         @Test
@@ -435,7 +435,7 @@ class UserServiceTest {
             String 새로운_닉네임 = "브라운";
             NicknameDuplicationCheckCommand 닉네임_중복_검사_요청 = 닉네임_중복_검사는().닉네임이(새로운_닉네임).이다().toCommand();
 
-            when(userRepository.existsByProfileNickname(새로운_닉네임)).thenReturn(true);
+            when(userRepository.existsByNickname(새로운_닉네임)).thenReturn(true);
 
             // when & then
             assertThatThrownBy(() -> userService.checkNicknameDuplication(닉네임_중복_검사_요청))

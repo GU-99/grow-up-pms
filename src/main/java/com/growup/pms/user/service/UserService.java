@@ -132,7 +132,7 @@ public class UserService {
     }
 
     public void checkNicknameDuplication(NicknameDuplicationCheckCommand command) {
-        if (userRepository.existsByProfileNickname(command.nickname())) {
+        if (userRepository.existsByNickname(command.nickname())) {
             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
     }
