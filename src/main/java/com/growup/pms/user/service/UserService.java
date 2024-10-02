@@ -11,7 +11,7 @@ import com.growup.pms.user.controller.dto.response.UserTeamResponse;
 import com.growup.pms.user.controller.dto.response.UserUpdateResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
-import com.growup.pms.user.service.dto.NicknameDuplicateCheckCommand;
+import com.growup.pms.user.service.dto.NicknameDuplicationCheckCommand;
 import com.growup.pms.user.service.dto.PasswordUpdateCommand;
 import com.growup.pms.user.service.dto.RecoverPasswordCommand;
 import com.growup.pms.user.service.dto.RecoverUsernameCommand;
@@ -131,7 +131,7 @@ public class UserService {
         return userRepository.findAllUserTeams(userId);
     }
 
-    public void duplicateCheckNickname(NicknameDuplicateCheckCommand command) {
+    public void checkNicknameDuplication(NicknameDuplicationCheckCommand command) {
         if (userRepository.existsByProfileNickname(command.nickname())) {
             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }

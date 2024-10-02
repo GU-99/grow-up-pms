@@ -3,5 +3,5 @@ package com.growup.pms.user.service.dto;
 import lombok.Builder;
 
 @Builder
-public record NicknameDuplicateCheckCommand(String nickname) {
+public record NicknameDuplicationCheckCommand(String nickname) {
 }
