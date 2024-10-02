@@ -2,6 +2,7 @@ package com.growup.pms.project.controller;
 
 import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.project.controller.dto.request.ProjectRoleEditRequest;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
 import com.growup.pms.project.service.ProjectUserService;
 import com.growup.pms.role.domain.PermissionType;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,5 +49,16 @@ public class ProjectUserControllerV1 {
 
         projectUserService.kickProjectUser(projectId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{targetUserId}/role")
+    @RequirePermission(PermissionType.PROJECT_MEMBER_ROLE_UPDATE)
+    public ResponseEntity<Void> changeRole(
+            @Positive @PathVariable @ProjectId Long projectId,
+            @Positive @PathVariable Long targetUserId,
+            @Valid @RequestBody ProjectRoleEditRequest request
+    ) {
+        projectUserService.changeRole(projectId, targetUserId, request.roleName());
+        return ResponseEntity.ok().build();
     }
 }
