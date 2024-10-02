@@ -17,7 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long>, QueryDslUserR
     @Query("""
             SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END
             FROM User u
-            WHERE u.profile.nickname = :nickname""")
+            WHERE u.profile.nickname = :nickname
+            """)
     Boolean existsByNickname(@Param("nickname") String nickname);
 
     default User findByIdOrThrow(Long id) {
