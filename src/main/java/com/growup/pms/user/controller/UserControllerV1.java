@@ -7,6 +7,7 @@ import com.growup.pms.user.controller.dto.request.PasswordUpdateRequest;
 import com.growup.pms.user.controller.dto.request.RecoverPasswordRequest;
 import com.growup.pms.user.controller.dto.request.RecoverUsernameRequest;
 import com.growup.pms.user.controller.dto.request.UserCreateRequest;
+import com.growup.pms.user.controller.dto.request.UserLinksUpdateRequest;
 import com.growup.pms.user.controller.dto.request.UserUpdateRequest;
 import com.growup.pms.user.controller.dto.request.VerificationCodeCreateRequest;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;
@@ -89,6 +90,12 @@ public class UserControllerV1 {
     @PostMapping("/nickname")
     public ResponseEntity<Void> duplicateCheckNickname(@Valid @RequestBody NicknameDuplicationCheckRequest request) {
         userService.checkNicknameDuplication(request.toCommand());
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/links")
+    public ResponseEntity<Void> updateLinks(@CurrentUser SecurityUser user, @RequestBody UserLinksUpdateRequest request) {
+        userService.updateUserLinks(user.getId(), request.toCommand());
         return ResponseEntity.ok().build();
     }
 }
