@@ -2023,6 +2023,47 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/project/{projectId}/task/{taskId}/assignee:
+    post:
+      tags:
+      - TaskUser
+      summary: 프로젝트 일정 생성
+      description: "프로젝트의 상태 식별자와 일정 이름, 일정 내용, 정렬 순서, 시작일자, 종료일자를 입력 받습니다."
+      operationId: task-user-controller-v1-docs-test/일정_수행자_추가_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: taskId
+        in: path
+        description: 프로젝트 일정 식별자
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/프로젝트 일정 수행자 추가 요청 예시입니다.'
+            examples:
+              task-user-controller-v1-docs-test/일정_수행자_추가_api_문서를_생성한다:
+                value: |-
+                  {
+                    "userId" : 1
+                  }
+      responses:
+        "200":
+          description: "200"
   /api/v1/project/{projectId}/user/{userId}/role:
     patch:
       tags:
@@ -2322,6 +2363,13 @@ components:
         username:
           type: string
           description: 아이디
+    프로젝트 일정 수행자 추가 요청 예시입니다.:
+      title: 프로젝트 일정 수행자 추가 요청 예시입니다.
+      type: object
+      properties:
+        userId:
+          type: number
+          description: 회원 식별자
     api-v1-project-projectId-user962876650:
       type: array
       description: 프로젝트원 목록
