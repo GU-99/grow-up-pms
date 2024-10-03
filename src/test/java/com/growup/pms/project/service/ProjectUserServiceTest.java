@@ -3,12 +3,14 @@ package com.growup.pms.project.service;
 import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserResponseTestBuilder.프로젝트원은;
+import static com.growup.pms.test.fixture.project.builder.ProjectUserSearchResponseTestBuilder.검색된_프로젝트원은;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserTestBuilder.프로젝트_유저는;
 import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -18,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
+import com.growup.pms.project.controller.dto.response.ProjectUserSearchResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.project.domain.ProjectUserId;
@@ -296,6 +299,57 @@ public class ProjectUserServiceTest {
 
             // then
             assertThat(실제_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 접두사로_시작하는_닉네임을_가진_프로젝트_일정_수행자_검색시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long projectId = 1L;
+            String prefix1 = "레";
+
+            ProjectUserSearchResponse response1 = 검색된_프로젝트원은()
+                    .회원_식별자가(1L)
+                    .닉네임이("레니")
+                    .이다();
+            ProjectUserSearchResponse response2 = 검색된_프로젝트원은()
+                    .회원_식별자가(2L)
+                    .닉네임이("레너드")
+                    .이다();
+            List<ProjectUserSearchResponse> responses1 = List.of(response1, response2);
+
+            when(projectUserRepository.searchProjectUsersByNicknamePrefix(anyLong(), anyString()))
+                    .thenReturn(responses1);
+
+            // when
+            List<ProjectUserSearchResponse> result = projectUserService.searchProjectUsersByPrefix(projectId, prefix1);
+
+            // then
+            assertThat(responses1).hasSize(2)
+                    .extracting("userId", "nickname")
+                    .containsExactlyInAnyOrder(
+                            tuple(response1.userId(), response1.nickname()),
+                            tuple(response2.userId(), response2.nickname())
+                    );
+        }
+
+        @Test
+        void 접두사로_시작하는_닉네임이_없다면_빈리스트를_반환한다() {
+            // given
+            Long PMS_ID = 2L;
+            String prefix = "!#%@#$%@$%@&";
+            List<ProjectUserSearchResponse> response = Collections.emptyList();
+            when(projectUserRepository.searchProjectUsersByNicknamePrefix(anyLong(), anyString()))
+                    .thenReturn(response);
+
+            // when
+            List<ProjectUserSearchResponse> result = projectUserService.searchProjectUsersByPrefix(PMS_ID, prefix);
+
+            // then
+            assertThat(result).isEmpty();
         }
     }
 }
