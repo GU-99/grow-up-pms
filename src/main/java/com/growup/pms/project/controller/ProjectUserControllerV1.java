@@ -5,6 +5,7 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.project.controller.dto.request.ProjectRoleEditRequest;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
 import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
+import com.growup.pms.project.controller.dto.response.ProjectUserSearchResponse;
 import com.growup.pms.project.service.ProjectUserService;
 import com.growup.pms.role.domain.PermissionType;
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -44,11 +46,26 @@ public class ProjectUserControllerV1 {
 
     @GetMapping
     @RequirePermission(PermissionType.PROJECT_READ)
-    public ResponseEntity<List<ProjectUserResponse>> getProjectUsers(@Positive @ProjectId @PathVariable Long projectId) {
+    public ResponseEntity<List<ProjectUserResponse>> getProjectUsers(
+            @Positive @ProjectId @PathVariable Long projectId) {
         log.debug("ProjectUserControllerV1#getProjectUsers called.");
         log.debug("프로젝트원을 조회할 projectId: {}", projectId);
         List<ProjectUserResponse> responses = projectUserService.getProjectUsers(projectId);
 
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/search")
+    @RequirePermission(PermissionType.PROJECT_READ)
+    public ResponseEntity<List<ProjectUserSearchResponse>> searchProjectUsersByPrefix(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @RequestParam(required = false, defaultValue = "", name = "nickname") String prefix
+    ) {
+        log.debug("ProjectUserControllerV1#searchProjectUsers called.");
+        log.debug("검색어: {}", prefix);
+
+        List<ProjectUserSearchResponse> responses = projectUserService.searchProjectUsersByPrefix(projectId,
+                prefix);
         return ResponseEntity.ok(responses);
     }
 

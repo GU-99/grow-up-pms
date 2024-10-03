@@ -3,6 +3,7 @@ package com.growup.pms.project.service;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
+import com.growup.pms.project.controller.dto.response.ProjectUserSearchResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.project.domain.ProjectUserId;
@@ -80,5 +81,9 @@ public class ProjectUserService {
         if (!roleName.equals(ProjectRole.ADMIN.getRoleName())) {
             throw new BusinessException(ErrorCode.PROJECT_PERMISSION_DENIED);
         }
+    }
+
+    public List<ProjectUserSearchResponse> searchProjectUsersByPrefix(Long projectId, String nickname) {
+        return null;
     }
 }
