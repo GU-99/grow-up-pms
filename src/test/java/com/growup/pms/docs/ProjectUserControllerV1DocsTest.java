@@ -6,10 +6,13 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
 import static com.growup.pms.test.fixture.project.builder.ProjectRoleEditRequestTestBuilder.프로젝트원_역할_변경_요청은;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
+import static com.growup.pms.test.fixture.project.builder.ProjectUserResponseTestBuilder.프로젝트원은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -19,11 +22,14 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.project.controller.dto.request.ProjectRoleEditRequest;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
+import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
 import com.growup.pms.project.service.ProjectUserService;
 import com.growup.pms.project.service.dto.ProjectUserCreateCommand;
+import com.growup.pms.role.domain.ProjectRole;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
+import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,31 +86,61 @@ public class ProjectUserControllerV1DocsTest extends ControllerSliceTestSupport 
     }
 
     @Test
-    void 프로젝트원_제거_API_문서를_생성한다() throws Exception {
+    @WithMockSecurityUser
+    void 프로젝트원_목록조회_API_문서를_생성한다() throws Exception {
         // given
-        Long 프로젝트_ID = 1L;
-        Long 제거할_팀원_ID = 1L;
+        Long 예상_프로젝트_ID = 1L;
+        ProjectUserResponse 예상_프로젝트원_1 = 프로젝트원은()
+                .회원_식별자가(1L)
+                .닉네임이("브라운")
+                .역할이름이(ProjectRole.ADMIN.getRoleName())
+                .이다();
+
+        ProjectUserResponse 예상_프로젝트원_2 = 프로젝트원은()
+                .회원_식별자가(2L)
+                .닉네임이("레니")
+                .역할이름이(ProjectRole.LEADER.getRoleName())
+                .이다();
+
+        ProjectUserResponse 예상_프로젝트원_3 = 프로젝트원은()
+                .회원_식별자가(3L)
+                .닉네임이("레너드")
+                .역할이름이(ProjectRole.ASSIGNEE.getRoleName())
+                .이다();
+        List<ProjectUserResponse> 예상_결과 = List.of(예상_프로젝트원_1, 예상_프로젝트원_2, 예상_프로젝트원_3);
 
         // when
-        doNothing().when(projectUserService).kickProjectUser(프로젝트_ID, 제거할_팀원_ID);
+        when(projectUserService.getProjectUsers(anyLong())).thenReturn(예상_결과);
 
         // then
-        mockMvc.perform(delete("/api/v1/project/{projectId}/user/{userId}", 프로젝트_ID, 제거할_팀원_ID)
+        mockMvc.perform(get("/api/v1/project/{projectId}/user", 예상_프로젝트_ID)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
                 )
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(docs.document(resource(
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
-                                .requestSchema(schema("프로젝트원 제거 요청 예시 입니다."))
-                                .summary("프로젝트원 제거")
-                                .description("프로젝트 ID, 프로젝트원의 회원 ID를 통해 프로젝트원을 제거합니다.")
+                                .requestSchema(schema("프로젝트원 목록조회 요청 예시 입니다."))
+                                .summary("프로젝트원 목록 조회")
+                                .description("프로젝트에 속한 프로젝트원의 목록을 조회합니다.")
                                 .pathParameters(
                                         parameterWithName("projectId").type(SimpleType.NUMBER)
-                                                .description("프로젝트 ID"),
-                                        parameterWithName("userId").type(SimpleType.NUMBER)
-                                                .description("제거할 회원 ID")
+                                                .description("프로젝트 ID")
+                                )
+                                .requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE)
+                                                .description(MediaType.APPLICATION_JSON_VALUE)
+                                )
+                                .responseFields(
+                                        fieldWithPath("[]").type(JsonFieldType.ARRAY)
+                                                .description("프로젝트원 목록"),
+                                        fieldWithPath("[].userId").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트원의 회원 ID"),
+                                        fieldWithPath("[].nickname").type(JsonFieldType.STRING)
+                                                .description("프로젝트원의 회원 닉네임"),
+                                        fieldWithPath("[].roleName").type(JsonFieldType.STRING)
+                                                .description("프로젝트원의 프로젝트 내 권한")
                                 )
                                 .build())));
     }
@@ -144,5 +180,35 @@ public class ProjectUserControllerV1DocsTest extends ControllerSliceTestSupport 
                                 )
                                 .build()
                 )));
+    }
+
+    @Test
+    void 프로젝트원_제거_API_문서를_생성한다() throws Exception {
+        // given
+        Long 프로젝트_ID = 1L;
+        Long 제거할_팀원_ID = 1L;
+
+        // when
+        doNothing().when(projectUserService).kickProjectUser(프로젝트_ID, 제거할_팀원_ID);
+
+        // then
+        mockMvc.perform(delete("/api/v1/project/{projectId}/user/{userId}", 프로젝트_ID, 제거할_팀원_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
+                )
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .requestSchema(schema("프로젝트원 제거 요청 예시 입니다."))
+                                .summary("프로젝트원 제거")
+                                .description("프로젝트 ID, 프로젝트원의 회원 ID를 통해 프로젝트원을 제거합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 ID"),
+                                        parameterWithName("userId").type(SimpleType.NUMBER)
+                                                .description("제거할 회원 ID")
+                                )
+                                .build())));
     }
 }

@@ -1205,6 +1205,49 @@ paths:
                       "endDate" : "2023-12-31"
                     }
   /api/v1/project/{projectId}/user:
+    get:
+      tags:
+      - ProjectUser
+      summary: 프로젝트원 목록 조회
+      description: 프로젝트에 속한 프로젝트원의 목록을 조회합니다.
+      operationId: project-user-controller-v1-docs-test/프로젝트원_목록조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 ID
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-user962876650'
+              examples:
+                project-user-controller-v1-docs-test/프로젝트원_목록조회_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "userId" : 1,
+                      "nickname" : "브라운",
+                      "roleName" : "ADMIN"
+                    }, {
+                      "userId" : 2,
+                      "nickname" : "레니",
+                      "roleName" : "LEADER"
+                    }, {
+                      "userId" : 3,
+                      "nickname" : "레너드",
+                      "roleName" : "ASSIGNEE"
+                    } ]
     post:
       tags:
       - ProjectUser
@@ -2279,6 +2322,22 @@ components:
         username:
           type: string
           description: 아이디
+    api-v1-project-projectId-user962876650:
+      type: array
+      description: 프로젝트원 목록
+      items:
+        type: object
+        properties:
+          roleName:
+            type: string
+            description: 프로젝트원의 프로젝트 내 권한
+          nickname:
+            type: string
+            description: 프로젝트원의 회원 닉네임
+          userId:
+            type: number
+            description: 프로젝트원의 회원 ID
+        description: 프로젝트원 목록
     프로젝트 일정 상세 조회 성공 시 응답 예시입니다.:
       title: 프로젝트 일정 상세 조회 성공 시 응답 예시입니다.
       type: object
