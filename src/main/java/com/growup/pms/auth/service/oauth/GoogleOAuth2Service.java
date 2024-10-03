@@ -1,4 +1,4 @@
-package com.growup.pms.auth.service;
+package com.growup.pms.auth.service.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;

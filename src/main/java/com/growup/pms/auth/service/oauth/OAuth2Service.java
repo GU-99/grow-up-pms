@@ -1,4 +1,4 @@
-package com.growup.pms.auth.service;
+package com.growup.pms.auth.service.oauth;
 
 import com.growup.pms.auth.service.dto.oauth.OAuthAccessToken;
 import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
