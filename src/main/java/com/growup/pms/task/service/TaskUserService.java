@@ -1,11 +1,13 @@
 package com.growup.pms.task.service;
 
+import com.growup.pms.task.controller.dto.response.TaskUserResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.domain.TaskUser;
 import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.repository.TaskUserRepository;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,5 +33,9 @@ public class TaskUserService {
                 .build();
 
         taskUserRepository.save(taskUser);
+    }
+
+    public List<TaskUserResponse> getAssignees(Long projectId, Long taskId) {
+        return taskUserRepository.getTaskUsersByProjectIdAndTaskId(projectId, taskId);
     }
 }
