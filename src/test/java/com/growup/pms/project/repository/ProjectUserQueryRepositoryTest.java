@@ -6,8 +6,10 @@ import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은
 import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
+import com.growup.pms.project.controller.dto.response.ProjectUserSearchResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.role.domain.ProjectRole;
@@ -227,9 +229,30 @@ public class ProjectUserQueryRepositoryTest extends RepositoryTestSupport {
 
             // then
             SoftAssertions.assertSoftly(softly -> {
-                softly.assertThat(PMS_실제_결과).hasSize(4);
-                softly.assertThat(게시판_실제_결과).hasSize(4);
-                softly.assertThat(팀원모집_실제_결과).hasSize(2);
+                softly.assertThat(PMS_실제_결과).hasSize(4)
+                        .extracting("userId", "nickname", "roleName")
+                        .containsExactlyInAnyOrder(
+                                tuple(브라운.getId(), 브라운.getProfile().getNickname(), ADMIN.getName()),
+                                tuple(코니.getId(), 코니.getProfile().getNickname(), LEADER.getName()),
+                                tuple(레니.getId(), 레니.getProfile().getNickname(), ASSIGNEE.getName()),
+                                tuple(레너드.getId(), 레너드.getProfile().getNickname(), ASSIGNEE.getName())
+                        );
+
+                softly.assertThat(게시판_실제_결과).hasSize(4)
+                        .extracting("userId", "nickname", "roleName")
+                        .containsExactlyInAnyOrder(
+                                tuple(브라운.getId(), 브라운.getProfile().getNickname(), ADMIN.getName()),
+                                tuple(코니.getId(), 코니.getProfile().getNickname(), LEADER.getName()),
+                                tuple(레니.getId(), 레니.getProfile().getNickname(), LEADER.getName()),
+                                tuple(레너드.getId(), 레너드.getProfile().getNickname(), ASSIGNEE.getName())
+                        );
+
+                softly.assertThat(팀원모집_실제_결과).hasSize(2)
+                        .extracting("userId", "nickname", "roleName")
+                        .containsExactlyInAnyOrder(
+                                tuple(브라운.getId(), 브라운.getProfile().getNickname(), LEADER.getName()),
+                                tuple(레너드.getId(), 레너드.getProfile().getNickname(), ADMIN.getName())
+                        );
             });
         }
 
@@ -243,6 +266,51 @@ public class ProjectUserQueryRepositoryTest extends RepositoryTestSupport {
 
             // then
             assertThat(실졔_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 접두사로_시작하는_닉네임을_가진_프로젝트_일정_수행자_검색시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long PMS_ID = PMS_프로젝트.getId();
+            String prefix1 = "레";
+            String prefix2 = "브";
+
+            // when
+            List<ProjectUserSearchResponse> responses1 = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, prefix1);
+            List<ProjectUserSearchResponse> responses2 = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, prefix2);
+
+            // then
+            SoftAssertions.assertSoftly(softly -> {
+                softly.assertThat(responses1).hasSize(2)
+                        .extracting("userId", "nickname")
+                        .containsExactlyInAnyOrder(
+                                tuple(레니.getId(), 레니.getProfile().getNickname()),
+                                tuple(레너드.getId(), 레너드.getProfile().getNickname())
+                        );
+
+                softly.assertThat(responses2).hasSize(1)
+                        .extracting("userId", "nickname")
+                        .containsExactlyInAnyOrder(
+                                tuple(브라운.getId(), 브라운.getProfile().getNickname())
+                        );
+            });
+        }
+
+        @Test
+        void 접두사로_시작하는_닉네임이_없다면_빈리스트를_반환한다() {
+            // given
+            Long PMS_ID = PMS_프로젝트.getId();
+            String prefix = "!#%@#$%@$%@&";
+
+            // when
+            List<ProjectUserSearchResponse> responses = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, prefix);
+
+            // then
+            assertThat(responses).isEmpty();
         }
     }
 }
