@@ -4,17 +4,20 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
+import static com.growup.pms.test.fixture.project.builder.ProjectRoleEditRequestTestBuilder.프로젝트원_역할_변경_요청은;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
+import com.growup.pms.project.controller.dto.request.ProjectRoleEditRequest;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
 import com.growup.pms.project.service.ProjectUserService;
 import com.growup.pms.project.service.dto.ProjectUserCreateCommand;
@@ -104,5 +107,42 @@ public class ProjectUserControllerV1DocsTest extends ControllerSliceTestSupport 
                                                 .description("제거할 회원 ID")
                                 )
                                 .build())));
+    }
+
+    @Test
+    void 프로젝트원_역할_변경_API_문서를_생성한다() throws Exception {
+        // given
+        Long 프로젝트_ID = 1L;
+        Long 변경할_팀원_ID = 1L;
+        ProjectRoleEditRequest 프로젝트_역할_변경_요청 = 프로젝트원_역할_변경_요청은().이다();
+
+        // when
+        doNothing().when(projectUserService).changeRole(프로젝트_ID, 변경할_팀원_ID, 프로젝트_역할_변경_요청.roleName());
+
+        // then
+        mockMvc.perform(patch("/api/v1/project/{projectId}/user/{userId}/role", 프로젝트_ID, 변경할_팀원_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(프로젝트_역할_변경_요청))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
+                )
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .requestSchema(schema("프로젝트원 역할 변경 요청 예시 입니다."))
+                                .summary("프로젝트원 역할 변경")
+                                .description("프로젝트 ID, 프로젝트원의 회원 ID, 변경할 역할 이름을 통해 프로젝트원의 역할을 변경합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 ID"),
+                                        parameterWithName("userId").type(SimpleType.NUMBER)
+                                                .description("변경할 회원 ID")
+                                )
+                                .requestFields(
+                                        fieldWithPath("roleName").type(JsonFieldType.STRING)
+                                                .description("변경할 프로젝트 역할 이름")
+                                )
+                                .build()
+                )));
     }
 }

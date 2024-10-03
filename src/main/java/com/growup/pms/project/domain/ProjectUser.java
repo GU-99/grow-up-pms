@@ -46,4 +46,9 @@ public class ProjectUser extends BaseEntity {
         this.user = user;
         this.role = role;
     }
+
+    // Business Logics //
+    public void changeRole(Role role) {
+        this.role = role;
+    }
 }

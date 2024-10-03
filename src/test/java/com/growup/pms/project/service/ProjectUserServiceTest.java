@@ -5,9 +5,11 @@ import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateReque
 import static com.growup.pms.test.fixture.project.builder.ProjectUserTestBuilder.프로젝트_유저는;
 import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -186,6 +188,59 @@ public class ProjectUserServiceTest {
 
             // when & then
             assertThatThrownBy(() -> projectUserService.kickProjectUser(기존_프로젝트_ID, 기존_회원_ID))
+                    .isInstanceOf(BusinessException.class);
+        }
+    }
+
+    @Nested
+    class 관리자가_프로젝트원_역할_변경시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Long 기존_회원_ID = 1L;
+            ProjectUser projectUser = 프로젝트_유저는().이다();
+            Role 변경될_권한 = 역할은().타입이(RoleType.PROJECT).이름이(ProjectRole.LEADER.getRoleName()).이다();
+            when(projectUserRepository.findByIdOrThrow(any(ProjectUserId.class)))
+                    .thenReturn(projectUser);
+            when(roleRepository.findProjectRoleByName(anyString()))
+                    .thenReturn(변경될_권한);
+
+            // when
+            projectUserService.changeRole(기존_프로젝트_ID, 기존_회원_ID, 변경될_권한.getName());
+
+            // then
+            assertThat(projectUser.getRole()).isEqualTo(변경될_권한);
+        }
+
+        @Test
+        void 해당_프로젝트원이_없으면_에외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Long 잘못된_회원_ID = 1L;
+            Role 변경될_권한 = 역할은().타입이(RoleType.PROJECT).이름이(ProjectRole.LEADER.getRoleName()).이다();
+            doThrow(BusinessException.class).when(projectUserRepository).findByIdOrThrow(any(ProjectUserId.class));
+
+            // when & then
+            assertThatThrownBy(() -> projectUserService.changeRole(기존_프로젝트_ID, 잘못된_회원_ID, 변경될_권한.getName()))
+                    .isInstanceOf(BusinessException.class);
+        }
+
+        @Test
+        void 권한이_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Long 기존_회원_ID = 1L;
+            String 잘못된_권한_이름 = "ADMiN";
+            ProjectUser projectUser = 프로젝트_유저는().이다();
+
+            when(projectUserRepository.findByIdOrThrow(any(ProjectUserId.class)))
+                    .thenReturn(projectUser);
+            doThrow(BusinessException.class).when(roleRepository).findProjectRoleByName(anyString());
+
+            // when & then
+            assertThatThrownBy(() -> projectUserService.changeRole(기존_프로젝트_ID, 기존_회원_ID, 잘못된_권한_이름))
                     .isInstanceOf(BusinessException.class);
         }
     }

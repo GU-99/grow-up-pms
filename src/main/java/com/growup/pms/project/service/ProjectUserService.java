@@ -50,6 +50,14 @@ public class ProjectUserService {
         projectUserRepository.delete(projectUser);
     }
 
+    @Transactional
+    public void changeRole(Long projectId, Long targetUserId, String roleName) {
+        ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, targetUserId));
+        Role role = roleRepository.findProjectRoleByName(roleName);
+
+        projectUser.changeRole(role);
+    }
+
     private void ensureUserIsAssignee(String targetUserRoleName) {
         if (!ProjectRole.valueOf(targetUserRoleName).equals(ProjectRole.ASSIGNEE)) {
             throw new BusinessException(ErrorCode.ACCESS_DENIED);
