@@ -2024,11 +2024,49 @@ paths:
         "204":
           description: "204"
   /api/v1/project/{projectId}/task/{taskId}/assignee:
+    get:
+      tags:
+      - TaskUser
+      summary: 프로젝트 일정 수행자 목록 조회
+      description: 프로젝트와 일정의 식별자를 사용해서 해당 프로젝트 일정 수행자 목록을 조회합니다.
+      operationId: task-user-controller-v1-docs-test/일정_수행자_목록조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: taskId
+        in: path
+        description: 프로젝트 일정 식별자
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-task-taskId-assignee530242938'
+              examples:
+                task-user-controller-v1-docs-test/일정_수행자_목록조회_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "userId" : 1,
+                      "nickname" : "브라운",
+                      "roleName" : "ADMIN"
+                    }, {
+                      "userId" : 2,
+                      "nickname" : "코니",
+                      "roleName" : "LEADER"
+                    } ]
     post:
       tags:
       - TaskUser
       summary: 프로젝트 일정 생성
-      description: "프로젝트의 상태 식별자와 일정 이름, 일정 내용, 정렬 순서, 시작일자, 종료일자를 입력 받습니다."
+      description: 회원 식별자를 입력 받습니다.
       operationId: task-user-controller-v1-docs-test/일정_수행자_추가_api_문서를_생성한다
       parameters:
       - name: projectId
@@ -2515,6 +2553,22 @@ components:
           description: 부여할 역할명
     api-v1-user-file486549215:
       type: object
+    api-v1-project-projectId-task-taskId-assignee530242938:
+      type: array
+      description: 프로젝트 일정 수행자 목록
+      items:
+        type: object
+        properties:
+          roleName:
+            type: string
+            description: 프로젝트 내 회원 역할
+          nickname:
+            type: string
+            description: 회원 닉네임
+          userId:
+            type: number
+            description: 회원 식별자
+        description: 프로젝트 일정 수행자 목록
     api-v1-team-id594896981:
       type: object
       properties:
