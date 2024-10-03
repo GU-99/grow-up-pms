@@ -50,6 +50,10 @@ public class ProjectUserService {
         return projectUserRepository.getProjectUsersByProjectId(projectId);
     }
 
+    public List<ProjectUserSearchResponse> searchProjectUsersByPrefix(Long projectId, String prefix) {
+        return projectUserRepository.searchProjectUsersByNicknamePrefix(projectId, prefix);
+    }
+
     @Transactional
     public void changeRole(Long projectId, Long targetUserId, String roleName) {
         ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, targetUserId));
@@ -81,9 +85,5 @@ public class ProjectUserService {
         if (!roleName.equals(ProjectRole.ADMIN.getRoleName())) {
             throw new BusinessException(ErrorCode.PROJECT_PERMISSION_DENIED);
         }
-    }
-
-    public List<ProjectUserSearchResponse> searchProjectUsersByPrefix(Long projectId, String nickname) {
-        return null;
     }
 }
