@@ -60,7 +60,7 @@ public class LoginControllerV1 {
             HttpServletResponse response
     ) {
         redisRefreshTokenService.revoke(user.getId(), refreshToken);
-        CookieUtil.removeCookie(response,  JwtConstants.REFRESH_TOKEN_COOKIE_NAME);
+        CookieUtil.removeCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME);
         return ResponseEntity.ok().build();
     }
 }

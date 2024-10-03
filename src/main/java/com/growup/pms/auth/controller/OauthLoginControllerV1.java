@@ -1,6 +1,6 @@
 package com.growup.pms.auth.controller;
 
-import com.growup.pms.auth.service.OAuthLoginService;
+import com.growup.pms.auth.service.oauth.OauthLoginService;
 import com.growup.pms.common.security.jwt.JwtConstants;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
@@ -19,16 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/user/login")
 @RequiredArgsConstructor
-public class OAuthLoginControllerV1 {
+public class OauthLoginControllerV1 {
 
-    private final OAuthLoginService oAuthLoginService;
+    private final OauthLoginService oauthLoginService;
     private final JwtTokenProvider tokenProvider;
 
     @GetMapping("/{provider}")
-    public ResponseEntity<Void> login(@PathVariable String provider, @RequestParam("code") String code,
-                                      HttpServletResponse response) {
+    public ResponseEntity<Void> login(
+            @PathVariable String provider,
+            @RequestParam("code") String code,
+            HttpServletResponse response
+    ) {
         Provider providerEnum = Provider.valueOf(provider.toUpperCase());
-        TokenResponse authTokens = oAuthLoginService.authenticate(providerEnum, code);
+        TokenResponse authTokens = oauthLoginService.authenticate(providerEnum, code);
         CookieUtil.addCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME, authTokens.refreshToken(),
                 (int) (tokenProvider.refreshTokenExpirationMillis / 1000));
         return ResponseEntity.ok()

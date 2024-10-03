@@ -2,8 +2,8 @@ package com.growup.pms.auth.service.oauth;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.auth.service.RefreshTokenService;
-import com.growup.pms.auth.service.dto.oauth.OAuthAccessToken;
-import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
+import com.growup.pms.auth.service.dto.oauth.OauthAccessToken;
+import com.growup.pms.auth.service.dto.oauth.OauthProfile;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
@@ -17,19 +17,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class OAuthLoginService {
+public class OauthLoginService {
 
-    private final KakaoOAuth2Service kakaoOAuth2Service;
-    private final GoogleOAuth2Service googleOAuth2Service;
+    private final KakaoOauth2Service kakaoOauth2Service;
+    private final GoogleOauth2Service googleOauth2Service;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
 
     public TokenResponse authenticate(Provider provider, String code) {
-        OAuth2Service oAuth2Service = getOAuth2Service(provider);
+        Oauth2Service oAuth2Service = getOauth2Service(provider);
 
-        OAuthAccessToken accessToken = oAuth2Service.requestToken(provider, code);
-        OAuthProfile profile = oAuth2Service.requestProfile(provider, accessToken);
+        OauthAccessToken accessToken = oAuth2Service.requestToken(provider, code);
+        OauthProfile profile = oAuth2Service.requestProfile(provider, accessToken);
 
         String email = profile.getEmail();
         String nickname = profile.getNickname();
@@ -43,10 +43,10 @@ public class OAuthLoginService {
         return newToken;
     }
 
-    private OAuth2Service getOAuth2Service(Provider provider) {
+    private Oauth2Service getOauth2Service(Provider provider) {
         return switch (provider) {
-            case KAKAO -> kakaoOAuth2Service;
-            case GOOGLE -> googleOAuth2Service;
+            case KAKAO -> kakaoOauth2Service;
+            case GOOGLE -> googleOauth2Service;
             default -> throw new BusinessException(ErrorCode.INVALID_PROVIDER);
         };
     }

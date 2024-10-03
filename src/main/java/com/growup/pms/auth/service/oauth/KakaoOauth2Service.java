@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class KakaoOAuth2Service extends OAuth2ServiceImpl {
+public class KakaoOauth2Service extends Oauth2ServiceImpl {
 
     @Value("${oauth2.kakao.clientId}")
     private String clientId;
@@ -20,7 +20,7 @@ public class KakaoOAuth2Service extends OAuth2ServiceImpl {
     @Value("${oauth2.kakao.userinfo-request-uri}")
     private String userInfoRequestUri;
 
-    public KakaoOAuth2Service(RestTemplate restTemplate,
+    public KakaoOauth2Service(RestTemplate restTemplate,
                               ObjectMapper objectMapper) {
         super(restTemplate, objectMapper);
     }

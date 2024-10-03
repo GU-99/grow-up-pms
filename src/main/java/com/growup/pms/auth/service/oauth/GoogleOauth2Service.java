@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class GoogleOAuth2Service extends OAuth2ServiceImpl {
+public class GoogleOauth2Service extends Oauth2ServiceImpl {
 
     @Value("${oauth2.google.clientId}")
     private String clientId;
@@ -26,7 +26,7 @@ public class GoogleOAuth2Service extends OAuth2ServiceImpl {
     @Value("${oauth2.google.userinfo-request-uri}")
     private String userInfoRequestUri;
 
-    public GoogleOAuth2Service(RestTemplate restTemplate,
+    public GoogleOauth2Service(RestTemplate restTemplate,
                                ObjectMapper objectMapper) {
         super(restTemplate, objectMapper);
     }
