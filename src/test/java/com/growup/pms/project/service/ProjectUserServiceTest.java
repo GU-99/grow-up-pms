@@ -308,48 +308,48 @@ public class ProjectUserServiceTest {
         @Test
         void 성공한다() {
             // given
-            Long projectId = 1L;
-            String prefix1 = "레";
+            Long 프로젝트_ID = 1L;
+            String 접두사 = "레";
 
-            ProjectUserSearchResponse response1 = 검색된_프로젝트원은()
+            ProjectUserSearchResponse 검색_결과_1 = 검색된_프로젝트원은()
                     .회원_식별자가(1L)
                     .닉네임이("레니")
                     .이다();
-            ProjectUserSearchResponse response2 = 검색된_프로젝트원은()
+            ProjectUserSearchResponse 검색_결과_2 = 검색된_프로젝트원은()
                     .회원_식별자가(2L)
                     .닉네임이("레너드")
                     .이다();
-            List<ProjectUserSearchResponse> responses1 = List.of(response1, response2);
+            List<ProjectUserSearchResponse> 검색_결과_목록 = List.of(검색_결과_1, 검색_결과_2);
 
             when(projectUserRepository.searchProjectUsersByNicknamePrefix(anyLong(), anyString()))
-                    .thenReturn(responses1);
+                    .thenReturn(검색_결과_목록);
 
             // when
-            List<ProjectUserSearchResponse> result = projectUserService.searchProjectUsersByPrefix(projectId, prefix1);
+            List<ProjectUserSearchResponse> result = projectUserService.searchProjectUsersByPrefix(프로젝트_ID, 접두사);
 
             // then
-            assertThat(responses1).hasSize(2)
+            assertThat(검색_결과_목록).hasSize(2)
                     .extracting("userId", "nickname")
                     .containsExactlyInAnyOrder(
-                            tuple(response1.userId(), response1.nickname()),
-                            tuple(response2.userId(), response2.nickname())
+                            tuple(검색_결과_1.userId(), 검색_결과_1.nickname()),
+                            tuple(검색_결과_2.userId(), 검색_결과_2.nickname())
                     );
         }
 
         @Test
         void 접두사로_시작하는_닉네임이_없다면_빈리스트를_반환한다() {
             // given
-            Long PMS_ID = 2L;
-            String prefix = "!#%@#$%@$%@&";
-            List<ProjectUserSearchResponse> response = Collections.emptyList();
+            Long 프로젝트_ID = 2L;
+            String 접두사 = "!#%@#$%@$%@&";
+            List<ProjectUserSearchResponse> 예상_결과 = Collections.emptyList();
             when(projectUserRepository.searchProjectUsersByNicknamePrefix(anyLong(), anyString()))
-                    .thenReturn(response);
+                    .thenReturn(예상_결과);
 
             // when
-            List<ProjectUserSearchResponse> result = projectUserService.searchProjectUsersByPrefix(PMS_ID, prefix);
+            List<ProjectUserSearchResponse> 실제_결과 = projectUserService.searchProjectUsersByPrefix(프로젝트_ID, 접두사);
 
             // then
-            assertThat(result).isEmpty();
+            assertThat(실제_결과).isEmpty();
         }
     }
 }

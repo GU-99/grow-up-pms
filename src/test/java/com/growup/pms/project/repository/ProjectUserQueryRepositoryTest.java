@@ -276,23 +276,23 @@ public class ProjectUserQueryRepositoryTest extends RepositoryTestSupport {
         void 성공한다() {
             // given
             Long PMS_ID = PMS_프로젝트.getId();
-            String prefix1 = "레";
-            String prefix2 = "브";
+            String 접두사_1 = "레";
+            String 접두사_2 = "브";
 
             // when
-            List<ProjectUserSearchResponse> responses1 = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, prefix1);
-            List<ProjectUserSearchResponse> responses2 = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, prefix2);
+            List<ProjectUserSearchResponse> 실제_결과_목록_1 = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, 접두사_1);
+            List<ProjectUserSearchResponse> 실제_결과_목록_2 = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, 접두사_2);
 
             // then
             SoftAssertions.assertSoftly(softly -> {
-                softly.assertThat(responses1).hasSize(2)
+                softly.assertThat(실제_결과_목록_1).hasSize(2)
                         .extracting("userId", "nickname")
                         .containsExactlyInAnyOrder(
                                 tuple(레니.getId(), 레니.getProfile().getNickname()),
                                 tuple(레너드.getId(), 레너드.getProfile().getNickname())
                         );
 
-                softly.assertThat(responses2).hasSize(1)
+                softly.assertThat(실제_결과_목록_2).hasSize(1)
                         .extracting("userId", "nickname")
                         .containsExactlyInAnyOrder(
                                 tuple(브라운.getId(), 브라운.getProfile().getNickname())
@@ -304,13 +304,13 @@ public class ProjectUserQueryRepositoryTest extends RepositoryTestSupport {
         void 접두사로_시작하는_닉네임이_없다면_빈리스트를_반환한다() {
             // given
             Long PMS_ID = PMS_프로젝트.getId();
-            String prefix = "!#%@#$%@$%@&";
+            String 접두사 = "!#%@#$%@$%@&";
 
             // when
-            List<ProjectUserSearchResponse> responses = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, prefix);
+            List<ProjectUserSearchResponse> 실제_결과 = projectUserRepository.searchProjectUsersByNicknamePrefix(PMS_ID, 접두사);
 
             // then
-            assertThat(responses).isEmpty();
+            assertThat(실제_결과).isEmpty();
         }
     }
 }

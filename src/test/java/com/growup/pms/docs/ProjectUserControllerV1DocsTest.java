@@ -153,26 +153,26 @@ public class ProjectUserControllerV1DocsTest extends ControllerSliceTestSupport 
     void 프로젝트원_검색_API_문서를_생성한다() throws Exception {
         // given
         Long 예상_프로젝트_ID = 1L;
-        String prefix = "레";
-        ProjectUserSearchResponse response2 = 검색된_프로젝트원은()
+        String 접두사 = "레";
+        ProjectUserSearchResponse 예상_결과_1 = 검색된_프로젝트원은()
                 .회원_식별자가(1L)
                 .닉네임이("레니")
                 .이다();
-        ProjectUserSearchResponse response3 = 검색된_프로젝트원은()
+        ProjectUserSearchResponse 예상_결과_2 = 검색된_프로젝트원은()
                 .회원_식별자가(2L)
                 .닉네임이("레너드")
                 .이다();
 
-        List<ProjectUserSearchResponse> responses = List.of(response2, response3);
+        List<ProjectUserSearchResponse> 예상_결과_목록 = List.of(예상_결과_1, 예상_결과_2);
 
         // when
-        when(projectUserService.searchProjectUsersByPrefix(anyLong(), anyString())).thenReturn(responses);
+        when(projectUserService.searchProjectUsersByPrefix(anyLong(), anyString())).thenReturn(예상_결과_목록);
 
         // then
         mockMvc.perform(get("/api/v1/project/{projectId}/user/search", 예상_프로젝트_ID)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
-                        .queryParam("nickname", prefix)
+                        .queryParam("nickname", 접두사)
                 )
                 .andExpect(status().isOk())
                 .andDo(docs.document(resource(
