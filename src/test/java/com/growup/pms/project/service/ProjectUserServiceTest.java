@@ -2,6 +2,7 @@ package com.growup.pms.project.service;
 
 import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
+import static com.growup.pms.test.fixture.project.builder.ProjectUserResponseTestBuilder.프로젝트원은;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserTestBuilder.프로젝트_유저는;
 import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
@@ -9,12 +10,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.project.domain.ProjectUserId;
@@ -28,6 +31,8 @@ import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -242,6 +247,55 @@ public class ProjectUserServiceTest {
             // when & then
             assertThatThrownBy(() -> projectUserService.changeRole(기존_프로젝트_ID, 기존_회원_ID, 잘못된_권한_이름))
                     .isInstanceOf(BusinessException.class);
+        }
+    }
+
+    @Nested
+    class 프로젝트원_목록_조회시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 예상_프로젝트_ID = 1L;
+            ProjectUserResponse 예상_프로젝트원_1 = 프로젝트원은()
+                    .회원_식별자가(1L)
+                    .닉네임이("브라운")
+                    .역할이름이(ProjectRole.ADMIN.getRoleName())
+                    .이다();
+
+            ProjectUserResponse 예상_프로젝트원_2 = 프로젝트원은()
+                    .회원_식별자가(2L)
+                    .닉네임이("레니")
+                    .역할이름이(ProjectRole.LEADER.getRoleName())
+                    .이다();
+
+            ProjectUserResponse 예상_프로젝트원_3 = 프로젝트원은()
+                    .회원_식별자가(3L)
+                    .닉네임이("레너드")
+                    .역할이름이(ProjectRole.ASSIGNEE.getRoleName())
+                    .이다();
+            List<ProjectUserResponse> 예상_결과 = List.of(예상_프로젝트원_1, 예상_프로젝트원_2, 예상_프로젝트원_3);
+            when(projectUserRepository.getProjectUsersByProjectId(anyLong())).thenReturn(예상_결과);
+
+            // when
+            List<ProjectUserResponse> 실제_결과 = projectUserService.getProjectUsers(예상_프로젝트_ID);
+
+            // then
+            assertThat(예상_결과.size()).isEqualTo(실제_결과.size());
+        }
+
+        @Test
+        void 해당_프로젝트가_없으면_빈리스트를_반환한다() {
+            // given
+            Long 잘못된_프로젝트_ID = Long.MIN_VALUE;
+            List<ProjectUserResponse> 예상_결과 = Collections.emptyList();
+            when(projectUserRepository.getProjectUsersByProjectId(anyLong())).thenReturn(예상_결과);
+
+            // when
+            List<ProjectUserResponse> 실제_결과 = projectUserService.getProjectUsers(잘못된_프로젝트_ID);
+
+            // then
+            assertThat(실제_결과).isEmpty();
         }
     }
 }

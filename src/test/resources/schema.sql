@@ -92,7 +92,6 @@ CREATE TABLE IF NOT EXISTS project_users (
     project_id          BIGINT  NOT NULL,
     user_id             BIGINT  NOT NULL,
     role_id             BIGINT  NOT NULL,
-    is_pending_approval BOOLEAN NOT NULL,
     is_deleted          BOOLEAN   DEFAULT FALSE,
     created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

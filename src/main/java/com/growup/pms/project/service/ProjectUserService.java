@@ -2,6 +2,7 @@ package com.growup.pms.project.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
 import com.growup.pms.project.domain.ProjectUserId;
@@ -13,6 +14,7 @@ import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,11 +45,8 @@ public class ProjectUserService {
         projectUserRepository.save(projectUser);
     }
 
-    @Transactional
-    public void kickProjectUser(Long projectId, Long targetUserId) {
-        ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, targetUserId));
-        ensureUserIsAssignee(projectUser.getRole().getName());
-        projectUserRepository.delete(projectUser);
+    public List<ProjectUserResponse> getProjectUsers(Long projectId) {
+        return projectUserRepository.getProjectUsersByProjectId(projectId);
     }
 
     @Transactional
@@ -56,6 +55,13 @@ public class ProjectUserService {
         Role role = roleRepository.findProjectRoleByName(roleName);
 
         projectUser.changeRole(role);
+    }
+
+    @Transactional
+    public void kickProjectUser(Long projectId, Long targetUserId) {
+        ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, targetUserId));
+        ensureUserIsAssignee(projectUser.getRole().getName());
+        projectUserRepository.delete(projectUser);
     }
 
     private void ensureUserIsAssignee(String targetUserRoleName) {
