@@ -2,11 +2,16 @@ package com.growup.pms.file.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
+import com.growup.pms.common.aop.annotation.ProjectId;
+import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.util.FileNameUtil;
 import com.growup.pms.common.validator.annotation.File;
 import com.growup.pms.file.domain.FileType;
 import com.growup.pms.file.service.ProfileImageService;
+import com.growup.pms.file.service.TaskAttachmentService;
+import com.growup.pms.role.domain.PermissionType;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileControllerV1 {
 
     private final ProfileImageService profileImageService;
+    private final TaskAttachmentService taskAttachmentService;
 
     @PostMapping("/user/profile/image")
     public ResponseEntity<Void> uploadProfileImage(
@@ -39,5 +45,16 @@ public class FileControllerV1 {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(profileImageService.download(fileName));
+    }
+
+    @PostMapping("/project/{projectId}/task/{taskId}/upload")
+    @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
+    public ResponseEntity<Void> uploadTaskAttachment(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long taskId,
+            @Valid @File(types = FileType.IMAGE) @RequestPart(name = "file") MultipartFile file
+    ) {
+        taskAttachmentService.uploadTaskAttachment(taskId, file);
+        return ResponseEntity.ok().build();
     }
 }
