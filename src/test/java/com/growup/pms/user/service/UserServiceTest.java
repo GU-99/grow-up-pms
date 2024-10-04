@@ -9,6 +9,7 @@ import static com.growup.pms.test.fixture.user.builder.UserPasswordUpdateTestBui
 import static com.growup.pms.test.fixture.user.builder.UserSearchResponseTestBuilder.사용자_검색_응답은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static com.growup.pms.test.fixture.user.builder.UserUpdateRequestTestBuilder.사용자_정보_변경_요청은;
+import static com.growup.pms.test.fixture.user.builder.VerificationCodeCheckRequestTestBuilder.인증_코드_확인은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -40,6 +41,7 @@ import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserLinksUpdateCommand;
 import com.growup.pms.user.service.dto.UserUpdateCommand;
+import com.growup.pms.user.service.dto.VerificationCodeCheckCommand;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -441,6 +443,41 @@ class UserServiceTest {
             assertThatThrownBy(() -> userService.checkNicknameDuplication(닉네임_중복_검사_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NICKNAME_ALREADY_EXISTS);
+        }
+    }
+
+    @Nested
+    class 이메일_인증_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            String 이메일 = "test@test.com";
+            String 인증코드 = "123456";
+            VerificationCodeCheckCommand 인증_코드_확인_요청 = 인증_코드_확인은().이메일은(이메일).인증코드는(인증코드).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(이메일, 인증코드)).thenReturn(true);
+
+            // when
+            userService.checkVerificationCode(인증_코드_확인_요청);
+
+            // then
+            verify(emailVerificationService, times(1)).verifyAndInvalidateEmail(이메일, 인증코드);
+        }
+
+        @Test
+        void 이메일_인증에_실패하면_예외가_발생한다() {
+            // given
+            String 이메일 = "test@test.com";
+            String 인증코드 = "123456";
+            VerificationCodeCheckCommand 인증_코드_확인_요청 = 인증_코드_확인은().이메일은(이메일).인증코드는(인증코드).이다().toCommand();
+
+            when(emailVerificationService.verifyAndInvalidateEmail(이메일, 인증코드)).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> userService.checkVerificationCode(인증_코드_확인_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
         }
     }
 }

@@ -18,6 +18,7 @@ import com.growup.pms.user.service.dto.RecoverUsernameCommand;
 import com.growup.pms.user.service.dto.UserCreateCommand;
 import com.growup.pms.user.service.dto.UserLinksUpdateCommand;
 import com.growup.pms.user.service.dto.UserUpdateCommand;
+import com.growup.pms.user.service.dto.VerificationCodeCheckCommand;
 import com.growup.pms.user.service.dto.VerificationCodeCreateCommand;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -135,6 +136,10 @@ public class UserService {
         if (userRepository.existsByNickname(command.nickname())) {
             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
+    }
+
+    public void checkVerificationCode(VerificationCodeCheckCommand command) {
+        validateVerificationCode(command.email(), command.verificationCode());
     }
 
     private void validateVerificationCode(String email, String verificationCode) {
