@@ -79,16 +79,33 @@ class TaskAttachmentServiceTest {
         @Test
         void 성공한다() {
             // given
+            Long 일정_ID = 1L;
+            Task 기존_일정 = 일정은().이다();
+
             String 파일_이름 = "test.png";
             byte[] 파일_내용 = "test".getBytes();
 
+            when(taskRepository.findByIdOrThrow(일정_ID)).thenReturn(기존_일정);
             when(fileStorageService.download(anyString())).thenReturn(파일_내용);
 
             // when
-            byte[] 실제_결과 = taskAttachmentService.download(파일_이름);
+            byte[] 실제_결과 = taskAttachmentService.download(일정_ID, 파일_이름);
 
             // then
             assertThat(실제_결과).isEqualTo(파일_내용);
+        }
+
+        @Test
+        void 일정이_없으면_예외가_발생한다() {
+            // given
+            Long 잘못된_일정_ID = Long.MIN_VALUE;
+            String 파일_이름 = "test.png";
+
+            doThrow(BusinessException.class).when(taskRepository).findByIdOrThrow(잘못된_일정_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskAttachmentService.download(잘못된_일정_ID, 파일_이름))
+                    .isInstanceOf(BusinessException.class);
         }
     }
 }
