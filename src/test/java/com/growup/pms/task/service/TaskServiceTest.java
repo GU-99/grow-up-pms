@@ -1,6 +1,7 @@
 package com.growup.pms.task.service;
 
 import static com.growup.pms.test.fixture.status.builder.StatusTestBuilder.상태는;
+import static com.growup.pms.test.fixture.task.builder.TaskAttachmentResponseTestBuilder.첨부파일_조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskCreateRequestTestBuilder.일정_생성_요청은;
 import static com.growup.pms.test.fixture.task.builder.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskEditRequestTestBuilder.일정_수정_요청은;
@@ -12,7 +13,9 @@ import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -22,10 +25,12 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
+import com.growup.pms.task.controller.dto.response.TaskAttachmentResponse;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
+import com.growup.pms.task.repository.TaskAttachmentRepository;
 import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.repository.TaskUserRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
@@ -61,6 +66,9 @@ class TaskServiceTest {
 
     @Mock
     TaskUserRepository taskUserRepository;
+
+    @Mock
+    TaskAttachmentRepository taskAttachmentRepository;
 
     @InjectMocks
     TaskService taskService;
@@ -442,6 +450,53 @@ class TaskServiceTest {
             assertThatThrownBy(() -> taskService.deleteTask(기존_일정_ID))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
+        }
+    }
+
+    @Nested
+    class 사용자가_프로젝트_일정_첨부파일_조회시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 일정_ID = 1L;
+            TaskAttachmentResponse 예상_응답_1 = 첨부파일_조회_응답은().이다();
+            TaskAttachmentResponse 예상_응답_2 = 첨부파일_조회_응답은().첨부파일_식별자가(2L).원본_파일명이("cow.docx")
+                    .저장_파일명이("cow-store-name.docx").이다();
+            TaskAttachmentResponse 예상_응답_3 = 첨부파일_조회_응답은().첨부파일_식별자가(3L).원본_파일명이("cat.pdf")
+                    .저장_파일명이("cat-store-name.pdf").이다();
+            List<TaskAttachmentResponse> 예상_응답_목록 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
+
+            when(taskAttachmentRepository.getTaskAttachmentsByTaskId(anyLong())).thenReturn(예상_응답_목록);
+
+            // when
+            List<TaskAttachmentResponse> 실제_결과 = taskService.getTaskAttachments(일정_ID);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(실제_결과).hasSize(예상_응답_목록.size())
+                        .extracting("fileId", "fileName", "uploadName")
+                        .containsExactlyInAnyOrder(
+                                tuple(예상_응답_1.fileId(), 예상_응답_1.fileName(), 예상_응답_1.uploadName()),
+                                tuple(예상_응답_2.fileId(), 예상_응답_2.fileName(), 예상_응답_2.uploadName()),
+                                tuple(예상_응답_3.fileId(), 예상_응답_3.fileName(), 예상_응답_3.uploadName())
+                        );
+            });
+        }
+
+        @Test
+        void 일정이_없거나_첨부파일이_없으면_빈리스트를_반환한다() {
+            // given
+            Long 잘못된_일정_ID = 1L;
+            List<TaskAttachmentResponse> 예상_결과 = Collections.emptyList();
+
+            when(taskAttachmentRepository.getTaskAttachmentsByTaskId(anyLong())).thenReturn(예상_결과);
+
+            // when
+            List<TaskAttachmentResponse> 실제_결과 = taskService.getTaskAttachments(잘못된_일정_ID);
+
+            // then
+            assertThat(실제_결과).isEmpty();
         }
     }
 }
