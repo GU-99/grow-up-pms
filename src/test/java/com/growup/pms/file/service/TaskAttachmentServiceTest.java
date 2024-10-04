@@ -1,8 +1,10 @@
 package com.growup.pms.file.service;
 
 import static com.growup.pms.test.fixture.task.builder.TaskTestBuilder.일정은;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +70,25 @@ class TaskAttachmentServiceTest {
             // when & then
             assertThatThrownBy(() -> taskAttachmentService.uploadTaskAttachment(잘못된_일정_ID, 첨부_파일))
                     .isInstanceOf(BusinessException.class);
+        }
+    }
+
+    @Nested
+    class 일정_첨부파일_다운로드시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            String 파일_이름 = "test.png";
+            byte[] 파일_내용 = "test".getBytes();
+
+            when(fileStorageService.download(anyString())).thenReturn(파일_내용);
+
+            // when
+            byte[] 실제_결과 = taskAttachmentService.download(파일_이름);
+
+            // then
+            assertThat(실제_결과).isEqualTo(파일_내용);
         }
     }
 }
