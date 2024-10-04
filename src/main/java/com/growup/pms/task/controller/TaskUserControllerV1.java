@@ -12,6 +12,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,17 @@ public class TaskUserControllerV1 {
 
         List <TaskUserResponse> responses = taskUserService.getAssignees(projectId, taskId);
         return ResponseEntity.ok().body(responses);
+    }
+
+    @DeleteMapping("/{assigneeId}")
+    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
+    public ResponseEntity<Void> deleteTaskUser(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long taskId,
+            @Positive @PathVariable Long assigneeId
+    ) {
+        log.debug("TaskUserControllerV1#deleteTaskUser called.");
+        taskUserService.deleteTaskUser(taskId, assigneeId);
+        return ResponseEntity.noContent().build();
     }
 }

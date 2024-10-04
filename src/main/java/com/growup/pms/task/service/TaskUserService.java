@@ -3,6 +3,7 @@ package com.growup.pms.task.service;
 import com.growup.pms.task.controller.dto.response.TaskUserResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.domain.TaskUser;
+import com.growup.pms.task.domain.TaskUserId;
 import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.repository.TaskUserRepository;
 import com.growup.pms.user.domain.User;
@@ -37,5 +38,11 @@ public class TaskUserService {
 
     public List<TaskUserResponse> getAssignees(Long projectId, Long taskId) {
         return taskUserRepository.getTaskUsersByProjectIdAndTaskId(projectId, taskId);
+    }
+
+    @Transactional
+    public void deleteTaskUser(Long taskId, Long assigneeId) {
+        TaskUser taskUser = taskUserRepository.findByIdOrThrow(new TaskUserId(taskId, assigneeId));
+        taskUserRepository.delete(taskUser);
     }
 }
