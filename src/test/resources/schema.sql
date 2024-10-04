@@ -133,6 +133,18 @@ CREATE TABLE IF NOT EXISTS status_tasks (
     CONSTRAINT fk_task_user   FOREIGN KEY (user_id)            REFERENCES users (id)
 );
 
+-- 프로젝트 일정 첨부파일
+    CREATE TABLE IF NOT EXISTS status_tasks_attachments (
+        id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+        status_tasks_id     BIGINT NOT NULL,
+        original_file_name   VARCHAR(255) NOT NULL ,
+        store_file_name      VARCHAR(255) NOT NULL ,
+        is_deleted          BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at          DATETIME,
+        updated_at          DATETIME,
+        CONSTRAINT fk_status_tasks FOREIGN KEY (status_tasks_id) REFERENCES status_tasks (id)
+);
+
 -- 프로젝트 일정 유저
 CREATE TABLE IF NOT EXISTS task_users (
     user_id    BIGINT NOT NULL,
