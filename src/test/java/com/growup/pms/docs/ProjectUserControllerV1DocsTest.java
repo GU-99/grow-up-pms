@@ -7,8 +7,10 @@ import static com.epages.restdocs.apispec.Schema.schema;
 import static com.growup.pms.test.fixture.project.builder.ProjectRoleEditRequestTestBuilder.프로젝트원_역할_변경_요청은;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserCreateRequestTestBuilder.프로젝트_유저_생성_요청은;
 import static com.growup.pms.test.fixture.project.builder.ProjectUserResponseTestBuilder.프로젝트원은;
+import static com.growup.pms.test.fixture.project.builder.ProjectUserSearchResponseTestBuilder.검색된_프로젝트원은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
@@ -23,6 +25,7 @@ import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.project.controller.dto.request.ProjectRoleEditRequest;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
 import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
+import com.growup.pms.project.controller.dto.response.ProjectUserSearchResponse;
 import com.growup.pms.project.service.ProjectUserService;
 import com.growup.pms.project.service.dto.ProjectUserCreateCommand;
 import com.growup.pms.role.domain.ProjectRole;
@@ -141,6 +144,62 @@ public class ProjectUserControllerV1DocsTest extends ControllerSliceTestSupport 
                                                 .description("프로젝트원의 회원 닉네임"),
                                         fieldWithPath("[].roleName").type(JsonFieldType.STRING)
                                                 .description("프로젝트원의 프로젝트 내 권한")
+                                )
+                                .build())));
+    }
+
+    @Test
+    @WithMockSecurityUser
+    void 프로젝트원_검색_API_문서를_생성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_ID = 1L;
+        String 접두사 = "레";
+        ProjectUserSearchResponse 예상_결과_1 = 검색된_프로젝트원은()
+                .회원_식별자가(1L)
+                .닉네임이("레니")
+                .이다();
+        ProjectUserSearchResponse 예상_결과_2 = 검색된_프로젝트원은()
+                .회원_식별자가(2L)
+                .닉네임이("레너드")
+                .이다();
+
+        List<ProjectUserSearchResponse> 예상_결과_목록 = List.of(예상_결과_1, 예상_결과_2);
+
+        // when
+        when(projectUserService.searchProjectUsersByPrefix(anyLong(), anyString())).thenReturn(예상_결과_목록);
+
+        // then
+        mockMvc.perform(get("/api/v1/project/{projectId}/user/search", 예상_프로젝트_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
+                        .queryParam("nickname", 접두사)
+                )
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .requestSchema(schema("프로젝트원 검색 요청 예시 입니다."))
+                                .summary("닉네임으로 프로젝트원 검색")
+                                .description("접두사로 시작하는 닉네임을 가진 프로젝트원의 목록을 조회합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 ID")
+                                )
+                                .queryParameters(
+                                        parameterWithName("nickname").type(SimpleType.STRING)
+                                                .description("검색어")
+                                )
+                                .requestHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE)
+                                                .description(MediaType.APPLICATION_JSON_VALUE)
+                                )
+                                .responseFields(
+                                        fieldWithPath("[]").type(JsonFieldType.ARRAY)
+                                                .description("프로젝트원 목록"),
+                                        fieldWithPath("[].userId").type(JsonFieldType.NUMBER)
+                                                .description("프로젝트원의 회원 ID"),
+                                        fieldWithPath("[].nickname").type(JsonFieldType.STRING)
+                                                .description("프로젝트원의 회원 닉네임")
                                 )
                                 .build())));
     }

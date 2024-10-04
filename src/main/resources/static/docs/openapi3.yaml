@@ -1854,6 +1854,50 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/project/{projectId}/user/search:
+    get:
+      tags:
+      - ProjectUser
+      summary: 닉네임으로 프로젝트원 검색
+      description: 접두사로 시작하는 닉네임을 가진 프로젝트원의 목록을 조회합니다.
+      operationId: project-user-controller-v1-docs-test/프로젝트원_검색_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 ID
+        required: true
+        schema:
+          type: number
+      - name: nickname
+        in: query
+        description: 검색어
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-project-projectId-user-search935118434'
+              examples:
+                project-user-controller-v1-docs-test/프로젝트원_검색_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "userId" : 1,
+                      "nickname" : "레니"
+                    }, {
+                      "userId" : 2,
+                      "nickname" : "레너드"
+                    } ]
   /api/v1/project/{projectId}/user/{userId}:
     delete:
       tags:
@@ -2551,6 +2595,19 @@ components:
         roleName:
           type: string
           description: 부여할 역할명
+    api-v1-project-projectId-user-search935118434:
+      type: array
+      description: 프로젝트원 목록
+      items:
+        type: object
+        properties:
+          nickname:
+            type: string
+            description: 프로젝트원의 회원 닉네임
+          userId:
+            type: number
+            description: 프로젝트원의 회원 ID
+        description: 프로젝트원 목록
     api-v1-user-file486549215:
       type: object
     api-v1-project-projectId-task-taskId-assignee530242938:
