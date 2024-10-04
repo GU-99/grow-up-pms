@@ -11,6 +11,7 @@ import com.growup.pms.file.service.ProfileImageService;
 import com.growup.pms.file.service.TaskAttachmentService;
 import com.growup.pms.role.domain.PermissionType;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,17 @@ public class FileControllerV1 {
     ) {
         taskAttachmentService.uploadTaskAttachment(taskId, file);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/file/project/{projectId}/task/{taskId}/{fileName}")
+    public ResponseEntity<byte[]> downloadTaskAttachment(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long taskId,
+            @PathVariable String fileName
+    ) {
+        if (!FileNameUtil.isValidFileName(fileName)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(taskAttachmentService.download(fileName));
     }
 }

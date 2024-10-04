@@ -6,6 +6,7 @@ import com.growup.pms.task.repository.TaskAttachmentRepository;
 import com.growup.pms.task.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,5 +33,10 @@ public class TaskAttachmentService {
                 .storeFileName(storeFileName)
                 .build();
         taskAttachmentRepository.save(taskAttachment);
+    }
+
+    @Transactional(propagation = Propagation.NEVER)
+    public byte[] download(String fileName) {
+        return fileStorageService.download(fileName);
     }
 }
