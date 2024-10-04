@@ -11,7 +11,6 @@ import com.growup.pms.file.service.ProfileImageService;
 import com.growup.pms.file.service.TaskAttachmentService;
 import com.growup.pms.role.domain.PermissionType;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
