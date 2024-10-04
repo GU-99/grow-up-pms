@@ -67,6 +67,6 @@ public class FileControllerV1 {
         if (!FileNameUtil.isValidFileName(fileName)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(taskAttachmentService.download(fileName));
+        return ResponseEntity.ok(taskAttachmentService.download(taskId, fileName));
     }
 }

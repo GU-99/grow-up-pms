@@ -26,6 +26,12 @@ public class TaskAttachmentService {
         createTaskAttachment(file, task, storeFileName);
     }
 
+    @Transactional(propagation = Propagation.NEVER)
+    public byte[] download(Long taskId, String fileName) {
+        Task task = taskRepository.findByIdOrThrow(taskId);
+        return fileStorageService.download(fileName);
+    }
+
     private void createTaskAttachment(MultipartFile file, Task task, String storeFileName) {
         TaskAttachment taskAttachment = TaskAttachment.builder()
                 .task(task)
@@ -33,10 +39,5 @@ public class TaskAttachmentService {
                 .storeFileName(storeFileName)
                 .build();
         taskAttachmentRepository.save(taskAttachment);
-    }
-
-    @Transactional(propagation = Propagation.NEVER)
-    public byte[] download(String fileName) {
-        return fileStorageService.download(fileName);
     }
 }
