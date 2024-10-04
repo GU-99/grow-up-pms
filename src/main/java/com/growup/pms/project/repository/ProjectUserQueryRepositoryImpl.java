@@ -1,5 +1,6 @@
 package com.growup.pms.project.repository;
 
+import static com.growup.pms.common.constant.SizeConstants.SEARCH_SIZE;
 import static com.growup.pms.project.domain.QProject.project;
 import static com.growup.pms.project.domain.QProjectUser.projectUser;
 import static com.growup.pms.role.domain.QRole.role;
@@ -48,6 +49,7 @@ public class ProjectUserQueryRepositoryImpl implements ProjectUserQueryRepositor
                         isProjectId(projectId),
                         startWithPrefix(prefix)
                 )
+                .limit(SEARCH_SIZE)
                 .fetch();
     }
 
