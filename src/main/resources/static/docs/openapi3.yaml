@@ -2246,6 +2246,42 @@ paths:
       responses:
         "200":
           description: "200"
+  /api/v1/project/{projectId}/task/{taskId}/assignee/{assigneeId}:
+    delete:
+      tags:
+      - TaskUser
+      summary: 프로젝트 일정 제거
+      description: 프로젝트 일정과 회원 식별자를 사용해서 수행자를 제거합니다.
+      operationId: task-user-controller-v1-docs-test/일정_수행자_제거_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: taskId
+        in: path
+        description: 프로젝트 일정 식별자
+        required: true
+        schema:
+          type: number
+      - name: assigneeId
+        in: path
+        description: 회원 식별자
+        required: true
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "204":
+          description: "204"
 components:
   schemas:
     프로젝트 일정 전체 조회 성공 시 응답 예시입니다.:

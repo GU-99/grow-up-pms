@@ -9,6 +9,7 @@ import static com.growup.pms.test.fixture.task.builder.TaskUserResponseTestBuild
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -128,6 +129,44 @@ public class TaskUserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("[].roleName").type(JsonFieldType.STRING)
                                                 .description("프로젝트 내 회원 역할")
                                 )
+                                .build())));
+    }
+
+    @Test
+    @WithMockSecurityUser
+    void 일정_수행자_제거_API_문서를_생성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_식별자 = 1L;
+        Long 예상_일정_식별자 = 1L;
+        Long 예상_회원_식별자 = 1L;
+
+        // when
+        doNothing().when(taskUserService).deleteTaskUser(예상_일정_식별자, 예상_회원_식별자);
+
+        // then
+        mockMvc.perform(delete("/api/v1/project/{projectId}/task/{taskId}/assignee/{assigneeId}",
+                        예상_프로젝트_식별자, 예상_일정_식별자, 예상_회원_식별자)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(
+                        status().isNoContent()
+                )
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .requestSchema(schema("프로젝트 일정 수행자 제거 요청 예시입니다."))
+                                .summary("프로젝트 일정 제거")
+                                .description("프로젝트 일정과 회원 식별자를 사용해서 수행자를 제거합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 식별자"),
+                                        parameterWithName("taskId").type(SimpleType.NUMBER)
+                                                .description("프로젝트 일정 식별자"),
+                                        parameterWithName("assigneeId").type(SimpleType.NUMBER)
+                                                .description("회원 식별자")
+                                )
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(
+                                        MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
     }
 }
