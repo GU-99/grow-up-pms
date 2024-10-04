@@ -54,7 +54,7 @@ public class FileControllerV1 {
             @Positive @PathVariable Long taskId,
             @Valid @File(types = FileType.IMAGE) @RequestPart(name = "file") MultipartFile file
     ) {
-        taskAttachmentService.uploadTaskAttachment(taskId, file);
+        taskAttachmentService.upload(taskId, file);
         return ResponseEntity.ok().build();
     }
 

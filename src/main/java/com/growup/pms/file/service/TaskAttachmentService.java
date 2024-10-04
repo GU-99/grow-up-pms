@@ -20,7 +20,7 @@ public class TaskAttachmentService {
     private final FileStorageService fileStorageService;
 
     @Transactional
-    public void uploadTaskAttachment(Long taskId, MultipartFile file) {
+    public void upload(Long taskId, MultipartFile file) {
         Task task = taskRepository.findByIdOrThrow(taskId);
         String storeFileName = fileStorageService.upload(file);
         createTaskAttachment(file, task, storeFileName);

@@ -53,7 +53,7 @@ class TaskAttachmentServiceTest {
             when(taskRepository.findByIdOrThrow(일정_ID)).thenReturn(기존_일정);
 
             // when & then
-            assertThatCode(() -> taskAttachmentService.uploadTaskAttachment(일정_ID, 첨부_파일))
+            assertThatCode(() -> taskAttachmentService.upload(일정_ID, 첨부_파일))
                     .doesNotThrowAnyException();
         }
 
@@ -68,7 +68,7 @@ class TaskAttachmentServiceTest {
             doThrow(BusinessException.class).when(taskRepository).findByIdOrThrow(잘못된_일정_ID);
 
             // when & then
-            assertThatThrownBy(() -> taskAttachmentService.uploadTaskAttachment(잘못된_일정_ID, 첨부_파일))
+            assertThatThrownBy(() -> taskAttachmentService.upload(잘못된_일정_ID, 첨부_파일))
                     .isInstanceOf(BusinessException.class);
         }
     }
