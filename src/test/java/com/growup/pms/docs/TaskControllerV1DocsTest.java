@@ -4,6 +4,7 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
+import static com.growup.pms.test.fixture.task.builder.TaskAttachmentResponseTestBuilder.첨부파일_조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskKanbanResponseTestBuilder.일정_칸반_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskOrderEditRequestTestBuilder.일정_순서변경_요청은;
 import static com.growup.pms.test.fixture.task.builder.TaskOrderListEditRequestTestBuilder.일정_순서변경_목록_요청은;
@@ -28,6 +29,7 @@ import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.request.TaskOrderEditRequest;
 import com.growup.pms.task.controller.dto.request.TaskOrderListEditRequest;
+import com.growup.pms.task.controller.dto.response.TaskAttachmentResponse;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.service.TaskService;
@@ -363,5 +365,53 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
                                 )
                                 .build()
                 )));
+    }
+
+    @Test
+    void 일정_첨부파일_전체조회_API_문서를_생성한다() throws Exception {
+        // given
+        Long 예상_프로젝트_ID = 1L;
+        Long 예상_일정_ID = 1L;
+        TaskAttachmentResponse 예상_응답_1 = 첨부파일_조회_응답은().이다();
+        TaskAttachmentResponse 예상_응답_2 = 첨부파일_조회_응답은().첨부파일_식별자가(2L).원본_파일명이("cow.docx")
+                .저장_파일명이("cow-store-name.docx").이다();
+        TaskAttachmentResponse 예상_응답_3 = 첨부파일_조회_응답은().첨부파일_식별자가(3L).원본_파일명이("cat.pdf")
+                .저장_파일명이("cat-store-name.pdf").이다();
+        List<TaskAttachmentResponse> 예상_응답_목록 = List.of(예상_응답_1, 예상_응답_2, 예상_응답_3);
+
+        // when
+        when(taskService.getTaskAttachments(예상_일정_ID)).thenReturn(예상_응답_목록);
+
+        // then
+        mockMvc.perform(get(("/api/v1/project/{projectId}/task/{taskId}/attachment"), 예상_프로젝트_ID, 예상_일정_ID)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰")
+                )
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("일정 첨부파일 목록 조회")
+                                .requestSchema(schema("일정 첨부파일 목록 조회 요청 예시입니다."))
+                                .responseSchema(schema("일정 첨부파일 목록 조회 성공 시 응답 예시입니다."))
+                                .description("일정 식별자를 사용하여 일정 내의 모든 첨부파일을 조회합니다.")
+                                .pathParameters(
+                                        parameterWithName("projectId").type(SimpleType.NUMBER)
+                                                .description("조회할 프로젝트 식별자"),
+                                        parameterWithName("taskId").type(SimpleType.NUMBER)
+                                                .description("조회할 일정 식별자")
+                                )
+                                .responseFields(
+                                        fieldWithPath("[]").type(JsonFieldType.ARRAY)
+                                                .description("일정 첨부파일 조회 목록"),
+                                        fieldWithPath("[].fileId").type(JsonFieldType.NUMBER)
+                                                .description("첨부파일 식별자"),
+                                        fieldWithPath("[].fileName").type(JsonFieldType.STRING)
+                                                .description("첨부파일 원본명"),
+                                        fieldWithPath("[].uploadName").type(JsonFieldType.STRING)
+                                                .description("첨부파일 저장명")
+                                )
+                                .build()
+                )));
+
     }
 }
