@@ -6,6 +6,7 @@ import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.request.TaskOrderListEditRequest;
+import com.growup.pms.task.controller.dto.response.TaskAttachmentResponse;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.service.TaskService;
@@ -126,5 +127,17 @@ public class TaskControllerV1 {
         taskService.deleteTask(taskId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{taskId}/attachment")
+    @RequirePermission(PermissionType.PROJECT_TASK_READ)
+    public ResponseEntity<List<TaskAttachmentResponse>> getTaskAttachments(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @PathVariable Long taskId
+    ) {
+        log.debug("TaskControllerV1#getTaskAttachments called.");
+
+        List<TaskAttachmentResponse> responses = taskService.getTaskAttachments(taskId);
+        return ResponseEntity.ok(responses);
     }
 }

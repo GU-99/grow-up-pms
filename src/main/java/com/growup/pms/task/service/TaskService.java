@@ -4,11 +4,13 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
+import com.growup.pms.task.controller.dto.response.TaskAttachmentResponse;
 import com.growup.pms.task.controller.dto.response.TaskDetailResponse;
 import com.growup.pms.task.controller.dto.response.TaskKanbanResponse;
 import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.growup.pms.task.domain.Task;
 import com.growup.pms.task.domain.TaskUser;
+import com.growup.pms.task.repository.TaskAttachmentRepository;
 import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.task.repository.TaskUserRepository;
 import com.growup.pms.task.service.dto.TaskCreateCommand;
@@ -36,6 +38,7 @@ public class TaskService {
     private final StatusRepository statusRepository;
     private final UserRepository userRepository;
     private final TaskUserRepository taskUserRepository;
+    private final TaskAttachmentRepository taskAttachmentRepository;
 
     @Transactional
     public TaskDetailResponse createTask(Long projectId, TaskCreateCommand command) {
@@ -106,6 +109,10 @@ public class TaskService {
     public void deleteTask(Long taskId) {
         Task task = taskRepository.findByIdOrThrow(taskId);
         taskRepository.delete(task);
+    }
+
+    public List<TaskAttachmentResponse> getTaskAttachments(Long taskId) {
+        return taskAttachmentRepository.getTaskAttachmentsByTaskId(taskId);
     }
 
     private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Task> updater, Task task) {

@@ -2146,6 +2146,49 @@ paths:
       responses:
         "200":
           description: "200"
+  /api/v1/project/{projectId}/task/{taskId}/attachment:
+    get:
+      tags:
+      - Task
+      summary: 일정 첨부파일 목록 조회
+      description: 일정 식별자를 사용하여 일정 내의 모든 첨부파일을 조회합니다.
+      operationId: task-controller-v1-docs-test/일정_첨부파일_전체조회_api_문서를_생성한다
+      parameters:
+      - name: projectId
+        in: path
+        description: 조회할 프로젝트 식별자
+        required: true
+        schema:
+          type: number
+      - name: taskId
+        in: path
+        description: 조회할 일정 식별자
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/일정 첨부파일 목록 조회 성공 시 응답 예시입니다.'
+              examples:
+                task-controller-v1-docs-test/일정_첨부파일_전체조회_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "fileId" : 1,
+                      "fileName" : "pig.jpg",
+                      "uploadName" : "f34abb71-1788-41d7-9f1c-11f66b5a9896.png"
+                    }, {
+                      "fileId" : 2,
+                      "fileName" : "cow.docx",
+                      "uploadName" : "cow-store-name.docx"
+                    }, {
+                      "fileId" : 3,
+                      "fileName" : "cat.pdf",
+                      "uploadName" : "cat-store-name.pdf"
+                    } ]
   /api/v1/project/{projectId}/user/{userId}/role:
     patch:
       tags:
@@ -2816,6 +2859,23 @@ components:
               sortOrder:
                 type: number
                 description: 변경할 정렬 순서
+    일정 첨부파일 목록 조회 성공 시 응답 예시입니다.:
+      title: 일정 첨부파일 목록 조회 성공 시 응답 예시입니다.
+      type: array
+      description: 일정 첨부파일 조회 목록
+      items:
+        type: object
+        properties:
+          fileName:
+            type: string
+            description: 첨부파일 원본명
+          uploadName:
+            type: string
+            description: 첨부파일 저장명
+          fileId:
+            type: number
+            description: 첨부파일 식별자
+        description: 일정 첨부파일 조회 목록
     api-v1-team-750252047:
       type: object
       properties:
