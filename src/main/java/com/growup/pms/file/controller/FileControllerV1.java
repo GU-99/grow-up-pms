@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,5 +69,15 @@ public class FileControllerV1 {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(taskAttachmentService.download(taskId, fileName));
+    }
+
+    @DeleteMapping("/project/{projectId}/task/{taskId}/file/{taskAttachmentId}")
+    public ResponseEntity<Void> deleteTaskAttachment(
+            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long taskId,
+            @Positive @PathVariable Long taskAttachmentId
+    ) {
+        taskAttachmentService.deleteTaskAttachment(taskId, taskAttachmentId);
+        return ResponseEntity.noContent().build();
     }
 }

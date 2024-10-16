@@ -32,6 +32,13 @@ public class TaskAttachmentService {
         return fileStorageService.download(fileName);
     }
 
+    @Transactional
+    public void deleteTaskAttachment(Long taskId, Long taskAttachmentId) {
+        Task  task = taskRepository.findByIdOrThrow(taskId);
+        TaskAttachment taskAttachment = taskAttachmentRepository.findByIdOrThrow(taskAttachmentId);
+        taskAttachmentRepository.delete(taskAttachment);
+    }
+
     private void createTaskAttachment(MultipartFile file, Task task, String storeFileName) {
         TaskAttachment taskAttachment = TaskAttachment.builder()
                 .task(task)
