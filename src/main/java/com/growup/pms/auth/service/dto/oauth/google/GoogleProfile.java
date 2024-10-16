@@ -2,7 +2,7 @@ package com.growup.pms.auth.service.dto.oauth.google;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
+import com.growup.pms.auth.service.dto.oauth.OauthProfile;
 import lombok.Builder;
 
 @Builder
@@ -13,7 +13,7 @@ public record GoogleProfile(
         Boolean verifiedEmail,
         String picture,
         String hd
-) implements OAuthProfile {
+) implements OauthProfile {
 
     @Override
     public String getNickname() {

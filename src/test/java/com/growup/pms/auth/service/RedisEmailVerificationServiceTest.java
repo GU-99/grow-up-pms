@@ -9,7 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.service.dto.EmailSendCommand;
-import com.growup.pms.auth.service.mail.MailClient;
+import com.growup.pms.auth.service.mail.RedisEmailVerificationService;
+import com.growup.pms.auth.service.mail.client.MailClient;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import java.time.Duration;
 import org.junit.jupiter.api.Nested;

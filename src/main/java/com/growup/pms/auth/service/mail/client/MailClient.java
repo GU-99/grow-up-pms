@@ -1,4 +1,4 @@
-package com.growup.pms.auth.service.mail;
+package com.growup.pms.auth.service.mail.client;
 
 import com.growup.pms.auth.service.dto.EmailSendCommand;
 

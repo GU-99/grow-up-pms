@@ -1,4 +1,4 @@
-package com.growup.pms.auth.service;
+package com.growup.pms.common;
 
 import java.util.function.Supplier;
 import org.springframework.stereotype.Service;

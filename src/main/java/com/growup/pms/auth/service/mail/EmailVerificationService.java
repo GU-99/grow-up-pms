@@ -1,4 +1,4 @@
-package com.growup.pms.auth.service;
+package com.growup.pms.auth.service.mail;
 
 public interface EmailVerificationService {
 

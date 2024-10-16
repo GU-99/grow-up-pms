@@ -1,7 +1,7 @@
-package com.growup.pms.auth.service;
+package com.growup.pms.auth.service.mail;
 
 import com.growup.pms.auth.service.dto.EmailSendCommand;
-import com.growup.pms.auth.service.mail.MailClient;
+import com.growup.pms.auth.service.mail.client.MailClient;
 import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;

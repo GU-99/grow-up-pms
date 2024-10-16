@@ -1,6 +1,6 @@
 package com.growup.pms.test.fixture.auth.builder;
 
-import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
+import com.growup.pms.auth.service.dto.oauth.OauthProfile;
 import com.growup.pms.auth.service.dto.oauth.google.GoogleProfile;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("NonAsciiCharacters")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class GoogleProfileTestBuilder implements OAuthProfile {
+public class GoogleProfileTestBuilder implements OauthProfile {
     private String id = "12345";
     private String email = "test@test.com";
     private Boolean verifiedEmail = true;

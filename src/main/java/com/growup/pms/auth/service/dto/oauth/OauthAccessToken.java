@@ -1,6 +1,6 @@
 package com.growup.pms.auth.service.dto.oauth;
 
-public interface OAuthAccessToken {
+public interface OauthAccessToken {
 
     String getAccessToken();
 
