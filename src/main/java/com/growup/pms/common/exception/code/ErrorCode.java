@@ -46,6 +46,7 @@ public enum ErrorCode {
     EMPTY_FILE(BAD_REQUEST, "ST_004", "업로드된 파일이 비어 있습니다."),
     MISSING_FILE_NAME(BAD_REQUEST, "ST_005", "파일 이름이 누락되었습니다."),
     FILE_CONVERSION_FAILED(INTERNAL_SERVER_ERROR, "ST_006", "파일 변환에 실패했습니다."),
+    FILE_NOT_FOUND(NOT_FOUND, "ST_007", "해당 파일을 찾을 수 없습니다. 입력 정보를 확인해주세요."),
 
     // 팀(Team) - TM
     USER_ALREADY_IN_TEAM(BAD_REQUEST, "TM_001", "해당 사용자가 이미 팀에 속해 있습니다."),
