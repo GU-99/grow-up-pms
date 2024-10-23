@@ -2,7 +2,7 @@ package com.growup.pms.auth.service.dto.oauth.kakao;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
+import com.growup.pms.auth.service.dto.oauth.OauthProfile;
 import lombok.Builder;
 
 @Builder
@@ -12,7 +12,7 @@ public record KakaoProfile(
         String connectedAt,
         Properties properties,
         KakaoAccount kakaoAccount
-) implements OAuthProfile {
+) implements OauthProfile {
 
     @Override
     public String getNickname() {

@@ -2,7 +2,7 @@ package com.growup.pms.auth.service.dto.oauth.kakao;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.growup.pms.auth.service.dto.oauth.OAuthAccessToken;
+import com.growup.pms.auth.service.dto.oauth.OauthAccessToken;
 import lombok.Builder;
 
 @Builder
@@ -14,7 +14,7 @@ public record KakaoAccessToken(
         String scope,
         int expiresIn,
         int refreshTokenExpiresIn
-) implements OAuthAccessToken {
+) implements OauthAccessToken {
 
     @Override
     public String getAccessToken() {

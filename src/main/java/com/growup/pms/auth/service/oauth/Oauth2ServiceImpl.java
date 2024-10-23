@@ -1,11 +1,12 @@
-package com.growup.pms.auth.service;
+package com.growup.pms.auth.service.oauth;
 
-import static org.springframework.http.HttpHeaders.*;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.growup.pms.auth.service.dto.oauth.OAuthAccessToken;
-import com.growup.pms.auth.service.dto.oauth.OAuthProfile;
+import com.growup.pms.auth.service.dto.oauth.OauthAccessToken;
+import com.growup.pms.auth.service.dto.oauth.OauthProfile;
 import com.growup.pms.auth.service.dto.oauth.google.GoogleAccessToken;
 import com.growup.pms.auth.service.dto.oauth.google.GoogleProfile;
 import com.growup.pms.auth.service.dto.oauth.kakao.KakaoAccessToken;
@@ -26,7 +27,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
-public abstract class OAuth2ServiceImpl implements OAuth2Service {
+public abstract class Oauth2ServiceImpl implements Oauth2Service {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -47,24 +48,24 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
     protected abstract String getScope();
 
     @Override
-    public OAuthAccessToken requestToken(Provider provider, String code) {
+    public OauthAccessToken requestToken(Provider provider, String code) {
         HttpHeaders headers = createHeaders();
         LinkedMultiValueMap<String, String> params = createTokenRequestParams(code);
 
         HttpEntity<LinkedMultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        return (OAuthAccessToken) sendRequest(getAccessTokenRequestUri(), HttpMethod.POST,
+        return (OauthAccessToken) sendRequest(getAccessTokenRequestUri(), HttpMethod.POST,
                 request, getAccessTokenClass(provider));
     }
 
     @Override
-    public OAuthProfile requestProfile(Provider provider, OAuthAccessToken accessToken) {
+    public OauthProfile requestProfile(Provider provider, OauthAccessToken accessToken) {
         HttpHeaders headers = createHeaders();
         headers.add(AUTHORIZATION, JwtConstants.BEARER_PREFIX + accessToken.getAccessToken());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
 
-        return (OAuthProfile) sendRequest(getUserInfoRequestUri(), HttpMethod.GET, request, getProfileClass(provider));
+        return (OauthProfile) sendRequest(getUserInfoRequestUri(), HttpMethod.GET, request, getProfileClass(provider));
     }
 
     @NotNull

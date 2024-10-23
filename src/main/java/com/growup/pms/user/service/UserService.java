@@ -1,6 +1,6 @@
 package com.growup.pms.user.service;
 
-import com.growup.pms.auth.service.RedisEmailVerificationService;
+import com.growup.pms.auth.service.mail.RedisEmailVerificationService;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.user.controller.dto.response.RecoverPasswordResponse;

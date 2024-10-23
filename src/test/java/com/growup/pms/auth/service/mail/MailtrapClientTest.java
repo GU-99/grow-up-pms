@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.service.dto.EmailSendCommand;
+import com.growup.pms.auth.service.mail.client.MailtrapClient;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
