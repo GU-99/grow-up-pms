@@ -36,7 +36,7 @@ public class ProjectUserService {
     public void createProjectUser(Long projectId, ProjectUserCreateCommand command) {
         isUserAlreadyInProject(projectId, command.userId());
 
-        checkPermission(command.roleName());
+        checkAllowedRole(command.roleName());
 
         Project project = projectRepository.findByIdOrThrow(projectId);
         User user = userRepository.findByIdOrThrow(command.userId());
@@ -81,9 +81,9 @@ public class ProjectUserService {
         }
     }
 
-    private void checkPermission(String roleName) {
-        if (!roleName.equals(ProjectRole.ADMIN.getRoleName())) {
-            throw new BusinessException(ErrorCode.PROJECT_PERMISSION_DENIED);
+    private void checkAllowedRole(String roleName) {
+        if (roleName.equals(ProjectRole.ADMIN.getRoleName())) {
+            throw new BusinessException(ErrorCode.ROLE_ASSIGNMENT_NOT_ALLOWED);
         }
     }
 }

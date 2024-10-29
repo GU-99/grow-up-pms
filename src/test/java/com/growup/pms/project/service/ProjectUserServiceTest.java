@@ -70,7 +70,7 @@ public class ProjectUserServiceTest {
         void 성공한다() {
             // given
             Long 기존_프로젝트_ID = 1L;
-            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ASSIGNEE.getRoleName())
                     .이다().toCommand();
 
             Project 기존_프로젝트 = 프로젝트는().이다();
@@ -97,7 +97,7 @@ public class ProjectUserServiceTest {
         void 프로젝트에_이미_존재하는_회원이면_예외가_발생한다() {
             // given
             Long 기존_프로젝트_ID = 1L;
-            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ASSIGNEE.getRoleName())
                     .이다().toCommand();
 
             // when
@@ -112,7 +112,7 @@ public class ProjectUserServiceTest {
         void 권한이_없는_사용자면_예외가_발생한다() {
             // given
             Long 기존_프로젝트_ID = 1L;
-            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ASSIGNEE.getRoleName())
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
                     .이다().toCommand();
 
             when(projectUserRepository.existsById(any(ProjectUserId.class))).thenReturn(false);
@@ -126,7 +126,7 @@ public class ProjectUserServiceTest {
         void 회원이_존재하지_않으면_예외가_발생한다() {
             // given
             Long 기존_프로젝트_ID = 1L;
-            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ASSIGNEE.getRoleName())
                     .이다().toCommand();
 
             when(projectUserRepository.existsById(any(ProjectUserId.class))).thenReturn(false);
@@ -141,7 +141,7 @@ public class ProjectUserServiceTest {
         void 권한이_존재하지_않으면_예외가_발생한다() {
             // given
             Long 기존_프로젝트_ID = 1L;
-            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ADMIN.getRoleName())
+            ProjectUserCreateCommand 프로젝트원_생성_요청 = 프로젝트_유저_생성_요청은().역할_이름이(ProjectRole.ASSIGNEE.getRoleName())
                     .이다().toCommand();
 
             when(projectUserRepository.existsById(any(ProjectUserId.class))).thenReturn(false);
