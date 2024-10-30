@@ -2,13 +2,16 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.growup.pms.file.service.ProfileImageService;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.test.annotation.WithMockSecurityUser;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -45,6 +48,29 @@ class FileControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .tag(TAG)
                                 .summary("프로필 이미지 다운로드")
                                 .description("현재 사용자의 프로필 이미지를 다운로드 합니다.")
+                                .requestHeaders(headerWithName(org.apache.http.HttpHeaders.CONTENT_TYPE).description(
+                                        MediaType.APPLICATION_JSON_VALUE))
+                                .build()
+                )));
+    }
+
+    @Test
+    @WithMockSecurityUser(id = 1L)
+    void 프로필_이미지_삭제_API_문서를_생성한다() throws Exception {
+        // given
+        Long 사용자_ID = 1L;
+
+        doNothing().when(profileImageService).delete(사용자_ID);
+
+        // when & then
+        mockMvc.perform(delete("/api/v1/user/profile/image")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpectAll(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("프로필 이미지 삭제")
+                                .description("현재 사용자의 프로필 이미지를 삭제합니다.")
                                 .requestHeaders(headerWithName(org.apache.http.HttpHeaders.CONTENT_TYPE).description(
                                         MediaType.APPLICATION_JSON_VALUE))
                                 .build()
