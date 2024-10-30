@@ -27,4 +27,13 @@ public class ProfileImageService {
     public byte[] download(String fileName) {
         return fileStorageService.download(fileName);
     }
+
+    @Transactional
+    public void delete(Long userId) {
+        User user = userRepository.findByIdOrThrow(userId);
+        if (!user.isProfileImageEmpty()) {
+            fileStorageService.delete("/user/profile/%d/%s".formatted(userId, user.getProfile().getImageName()));
+            user.deleteProfileImage();
+        }
+    }
 }

@@ -5,6 +5,7 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.util.RandomPasswordGenerator;
 import com.growup.pms.common.util.RandomPasswordGenerator.PasswordOptions;
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -107,6 +108,14 @@ public class User extends BaseEntity {
 
     public void updateImageName(String imageName) {
         this.profile.changeImageName(imageName);
+    }
+
+    public void deleteProfileImage() {
+        this.profile.changeImageName(null);
+    }
+
+    public boolean isProfileImageEmpty() {
+        return StringUtils.isEmpty(this.profile.getImageName());
     }
   
     private void addLink(String link) {

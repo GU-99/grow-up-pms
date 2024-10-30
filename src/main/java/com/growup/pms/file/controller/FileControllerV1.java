@@ -40,6 +40,12 @@ public class FileControllerV1 {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/user/profile/image")
+    public ResponseEntity<Void> deleteProfileImage(@CurrentUser SecurityUser user) {
+        profileImageService.delete(user.getId());
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/file/profile/{fileName}")
     public ResponseEntity<byte[]> downloadProfileImage(@PathVariable String fileName) {
         if (!FileNameUtil.isValidFileName(fileName)) {
