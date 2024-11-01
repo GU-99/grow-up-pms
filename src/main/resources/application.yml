@@ -3,10 +3,10 @@ spring:
     active: local
 
   mail:
-    host: live.smtp.mailtrap.io
+    host: smtp.gmail.com
     port: 587
-    username: api
-    password: ENC(nc+/bpDH70Gm6hmsOWniHJn/q39VOPb2khMnMid5jMNK8kQXhJJXKnyyEhV6nXzCRjxdXEYjzSo/CA7Q1b7NBCBlmvI30yb1G+bkKNYTiWA=)
+    username: ENC(d5Va1G7shpJvPpTC35q15rSnH2uqMT4o8L21kbgbXOAvCsP7aj+XwMlgdBKXGXPjKQxcfe9h+4kV0NdQppIWyg==)
+    password: ENC(uWGnnm8Cm5lR19AueV28RMpQhNIKqXo6X2xjrzQFYW186zwIu6feKH8lccI40vnFSfXNERiYe/MJ49Wqed4sHA==)
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
