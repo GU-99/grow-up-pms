@@ -1,5 +1,6 @@
 package com.growup.pms.file.service;
 
+import com.growup.pms.file.controller.dto.response.ProfileImageUpdateResponse;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,11 @@ public class ProfileImageService {
     private final FileStorageService fileStorageService;
 
     @Transactional
-    public void update(Long userId, MultipartFile profileImage) {
+    public ProfileImageUpdateResponse update(Long userId, MultipartFile profileImage) {
         User user = userRepository.findByIdOrThrow(userId);
         String fileName = fileStorageService.upload(profileImage);
         user.updateImageName(fileName);
+        return new ProfileImageUpdateResponse(fileName);
     }
 
     @Transactional(propagation = Propagation.NEVER)

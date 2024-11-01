@@ -6,6 +6,7 @@ import com.growup.pms.common.aop.annotation.ProjectId;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.util.FileNameUtil;
 import com.growup.pms.common.validator.annotation.File;
+import com.growup.pms.file.controller.dto.response.ProfileImageUpdateResponse;
 import com.growup.pms.file.domain.FileType;
 import com.growup.pms.file.service.ProfileImageService;
 import com.growup.pms.file.service.TaskAttachmentService;
@@ -32,12 +33,11 @@ public class FileControllerV1 {
     private final TaskAttachmentService taskAttachmentService;
 
     @PostMapping("/user/profile/image")
-    public ResponseEntity<Void> uploadProfileImage(
+    public ResponseEntity<ProfileImageUpdateResponse> uploadProfileImage(
             @CurrentUser SecurityUser user,
             @Valid @File(types = FileType.IMAGE) @RequestPart(name = "file") MultipartFile file
     ) {
-        profileImageService.update(user.getId(), file);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(profileImageService.update(user.getId(), file));
     }
 
     @DeleteMapping("/user/profile/image")
