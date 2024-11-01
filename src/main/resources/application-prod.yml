@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ENC(gO8UhZghCEeTIIcPyUXJ2iodj/+DaESNIBfQNc8z5BgjjnsJDHlzGsEN/PQKeFTfGUi4DpNDMyxAWb9qpQICv6oE4Zcr0wKUsuElfoenGh45KVB18hJUZ+mKsL6BFsfKk2MG29hb7X2RzMTEKz3WS6maXNu2rZwL563kMPASqPk=)
-    username: ENC(sgyx0VySXTe4KnQtUqUhRLPpBa1iT/mCBZWGGV9/5LcWgpONx3fpebGP9UinHU4v)
-    password: ENC(5mM3YfiCkMnkgpwYHn6r9HEd0q6yTqHN+zAInH/rm9JezFqxVrP94Iy2Mzrx0SrtyN7Dc+tjHSqZHsDVGYyXTA==)
+    url: ENC(cqnw6IOtpjXR6B2/umKTPNqvAauL7vg/ii+kyj7fKEyubMZ5o43/yF9yxwd5YhPwy6zLLVnlgnCGl+Brl9tmo90r0o+cDxOb/YR+8Tb9CwyNsMrnUVuP3yzaCbvxLx58P8rJdhlHW6QrYEWXlpgqzwXK6qvGvsvEzkfiWBF5vxU=)
+    username: ENC(wDgTgKrcLwfLLotB3cwR7Hv/hGYuHEhEDPfiRuLluDRJERo16Zhy0pz4ZHZPAPu/)
+    password: ENC(Ow5Xn5aV2LApz5g22Ovjp3/fLM2YFCPlF1CfrR+J2SAEoQDThcXtjEsUEA77Th0G9zcgUiJMoeBy6XPf0dKLZw==)
 
   jpa:
     hibernate:
