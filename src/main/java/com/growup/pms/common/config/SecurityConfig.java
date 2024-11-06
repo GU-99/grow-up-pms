@@ -4,6 +4,7 @@ import com.growup.pms.common.security.jwt.JwtAccessDeniedHandler;
 import com.growup.pms.common.security.jwt.JwtAuthTokenFilter;
 import com.growup.pms.common.security.jwt.JwtAuthenticationEntryPoint;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,10 +48,10 @@ public class SecurityConfig {
     private CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration config = new CorsConfiguration();
-            config.addAllowedOriginPattern("*");
+            config.addAllowedOrigin("https://localhost:5173");
             config.addAllowedHeader("*");
             config.addExposedHeader("*");
-            config.addAllowedMethod("*");
+            config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
             config.setAllowCredentials(true);
             return config;
         };
