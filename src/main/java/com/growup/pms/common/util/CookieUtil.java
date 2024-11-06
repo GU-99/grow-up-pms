@@ -13,6 +13,7 @@ public final class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
+        cookie.setDomain("localhost");
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
     }
@@ -22,6 +23,7 @@ public final class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
+        cookie.setDomain("localhost");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
