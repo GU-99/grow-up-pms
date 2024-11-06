@@ -106,7 +106,7 @@ public class User extends BaseEntity {
         return newPassword;
     }
 
-    public void updateImageName(String imageName) {
+    public void updateProfileImageName(String imageName) {
         this.profile.changeImageName(imageName);
     }
 

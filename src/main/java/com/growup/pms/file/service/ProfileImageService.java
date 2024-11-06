@@ -21,7 +21,7 @@ public class ProfileImageService {
     public ProfileImageUpdateResponse update(Long userId, MultipartFile profileImage) {
         User user = userRepository.findByIdOrThrow(userId);
         String fileName = fileStorageService.upload(profileImage);
-        user.updateImageName(fileName);
+        user.updateProfileImageName(fileName);
         return new ProfileImageUpdateResponse(fileName);
     }
 

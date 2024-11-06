@@ -76,7 +76,7 @@ public class UserService {
 
         editFieldIfPresent(command.nickname(), (v, u) -> u.editNickname(v.get()), user);
         editFieldIfPresent(command.bio(), (v, u) -> u.editBio(v.get()), user);
-        editFieldIfPresent(command.profileImageName(), (v, u) -> u.updateImageName(v.get()), user);
+        editFieldIfPresent(command.profileImageName(), (v, u) -> u.updateProfileImageName(v.get()), user);
 
         return UserUpdateResponse.of(user);
     }
