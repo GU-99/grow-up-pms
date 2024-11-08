@@ -1,5 +1,6 @@
 package com.growup.pms.team.service;
 
+import static com.growup.pms.test.fixture.team.builder.TeamCreateRequestTestBuilder.TeamCoworkerRequestTestBuilder.초대된_사용자는;
 import static com.growup.pms.test.fixture.team.builder.TeamCreateRequestTestBuilder.팀_생성_요청은;
 import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
 import static com.growup.pms.test.fixture.team.builder.TeamUpdateRequestTestBuilder.팀_변경_요청은;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.when;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.service.ProjectService;
+import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.domain.TeamUserId;
@@ -26,6 +28,7 @@ import com.growup.pms.team.service.dto.TeamCreateCommand;
 import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.repository.UserRepository;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +50,9 @@ class TeamServiceTest {
     UserRepository userRepository;
 
     @Mock
+    RoleRepository roleRepository;
+
+    @Mock
     ProjectService projectService;
 
     @InjectMocks
@@ -54,6 +60,7 @@ class TeamServiceTest {
 
     @Nested
     class 팀_생성_시에 {
+
         @Test
         void 성공한다() {
             // given
@@ -62,6 +69,7 @@ class TeamServiceTest {
             Team 생성된_팀 = mock(Team.class);
             TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은().이다().toCommand();
 
+            when(teamRepository.existsByName(팀_생성_요청.teamName())).thenReturn(false);
             when(userRepository.findByIdOrThrow(팀장_ID)).thenReturn(사용자는().식별자가(팀장_ID).이다());
             when(teamRepository.save(any(Team.class))).thenReturn(생성된_팀);
             when(생성된_팀.getId()).thenReturn(예상_팀_ID);
@@ -83,7 +91,57 @@ class TeamServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.createTeam(팀장_ID, 팀_생성_요청))
-                    .isInstanceOf(BusinessException.class);
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.USER_NOT_FOUND);
+        }
+
+        @Test
+        void 팀명이_이미_존재하면_예외가_발생한다() {
+            // given
+            Long 팀장_ID = 1L;
+            TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은().이다().toCommand();
+
+            when(teamRepository.existsByName(팀_생성_요청.teamName())).thenReturn(true);
+
+            // when & then
+            assertThatThrownBy(() -> teamService.createTeam(팀장_ID, 팀_생성_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TEAM_NAME_DUPLICATED);
+        }
+
+        @Test
+        void 팀장_ID가_초대된_사용자_목록에_있으면_예외가_발생한다() {
+            // given
+            Long 팀장_ID = 1L;
+            TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은()
+                    .초대된_사용자가(List.of(초대된_사용자는().식별자가(팀장_ID).이다()))
+                    .이다().toCommand();
+
+            when(teamRepository.existsByName(팀_생성_요청.teamName())).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> teamService.createTeam(팀장_ID, 팀_생성_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DATA_FORMAT);
+        }
+
+        @Test
+        void 중복된_사용자_ID가_있으면_예외가_발생한다() {
+            // given
+            Long 팀장_ID = 1L;
+            Long 초대된_사용자_ID = 2L;
+            TeamCreateCommand 팀_생성_요청 = 팀_생성_요청은()
+                    .초대된_사용자가(List.of(
+                            초대된_사용자는().식별자가(초대된_사용자_ID).이다(),
+                            초대된_사용자는().식별자가(초대된_사용자_ID).이다()))
+                    .이다().toCommand();
+
+            when(teamRepository.existsByName(팀_생성_요청.teamName())).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> teamService.createTeam(팀장_ID, 팀_생성_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DATA_FORMAT);
         }
     }
 

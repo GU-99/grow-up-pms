@@ -2,6 +2,7 @@ package com.growup.pms.test.fixture.team.builder;
 
 import static com.growup.pms.test.fixture.team.builder.TeamCreateRequestTestBuilder.TeamCoworkerRequestTestBuilder.초대된_사용자는;
 
+import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest.TeamCoworkerRequest;
 import java.util.List;
@@ -46,7 +47,7 @@ public class TeamCreateRequestTestBuilder {
 
     public static class TeamCoworkerRequestTestBuilder {
         private Long userId = 2L;
-        private String roleName = "Mate";
+        private String roleName = TeamRole.MATE.getRoleName();
 
         public static TeamCoworkerRequestTestBuilder 초대된_사용자는() {
             return new TeamCoworkerRequestTestBuilder();
