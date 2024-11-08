@@ -13,6 +13,7 @@ public final class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
+        // TODO: 프론트 서버가 배포되고 도메인이 부여된 이후로는 반드시 아래의 설정 값을 변경해야 함
         cookie.setDomain("localhost");
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
@@ -23,6 +24,7 @@ public final class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
+        // TODO: 프론트 서버가 배포되고 도메인이 부여된 이후로는 반드시 아래의 설정 값을 변경해야 함
         cookie.setDomain("localhost");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
