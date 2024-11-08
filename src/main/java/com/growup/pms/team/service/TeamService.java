@@ -48,10 +48,7 @@ public class TeamService {
         User creator = userRepository.findByIdOrThrow(creatorId);
         Team team = teamRepository.save(command.toEntity(creator));
 
-        List<TeamCoworkerCommand> coworkers = new ArrayList<>();
-        coworkers.add(new TeamCoworkerCommand(creatorId, TeamRole.HEAD.getRoleName()));
-        coworkers.addAll(command.coworkers());
-        inviteAllUsersToTeam(team, coworkers);
+        inviteAllUsersToTeam(team, command.coworkers());
         return team.getId();
     }
 
@@ -84,6 +81,13 @@ public class TeamService {
                 ));
 
         List<TeamUser> invitedUsers = new ArrayList<>();
+        invitedUsers.add(TeamUser.builder()
+                .user(newTeam.getCreator())
+                .role(roles.get(TeamRole.HEAD.getRoleName()))
+                .team(newTeam)
+                .isPendingApproval(false)
+                .build());
+
         for (var coworker : coworkers) {
             if (!roles.containsKey(coworker.roleName())) {
                 continue;
@@ -93,6 +97,7 @@ public class TeamService {
                     .team(newTeam)
                     .user(userRepository.findByIdOrThrow(coworker.userId()))
                     .role(roles.get(coworker.roleName()))
+                    .isPendingApproval(true)
                     .build());
         }
         teamUserRepository.saveAll(invitedUsers);
