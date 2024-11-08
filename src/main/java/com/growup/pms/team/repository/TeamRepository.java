@@ -13,6 +13,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
         WHERE t.id = :teamId AND t.creator.id = :userId""")
     boolean isUserTeamLeader(Long teamId, Long userId);
 
+    boolean existsByName(String name);
+
     default Team findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
     }

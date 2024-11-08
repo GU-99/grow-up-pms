@@ -53,6 +53,7 @@ public enum ErrorCode {
     TEAM_NOT_FOUND(NOT_FOUND, "TM_002", "해당 팀을 찾을 수 없습니다. 팀 정보를 확인해 주세요."),
     TEAM_MEMBER_NOT_FOUND(NOT_FOUND, "TM_003", "해당 팀원을 찾을 수 없습니다. 멤버 정보를 확인해 주세요."),
     UNAUTHORIZED_ROLE_ASSIGNMENT(BAD_REQUEST, "TM_004", "권한이 없는 역할 지정입니다. 적절한 권한을 가진 사용자만 역할을 지정할 수 있습니다."),
+    TEAM_NAME_DUPLICATED(BAD_REQUEST, "TM_005", "팀 이름은 중복될 수 없습니다."),
 
     // 프로젝트(Project) - PR
     PROJECT_NOT_FOUND(NOT_FOUND, "PR_001", "해당 프로젝트를 찾을 수 없습니다. 프로젝트 정보를 확인해 주세요."),

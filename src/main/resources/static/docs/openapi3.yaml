@@ -94,55 +94,6 @@ paths:
       responses:
         "201":
           description: "201"
-    patch:
-      tags:
-      - User
-      summary: 현재 사용자 정보 변경
-      description: 현재 로그인한 사용자의 정보를 변경합니다.
-      operationId: user-controller-v1-docs-test/유저_정보_변경_api_문서를_생성한다
-      parameters:
-      - name: Content-Type
-        in: header
-        description: application/json
-        required: true
-        schema:
-          type: string
-        example: application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-user-2119753624'
-            examples:
-              user-controller-v1-docs-test/유저_정보_변경_api_문서를_생성한다:
-                value: |-
-                  {
-                    "nickname" : "wlshooo",
-                    "bio" : "신입입니다. 잘 부탁드려요!",
-                    "profileImageName" : "d4657d96-064e-4899-b13d-9bdda2840adc.png"
-                  }
-      responses:
-        "200":
-          description: "200"
-          headers:
-            Content-Type:
-              description: application/json
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api-v1-user1641830135'
-              examples:
-                user-controller-v1-docs-test/유저_정보_변경_api_문서를_생성한다:
-                  value: |-
-                    {
-                      "userId" : 1,
-                      "nickname" : "wlshooo",
-                      "profileImageName" : "d4657d96-064e-4899-b13d-9bdda2840adc.png",
-                      "bio" : "신입입니다. 잘 부탁드려요!",
-                      "links" : null
-                    }
   /api/v1/team/{id}:
     get:
       tags:
@@ -214,27 +165,6 @@ paths:
       responses:
         "204":
           description: "204"
-  /api/v1/user/links:
-    patch:
-      tags:
-      - User
-      summary: 사용자 링크 변경
-      description: 현재 로그인한 사용자의 링크를 변경합니다.
-      operationId: user-controller-v1-docs-test/사용자_링크_변경_api_문서를_생성한다
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-user-links551251672'
-            examples:
-              user-controller-v1-docs-test/사용자_링크_변경_api_문서를_생성한다:
-                value: |-
-                  {
-                    "links" : [ "http://github.com", "http://blog.example.com", "http://GU-99.com", "http://longBright.com" ]
-                  }
-      responses:
-        "200":
-          description: "200"
   /api/v1/user/login:
     post:
       tags:
@@ -316,57 +246,6 @@ paths:
                       "profileImageName" : "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png",
                       "links" : [ "https://github.com/growup" ]
                     }
-  /api/v1/user/nickname:
-    post:
-      tags:
-      - User
-      summary: 닉네임 중복 검사
-      description: 닉네임이 서버에 존재하는지 확인합니다.
-      operationId: user-controller-v1-docs-test/닉네임_중복_검사_api_문서를_생성한다
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-user-nickname-1132561407'
-            examples:
-              user-controller-v1-docs-test/닉네임_중복_검사_api_문서를_생성한다:
-                value: |-
-                  {
-                    "nickname" : "브라운"
-                  }
-      responses:
-        "200":
-          description: "200"
-  /api/v1/user/password:
-    patch:
-      tags:
-      - User
-      summary: 비밀번호 변경
-      description: 새로운 비밀번호를 통해 사용자의 기존 비밀번호를 변경한다.
-      operationId: user-controller-v1-docs-test/비밀번호_변경_api_문서를_생성한다
-      parameters:
-      - name: Content-Type
-        in: header
-        description: application/json
-        required: true
-        schema:
-          type: string
-        example: application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-user-password1866472967'
-            examples:
-              user-controller-v1-docs-test/비밀번호_변경_api_문서를_생성한다:
-                value: |-
-                  {
-                    "password" : "test1234!@#$",
-                    "newPassword" : "test2345!@#$"
-                  }
-      responses:
-        "200":
-          description: "200"
   /api/v1/user/refresh:
     post:
       tags:
@@ -1039,28 +918,6 @@ paths:
                     {
                       "username" : "brown"
                     }
-  /api/v1/user/verify/code:
-    post:
-      tags:
-      - User
-      summary: 이메일 인증 코드 확인
-      description: 인증 코드와 이메일로 이메일 인증을 검사한다.
-      operationId: user-controller-v1-docs-test/이메일_인증_코드_검사_api_문서를_생성한다
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api-v1-user-verify-code1380844528'
-            examples:
-              user-controller-v1-docs-test/이메일_인증_코드_검사_api_문서를_생성한다:
-                value: |-
-                  {
-                    "email" : "test@test.com",
-                    "verificationCode" : "123456"
-                  }
-      responses:
-        "200":
-          description: "200"
   /api/v1/user/verify/send:
     post:
       tags:
@@ -1896,18 +1753,6 @@ components:
         username:
           type: string
           description: 사용자 아이디
-    api-v1-user-links551251672:
-      type: object
-      properties:
-        links:
-          type: array
-          description: 링크 목록
-          items:
-            oneOf:
-            - type: object
-            - type: boolean
-            - type: string
-            - type: number
     api-v1-user-recover-username-1963233032:
       type: object
       properties:
@@ -1917,15 +1762,6 @@ components:
         verificationCode:
           type: string
           description: 이메일로 전송된 인증번호
-    api-v1-user-password1866472967:
-      type: object
-      properties:
-        password:
-          type: string
-          description: 기존 비밀번호
-        newPassword:
-          type: string
-          description: 새로운 비밀번호
     api-v1-project-projectId-status-statusId75349813:
       type: object
       properties:
@@ -1954,25 +1790,6 @@ components:
         content:
           type: string
           description: 일정 내용
-    프로젝트 일정 순서변경 요청 예시입니다.:
-      title: 프로젝트 일정 순서변경 요청 예시입니다.
-      type: object
-      properties:
-        tasks:
-          type: array
-          description: 프로젝트 일정 순서 변경 목록
-          items:
-            type: object
-            properties:
-              statusId:
-                type: number
-                description: 상태 PK
-              sortOrder:
-                type: number
-                description: 일정 정렬 순서
-              taskId:
-                type: number
-                description: 일정 PK
     api-v1-team-teamId-project-557506802:
       type: array
       description: 팀 ID에 해당하는 프로젝트 목록
@@ -2001,6 +1818,25 @@ components:
             type: string
             description: 프로젝트 변경일시
         description: 팀 ID에 해당하는 프로젝트 목록
+    프로젝트 일정 순서변경 요청 예시입니다.:
+      title: 프로젝트 일정 순서변경 요청 예시입니다.
+      type: object
+      properties:
+        tasks:
+          type: array
+          description: 프로젝트 일정 순서 변경 목록
+          items:
+            type: object
+            properties:
+              statusId:
+                type: number
+                description: 상태 PK
+              sortOrder:
+                type: number
+                description: 일정 정렬 순서
+              taskId:
+                type: number
+                description: 일정 PK
     api-v1-user-me-752510290:
       type: object
       properties:
@@ -2082,18 +1918,6 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
-    api-v1-user-2119753624:
-      type: object
-      properties:
-        profileImageName:
-          type: string
-          description: 프로필 이미지
-        nickname:
-          type: string
-          description: 닉네임
-        bio:
-          type: string
-          description: 자기소개
     api-v1-user-recover-username1645263616:
       type: object
       properties:
@@ -2262,21 +2086,6 @@ components:
         username:
           type: string
           description: 아이디
-    api-v1-user1641830135:
-      type: object
-      properties:
-        profileImageName:
-          type: string
-          description: 프로필 이미지 이름
-        nickname:
-          type: string
-          description: 닉네임
-        bio:
-          type: string
-          description: 자기소개
-        userId:
-          type: number
-          description: 사용자 아이디
     api-v1-user-recover-password546453054:
       type: object
       properties:
@@ -2353,6 +2162,15 @@ components:
         projectId:
           type: number
           description: 프로젝트 식별자
+    api-v1-team-teamId-invitation-1262545139:
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 초대할 사용자의 역할명
+        userId:
+          type: number
+          description: 초대할 사용자 ID
     프로젝트원 역할 변경 요청 예시 입니다.:
       title: 프로젝트원 역할 변경 요청 예시 입니다.
       type: object
@@ -2372,15 +2190,6 @@ components:
         colorCode:
           type: string
           description: 색상 코드
-    api-v1-team-teamId-invitation-1262545139:
-      type: object
-      properties:
-        roleName:
-          type: string
-          description: 초대할 사용자의 역할명
-        userId:
-          type: number
-          description: 초대할 사용자 ID
     api-v1-project-projectId-status-order1030631579:
       type: object
       properties:
@@ -2475,18 +2284,3 @@ components:
         content:
           type: string
           description: 프로젝트 설명
-    api-v1-user-verify-code1380844528:
-      type: object
-      properties:
-        email:
-          type: string
-          description: 이메일
-        verificationCode:
-          type: string
-          description: 인증 코드
-    api-v1-user-nickname-1132561407:
-      type: object
-      properties:
-        nickname:
-          type: string
-          description: 검사할 닉네임
