@@ -2,9 +2,11 @@ package com.growup.pms.docs;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.growup.pms.test.fixture.status.builder.StatusCreateRequestTestBuilder.상태_생성_요청은;
 import static com.growup.pms.test.fixture.status.builder.StatusEditRequestTestBuilder.상태_변경_요청은;
 import static com.growup.pms.test.fixture.status.builder.StatusOrderEditRequestTestBuilder.상태_정렬순서_변경_요청은;
 import static com.growup.pms.test.fixture.status.builder.StatusOrderListEditRequestTestBuilder.상태_정렬순서_목록_변경_요청은;
+import static com.growup.pms.test.fixture.status.builder.StatusResponseTestBuilder.상태_응답은;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -30,8 +32,6 @@ import com.growup.pms.status.service.StatusService;
 import com.growup.pms.status.service.dto.StatusCreateCommand;
 import com.growup.pms.status.service.dto.StatusEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import com.growup.pms.test.fixture.status.builder.StatusCreateRequestTestBuilder;
-import com.growup.pms.test.fixture.status.builder.StatusResponseTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -53,8 +53,8 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     void 상태등록_API_문서를_생성한다() throws Exception {
         // given
         Long 예상_프로젝트_식별자 = 1L;
-        StatusCreateRequest 상태_생성_요청 = StatusCreateRequestTestBuilder.상태_생성_요청은().이다();
-        StatusResponse 예상_상태_응답 = StatusResponseTestBuilder.상태_응답은().이다();
+        StatusCreateRequest 상태_생성_요청 = 상태_생성_요청은().이다();
+        StatusResponse 예상_상태_응답 = 상태_응답은().이다();
 
         when(statusService.createStatus(any(StatusCreateCommand.class)))
                 .thenReturn(예상_상태_응답);
@@ -78,7 +78,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("프로젝트 식별자")
                                 )
                                 .requestFields(
-                                        fieldWithPath("name").type(JsonFieldType.STRING)
+                                        fieldWithPath("statusName").type(JsonFieldType.STRING)
                                                 .description("상태 이름"),
                                         fieldWithPath("colorCode").type(JsonFieldType.STRING)
                                                 .description("색상 코드"),
@@ -91,7 +91,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("생성퇸 상태 식별자"),
                                         fieldWithPath("projectId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 식별자"),
-                                        fieldWithPath("name").type(JsonFieldType.STRING)
+                                        fieldWithPath("statusName").type(JsonFieldType.STRING)
                                                 .description("상태 이름"),
                                         fieldWithPath("colorCode").type(JsonFieldType.STRING)
                                                 .description("색상 코드"),
@@ -106,8 +106,8 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
     void 상태_목록조회_API_문서를_생성한다() throws Exception {
         // given
         Long 조회할_프로젝트_ID = 1L;
-        StatusResponse statusResponse1 = StatusResponseTestBuilder.상태_응답은().이다();
-        StatusResponse statusResponse2 = StatusResponseTestBuilder.상태_응답은()
+        StatusResponse statusResponse1 = 상태_응답은().이다();
+        StatusResponse statusResponse2 = 상태_응답은()
                 .상태_식별자는(2L)
                 .이름은("진행중")
                 .색상코드는("FFFFF0")
@@ -137,7 +137,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
                                                 .description("상태 식별자"),
                                         fieldWithPath("[].projectId").type(JsonFieldType.NUMBER)
                                                 .description("프로젝트 식별자"),
-                                        fieldWithPath("[].name").type(JsonFieldType.STRING)
+                                        fieldWithPath("[].statusName").type(JsonFieldType.STRING)
                                                 .description("상태 이름"),
                                         fieldWithPath("[].colorCode").type(JsonFieldType.STRING)
                                                 .description("색상 코드"),

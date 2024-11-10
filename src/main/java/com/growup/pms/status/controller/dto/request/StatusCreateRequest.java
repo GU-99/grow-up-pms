@@ -14,7 +14,7 @@ import lombok.Builder;
 public record StatusCreateRequest(
         @NotBlank
         @Size(min = 1, max = 32)
-        String name,
+        String statusName,
 
         @NotBlank
         @Size(min = 7, max = 7)
@@ -29,7 +29,7 @@ public record StatusCreateRequest(
     public StatusCreateCommand toCommand(Long projectId) {
         return StatusCreateCommand.builder()
                 .projectId(projectId)
-                .name(name)
+                .statusName(statusName)
                 .colorCode(colorCode)
                 .sortOrder(sortOrder)
                 .build();

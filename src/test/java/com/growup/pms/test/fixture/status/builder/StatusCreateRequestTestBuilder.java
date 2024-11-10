@@ -41,7 +41,7 @@ public class StatusCreateRequestTestBuilder {
 
     public StatusCreateRequest 이다() {
         return StatusCreateRequest.builder()
-                .name(name)
+                .statusName(name)
                 .colorCode(colorCode)
                 .sortOrder(sortOrder)
                 .build();

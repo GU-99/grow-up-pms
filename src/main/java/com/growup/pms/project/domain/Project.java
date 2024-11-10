@@ -40,8 +40,10 @@ public class Project extends BaseEntity {
 
     private String content;
 
+    @Column(nullable = false)
     private LocalDate startDate;
 
+    @Column(nullable = false)
     private LocalDate endDate;
 
     @Builder

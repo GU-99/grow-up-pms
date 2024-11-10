@@ -5,6 +5,8 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithNam
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.epages.restdocs.apispec.Schema.schema;
 import static com.growup.pms.test.fixture.task.builder.TaskAttachmentResponseTestBuilder.첨부파일_조회_응답은;
+import static com.growup.pms.test.fixture.task.builder.TaskCreateRequestTestBuilder.일정_생성_요청은;
+import static com.growup.pms.test.fixture.task.builder.TaskDetailResponseTestBuilder.일정_상세조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskKanbanResponseTestBuilder.일정_칸반_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskOrderEditRequestTestBuilder.일정_순서변경_요청은;
 import static com.growup.pms.test.fixture.task.builder.TaskOrderListEditRequestTestBuilder.일정_순서변경_목록_요청은;
@@ -37,8 +39,6 @@ import com.growup.pms.task.service.dto.TaskCreateCommand;
 import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
-import com.growup.pms.test.fixture.task.builder.TaskCreateRequestTestBuilder;
-import com.growup.pms.test.fixture.task.builder.TaskDetailResponseTestBuilder;
 import com.growup.pms.test.fixture.task.builder.TaskEditRequestTestBuilder;
 import com.growup.pms.test.support.ControllerSliceTestSupport;
 import java.util.List;
@@ -63,8 +63,8 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
     void 일정등록_API_문서를_생성한다() throws Exception {
         // given
         Long 예상_프로젝트_식별자 = 1L;
-        TaskCreateRequest 일정_생성_요청 = TaskCreateRequestTestBuilder.일정_생성_요청은().이다();
-        TaskDetailResponse 예상_일정_응답 = TaskDetailResponseTestBuilder.일정_상세조회_응답은().이다();
+        TaskCreateRequest 일정_생성_요청 = 일정_생성_요청은().이다();
+        TaskDetailResponse 예상_일정_응답 = 일정_상세조회_응답은().이다();
 
         // when
         when(taskService.createTask(anyLong(), any(TaskCreateCommand.class)))
@@ -200,7 +200,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         // given
         Long 예상_프로젝트_식별자 = 1L;
         Long 예상_일정_식별자 = 1L;
-        TaskDetailResponse 예상_상세조회_응답 = TaskDetailResponseTestBuilder.일정_상세조회_응답은().이다();
+        TaskDetailResponse 예상_상세조회_응답 = 일정_상세조회_응답은().이다();
 
         // when
         when(taskService.getTask(anyLong())).thenReturn(예상_상세조회_응답);

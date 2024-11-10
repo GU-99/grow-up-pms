@@ -5,12 +5,12 @@ import com.growup.pms.status.domain.Status;
 import lombok.Builder;
 
 @Builder
-public record StatusCreateCommand(Long projectId, String name, String colorCode, Short sortOrder) {
+public record StatusCreateCommand(Long projectId, String statusName, String colorCode, Short sortOrder) {
 
     public Status toEntity(Project project) {
         return Status.builder()
                 .project(project)
-                .name(name)
+                .name(statusName)
                 .colorCode(colorCode)
                 .sortOrder(sortOrder)
                 .build();

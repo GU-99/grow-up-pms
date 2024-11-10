@@ -13,7 +13,7 @@ public class ProjectRoleEditRequestTestBuilder {
 
     private String roleName = ProjectRole.LEADER.getRoleName();
 
-    public static ProjectRoleEditRequestTestBuilder 프로젝트원_역할_변경_요청은() {
+    public static ProjectRoleEditRequestTestBuilder 프로젝트원_권한_변경_요청은() {
         return new ProjectRoleEditRequestTestBuilder();
     }
 

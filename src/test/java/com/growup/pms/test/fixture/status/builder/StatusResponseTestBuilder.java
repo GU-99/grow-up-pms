@@ -12,7 +12,7 @@ public class StatusResponseTestBuilder {
 
     private Long statusId = 1L;
     private Long projectId = 1L;
-    private String name = "대기중";
+    private String statusName = "대기중";
     private String colorCode = "#FFFFFF";
     private Short sortOrder = 0;
 
@@ -31,7 +31,7 @@ public class StatusResponseTestBuilder {
     }
 
     public StatusResponseTestBuilder 이름은(String name) {
-        this.name = name;
+        this.statusName = name;
         return this;
     }
 
@@ -49,7 +49,7 @@ public class StatusResponseTestBuilder {
         return StatusResponse.builder()
                 .statusId(statusId)
                 .projectId(projectId)
-                .name(name)
+                .statusName(statusName)
                 .colorCode(colorCode)
                 .sortOrder(sortOrder)
                 .build();
