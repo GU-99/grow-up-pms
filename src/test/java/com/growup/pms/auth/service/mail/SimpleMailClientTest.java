@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.service.dto.EmailSendCommand;
-import com.growup.pms.auth.service.mail.client.MailtrapClient;
+import com.growup.pms.auth.service.mail.client.SimpleMailClient;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
@@ -21,14 +21,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
-class MailtrapClientTest {
+class SimpleMailClientTest {
     @Mock
     JavaMailSender javaMailSender;
 
     @InjectMocks
-    MailtrapClient mailtrapClient;
+    SimpleMailClient simpleMailClient;
 
-    static final String 보내는_사람_이메일 = "sandbox@mailtrap.io";
+    static final String 보내는_사람_이메일 = "test@gmail.com";
 
     @Test
     void 이메일을_보내는_데_성공한다() {
@@ -43,10 +43,10 @@ class MailtrapClientTest {
         when(javaMailSender.createMimeMessage()).thenReturn(메시지);
         doNothing().when(javaMailSender).send(메시지);
 
-        ReflectionTestUtils.setField(mailtrapClient, "sandboxSenderEmail", 보내는_사람_이메일);
+        ReflectionTestUtils.setField(simpleMailClient, "senderEmail", 보내는_사람_이메일);
 
         // when & then
-        assertThatCode(() -> mailtrapClient.sendEmail(메일))
+        assertThatCode(() -> simpleMailClient.sendEmail(메일))
                 .doesNotThrowAnyException();
     }
 
@@ -62,10 +62,10 @@ class MailtrapClientTest {
 
         when(javaMailSender.createMimeMessage()).thenReturn(메시지);
 
-        ReflectionTestUtils.setField(mailtrapClient, "sandboxSenderEmail", 보내는_사람_이메일);
+        ReflectionTestUtils.setField(simpleMailClient, "senderEmail", 보내는_사람_이메일);
 
         // when & then
-        assertThatThrownBy(() -> mailtrapClient.sendEmail(메일))
+        assertThatThrownBy(() -> simpleMailClient.sendEmail(메일))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("To address must not be null");
     }
