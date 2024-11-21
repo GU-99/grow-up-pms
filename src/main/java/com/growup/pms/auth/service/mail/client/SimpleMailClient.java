@@ -12,14 +12,14 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MailtrapClient implements MailClient {
+public class SimpleMailClient implements MailClient {
 
     private final JavaMailSender mailSender;
-    private final String sandboxSenderEmail;
+    private final String senderEmail;
 
-    public MailtrapClient(JavaMailSender mailSender, @Value("${mailtrap.from}") String sandboxSenderEmail) {
+    public SimpleMailClient(JavaMailSender mailSender, @Value("${spring.mail.username}") String senderEmail) {
         this.mailSender = mailSender;
-        this.sandboxSenderEmail = sandboxSenderEmail;
+        this.senderEmail = senderEmail;
     }
 
     public void sendEmail(EmailSendCommand emailDetails) {
@@ -27,7 +27,7 @@ public class MailtrapClient implements MailClient {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
 
-            helper.setFrom(sandboxSenderEmail);
+            helper.setFrom(senderEmail);
             helper.setTo(emailDetails.recipient());
             helper.setSubject(emailDetails.subject());
             helper.setText(emailDetails.content());
