@@ -41,6 +41,3 @@ security:
 springdoc:
   swagger-ui:
     url: /docs/openapi3.yaml
-
-mailtrap:
-  from: mailtrap@demomailtrap.com
