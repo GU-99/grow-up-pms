@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ENC(cqnw6IOtpjXR6B2/umKTPNqvAauL7vg/ii+kyj7fKEyubMZ5o43/yF9yxwd5YhPwy6zLLVnlgnCGl+Brl9tmo90r0o+cDxOb/YR+8Tb9CwyNsMrnUVuP3yzaCbvxLx58P8rJdhlHW6QrYEWXlpgqzwXK6qvGvsvEzkfiWBF5vxU=)
-    username: ENC(wDgTgKrcLwfLLotB3cwR7Hv/hGYuHEhEDPfiRuLluDRJERo16Zhy0pz4ZHZPAPu/)
-    password: ENC(Ow5Xn5aV2LApz5g22Ovjp3/fLM2YFCPlF1CfrR+J2SAEoQDThcXtjEsUEA77Th0G9zcgUiJMoeBy6XPf0dKLZw==)
+    url: ENC(ulgkaiGoxlqXMQU73WYgiseVmo6ELq/Cuyrlf+O9mb7eLfPsQB7QrI4L7kqv0mlujE7DbogiX3jwAnlTd/J6SmkvfyZ3f9Y8qTLqKT79C6ju4KWfwKLZRX3eM7WaC+RqUexfJvUyTG+lkz0+XA/n9g==)
+    username: ENC(jZWb6BE+0stxAqjyk24nluJbR6VF2B7RRAegeefxBqCHGGSqA4kJ/kQ/3ONW5lI0)
+    password: ENC(6XcyfocRPs90+nQ/MhuGsNmw9PFW+Nxs3kq90eLzhwHIUtDPhVgGZDD0q4Pb13rTKGZC5Ounc5Sl/RyPAL4SoA==)
 
   jpa:
     hibernate:
@@ -40,11 +40,11 @@ management:
         enabled: true
 
 aws:
-  access-key: ENC(e6gMLdiSQvEgCqzQ7JRDNosVbW//CnDVkV8caxgYwfb8MEm5lj8m0fsc8I2bxsaEReR1BoIPxI0qISJ+sgxm5g==)
-  secret-key: ENC(Z835JZnyCMeatP7CdJDrWiCqaNr2jsNFhCCWc5MhkVfMM3WwUt6wMqKOfuvV83jYuSEJqfBdcrBScNH9B7XUT+DFXfta4/G0MpsBOl7kuZM=)
+  access-key: ENC(tRrfTq0vYJT1u3vpxM84nbTudTn76BvDa+SdMpPtnEG3hvnWdfsE1/JsAMaJmYQxt4wSeIFhU7bNNk9NUiullQ==)
+  secret-key: ENC(tdUkOVbfi2GBLwfXKSgurrZIRArIsCV0eLZapwOWURRbqBXchqisS4F0erQpIbCtabdyBNxS9xTa9A/FlDrjtjyUZasfIsVZZdvvK1Pk1M8=)
   s3:
     region: ENC(u9xNdlCO2E+c+SOkV5wcv0pA2h3I5K5LGCy0qKmziQQJBop6PvKWpn6VZb35EJsv)
-    bucket-name: ENC(n9BhDd0eubOZLL7wWEBmsfC/okUQwUDzqJWuU4bXtIR9d3i3LstwERRxTWnekLopl4KgKw5h7CJQ5Jpm/fSdmQ==)
+    bucket-name: ENC(rpTnDB2ZkrshPBDM1264vGh9ep8wZOfvsI0uHADuUdM/Qk/6uACA1ZgOEHFCEW2f)
 
 oauth2:
   kakao:
