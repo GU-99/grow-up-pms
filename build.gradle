@@ -81,7 +81,6 @@ dependencies {
     implementation 'software.amazon.awssdk:s3'
     // Logback ECS Encoder
     implementation 'co.elastic.logging:logback-ecs-encoder:1.6.0'
-
 }
 
 tasks.named('test') {
