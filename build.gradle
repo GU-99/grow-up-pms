@@ -79,6 +79,9 @@ dependencies {
     // AWS S3
     implementation platform('software.amazon.awssdk:bom:2.27.23')
     implementation 'software.amazon.awssdk:s3'
+    // Logback ECS Encoder
+    implementation 'co.elastic.logging:logback-ecs-encoder:1.6.0'
+
 }
 
 tasks.named('test') {
