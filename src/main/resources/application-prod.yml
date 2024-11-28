@@ -7,8 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      # FIXME: 추후에 서비스 개발이 끝나고 배포 환경이 구성되면 validate 혹은 none으로 변경해야 함
-      ddl-auto: create
+      ddl-auto: validate
 
   data:
     redis:
