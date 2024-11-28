@@ -3,7 +3,6 @@
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 
     <include resource="logback/console-appender.xml"/>
-    <include resource="logback/file-appender.xml"/>
 
     <springProfile name="local">
         <logger name="com.growup.pms" level="DEBUG">
@@ -20,12 +19,19 @@
     </springProfile>
 
     <springProfile name="prod">
+        <include resource="logback/file-appender.xml"/>
+        <include resource="logback/ecs-file-appender.xml"/>
         <include resource="logback/discord-appender.xml"/>
 
         <logger name="com.growup.pms" level="INFO">
             <appender-ref ref="INFO_FILE"/>
             <appender-ref ref="WARN_FILE"/>
             <appender-ref ref="ERROR_FILE"/>
+            <!-- ECS-based Logging -->
+            <appender-ref ref="INFO_JSON_FILE"/>
+            <appender-ref ref="WARN_JSON_FILE"/>
+            <appender-ref ref="ERROR_JSON_FILE"/>
+            <!-- Discord Webhook -->
             <appender-ref ref="ASYNC_DISCORD"/>
         </logger>
 
@@ -33,6 +39,11 @@
             <appender-ref ref="INFO_FILE"/>
             <appender-ref ref="WARN_FILE"/>
             <appender-ref ref="ERROR_FILE"/>
+            <!-- ECS-based Logging -->
+            <appender-ref ref="INFO_JSON_FILE"/>
+            <appender-ref ref="WARN_JSON_FILE"/>
+            <appender-ref ref="ERROR_JSON_FILE"/>
+            <!-- Discord Webhook -->
             <appender-ref ref="ASYNC_DISCORD"/>
         </logger>
     </springProfile>

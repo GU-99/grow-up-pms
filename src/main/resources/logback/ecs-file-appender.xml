@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <property name="JSON_FILE_LOG_PATH" value="./logs"/>
+
+    <springProperty name="SERVICE_NAME" source="spring.application.name" />
+
+    <appender name="INFO_JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${JSON_FILE_LOG_PATH}/info/info.json</file>
+        <encoder class="co.elastic.logging.logback.EcsEncoder">
+            <serviceName>${SERVICE_NAME}</serviceName>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${JSON_FILE_LOG_PATH}/info/info.%d{yyyy-MM-dd}-%i.json</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="WARN_JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${JSON_FILE_LOG_PATH}/warn/warn.json</file>
+        <encoder class="co.elastic.logging.logback.EcsEncoder">
+            <serviceName>${SERVICE_NAME}</serviceName>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${JSON_FILE_LOG_PATH}/warn/warn.%d{yyyy-MM-dd}-%i.json</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ERROR_JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${JSON_FILE_LOG_PATH}/error/error.json</file>
+        <encoder class="co.elastic.logging.logback.EcsEncoder">
+            <serviceName>${SERVICE_NAME}</serviceName>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${JSON_FILE_LOG_PATH}/error/error.%d{yyyy-MM-dd}-%i.json</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+</included>
