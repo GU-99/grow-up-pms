@@ -19,6 +19,7 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.project.service.ProjectService;
 import com.growup.pms.role.repository.RoleRepository;
+import com.growup.pms.team.controller.dto.response.TeamNameCheckResponse;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.domain.TeamUserId;
@@ -234,6 +235,38 @@ class TeamServiceTest {
             // when & then
             assertThatCode(() -> teamService.leaveTeam(팀_ID, 사용자_ID))
                     .doesNotThrowAnyException();
+        }
+    }
+
+    @Nested
+    class 팀_이름_중복_검사_시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            String 팀_이름 = "구구팔";
+
+            when(teamRepository.existsByName(팀_이름)).thenReturn(false);
+
+            // when
+            TeamNameCheckResponse 실제_결과 = teamService.isTeamNameAvailable(팀_이름);
+
+            // then
+            assertThat(실제_결과.available()).isTrue();
+        }
+
+        @Test
+        void 이미_팀_이름이_존재하면_거짓을_반환한다() {
+            // given
+            String 팀_이름 = "구구구";
+
+            when(teamRepository.existsByName(팀_이름)).thenReturn(true);
+
+            // when
+            TeamNameCheckResponse 실제_결과 = teamService.isTeamNameAvailable(팀_이름);
+
+            // then
+            assertThat(실제_결과.available()).isFalse();
         }
     }
 }
