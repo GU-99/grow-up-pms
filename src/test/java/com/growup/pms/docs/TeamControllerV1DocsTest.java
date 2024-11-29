@@ -22,6 +22,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
 import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
+import com.growup.pms.team.controller.dto.response.TeamNameCheckResponse;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.service.TeamService;
 import com.growup.pms.team.service.dto.TeamCreateCommand;
@@ -145,5 +146,28 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .summary("팀 탈퇴")
                                 .description("해당 팀을 탈퇴합니다. 자신이 팀장이라면 팀을 제거합니다.")
                                 .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("탈퇴할 팀 ID")).build())));
+    }
+
+    @Test
+    void 팀명_중복_검사_API_문서를_생성한다() throws Exception {
+        String 팀_이름 = "구구구";
+        boolean 사용_가능_여부 = true;
+
+        when(teamService.isTeamNameAvailable(팀_이름)).thenReturn(new TeamNameCheckResponse(사용_가능_여부));
+
+        // when & then
+        mockMvc.perform(get("/api/v1/team/check")
+                        .param("teamName", 팀_이름))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.available").value(사용_가능_여부))
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀명 중복 검사")
+                                .description("해당 팀명을 사용할 수 있는지 검사합니다. 팀명을 사용할 수 있으면 true를 반환합니다.")
+                                .queryParameters(parameterWithName("teamName").type(SimpleType.STRING).description("검사할 팀 이름"))
+                                .responseFields(fieldWithPath("available").type(JsonFieldType.BOOLEAN).description("사용 가능 여부"))
+                                .build())));
     }
 }
