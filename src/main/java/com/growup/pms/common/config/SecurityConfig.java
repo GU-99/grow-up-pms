@@ -51,7 +51,7 @@ public class SecurityConfig {
             config.addAllowedOrigin("https://growup.kr");
             config.addAllowedHeader("*");
             config.addExposedHeader("*");
-            config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
+            config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
             config.setAllowCredentials(true);
             return config;
         };
