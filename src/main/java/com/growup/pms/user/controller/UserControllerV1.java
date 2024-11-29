@@ -90,7 +90,7 @@ public class UserControllerV1 {
     }
 
     @PatchMapping
-    public ResponseEntity<UserUpdateResponse> updateUser(@CurrentUser SecurityUser user, @Valid UserUpdateRequest request) {
+    public ResponseEntity<UserUpdateResponse> updateUser(@CurrentUser SecurityUser user, @Valid @RequestBody UserUpdateRequest request) {
         return ResponseEntity.ok().body(userService.updateUserDetails(user.getId(), request.toCommand()));
     }
 
