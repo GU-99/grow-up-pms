@@ -7,6 +7,7 @@ import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.RoleType;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.role.repository.RoleRepository;
+import com.growup.pms.team.controller.dto.response.TeamNameCheckResponse;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.domain.TeamUser;
@@ -71,6 +72,10 @@ public class TeamService {
         if (command.content().isPresent()) {
             team.updateContent(command.content().get());
         }
+    }
+
+    public TeamNameCheckResponse isTeamNameAvailable(String teamName) {
+        return new TeamNameCheckResponse(!teamRepository.existsByName(teamName));
     }
 
     private void inviteAllUsersToTeam(Team newTeam, List<TeamCoworkerCommand> coworkers) {

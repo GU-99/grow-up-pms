@@ -7,6 +7,7 @@ import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
 import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
+import com.growup.pms.team.controller.dto.response.TeamNameCheckResponse;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
 import com.growup.pms.team.service.TeamService;
 import jakarta.validation.Valid;
@@ -59,5 +60,10 @@ public class TeamControllerV1 {
     public ResponseEntity<Void> leaveTeam(@CurrentUser SecurityUser user, @Positive @PathVariable Long teamId) {
         teamService.leaveTeam(teamId, user.getId());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<TeamNameCheckResponse> isTeamNameAvailable(String teamName) {
+        return ResponseEntity.ok().body(teamService.isTeamNameAvailable(teamName));
     }
 }
