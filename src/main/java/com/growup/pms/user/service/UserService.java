@@ -118,7 +118,7 @@ public class UserService {
         }
     }
 
-    private void validateCurrentPassword(String inputPassword, String storedPassword) {
+    private void validateCurrentPassword(String storedPassword, String inputPassword) {
         if (!passwordEncoder.matches(inputPassword, storedPassword)) {
             throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
