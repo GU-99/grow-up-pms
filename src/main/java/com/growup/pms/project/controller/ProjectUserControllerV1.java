@@ -45,7 +45,6 @@ public class ProjectUserControllerV1 {
     }
 
     @GetMapping
-    @RequirePermission(PermissionType.PROJECT_READ)
     public ResponseEntity<List<ProjectUserResponse>> getProjectUsers(
             @Positive @ProjectId @PathVariable Long projectId) {
         log.debug("ProjectUserControllerV1#getProjectUsers called.");
@@ -56,7 +55,6 @@ public class ProjectUserControllerV1 {
     }
 
     @GetMapping("/search")
-    @RequirePermission(PermissionType.PROJECT_READ)
     public ResponseEntity<List<ProjectUserSearchResponse>> searchProjectUsersByPrefix(
             @Positive @ProjectId @PathVariable Long projectId,
             @RequestParam(required = false, defaultValue = "", name = "nickname") String prefix
