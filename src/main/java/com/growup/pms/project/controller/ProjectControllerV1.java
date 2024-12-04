@@ -57,7 +57,6 @@ public class ProjectControllerV1 {
     }
 
     @GetMapping
-    @RequirePermission(PermissionType.PROJECT_READ)
     public ResponseEntity<List<ProjectResponse>> getProjects(@Positive @TeamId @PathVariable Long teamId) {
         log.debug("ProjectControllerV1#getProjects called.");
         log.debug("프로젝트 목록을 조회하려는 팀 ID={}", teamId);
