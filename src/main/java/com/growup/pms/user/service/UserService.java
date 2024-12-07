@@ -46,6 +46,7 @@ public class UserService {
 
     @Transactional
     public Long save(UserCreateCommand command) {
+        validateEmail(command.email());
         validateVerificationCode(command.email(), command.verificationCode());
         try {
             User user = command.toEntity();
@@ -145,6 +146,12 @@ public class UserService {
     private void validateVerificationCode(String email, String verificationCode) {
         if (!emailVerificationService.verifyAndInvalidateEmail(email, verificationCode)) {
             throw new BusinessException(ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
+        }
+    }
+
+    private void validateEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
     }
 }

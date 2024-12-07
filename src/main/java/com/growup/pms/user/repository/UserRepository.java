@@ -21,6 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long>, QueryDslUserR
             """)
     Boolean existsByNickname(@Param("nickname") String nickname);
 
+    Boolean existsByEmail(String email);
+
     default User findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
