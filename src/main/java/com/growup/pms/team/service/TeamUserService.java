@@ -5,6 +5,7 @@ import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.controller.dto.response.TeamUserResponse;
+import com.growup.pms.team.controller.dto.response.TeamUserSearchResponse;
 import com.growup.pms.team.domain.TeamUserId;
 import com.growup.pms.team.repository.TeamUserRepository;
 import java.util.List;
@@ -20,6 +21,10 @@ public class TeamUserService {
 
     public List<TeamUserResponse> getAllTeamUsers(Long teamId) {
         return teamUserRepository.getAllTeamUsers(teamId);
+    }
+
+    public List<TeamUserSearchResponse> getTeamUsersByNicknameStartingWith(Long userId, Long teamId, String nicknamePrefix) {
+        return teamUserRepository.getTeamUsersByNicknameStartingWith(userId, teamId, nicknamePrefix);
     }
 
     @Transactional

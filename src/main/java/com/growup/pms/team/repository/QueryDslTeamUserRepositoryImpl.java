@@ -8,6 +8,7 @@ import static com.growup.pms.user.domain.QUser.user;
 
 import com.growup.pms.role.domain.Permission;
 import com.growup.pms.team.controller.dto.response.TeamUserResponse;
+import com.growup.pms.team.controller.dto.response.TeamUserSearchResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -29,6 +30,19 @@ public class QueryDslTeamUserRepositoryImpl implements QueryDslTeamUserRepositor
                 .join(teamUser.user, user)
                 .join(teamUser.role, role)
                 .where(teamUser.team.id.eq(teamId))
+                .fetch();
+    }
+
+    @Override
+    public List<TeamUserSearchResponse> getTeamUsersByNicknameStartingWith(Long userId, Long teamId, String nicknamePrefix) {
+        return jpaQueryFactory.select(Projections.constructor(TeamUserSearchResponse.class,
+                    teamUser.user.id,
+                    user.profile.nickname
+                )).from(teamUser)
+                .join(teamUser.user, user)
+                .where(teamUser.team.id.eq(teamId), user.profile.nickname.startsWithIgnoreCase(nicknamePrefix), user.id.ne(userId))
+                .orderBy(user.profile.nickname.asc())
+                .limit(5)
                 .fetch();
     }
 
