@@ -2,6 +2,7 @@ package com.growup.pms.team.service;
 
 import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
 import static com.growup.pms.test.fixture.team.builder.TeamUserResponseTestBuilder.팀원_응답은;
+import static com.growup.pms.test.fixture.team.builder.TeamUserSearchResponseTestBuilder.팀원_검색_응답은;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,6 +15,7 @@ import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.controller.dto.response.TeamUserResponse;
+import com.growup.pms.team.controller.dto.response.TeamUserSearchResponse;
 import com.growup.pms.team.domain.TeamUserId;
 import com.growup.pms.team.repository.TeamUserRepository;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -138,6 +140,28 @@ class TeamUserServiceTest {
             assertThatThrownBy(() -> teamUserService.changeRole(팀_ID, 역할_변경할_팀원_ID, 변경할_역할명))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNAUTHORIZED_ROLE_ASSIGNMENT);
+        }
+    }
+
+    @Nested
+    class 팀원_검색_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 사용자_ID = 2L;
+            Long 팀_ID = 1L;
+            String 닉네임_접두사 = "브";
+            List<TeamUserSearchResponse> 예상_결과 = List.of(팀원_검색_응답은().사용자_식별자가(1L).닉네임이("브라운").이다());
+
+            when(teamUserRepository.getTeamUsersByNicknameStartingWith(사용자_ID, 팀_ID, 닉네임_접두사)).thenReturn(예상_결과);
+
+            // when
+            List<TeamUserSearchResponse> 실제_결과 = teamUserService.getTeamUsersByNicknameStartingWith(
+                    사용자_ID, 팀_ID, 닉네임_접두사);
+
+            // then
+            assertThat(실제_결과).isEqualTo(예상_결과);
         }
     }
 }

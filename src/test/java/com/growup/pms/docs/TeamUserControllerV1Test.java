@@ -3,6 +3,7 @@ package com.growup.pms.docs;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.growup.pms.test.fixture.team.builder.TeamUserResponseTestBuilder.팀원_응답은;
+import static com.growup.pms.test.fixture.team.builder.TeamUserSearchResponseTestBuilder.팀원_검색_응답은;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -18,6 +19,7 @@ import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.team.controller.dto.request.RoleUpdateRequest;
 import com.growup.pms.team.controller.dto.response.TeamUserResponse;
+import com.growup.pms.team.controller.dto.response.TeamUserSearchResponse;
 import com.growup.pms.team.service.TeamUserService;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.test.annotation.WithMockSecurityUser;
@@ -64,6 +66,38 @@ class TeamUserControllerV1Test extends ControllerSliceTestSupport {
                                         fieldWithPath("[].userId").type(JsonFieldType.NUMBER).description("팀원 ID"),
                                         fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("팀원 닉네임"),
                                         fieldWithPath("[].roleName").type(JsonFieldType.STRING).description("팀원 역할명"))
+                                .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)).build())));
+    }
+
+    @Test
+    @WithMockSecurityUser(id = 3L)
+    void 팀원_검색_API_문서를_생성한다() throws Exception {
+        // given
+        Long 사용자_ID = 3L;
+        Long 팀_ID = 1L;
+        String 닉네임_접두사 = "브";
+        List<TeamUserSearchResponse> 예상_응답 = List.of(
+                팀원_검색_응답은().사용자_식별자가(1L).닉네임이("브라운").이다(),
+                팀원_검색_응답은().사용자_식별자가(2L).닉네임이("브루클린").이다());
+
+        when(teamUserService.getTeamUsersByNicknameStartingWith(사용자_ID, 팀_ID, 닉네임_접두사)).thenReturn(예상_응답);
+
+        // when & then
+        mockMvc.perform(get("/api/v1/team/{id}/user/search", 팀_ID)
+                .queryParam("nickname", 닉네임_접두사))
+                .andExpectAll(
+                        status().isOk(),
+                        content().json(objectMapper.writeValueAsString(예상_응답)))
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀원 검색")
+                                .description("팀에 소속된 유저를 조회한다. 해당 접두사로 시작하는 닉네임을 최대 5개까지 검색한다.")
+                                .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("팀 ID"))
+                                .queryParameters(parameterWithName("nickname").type(SimpleType.STRING).description("검색할 팀원의 닉네임 접두사"))
+                                .responseFields(
+                                        fieldWithPath("[].userId").type(JsonFieldType.NUMBER).description("검색된 팀원 ID"),
+                                        fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("검색된 팀원 닉네임"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)).build())));
     }
 
