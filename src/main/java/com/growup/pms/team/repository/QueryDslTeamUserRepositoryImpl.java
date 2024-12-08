@@ -18,6 +18,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class QueryDslTeamUserRepositoryImpl implements QueryDslTeamUserRepository {
+
+    private static final int MAX_SEARCH_RESULTS = 5;
+
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
@@ -42,7 +45,7 @@ public class QueryDslTeamUserRepositoryImpl implements QueryDslTeamUserRepositor
                 .join(teamUser.user, user)
                 .where(teamUser.team.id.eq(teamId), user.profile.nickname.startsWithIgnoreCase(nicknamePrefix), user.id.ne(userId))
                 .orderBy(user.profile.nickname.asc())
-                .limit(5)
+                .limit(MAX_SEARCH_RESULTS)
                 .fetch();
     }
 
