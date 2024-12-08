@@ -500,20 +500,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-status1787942943'
+                $ref: '#/components/schemas/api-v1-project-projectId-status1220278061'
               examples:
                 status-controller-v1-docs-test/상태_목록조회_api_문서를_생성한다:
                   value: |-
                     [ {
                       "statusId" : 1,
                       "projectId" : 1,
-                      "statusName" : "대기중",
+                      "name" : "대기중",
                       "colorCode" : "#FFFFFF",
                       "sortOrder" : 0
                     }, {
                       "statusId" : 2,
                       "projectId" : 1,
-                      "statusName" : "진행중",
+                      "name" : "진행중",
                       "colorCode" : "FFFFF0",
                       "sortOrder" : 1
                     } ]
@@ -541,12 +541,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api-v1-project-projectId-status418670879'
+              $ref: '#/components/schemas/api-v1-project-projectId-status816001105'
             examples:
               status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
                 value: |-
                   {
-                    "statusName" : "대기중",
+                    "name" : "대기중",
                     "colorCode" : "#FFFFFF",
                     "sortOrder" : 0
                   }
@@ -561,14 +561,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-project-projectId-status816672890'
+                $ref: '#/components/schemas/api-v1-project-projectId-status1214003116'
               examples:
                 status-controller-v1-docs-test/상태등록_api_문서를_생성한다:
                   value: |-
                     {
                       "statusId" : 1,
                       "projectId" : 1,
-                      "statusName" : "대기중",
+                      "name" : "대기중",
                       "colorCode" : "#FFFFFF",
                       "sortOrder" : 0
                     }
@@ -1437,6 +1437,49 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/team/{id}/user/search:
+    get:
+      tags:
+      - Team
+      summary: 팀원 검색
+      description: 팀에 소속된 유저를 조회한다. 해당 접두사로 시작하는 닉네임을 최대 5개까지 검색한다.
+      operationId: team-user-controller-v1-test/팀원_검색_api_문서를_생성한다
+      parameters:
+      - name: id
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: nickname
+        in: query
+        description: 검색할 팀원의 닉네임 접두사
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: "200"
+          headers:
+            Content-Type:
+              description: application/json
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api-v1-team-id-user-search-96188882'
+              examples:
+                team-user-controller-v1-test/팀원_검색_api_문서를_생성한다:
+                  value: |-
+                    [ {
+                      "userId" : 1,
+                      "nickname" : "브라운"
+                    }, {
+                      "userId" : 2,
+                      "nickname" : "브루클린"
+                    } ]
   /api/v1/team/{teamId}/invitation/accept:
     post:
       tags:
@@ -1709,9 +1752,9 @@ paths:
     patch:
       tags:
       - ProjectUser
-      summary: 프로젝트원 권한 변경
-      description: "프로젝트 ID, 프로젝트원의 회원 ID, 변경할 권한 이름을 통해 프로젝트원의 권한을 변경합니다."
-      operationId: project-user-controller-v1-docs-test/프로젝트원_권한_변경_api_문서를_생성한다
+      summary: 프로젝트원 역할 변경
+      description: "프로젝트 ID, 프로젝트원의 회원 ID, 변경할 역할 이름을 통해 프로젝트원의 역할을 변경합니다."
+      operationId: project-user-controller-v1-docs-test/프로젝트원_역할_변경_api_문서를_생성한다
       parameters:
       - name: projectId
         in: path
@@ -1729,9 +1772,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/프로젝트원 권한 변경 요청 예시 입니다.'
+              $ref: '#/components/schemas/프로젝트원 역할 변경 요청 예시 입니다.'
             examples:
-              project-user-controller-v1-docs-test/프로젝트원_권한_변경_api_문서를_생성한다:
+              project-user-controller-v1-docs-test/프로젝트원_역할_변경_api_문서를_생성한다:
                 value: |-
                   {
                     "roleName" : "LEADER"
@@ -2068,33 +2111,6 @@ components:
         userId:
           type: number
           description: 회원 식별자
-    프로젝트원 권한 변경 요청 예시 입니다.:
-      title: 프로젝트원 권한 변경 요청 예시 입니다.
-      type: object
-      properties:
-        roleName:
-          type: string
-          description: 변경할 프로젝트 권한 이름
-    api-v1-project-projectId-status1787942943:
-      type: array
-      items:
-        type: object
-        properties:
-          statusId:
-            type: number
-            description: 상태 식별자
-          sortOrder:
-            type: number
-            description: 정렬 순서
-          statusName:
-            type: string
-            description: 상태 이름
-          colorCode:
-            type: string
-            description: 색상 코드
-          projectId:
-            type: number
-            description: 프로젝트 식별자
     api-v1-project-projectId-user962876650:
       type: array
       description: 프로젝트원 목록
@@ -2164,24 +2180,26 @@ components:
         userId:
           type: number
           description: 프로젝트원의 회원 ID
-    api-v1-project-projectId-status816672890:
-      type: object
-      properties:
-        statusId:
-          type: number
-          description: 생성퇸 상태 식별자
-        sortOrder:
-          type: number
-          description: 정렬순서
-        statusName:
-          type: string
-          description: 상태 이름
-        colorCode:
-          type: string
-          description: 색상 코드
-        projectId:
-          type: number
-          description: 프로젝트 식별자
+    api-v1-project-projectId-status1220278061:
+      type: array
+      items:
+        type: object
+        properties:
+          statusId:
+            type: number
+            description: 상태 식별자
+          sortOrder:
+            type: number
+            description: 정렬 순서
+          name:
+            type: string
+            description: 상태 이름
+          colorCode:
+            type: string
+            description: 색상 코드
+          projectId:
+            type: number
+            description: 프로젝트 식별자
     api-v1-user-recover-password1699166416:
       type: object
       properties:
@@ -2314,24 +2332,23 @@ components:
         username:
           type: string
           description: 아이디
+    api-v1-team-id-user-search-96188882:
+      type: array
+      items:
+        type: object
+        properties:
+          nickname:
+            type: string
+            description: 팀원 닉네임
+          userId:
+            type: number
+            description: 팀원 ID
     api-v1-team-check1867982908:
       type: object
       properties:
         available:
           type: boolean
           description: 사용 가능 여부
-    api-v1-project-projectId-status418670879:
-      type: object
-      properties:
-        sortOrder:
-          type: number
-          description: 정렬순서
-        statusName:
-          type: string
-          description: 상태 이름
-        colorCode:
-          type: string
-          description: 색상 코드
     api-v1-user1641830135:
       type: object
       properties:
@@ -2405,6 +2422,43 @@ components:
         email:
           type: string
           description: 인증하려는 사용자 이메일
+    api-v1-project-projectId-status1214003116:
+      type: object
+      properties:
+        statusId:
+          type: number
+          description: 생성퇸 상태 식별자
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
+        projectId:
+          type: number
+          description: 프로젝트 식별자
+    프로젝트원 역할 변경 요청 예시 입니다.:
+      title: 프로젝트원 역할 변경 요청 예시 입니다.
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 변경할 프로젝트 역할 이름
+    api-v1-project-projectId-status816001105:
+      type: object
+      properties:
+        sortOrder:
+          type: number
+          description: 정렬순서
+        name:
+          type: string
+          description: 상태 이름
+        colorCode:
+          type: string
+          description: 색상 코드
     api-v1-team-teamId-invitation-1262545139:
       type: object
       properties:
