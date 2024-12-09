@@ -1,12 +1,16 @@
 package com.growup.pms.team.controller;
 
+import com.growup.pms.auth.controller.dto.SecurityUser;
+import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.team.controller.dto.request.RoleUpdateRequest;
 import com.growup.pms.team.controller.dto.response.TeamUserResponse;
+import com.growup.pms.team.controller.dto.response.TeamUserSearchResponse;
 import com.growup.pms.team.service.TeamUserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,15 @@ public class TeamUserControllerV1 {
     @GetMapping
     public ResponseEntity<List<TeamUserResponse>> getAllTeamUsers(@Positive @PathVariable Long teamId) {
         return ResponseEntity.ok(teamUserService.getAllTeamUsers(teamId));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<TeamUserSearchResponse>> searchTeamUsers(
+            @CurrentUser SecurityUser user,
+            @Valid @Positive @PathVariable Long teamId,
+            @Valid @NotEmpty String nickname
+    ) {
+        return ResponseEntity.ok(teamUserService.getTeamUsersByNicknameStartingWith(user.getId(), teamId, nickname));
     }
 
     @DeleteMapping("/{targetMemberId}")
