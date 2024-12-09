@@ -48,7 +48,7 @@ aws:
 oauth2:
   kakao:
     clientId: ENC(qhz/1p8n/EFFSF3APlmBYtiYGnokE0bYAxMSpSz0PTKeAgUN1+jTzGvgWGKdg+otmxXlRNRTYMyOe07XcviMpLkNruEnggMpLZnQE7Z4/fs=)
-    redirect-uri: http://growup.kr/auth/kakao/callback
+    redirect-uri: https://growup.kr/auth/kakao/callback
     accessToken-request-uri: https://kauth.kakao.com/oauth/token
     userinfo-request-uri: https://kapi.kakao.com/v2/user/me
 
