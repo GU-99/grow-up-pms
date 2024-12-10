@@ -49,6 +49,7 @@ public class SecurityConfig {
         return request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.addAllowedOrigin("https://growup.kr");
+            config.addAllowedOrigin("https://www.growup.kr");
             config.addAllowedHeader("*");
             config.addExposedHeader("*");
             config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"));
