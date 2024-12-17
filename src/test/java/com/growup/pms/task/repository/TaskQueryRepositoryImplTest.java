@@ -6,6 +6,7 @@ import static com.growup.pms.test.fixture.task.builder.TaskTestBuilder.일정은
 import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -50,6 +52,9 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
     @Autowired
     TaskQueryRepositoryImpl taskQueryRepository;
+
+    @Autowired
+    TestEntityManager entityManager;
 
     User 브라운, 레니, 레너드;
     Team GU팀, 게시판팀;
@@ -216,6 +221,32 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
             // then
             assertThat(실제_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 일정_정렬순서_변경시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 프로젝트_ID = PMS_프로젝트.getId();
+            Short 삭제될_정렬순서 = PMS_조회기능.getSortOrder();
+
+            // when
+            taskQueryRepository.updateSortOrderInProject(프로젝트_ID, 삭제될_정렬순서);
+            entityManager.clear();
+
+            // then
+            assertSoftly(softly -> {
+                PMS_등록기능 = taskRepository.findByIdOrThrow(PMS_등록기능.getId());
+                PMS_수정기능 = taskRepository.findByIdOrThrow(PMS_수정기능.getId());
+                PMS_삭제기능 = taskRepository.findByIdOrThrow(PMS_삭제기능.getId());
+
+                assertThat(PMS_등록기능.getSortOrder()).isEqualTo((short) 1);
+                assertThat(PMS_삭제기능.getSortOrder()).isEqualTo((short) 3);
+                assertThat(PMS_수정기능.getSortOrder()).isEqualTo((short) 4);
+            });
         }
     }
 }
