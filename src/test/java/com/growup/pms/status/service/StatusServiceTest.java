@@ -252,6 +252,7 @@ class StatusServiceTest {
         @Test
         void 성공한다() {
             // given
+            Long 기존_프로젝트_ID = 1L;
             Long 기존_상태_ID = 1L;
             Status 기존_상태 = 상태는().식별자가(기존_상태_ID).이다();
 
@@ -259,22 +260,24 @@ class StatusServiceTest {
             doNothing().when(statusRepository).delete(기존_상태);
 
             // when
-            statusService.deleteStatus(기존_상태_ID);
+            statusService.deleteStatus(기존_프로젝트_ID, 기존_상태_ID);
 
             // then
+            verify(statusRepository).updateSortOrdersInProject(기존_프로젝트_ID, 기존_상태.getSortOrder());
             verify(statusRepository).delete(기존_상태);
         }
 
         @Test
         void 상태가_존재하지_않으면_예외가_발생한다() {
             // given
+            Long 기존_프로젝트_ID = 1L;
             Long 잘못된_상태_ID = 1L;
 
             doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
                     .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
 
             // when & then
-            assertThatThrownBy(() -> statusService.deleteStatus(잘못된_상태_ID))
+            assertThatThrownBy(() -> statusService.deleteStatus(기존_프로젝트_ID, 잘못된_상태_ID))
                     .isInstanceOf(BusinessException.class);
         }
     }
