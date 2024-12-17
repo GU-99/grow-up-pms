@@ -50,6 +50,13 @@ public class StatusQueryRepositoryImpl implements StatusQueryRepository {
                 .fetch();
     }
 
+    public void updateSortOrdersInProject(Long projectId, short sortOrder) {
+        queryFactory.update(status)
+                .set(status.sortOrder, status.sortOrder.subtract(1))
+                .where(isProjectId(projectId), status.sortOrder.gt(sortOrder))
+                .execute();
+    }
+
     private BooleanExpression isProjectId(Long projectId) {
         return projectId != null ? status.project.id.eq(projectId) : null;
     }

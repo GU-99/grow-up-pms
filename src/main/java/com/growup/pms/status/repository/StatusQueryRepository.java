@@ -6,4 +6,6 @@ import java.util.List;
 public interface StatusQueryRepository {
 
     List<StatusResponse> getAllStatusByProjectId(Long projectId);
+
+    void updateSortOrdersInProject(Long projectId, short sortOrder);
 }
