@@ -239,7 +239,7 @@ public class StatusControllerV1DocsTest extends ControllerSliceTestSupport {
         Long 삭제할_상태_ID = 1L;
 
         // when
-        doNothing().when(statusService).deleteStatus(anyLong());
+        doNothing().when(statusService).deleteStatus(anyLong(), anyLong());
 
         // then
         mockMvc.perform(delete("/api/v1/project/{projectId}/status/{statusId}", 예상_프로젝트_식별자, 삭제할_상태_ID)

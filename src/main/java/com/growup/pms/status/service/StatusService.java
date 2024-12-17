@@ -56,8 +56,9 @@ public class StatusService {
     }
 
     @Transactional
-    public void deleteStatus(Long statusId) {
+    public void deleteStatus(Long projectId, Long statusId) {
         Status status = statusRepository.findByIdOrThrow(statusId);
+        statusRepository.updateSortOrdersInProject(projectId, status.getSortOrder());
         statusRepository.delete(status);
     }
 }
