@@ -124,7 +124,7 @@ public class TaskControllerV1 {
         log.debug("일정 삭제를 위한 projectId={}", projectId);
         log.debug("일정 삭제를 위한 taskId={}", taskId);
 
-        taskService.deleteTask(taskId);
+        taskService.deleteTask(projectId, taskId);
 
         return ResponseEntity.noContent().build();
     }
