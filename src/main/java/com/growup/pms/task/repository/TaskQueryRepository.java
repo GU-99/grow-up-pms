@@ -7,4 +7,6 @@ import java.util.Map;
 public interface TaskQueryRepository {
 
     Map<Long, List<TaskResponse>> getTasksByProjectId(Long projectId);
+
+    void updateSortOrderInProject(Long projectId, Short sortOrder);
 }
