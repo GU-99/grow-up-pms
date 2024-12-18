@@ -129,7 +129,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         );
 
         PMS_환경설정 = taskRepository.save(
-                일정은().식별자는(1L)
+                일정은()
                         .상태는(PMS_완료)
                         .이름은("PMS 프로젝트의 환경설정을 진행함")
                         .내용은("- build.gradle 의존성 추가 <br> - Config 클래스 추가")
@@ -139,7 +139,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .이다()
         );
         PMS_등록기능 = taskRepository.save(
-                일정은().식별자는(2L)
+                일정은()
                         .상태는(PMS_완료)
                         .이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
                         .내용은("- ProjectRepository 구현 <br> - ProjectService 클래스 내부 구현")
@@ -232,8 +232,6 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
             // given
             Long 상태_ID = PMS_완료.getId();
             Short 삭제될_정렬순서 = PMS_환경설정.getSortOrder();
-            System.out.println(삭제될_정렬순서);
-            System.out.println(PMS_등록기능.getSortOrder());
 
             // when
             taskQueryRepository.updateSortOrderInStatus(상태_ID, 삭제될_정렬순서);
