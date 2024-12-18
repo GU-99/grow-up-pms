@@ -38,6 +38,10 @@ management:
       export:
         enabled: true
 
+server:
+  cookie:
+    domain: .growup.kr
+
 aws:
   access-key: ENC(tRrfTq0vYJT1u3vpxM84nbTudTn76BvDa+SdMpPtnEG3hvnWdfsE1/JsAMaJmYQxt4wSeIFhU7bNNk9NUiullQ==)
   secret-key: ENC(tdUkOVbfi2GBLwfXKSgurrZIRArIsCV0eLZapwOWURRbqBXchqisS4F0erQpIbCtabdyBNxS9xTa9A/FlDrjtjyUZasfIsVZZdvvK1Pk1M8=)

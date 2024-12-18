@@ -4,18 +4,20 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CookieUtil {
 
-    public static final String SERVER_COOKIE_DOMAIN = ".growup.kr";
+    @Value("${server.cookie.domain}")
+    public static String serverCookieDomain;
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setDomain(SERVER_COOKIE_DOMAIN);
+        cookie.setDomain(serverCookieDomain);
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
     }
@@ -25,7 +27,7 @@ public final class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setDomain(SERVER_COOKIE_DOMAIN);
+        cookie.setDomain(serverCookieDomain);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
