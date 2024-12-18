@@ -8,6 +8,7 @@ import org.springframework.core.Ordered;
 
 @Configuration
 public class FilterConfig {
+
     @Bean
     public FilterRegistrationBean<MdcFilter> filterRegistrationBean() {
         FilterRegistrationBean<MdcFilter> registrationBean = new FilterRegistrationBean<>();
