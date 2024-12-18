@@ -23,6 +23,7 @@ public class OauthLoginControllerV1 {
 
     private final OauthLoginService oauthLoginService;
     private final JwtTokenProvider tokenProvider;
+    private final CookieUtil cookieUtil;
 
     @GetMapping("/{provider}")
     public ResponseEntity<Void> login(
@@ -32,7 +33,7 @@ public class OauthLoginControllerV1 {
     ) {
         Provider providerEnum = Provider.valueOf(provider.toUpperCase());
         TokenResponse authTokens = oauthLoginService.authenticate(providerEnum, code);
-        CookieUtil.addCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME, authTokens.refreshToken(),
+        cookieUtil.addCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME, authTokens.refreshToken(),
                 (int) (tokenProvider.refreshTokenExpirationMillis / 1000));
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
