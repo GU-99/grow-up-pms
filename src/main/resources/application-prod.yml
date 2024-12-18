@@ -40,7 +40,7 @@ management:
 
 server:
   cookie:
-    domain: .growup.kr
+    domain: growup.kr
 
 aws:
   access-key: ENC(tRrfTq0vYJT1u3vpxM84nbTudTn76BvDa+SdMpPtnEG3hvnWdfsE1/JsAMaJmYQxt4wSeIFhU7bNNk9NUiullQ==)
