@@ -28,6 +28,7 @@ public class LoginControllerV1 {
     private final RefreshTokenService redisRefreshTokenService;
     private final JwtLoginService loginService;
     private final JwtTokenProvider tokenProvider;
+    private final CookieUtil cookieUtil;
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(
@@ -35,7 +36,7 @@ public class LoginControllerV1 {
             HttpServletResponse response
     ) {
         TokenResponse authTokens = loginService.authenticateUser(request.toCommand());
-        CookieUtil.addCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME, authTokens.refreshToken(),
+        cookieUtil.addCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME, authTokens.refreshToken(),
                 (int) (tokenProvider.refreshTokenExpirationMillis / 1000));
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, JwtConstants.BEARER_PREFIX + authTokens.accessToken())
@@ -60,7 +61,7 @@ public class LoginControllerV1 {
             HttpServletResponse response
     ) {
         redisRefreshTokenService.revoke(user.getId(), refreshToken);
-        CookieUtil.removeCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME);
+        cookieUtil.removeCookie(response, JwtConstants.REFRESH_TOKEN_COOKIE_NAME);
         return ResponseEntity.ok().build();
     }
 }

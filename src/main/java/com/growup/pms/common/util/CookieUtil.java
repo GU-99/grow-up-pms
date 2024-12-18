@@ -5,14 +5,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CookieUtil {
 
     @Value("${server.cookie.domain}")
-    public static String serverCookieDomain;
+    public String serverCookieDomain;
 
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+    public void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
@@ -22,7 +24,7 @@ public final class CookieUtil {
         response.addCookie(cookie);
     }
 
-    public static void removeCookie(HttpServletResponse response, String name) {
+    public void removeCookie(HttpServletResponse response, String name) {
         Cookie cookie = new Cookie(name, null);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
