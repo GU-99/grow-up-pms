@@ -347,7 +347,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         Long 예상_일정_식별자 = 1L;
 
         // when
-        doNothing().when(taskService).deleteTask(anyLong(), anyLong());
+        doNothing().when(taskService).deleteTask(anyLong());
 
         // then
         mockMvc.perform(delete("/api/v1/project/{projectId}/task/{taskId}", 예상_프로젝트_식별자, 예상_일정_식별자)

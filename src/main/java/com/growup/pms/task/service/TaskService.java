@@ -106,9 +106,10 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(Long projectId, Long taskId) {
+    public void deleteTask(Long taskId) {
         Task task = taskRepository.findByIdOrThrow(taskId);
-        taskRepository.updateSortOrderInProject(projectId, task.getSortOrder());
+        Status status = task.getStatus();
+        taskRepository.updateSortOrderInStatus(status.getId(), task.getSortOrder());
         taskRepository.delete(task);
     }
 

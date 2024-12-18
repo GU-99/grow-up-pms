@@ -8,5 +8,5 @@ public interface TaskQueryRepository {
 
     Map<Long, List<TaskResponse>> getTasksByProjectId(Long projectId);
 
-    void updateSortOrderInProject(Long projectId, Short sortOrder);
+    void updateSortOrderInStatus(Long projectId, Short sortOrder);
 }
