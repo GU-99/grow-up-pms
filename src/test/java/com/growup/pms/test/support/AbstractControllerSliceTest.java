@@ -3,6 +3,7 @@ package com.growup.pms.test.support;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.growup.pms.common.config.ObjectMapperConfig;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
+import com.growup.pms.common.util.CookieUtil;
 import com.growup.pms.test.annotation.AutoServiceMockBeans;
 import com.growup.pms.test.config.TestSecurityConfig;
 import org.junit.jupiter.api.AfterEach;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
@@ -34,6 +36,9 @@ public abstract class AbstractControllerSliceTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;
+
+    @SpyBean
+    protected CookieUtil cookieUtil;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
