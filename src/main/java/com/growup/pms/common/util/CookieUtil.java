@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CookieUtil {
 
+    public static final String SERVER_COOKIE_DOMAIN = ".growup.kr";
+
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setDomain("growup.kr");
+        cookie.setDomain(SERVER_COOKIE_DOMAIN);
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
     }
@@ -23,7 +25,7 @@ public final class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setDomain("growup.kr");
+        cookie.setDomain(SERVER_COOKIE_DOMAIN);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
