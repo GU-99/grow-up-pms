@@ -2,7 +2,9 @@ package com.growup.pms.team.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.project.repository.ProjectUserRepository;
 import com.growup.pms.project.service.ProjectService;
+import com.growup.pms.role.domain.ProjectRole;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.RoleType;
 import com.growup.pms.role.domain.TeamRole;
@@ -32,11 +34,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamService {
-    private final TeamRepository teamRepository;
     private final UserRepository userRepository;
-    private final TeamUserRepository teamUserRepository;
-    private final ProjectService projectService;
     private final RoleRepository roleRepository;
+    private final TeamRepository teamRepository;
+    private final TeamUserRepository teamUserRepository;
+    private final ProjectUserRepository projectUserRepository;
+    private final ProjectService projectService;
 
     public TeamResponse getTeam(Long teamId) {
         return TeamResponse.from(teamRepository.findByIdOrThrow(teamId));
@@ -72,6 +75,19 @@ public class TeamService {
         if (command.content().isPresent()) {
             team.updateContent(command.content().get());
         }
+    }
+
+    @Transactional
+    public void changeTeamHead(Long teamId, Long oldHeadId, Long newHeadId) {
+        Team team = teamRepository.findByIdOrThrow(teamId);
+        team.updateCreator(userRepository.findByIdOrThrow(newHeadId));
+
+        projectUserRepository.deleteMemberFromAllProjects(teamId, oldHeadId);
+        teamUserRepository.updateTeamRole(teamId, oldHeadId, TeamRole.MATE.toString());
+
+        Role roleProjectAdmin = roleRepository.findProjectRoleByName(ProjectRole.ADMIN.getRoleName());
+        projectUserRepository.upsertTeamRole(teamId, newHeadId, roleProjectAdmin.getId());
+        teamUserRepository.updateTeamRole(teamId, newHeadId, TeamRole.HEAD.toString());
     }
 
     public TeamNameCheckResponse isTeamNameAvailable(String teamName) {
