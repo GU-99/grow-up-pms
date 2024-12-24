@@ -46,6 +46,12 @@ jobs:
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
 
+      - name: Archive OpenAPI spec
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-spec-latest
+          retention-days: 7
+
       - name: Archive coverage data
         uses: actions/upload-artifact@v4
         with:
