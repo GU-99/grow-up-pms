@@ -65,7 +65,8 @@ class TeamUserControllerV1Test extends ControllerSliceTestSupport {
                                 .responseFields(
                                         fieldWithPath("[].userId").type(JsonFieldType.NUMBER).description("팀원 ID"),
                                         fieldWithPath("[].nickname").type(JsonFieldType.STRING).description("팀원 닉네임"),
-                                        fieldWithPath("[].roleName").type(JsonFieldType.STRING).description("팀원 역할명"))
+                                        fieldWithPath("[].roleName").type(JsonFieldType.STRING).description("팀원 역할명"),
+                                        fieldWithPath("[].isPendingApproval").type(JsonFieldType.BOOLEAN).description("초대 승인 대기 상태"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE)).build())));
     }
 
