@@ -809,18 +809,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-team-id-user-432401832'
+                $ref: '#/components/schemas/api-v1-team-id-user-1667290292'
               examples:
                 team-user-controller-v1-test/팀원_목록_조회_api_문서를_생성한다:
                   value: |-
                     [ {
                       "userId" : 1,
                       "nickname" : "브라운",
-                      "roleName" : "HEAD"
+                      "roleName" : "HEAD",
+                      "isPendingApproval" : false
                     }, {
                       "userId" : 2,
                       "nickname" : "코니",
-                      "roleName" : "MATE"
+                      "roleName" : "MATE",
+                      "isPendingApproval" : false
                     } ]
   /api/v1/team/{teamId}/invitation:
     post:
@@ -2242,6 +2244,23 @@ components:
         username:
           type: string
           description: 복구된 사용자의 아이디
+    api-v1-team-id-user-1667290292:
+      type: array
+      items:
+        type: object
+        properties:
+          roleName:
+            type: string
+            description: 팀원 역할명
+          nickname:
+            type: string
+            description: 팀원 닉네임
+          isPendingApproval:
+            type: boolean
+            description: 초대 승인 대기 상태
+          userId:
+            type: number
+            description: 팀원 ID
     프로젝트원 추가 요청 예시 입니다.:
       title: 프로젝트원 추가 요청 예시 입니다.
       type: object
@@ -2379,20 +2398,6 @@ components:
         content:
           type: string
           description: 팀 소개
-    api-v1-team-id-user-432401832:
-      type: array
-      items:
-        type: object
-        properties:
-          roleName:
-            type: string
-            description: 팀원 역할명
-          nickname:
-            type: string
-            description: 팀원 닉네임
-          userId:
-            type: number
-            description: 팀원 ID
     api-v1-user-login-434021498:
       type: object
       properties:

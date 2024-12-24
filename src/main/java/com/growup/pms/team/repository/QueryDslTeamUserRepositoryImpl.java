@@ -28,7 +28,8 @@ public class QueryDslTeamUserRepositoryImpl implements QueryDslTeamUserRepositor
         return jpaQueryFactory.select(Projections.constructor(TeamUserResponse.class,
                     teamUser.user.id,
                     user.profile.nickname,
-                    role.name
+                    role.name,
+                    teamUser.isPendingApproval
                 )).from(teamUser)
                 .join(teamUser.user, user)
                 .join(teamUser.role, role)
