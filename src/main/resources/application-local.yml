@@ -51,3 +51,7 @@ aws:
     region: dummy-region
     bucket-name: dummy-bucket-name
 
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
