@@ -1437,6 +1437,42 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/team/{id}/head/transfer:
+    post:
+      tags:
+      - Team
+      summary: 팀장 이양
+      description: 해당 팀의 팀장 역할을 다른 팀원에게 이양합니다.
+      operationId: team-controller-v1-docs-test/팀장_이양_api_문서를_생성한다
+      parameters:
+      - name: id
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-id-head-transfer-547626202'
+            examples:
+              team-controller-v1-docs-test/팀장_이양_api_문서를_생성한다:
+                value: |-
+                  {
+                    "userId" : 2
+                  }
+      responses:
+        "200":
+          description: "200"
   /api/v1/team/{id}/user/search:
     get:
       tags:
@@ -2551,6 +2587,12 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
+    api-v1-team-id-head-transfer-547626202:
+      type: object
+      properties:
+        userId:
+          type: number
+          description: 새로운 팀장 ID
     프로젝트 수정 요청 예시입니다.:
       title: 프로젝트 수정 요청 예시입니다.
       type: object
