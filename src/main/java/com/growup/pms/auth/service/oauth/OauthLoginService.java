@@ -4,6 +4,7 @@ import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.auth.service.RefreshTokenService;
 import com.growup.pms.auth.service.dto.oauth.OauthAccessToken;
 import com.growup.pms.auth.service.dto.oauth.OauthProfile;
+import com.growup.pms.auth.service.dto.oauth.OauthUserLoginCommand;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
@@ -25,10 +26,10 @@ public class OauthLoginService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
 
-    public TokenResponse authenticate(Provider provider, String code) {
+    public TokenResponse authenticate(Provider provider, OauthUserLoginCommand command) {
         Oauth2Service oAuth2Service = getOauth2Service(provider);
 
-        OauthAccessToken accessToken = oAuth2Service.requestToken(provider, code);
+        OauthAccessToken accessToken = oAuth2Service.requestToken(provider, command.code());
         OauthProfile profile = oAuth2Service.requestProfile(provider, accessToken);
 
         String email = profile.getEmail();
