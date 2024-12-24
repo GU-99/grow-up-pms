@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TeamService {
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final TeamRepository teamRepository;
@@ -79,6 +80,8 @@ public class TeamService {
 
     @Transactional
     public void changeTeamHead(Long teamId, Long oldHeadId, Long newHeadId) {
+        validateNewHeadExistsInTeam(teamId, newHeadId);
+
         Team team = teamRepository.findByIdOrThrow(teamId);
         team.updateCreator(userRepository.findByIdOrThrow(newHeadId));
 
@@ -155,6 +158,12 @@ public class TeamService {
                 .anyMatch(c -> TeamRole.HEAD.getRoleName().equals(c.roleName()));
         if (hasHead) {
             throw new BusinessException(ErrorCode.INVALID_DATA_FORMAT);
+        }
+    }
+
+    private void validateNewHeadExistsInTeam(Long teamId, Long newHeadId) {
+        if (!teamUserRepository.existsById(new TeamUserId(teamId, newHeadId))) {
+            throw new BusinessException(ErrorCode.NEW_HEAD_NOT_IN_TEAM);
         }
     }
 }
