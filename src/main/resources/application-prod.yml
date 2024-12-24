@@ -59,3 +59,8 @@ oauth2:
     scope: https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile
     accessToken-request-uri: https://oauth2.googleapis.com/token
     userinfo-request-uri: https://www.googleapis.com/oauth2/v2/userinfo
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
