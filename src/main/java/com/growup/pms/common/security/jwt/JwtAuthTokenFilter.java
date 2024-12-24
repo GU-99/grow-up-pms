@@ -1,5 +1,6 @@
 package com.growup.pms.common.security.jwt;
 
+import com.growup.pms.common.exception.handler.LogFormatter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
+
     private final JwtTokenProvider tokenProvider;
 
     @Override
@@ -32,7 +34,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(resolvedToken) && tokenProvider.validateToken(resolvedToken)) {
             Authentication authentication = tokenProvider.getAuthentication(resolvedToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("Authenticated user: {}, uri: {}", authentication.getName(), request.getRequestURI());
+            LogFormatter.info("Authenticated user: %s, uri: %s"
+                    .formatted(authentication.getName(), request.getRequestURI()), request);
         }
         filterChain.doFilter(request, response);
     }
