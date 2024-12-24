@@ -80,6 +80,7 @@ public class TeamService {
 
     @Transactional
     public void changeTeamHead(Long teamId, Long oldHeadId, Long newHeadId) {
+        validateCurrentUserIsTeamHead(teamId, oldHeadId);
         validateNewHeadExistsInTeam(teamId, newHeadId);
 
         Team team = teamRepository.findByIdOrThrow(teamId);
@@ -158,6 +159,12 @@ public class TeamService {
                 .anyMatch(c -> TeamRole.HEAD.getRoleName().equals(c.roleName()));
         if (hasHead) {
             throw new BusinessException(ErrorCode.INVALID_DATA_FORMAT);
+        }
+    }
+
+    private void validateCurrentUserIsTeamHead(Long teamId, Long oldHeadId) {
+        if (!teamUserRepository.isUserTeamAdmin(teamId, oldHeadId)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED);
         }
     }
 

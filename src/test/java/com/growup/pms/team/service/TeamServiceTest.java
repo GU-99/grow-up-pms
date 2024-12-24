@@ -296,6 +296,7 @@ class TeamServiceTest {
             User 새로운_팀장 = 사용자는().식별자가(2L).이다();
             Role 프로젝트장_역할 = 역할은().타입이(RoleType.PROJECT).이름이(ProjectRole.ADMIN.getRoleName()).이다();
 
+            when(teamUserRepository.isUserTeamAdmin(팀.getId(), 기존_팀장.getId())).thenReturn(true);
             when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(true);
             when(teamRepository.findByIdOrThrow(팀.getId())).thenReturn(팀);
             when(userRepository.findByIdOrThrow(새로운_팀장.getId())).thenReturn(새로운_팀장);
@@ -312,12 +313,28 @@ class TeamServiceTest {
         }
 
         @Test
+        void 자신이_팀장이_아니라면_예외가_발생한다() {
+            // given
+            Long 팀_ID = 1L;
+            Long 기존_팀장_ID = 1L;
+            Long 새로운_팀장_ID = 2L;
+
+            when(teamUserRepository.isUserTeamAdmin(팀_ID, 기존_팀장_ID)).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> teamService.changeTeamHead(팀_ID, 기존_팀장_ID, 새로운_팀장_ID))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
+        }
+
+        @Test
         void 팀이_존재하지_않으면_예외가_발생한다() {
             // given
             Long 팀_ID = 1L;
             Long 기존_팀장_ID = 1L;
             Long 새로운_팀장_ID = 2L;
 
+            when(teamUserRepository.isUserTeamAdmin(팀_ID, 기존_팀장_ID)).thenReturn(true);
             when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(true);
             doThrow(new BusinessException(ErrorCode.TEAM_NOT_FOUND)).when(teamRepository).findByIdOrThrow(팀_ID);
 
@@ -334,6 +351,7 @@ class TeamServiceTest {
             Long 기존_팀장_ID = 1L;
             Long 새로운_팀장_ID = 2L;
 
+            when(teamUserRepository.isUserTeamAdmin(팀_ID, 기존_팀장_ID)).thenReturn(true);
             when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(false);
 
             // when & then
