@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
 
   data:
     redis:
@@ -38,6 +38,10 @@ management:
       export:
         enabled: true
 
+server:
+  cookie:
+    domain: growup.kr
+
 aws:
   access-key: ENC(tRrfTq0vYJT1u3vpxM84nbTudTn76BvDa+SdMpPtnEG3hvnWdfsE1/JsAMaJmYQxt4wSeIFhU7bNNk9NUiullQ==)
   secret-key: ENC(tdUkOVbfi2GBLwfXKSgurrZIRArIsCV0eLZapwOWURRbqBXchqisS4F0erQpIbCtabdyBNxS9xTa9A/FlDrjtjyUZasfIsVZZdvvK1Pk1M8=)
@@ -59,3 +63,8 @@ oauth2:
     scope: https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile
     accessToken-request-uri: https://oauth2.googleapis.com/token
     userinfo-request-uri: https://www.googleapis.com/oauth2/v2/userinfo
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false

@@ -27,12 +27,13 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "fk_team_creator"))
+    @JoinColumn(name = "creator_id", nullable = false, foreignKey = @ForeignKey(name = "fk_team_creator"))
     private User creator;
 
     @Column(nullable = false, length = 10)
@@ -54,5 +55,9 @@ public class Team extends BaseEntity {
 
     public void updateContent(String newContent) {
         this.content = newContent;
+    }
+
+    public void updateCreator(User newCreator) {
+        this.creator = newCreator;
     }
 }

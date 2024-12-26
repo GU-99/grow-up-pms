@@ -18,6 +18,7 @@ public record LoginRequest(
         @Pattern(regexp = PASSWORD_PATTERN)
         String password
 ) {
+
     public UserLoginCommand toCommand() {
         return UserLoginCommand.builder()
                 .username(username)

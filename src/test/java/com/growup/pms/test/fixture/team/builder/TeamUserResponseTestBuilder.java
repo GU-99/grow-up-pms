@@ -13,6 +13,7 @@ public class TeamUserResponseTestBuilder {
     private Long userId = 1L;
     private String nickname = "브라운";
     private String roleName = TeamRole.HEAD.getRoleName();
+    private Boolean isPendingApproval = false;
 
     public static TeamUserResponseTestBuilder 팀원_응답은() {
         return new TeamUserResponseTestBuilder();
@@ -33,11 +34,17 @@ public class TeamUserResponseTestBuilder {
         return this;
     }
 
+    public TeamUserResponseTestBuilder 가입_대기_여부가(Boolean 가입_대기_여부) {
+        this.isPendingApproval = 가입_대기_여부;
+        return this;
+    }
+
     public TeamUserResponse 이다() {
         return TeamUserResponse.builder()
                 .userId(userId)
                 .nickname(nickname)
                 .roleName(roleName)
+                .isPendingApproval(isPendingApproval)
                 .build();
     }
 }

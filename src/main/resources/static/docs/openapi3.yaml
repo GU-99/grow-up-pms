@@ -809,18 +809,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api-v1-team-id-user-432401832'
+                $ref: '#/components/schemas/api-v1-team-id-user-1667290292'
               examples:
                 team-user-controller-v1-test/팀원_목록_조회_api_문서를_생성한다:
                   value: |-
                     [ {
                       "userId" : 1,
                       "nickname" : "브라운",
-                      "roleName" : "HEAD"
+                      "roleName" : "HEAD",
+                      "isPendingApproval" : false
                     }, {
                       "userId" : 2,
                       "nickname" : "코니",
-                      "roleName" : "MATE"
+                      "roleName" : "MATE",
+                      "isPendingApproval" : false
                     } ]
   /api/v1/team/{teamId}/invitation:
     post:
@@ -1437,6 +1439,42 @@ paths:
       responses:
         "204":
           description: "204"
+  /api/v1/team/{id}/head/transfer:
+    post:
+      tags:
+      - Team
+      summary: 팀장 이양
+      description: 해당 팀의 팀장 역할을 다른 팀원에게 이양합니다.
+      operationId: team-controller-v1-docs-test/팀장_이양_api_문서를_생성한다
+      parameters:
+      - name: id
+        in: path
+        description: 팀 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: Content-Type
+        in: header
+        description: application/json
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api-v1-team-id-head-transfer-547626202'
+            examples:
+              team-controller-v1-docs-test/팀장_이양_api_문서를_생성한다:
+                value: |-
+                  {
+                    "userId" : 2
+                  }
+      responses:
+        "200":
+          description: "200"
   /api/v1/team/{id}/user/search:
     get:
       tags:
@@ -1752,9 +1790,9 @@ paths:
     patch:
       tags:
       - ProjectUser
-      summary: 프로젝트원 권한 변경
-      description: "프로젝트 ID, 프로젝트원의 회원 ID, 변경할 권한 이름을 통해 프로젝트원의 권한을 변경합니다."
-      operationId: project-user-controller-v1-docs-test/프로젝트원_권한_변경_api_문서를_생성한다
+      summary: 프로젝트원 역할 변경
+      description: "프로젝트 ID, 프로젝트원의 회원 ID, 변경할 역할 이름을 통해 프로젝트원의 역할을 변경합니다."
+      operationId: project-user-controller-v1-docs-test/프로젝트원_
       parameters:
       - name: projectId
         in: path
@@ -1772,8 +1810,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/프로젝트원 권한 변경 요청 예시 입니다.'
+              $ref: '#/components/schemas/프로젝트원 역할 변경 요청 예시 입니다.'
             examples:
+              project-user-controller-v1-docs-test/프로젝트원_역할_변경_api_문서를_생성한다:
+                value: |-
+                  {
+                    "roleName" : "LEADER"
+                  }
               project-user-controller-v1-docs-test/프로젝트원_권한_변경_api_문서를_생성한다:
                 value: |-
                   {
@@ -2122,13 +2165,6 @@ components:
         userId:
           type: number
           description: 회원 식별자
-    프로젝트원 권한 변경 요청 예시 입니다.:
-      title: 프로젝트원 권한 변경 요청 예시 입니다.
-      type: object
-      properties:
-        roleName:
-          type: string
-          description: 변경할 프로젝트 권한 이름
     api-v1-project-projectId-status1787942943:
       type: array
       items:
@@ -2208,6 +2244,23 @@ components:
         username:
           type: string
           description: 복구된 사용자의 아이디
+    api-v1-team-id-user-1667290292:
+      type: array
+      items:
+        type: object
+        properties:
+          roleName:
+            type: string
+            description: 팀원 역할명
+          nickname:
+            type: string
+            description: 팀원 닉네임
+          isPendingApproval:
+            type: boolean
+            description: 초대 승인 대기 상태
+          userId:
+            type: number
+            description: 팀원 ID
     프로젝트원 추가 요청 예시 입니다.:
       title: 프로젝트원 추가 요청 예시 입니다.
       type: object
@@ -2345,20 +2398,6 @@ components:
         content:
           type: string
           description: 팀 소개
-    api-v1-team-id-user-432401832:
-      type: array
-      items:
-        type: object
-        properties:
-          roleName:
-            type: string
-            description: 팀원 역할명
-          nickname:
-            type: string
-            description: 팀원 닉네임
-          userId:
-            type: number
-            description: 팀원 ID
     api-v1-user-login-434021498:
       type: object
       properties:
@@ -2413,6 +2452,13 @@ components:
         username:
           type: string
           description: 가입 시 입력한 아이디
+    프로젝트원 역할 변경 요청 예시 입니다.:
+      title: 프로젝트원 역할 변경 요청 예시 입니다.
+      type: object
+      properties:
+        roleName:
+          type: string
+          description: 변경할 프로젝트 권한 이름
     프로젝트 일정 생성 요청 예시입니다.:
       title: 프로젝트 일정 생성 요청 예시입니다.
       type: object
@@ -2546,6 +2592,12 @@ components:
         taskId:
           type: number
           description: 프로젝트 일정 식별자
+    api-v1-team-id-head-transfer-547626202:
+      type: object
+      properties:
+        userId:
+          type: number
+          description: 새로운 팀장 ID
     프로젝트 수정 요청 예시입니다.:
       title: 프로젝트 수정 요청 예시입니다.
       type: object

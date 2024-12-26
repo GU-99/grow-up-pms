@@ -1,5 +1,6 @@
 package com.growup.pms.team.service;
 
+import static com.growup.pms.test.fixture.role.builder.RoleTestBuilder.역할은;
 import static com.growup.pms.test.fixture.team.builder.TeamCreateRequestTestBuilder.TeamCoworkerRequestTestBuilder.초대된_사용자는;
 import static com.growup.pms.test.fixture.team.builder.TeamCreateRequestTestBuilder.팀_생성_요청은;
 import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
@@ -13,11 +14,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.project.repository.ProjectUserRepository;
 import com.growup.pms.project.service.ProjectService;
+import com.growup.pms.role.domain.ProjectRole;
+import com.growup.pms.role.domain.Role;
+import com.growup.pms.role.domain.RoleType;
+import com.growup.pms.role.domain.TeamRole;
 import com.growup.pms.role.repository.RoleRepository;
 import com.growup.pms.team.controller.dto.response.TeamNameCheckResponse;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
@@ -28,6 +35,7 @@ import com.growup.pms.team.repository.TeamUserRepository;
 import com.growup.pms.team.service.dto.TeamCreateCommand;
 import com.growup.pms.team.service.dto.TeamUpdateCommand;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
+import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -41,6 +49,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class TeamServiceTest {
+
     @Mock
     TeamRepository teamRepository;
 
@@ -49,6 +58,9 @@ class TeamServiceTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    ProjectUserRepository projectUserRepository;
 
     @Mock
     RoleRepository roleRepository;
@@ -148,6 +160,7 @@ class TeamServiceTest {
 
     @Nested
     class 팀_조회_시에 {
+
         @Test
         void 성공한다() {
             // given
@@ -182,6 +195,7 @@ class TeamServiceTest {
 
     @Nested
     class 팀_변경_시에 {
+
         @Test
         void 성공한다() {
             // given
@@ -206,6 +220,7 @@ class TeamServiceTest {
 
     @Nested
     class 팀_탈퇴_시에 {
+
         @Test
         void 사용자가_탈퇴에_성공한다() {
             // given
@@ -267,6 +282,82 @@ class TeamServiceTest {
 
             // then
             assertThat(실제_결과.available()).isFalse();
+        }
+    }
+
+    @Nested
+    class 팀장_양도_시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Team 팀 = 팀은().식별자가(1L).이다();
+            User 기존_팀장 = 사용자는().식별자가(1L).이다();
+            User 새로운_팀장 = 사용자는().식별자가(2L).이다();
+            Role 프로젝트장_역할 = 역할은().타입이(RoleType.PROJECT).이름이(ProjectRole.ADMIN.getRoleName()).이다();
+
+            when(teamUserRepository.isUserTeamAdmin(팀.getId(), 기존_팀장.getId())).thenReturn(true);
+            when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(true);
+            when(teamRepository.findByIdOrThrow(팀.getId())).thenReturn(팀);
+            when(userRepository.findByIdOrThrow(새로운_팀장.getId())).thenReturn(새로운_팀장);
+            when(roleRepository.findProjectRoleByName(프로젝트장_역할.getName())).thenReturn(프로젝트장_역할);
+
+            // when
+            teamService.changeTeamHead(팀.getId(), 기존_팀장.getId(), 새로운_팀장.getId());
+
+            // then
+            verify(projectUserRepository).deleteMemberFromAllProjects(팀.getId(), 기존_팀장.getId());
+            verify(projectUserRepository).upsertTeamRole(팀.getId(), 새로운_팀장.getId(), 프로젝트장_역할.getId());
+            verify(teamUserRepository).updateTeamRole(팀.getId(), 기존_팀장.getId(), TeamRole.MATE.toString());
+            verify(teamUserRepository).updateTeamRole(팀.getId(), 새로운_팀장.getId(), TeamRole.HEAD.toString());
+        }
+
+        @Test
+        void 자신이_팀장이_아니라면_예외가_발생한다() {
+            // given
+            Long 팀_ID = 1L;
+            Long 기존_팀장_ID = 1L;
+            Long 새로운_팀장_ID = 2L;
+
+            when(teamUserRepository.isUserTeamAdmin(팀_ID, 기존_팀장_ID)).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> teamService.changeTeamHead(팀_ID, 기존_팀장_ID, 새로운_팀장_ID))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
+        }
+
+        @Test
+        void 팀이_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 팀_ID = 1L;
+            Long 기존_팀장_ID = 1L;
+            Long 새로운_팀장_ID = 2L;
+
+            when(teamUserRepository.isUserTeamAdmin(팀_ID, 기존_팀장_ID)).thenReturn(true);
+            when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(true);
+            doThrow(new BusinessException(ErrorCode.TEAM_NOT_FOUND)).when(teamRepository).findByIdOrThrow(팀_ID);
+
+            // when & then
+            assertThatThrownBy(() -> teamService.changeTeamHead(팀_ID, 기존_팀장_ID, 새로운_팀장_ID))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TEAM_NOT_FOUND);
+        }
+
+        @Test
+        void 대상_사용자가_팀원이_아니면_예외가_발생한다() {
+            // given
+            Long 팀_ID = 1L;
+            Long 기존_팀장_ID = 1L;
+            Long 새로운_팀장_ID = 2L;
+
+            when(teamUserRepository.isUserTeamAdmin(팀_ID, 기존_팀장_ID)).thenReturn(true);
+            when(teamUserRepository.existsById(any(TeamUserId.class))).thenReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> teamService.changeTeamHead(팀_ID, 기존_팀장_ID, 새로운_팀장_ID))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NEW_HEAD_NOT_IN_TEAM);
         }
     }
 }

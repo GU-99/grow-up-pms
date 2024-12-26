@@ -3,6 +3,7 @@ package com.growup.pms.docs;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.growup.pms.test.fixture.team.builder.TeamCreateRequestTestBuilder.팀_생성_요청은;
+import static com.growup.pms.test.fixture.team.builder.TeamHeadUpdateRequestTestBuilder.팀장_이양_요청은;
 import static com.growup.pms.test.fixture.team.builder.TeamResponseTestBuilder.팀_생성_응답은;
 import static com.growup.pms.test.fixture.team.builder.TeamUpdateRequestTestBuilder.팀_변경_요청은;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
+import com.growup.pms.team.controller.dto.request.TeamHeadUpdateRequest;
 import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
 import com.growup.pms.team.controller.dto.response.TeamNameCheckResponse;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
@@ -169,5 +171,30 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .queryParameters(parameterWithName("teamName").type(SimpleType.STRING).description("검사할 팀 이름"))
                                 .responseFields(fieldWithPath("available").type(JsonFieldType.BOOLEAN).description("사용 가능 여부"))
                                 .build())));
+    }
+
+    @Test
+    void 팀장_이양_API_문서를_생성한다() throws Exception {
+        // given
+        Long 팀_ID = 1L;
+        Long 기존_팀장_ID = 1L;
+        TeamHeadUpdateRequest 팀장_이양_요청 = 팀장_이양_요청은().새로운_팀장_식별자가(2L).이다();
+
+        doNothing().when(teamService).changeTeamHead(팀_ID, 기존_팀장_ID, 팀장_이양_요청.userId());
+
+        // when & then
+        mockMvc.perform(post("/api/v1/team/{id}/head/transfer", 팀_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(팀장_이양_요청)))
+                .andExpect(status().isOk())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀장 이양")
+                                .description("해당 팀의 팀장 역할을 다른 팀원에게 이양합니다.")
+                                .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
+                                .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("팀 ID"))
+                                .requestFields(
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("새로운 팀장 ID")).build())));
     }
 }

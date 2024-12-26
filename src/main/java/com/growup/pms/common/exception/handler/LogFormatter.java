@@ -16,10 +16,14 @@ public final class LogFormatter {
     private static final String MDC_REQUEST_URI = "requestUri";
     private static final String MDC_REQUEST_METHOD = "method";
 
-    public static void info(Exception ex, HttpServletRequest request) {
+    public static void info(String message, HttpServletRequest request) {
         logWithMdc(request, () ->
-                log.info(LOG_MESSAGE_FORMAT, Level.INFO, request.getMethod(), request.getRequestURI(), ex.getMessage())
+                log.info(LOG_MESSAGE_FORMAT, Level.INFO, request.getMethod(), request.getRequestURI(), message)
         );
+    }
+
+    public static void info(Exception ex, HttpServletRequest request) {
+        info(ex.getMessage(), request);
     }
 
     public static void error(Exception ex, HttpServletRequest request) {

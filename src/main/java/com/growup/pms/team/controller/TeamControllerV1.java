@@ -8,6 +8,7 @@ import com.growup.pms.common.aop.annotation.RequirePermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.role.domain.PermissionType;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
+import com.growup.pms.team.controller.dto.request.TeamHeadUpdateRequest;
 import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
 import com.growup.pms.team.controller.dto.response.TeamNameCheckResponse;
 import com.growup.pms.team.controller.dto.response.TeamResponse;
@@ -71,5 +72,15 @@ public class TeamControllerV1 {
             @Valid @NotNull @Pattern(regexp = TEAM_NAME_PATTERN) String teamName
     ) {
         return ResponseEntity.ok().body(teamService.isTeamNameAvailable(teamName));
+    }
+
+    @PostMapping("/{teamId}/head/transfer")
+    public ResponseEntity<Void> changeTeamHead(
+            @CurrentUser SecurityUser user,
+            @Positive @PathVariable Long teamId,
+            @Valid @RequestBody TeamHeadUpdateRequest request
+    ) {
+        teamService.changeTeamHead(teamId, user.getId(), request.userId());
+        return ResponseEntity.ok().build();
     }
 }

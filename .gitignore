@@ -44,3 +44,4 @@ logs/
 
 ### Etc ###
 spy.log
+src/main/resources/static/docs/openapi3.yaml

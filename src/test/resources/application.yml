@@ -32,8 +32,9 @@ security:
     access-token-expiration-millis: 86400000
     refresh-token-expiration-millis: 604800000
 
-mailtrap:
-  from: mailtrap@demomailtrap.com
+server:
+  cookie:
+    domain: localhost
 
 aws:
   access-key: test-access-key
