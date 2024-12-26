@@ -105,7 +105,7 @@ public class StatusControllerV1 {
         log.debug("projectId={}", projectId);
         log.debug("statusId={}", statusId);
 
-        statusService.deleteStatus(statusId);
+        statusService.deleteStatus(projectId, statusId);
 
         return ResponseEntity.noContent().build();
     }

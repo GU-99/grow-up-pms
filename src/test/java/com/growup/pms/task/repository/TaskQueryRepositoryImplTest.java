@@ -6,6 +6,7 @@ import static com.growup.pms.test.fixture.task.builder.TaskTestBuilder.일정은
 import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -50,6 +52,9 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
     @Autowired
     TaskQueryRepositoryImpl taskQueryRepository;
+
+    @Autowired
+    TestEntityManager entityManager;
 
     User 브라운, 레니, 레너드;
     Team GU팀, 게시판팀;
@@ -124,21 +129,21 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
         );
 
         PMS_환경설정 = taskRepository.save(
-                일정은().식별자는(1L)
+                일정은()
                         .상태는(PMS_완료)
                         .이름은("PMS 프로젝트의 환경설정을 진행함")
                         .내용은("- build.gradle 의존성 추가 <br> - Config 클래스 추가")
-                        .정렬순서는((short) 2)
+                        .정렬순서는((short) 1)
                         .시작일자는(LocalDate.parse("2023-01-01"))
                         .종료일자는(LocalDate.parse("2023-01-15"))
                         .이다()
         );
         PMS_등록기능 = taskRepository.save(
-                일정은().식별자는(2L)
+                일정은()
                         .상태는(PMS_완료)
                         .이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
                         .내용은("- ProjectRepository 구현 <br> - ProjectService 클래스 내부 구현")
-                        .정렬순서는((short) 1)
+                        .정렬순서는((short) 2)
                         .시작일자는(LocalDate.parse("2023-01-16"))
                         .종료일자는(LocalDate.parse("2023-01-31"))
                         .이다()
@@ -148,7 +153,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .상태는(PMS_진행중)
                         .이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
                         .내용은("- 조회 레포지토리 구현 <br> - 조회 쿼리 구현 및 테스트 작성")
-                        .정렬순서는((short) 3)
+                        .정렬순서는((short) 1)
                         .시작일자는(LocalDate.parse("2023-02-01"))
                         .종료일자는(null)
                         .이다()
@@ -158,7 +163,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .상태는(PMS_할일)
                         .이름은("PMS 프로젝트의 수정 기능 구현을 진행함")
                         .내용은(null)
-                        .정렬순서는((short) 5)
+                        .정렬순서는((short) 1)
                         .시작일자는(null)
                         .종료일자는(null)
                         .이다()
@@ -168,7 +173,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .상태는(PMS_할일)
                         .이름은("PMS 프로젝트의 삭제 기능 구현을 진행함")
                         .내용은("- 누가누가 이 기능에 먼저 도착할까")
-                        .정렬순서는((short) 4)
+                        .정렬순서는((short) 2)
                         .시작일자는(null)
                         .종료일자는(null)
                         .이다()
@@ -193,7 +198,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
             // then
             assertThat(실제_결과.get(완료_상태_ID)).hasSize(2);
             assertThat(실제_결과.get(완료_상태_ID).stream().map(TaskResponse::getTaskName))
-                    .containsExactly("PMS 프로젝트의 등록 기능 구현을 진행함", "PMS 프로젝트의 환경설정을 진행함");
+                    .containsExactly("PMS 프로젝트의 환경설정을 진행함", "PMS 프로젝트의 등록 기능 구현을 진행함");
 
             assertThat(실제_결과.get(진행중_상태_ID)).hasSize(1);
             assertThat(실제_결과.get(진행중_상태_ID).stream().map(TaskResponse::getTaskName))
@@ -201,7 +206,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
             assertThat(실제_결과.get(할일_상태_ID)).hasSize(2);
             assertThat(실제_결과.get(할일_상태_ID).stream().map(TaskResponse::getTaskName))
-                    .containsExactly("PMS 프로젝트의 삭제 기능 구현을 진행함", "PMS 프로젝트의 수정 기능 구현을 진행함");
+                    .containsExactly("PMS 프로젝트의 수정 기능 구현을 진행함", "PMS 프로젝트의 삭제 기능 구현을 진행함");
 
             assertThat(실제_결과.get(보류_상태_ID)).isNull();
         }
@@ -216,6 +221,27 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
 
             // then
             assertThat(실제_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 일정_정렬순서_변경시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 상태_ID = PMS_완료.getId();
+            Short 삭제될_정렬순서 = PMS_환경설정.getSortOrder();
+
+            // when
+            taskQueryRepository.updateSortOrderInStatus(상태_ID, 삭제될_정렬순서);
+            entityManager.clear();
+
+            // then
+            assertSoftly(softly -> {
+                PMS_등록기능 = taskRepository.findByIdOrThrow(PMS_등록기능.getId());
+                assertThat(PMS_등록기능.getSortOrder()).isEqualTo((short) 1);
+            });
         }
     }
 }

@@ -425,6 +425,7 @@ class TaskServiceTest {
         @Test
         void 성공한다() {
             // given
+            Long 기존_상태_ID = 1L;
             Long 기존_일정_ID = 1L;
             Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
 
@@ -432,22 +433,24 @@ class TaskServiceTest {
             doNothing().when(taskRepository).delete(기존_일정);
 
             // when
-            taskService.deleteTask(기존_일정_ID);
+            taskService.deleteTask(기존_상태_ID);
 
             // then
+            verify(taskRepository).updateSortOrderInStatus(기존_상태_ID, 기존_일정.getSortOrder());
             verify(taskRepository).delete(기존_일정);
         }
 
         @Test
         void 일정이_없으면_예외가_발생한다() {
             // given
+            Long 기존_프로젝트_ID = 1L;
             Long 기존_일정_ID = 1L;
 
             doThrow(new BusinessException(ErrorCode.TASK_NOT_FOUND))
                     .when(taskRepository).findByIdOrThrow(기존_일정_ID);
 
             // when & then
-            assertThatThrownBy(() -> taskService.deleteTask(기존_일정_ID))
+            assertThatThrownBy(() -> taskService.deleteTask(기존_프로젝트_ID))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
         }

@@ -6,6 +6,7 @@ import static com.growup.pms.test.fixture.status.builder.StatusTestBuilder.상�
 import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
 import static com.growup.pms.test.fixture.user.builder.UserTestBuilder.사용자는;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.repository.ProjectRepository;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @Transactional
 @AutoKoreanDisplayName
@@ -44,6 +46,9 @@ class StatusQueryRepositoryImplTest extends RepositoryTestSupport {
 
     @Autowired
     StatusQueryRepositoryImpl statusQueryRepository;
+
+    @Autowired
+    TestEntityManager entityManager;
 
     User 브라운, 레니, 레너드;
     Team GU팀, 게시판팀;
@@ -135,6 +140,29 @@ class StatusQueryRepositoryImplTest extends RepositoryTestSupport {
 
             // then
             assertThat(실졔_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 상태_정렬순서_갱신시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 프로젝트_ID = PMS_프로젝트.getId();
+            Short 삭제될_정렬순서 = PMS_할일.getSortOrder();
+
+            // when
+            statusQueryRepository.updateSortOrdersInProject(프로젝트_ID, 삭제될_정렬순서);
+            entityManager.clear();
+
+            // then
+            assertSoftly(softly -> {
+                PMS_진행중 = statusRepository.findByIdOrThrow(PMS_진행중.getId());
+                PMS_완료 = statusRepository.findByIdOrThrow(PMS_완료.getId());
+                assertThat(PMS_진행중.getSortOrder()).isEqualTo((short) 1);
+                assertThat(PMS_완료.getSortOrder()).isEqualTo((short) 2);
+            });
         }
     }
 }

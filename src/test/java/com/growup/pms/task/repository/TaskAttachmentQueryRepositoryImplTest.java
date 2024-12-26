@@ -97,7 +97,7 @@ class TaskAttachmentQueryRepositoryImplTest extends RepositoryTestSupport {
                         .상태는(PMS_할일)
                         .이름은("PMS 프로젝트의 환경설정을 진행함")
                         .내용은("- build.gradle 의존성 추가 <br> - Config 클래스 추가")
-                        .정렬순서는((short) 2)
+                        .정렬순서는((short) 1)
                         .시작일자는(LocalDate.parse("2023-01-01"))
                         .종료일자는(LocalDate.parse("2023-01-15"))
                         .이다()

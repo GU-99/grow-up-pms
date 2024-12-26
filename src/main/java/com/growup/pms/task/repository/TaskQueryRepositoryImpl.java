@@ -67,7 +67,18 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                 .collect(groupingBy(task -> Objects.requireNonNull(task).getStatusId()));
     }
 
+    public void updateSortOrderInStatus(Long statusId, Short sortOrder) {
+        queryFactory.update(task)
+                .set(task.sortOrder, task.sortOrder.subtract(1))
+                .where(isStatusId(statusId), task.sortOrder.gt(sortOrder))
+                .execute();
+    }
+
     private BooleanExpression isProjectId(Long projectId) {
         return projectId != null ? task.status.project.id.eq(projectId) : null;
+    }
+
+    private BooleanExpression isStatusId(Long statusId) {
+        return statusId != null ? task.status.id.eq(statusId) : null;
     }
 }
