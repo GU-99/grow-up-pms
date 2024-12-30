@@ -20,7 +20,6 @@ import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,11 +69,11 @@ public class TaskService {
 
     public List<TaskKanbanResponse> getTasks(Long projectId) {
         List<TaskKanbanResponse> responses = new ArrayList<>();
-        Map<Long, List<TaskResponse>> statusTaskMap = taskRepository.getTasksByProjectId(projectId);
-        statusTaskMap.forEach((statusId, tasks) -> {
-            Status status = statusRepository.findByIdOrThrow(statusId);
-            responses.add(TaskKanbanResponse.of(status, tasks));
-        });
+        statusRepository.findAllByProjectId(projectId)
+                .forEach(status -> {
+                    List<TaskResponse> tasks = taskRepository.getAllTasksByStatus(status.getId());
+                    responses.add(TaskKanbanResponse.of(status, tasks));
+                });
         return responses;
     }
 
@@ -109,7 +108,7 @@ public class TaskService {
     public void deleteTask(Long taskId) {
         Task task = taskRepository.findByIdOrThrow(taskId);
         Status status = task.getStatus();
-        taskRepository.updateSortOrderInStatus(status.getId(), task.getSortOrder());
+        taskRepository.decreaseSortOrderByStatus(status.getId(), task.getSortOrder());
         taskRepository.delete(task);
     }
 
