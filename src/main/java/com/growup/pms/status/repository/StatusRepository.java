@@ -3,6 +3,7 @@ package com.growup.pms.status.repository;
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.status.domain.Status;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +13,6 @@ public interface StatusRepository extends JpaRepository<Status, Long>, StatusQue
     default Status findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.STATUS_NOT_FOUND));
     }
+
+    List<Status> findAllByProjectId(Long projectId);
 }
