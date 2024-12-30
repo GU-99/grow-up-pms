@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface TaskQueryRepository {
 
-    void decreaseSortOrderByStatus(Long projectId, Short sortOrder);
+    void decreaseSortOrderByStatus(Long statusId, Short sortOrder);
 
     List<TaskResponse> getAllTasksByStatus(Long statusId);
 }
