@@ -59,10 +59,6 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                 .fetch();
     }
 
-    private BooleanExpression isProjectId(Long projectId) {
-        return projectId != null ? task.status.project.id.eq(projectId) : null;
-    }
-
     private BooleanExpression isStatusId(Long statusId) {
         return statusId != null ? task.status.id.eq(statusId) : null;
     }

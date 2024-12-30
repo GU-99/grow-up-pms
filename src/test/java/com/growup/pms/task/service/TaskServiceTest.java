@@ -199,8 +199,6 @@ class TaskServiceTest {
             // given
             Long 잘못된_상태_ID = Long.MIN_VALUE;
 
-            List<TaskResponse> 예상_결과 = Collections.emptyList();
-
             // when
             List<TaskKanbanResponse> 실제_결과 = taskService.getTasks(잘못된_상태_ID);
 
@@ -475,15 +473,13 @@ class TaskServiceTest {
             List<TaskAttachmentResponse> 실제_결과 = taskService.getTaskAttachments(일정_ID);
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(실제_결과).hasSize(예상_응답_목록.size())
-                        .extracting("fileId", "fileName", "uploadName")
-                        .containsExactlyInAnyOrder(
-                                tuple(예상_응답_1.fileId(), 예상_응답_1.fileName(), 예상_응답_1.uploadName()),
-                                tuple(예상_응답_2.fileId(), 예상_응답_2.fileName(), 예상_응답_2.uploadName()),
-                                tuple(예상_응답_3.fileId(), 예상_응답_3.fileName(), 예상_응답_3.uploadName())
-                        );
-            });
+            assertSoftly(softly -> softly.assertThat(실제_결과).hasSize(예상_응답_목록.size())
+                    .extracting("fileId", "fileName", "uploadName")
+                    .containsExactlyInAnyOrder(
+                            tuple(예상_응답_1.fileId(), 예상_응답_1.fileName(), 예상_응답_1.uploadName()),
+                            tuple(예상_응답_2.fileId(), 예상_응답_2.fileName(), 예상_응답_2.uploadName()),
+                            tuple(예상_응답_3.fileId(), 예상_응답_3.fileName(), 예상_응답_3.uploadName())
+                    ));
         }
 
         @Test
