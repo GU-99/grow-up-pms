@@ -42,7 +42,6 @@ import com.growup.pms.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -173,18 +172,19 @@ class TaskServiceTest {
                     .정렬순서는((short) 3)
                     .이다();
 
-            List<TaskResponse> 예상_일정_목록_2 = List.of(예상_일정_3);
+            List<Status> 예상_상태_목록 = List.of(예상_상태_1, 예상_상태_2);
+
             List<TaskResponse> 예상_일정_목록_1 = List.of(예상_일정_1, 예상_일정_2);
-            Map<Long, List<TaskResponse>> 예상_상태별_일정 = Map.of(예상_상태_ID_1, 예상_일정_목록_1, 예상_상태_ID_2, 예상_일정_목록_2);
+            List<TaskResponse> 예상_일정_목록_2 = List.of(예상_일정_3);
 
             TaskKanbanResponse 예상_응답_1 = 일정_칸반_응답은().일정목록은(예상_일정_목록_1).이다();
             TaskKanbanResponse 예상_응답_2 = 일정_칸반_응답은().상태_식별자는(예상_상태_ID_2).일정목록은(예상_일정_목록_2).이다();
 
             List<TaskKanbanResponse> 예상_결과 = List.of(예상_응답_1, 예상_응답_2);
 
-            when(taskRepository.getTasksByProjectId(예상_프로젝트_ID)).thenReturn(예상_상태별_일정);
-            when(statusRepository.findByIdOrThrow(예상_상태_ID_1)).thenReturn(예상_상태_1);
-            when(statusRepository.findByIdOrThrow(예상_상태_ID_2)).thenReturn(예상_상태_2);
+            when(statusRepository.findAllByProjectId(예상_프로젝트_ID)).thenReturn(예상_상태_목록);
+            when(taskRepository.getAllTasksByStatus(예상_상태_ID_1)).thenReturn(예상_일정_목록_1);
+            when(taskRepository.getAllTasksByStatus(예상_상태_ID_2)).thenReturn(예상_일정_목록_2);
 
             // when
             List<TaskKanbanResponse> 실제_결과 = taskService.getTasks(예상_프로젝트_ID);
@@ -195,15 +195,12 @@ class TaskServiceTest {
         }
 
         @Test
-        void 해당_프로젝트에_일정이_없으면_빈맵을_반환한다() {
+        void 해당_상태에_일정이_없으면_빈리스트를_반환한다() {
             // given
-            Long 잘못된_프로젝트_ID = Long.MAX_VALUE;
-
-            Map<Long, List<TaskResponse>> 예상_결과 = Collections.emptyMap();
-            when(taskRepository.getTasksByProjectId(잘못된_프로젝트_ID)).thenReturn(예상_결과);
+            Long 잘못된_상태_ID = Long.MIN_VALUE;
 
             // when
-            List<TaskKanbanResponse> 실제_결과 = taskService.getTasks(잘못된_프로젝트_ID);
+            List<TaskKanbanResponse> 실제_결과 = taskService.getTasks(잘못된_상태_ID);
 
             // then
             assertThat(실제_결과).isEmpty();
@@ -436,7 +433,7 @@ class TaskServiceTest {
             taskService.deleteTask(기존_상태_ID);
 
             // then
-            verify(taskRepository).updateSortOrderInStatus(기존_상태_ID, 기존_일정.getSortOrder());
+            verify(taskRepository).decreaseSortOrderByStatus(기존_상태_ID, 기존_일정.getSortOrder());
             verify(taskRepository).delete(기존_일정);
         }
 
@@ -476,15 +473,13 @@ class TaskServiceTest {
             List<TaskAttachmentResponse> 실제_결과 = taskService.getTaskAttachments(일정_ID);
 
             // then
-            assertSoftly(softly -> {
-                softly.assertThat(실제_결과).hasSize(예상_응답_목록.size())
-                        .extracting("fileId", "fileName", "uploadName")
-                        .containsExactlyInAnyOrder(
-                                tuple(예상_응답_1.fileId(), 예상_응답_1.fileName(), 예상_응답_1.uploadName()),
-                                tuple(예상_응답_2.fileId(), 예상_응답_2.fileName(), 예상_응답_2.uploadName()),
-                                tuple(예상_응답_3.fileId(), 예상_응답_3.fileName(), 예상_응답_3.uploadName())
-                        );
-            });
+            assertSoftly(softly -> softly.assertThat(실제_결과).hasSize(예상_응답_목록.size())
+                    .extracting("fileId", "fileName", "uploadName")
+                    .containsExactlyInAnyOrder(
+                            tuple(예상_응답_1.fileId(), 예상_응답_1.fileName(), 예상_응답_1.uploadName()),
+                            tuple(예상_응답_2.fileId(), 예상_응답_2.fileName(), 예상_응답_2.uploadName()),
+                            tuple(예상_응답_3.fileId(), 예상_응답_3.fileName(), 예상_응답_3.uploadName())
+                    ));
         }
 
         @Test
