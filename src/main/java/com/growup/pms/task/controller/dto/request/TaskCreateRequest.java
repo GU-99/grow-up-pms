@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 
@@ -39,7 +40,7 @@ public record TaskCreateRequest(
 
     public TaskCreateCommand toCommand() {
         return TaskCreateCommand.builder()
-                .assigneeIds(assigneeIds)
+                .assigneeIds(assigneeIds == null ? Collections.emptyList() : assigneeIds)
                 .statusId(statusId)
                 .taskName(taskName)
                 .content(content)
