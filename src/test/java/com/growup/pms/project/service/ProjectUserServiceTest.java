@@ -169,7 +169,7 @@ public class ProjectUserServiceTest {
             projectUserService.kickProjectUser(기존_프로젝트_ID, 기존_회원_ID);
 
             // then
-            verify(projectUserRepository).delete(projectUser);
+            verify(projectUserRepository).deleteMemberFromProject(기존_프로젝트_ID, 기존_회원_ID);
         }
 
         @Test

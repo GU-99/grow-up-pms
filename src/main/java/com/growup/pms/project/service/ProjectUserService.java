@@ -66,7 +66,7 @@ public class ProjectUserService {
     public void kickProjectUser(Long projectId, Long targetUserId) {
         ProjectUser projectUser = projectUserRepository.findByIdOrThrow(new ProjectUserId(projectId, targetUserId));
         ensureUserIsAssignee(projectUser.getRole().getName());
-        projectUserRepository.delete(projectUser);
+        projectUserRepository.deleteMemberFromProject(projectId, targetUserId);
     }
 
     private void ensureUserIsAssignee(String targetUserRoleName) {

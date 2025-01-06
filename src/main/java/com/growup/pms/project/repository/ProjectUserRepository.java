@@ -32,14 +32,21 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Projec
 
     @Modifying
     @Query(value = """
-        INSERT INTO project_users(project_id, user_id, role_id)
-        SELECT p.id, :userId, :roleId
-        FROM projects p
-        WHERE p.team_id = :teamId
-        ON DUPLICATE KEY UPDATE role_id = :roleId""", nativeQuery = true)
+            INSERT INTO project_users(project_id, user_id, role_id)
+            SELECT p.id, :userId, :roleId
+            FROM projects p
+            WHERE p.team_id = :teamId
+            ON DUPLICATE KEY UPDATE role_id = :roleId""", nativeQuery = true)
     void upsertTeamRole(@Param("teamId") Long teamId, @Param("userId") Long userId, @Param("roleId") Long roleId);
 
     default ProjectUser findByIdOrThrow(ProjectUserId id) {
         return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.PROJECT_USER_NOT_FOUND));
     }
+
+    @Modifying
+    @Query("""
+            DELETE FROM ProjectUser pu
+            WHERE pu.user.id = :userId AND pu.project.id = :projectId
+            """)
+    void deleteMemberFromProject(@Param("projectId") Long projectId, @Param("userId") Long userId);
 }
