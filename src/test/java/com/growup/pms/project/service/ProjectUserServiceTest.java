@@ -328,7 +328,7 @@ public class ProjectUserServiceTest {
             List<ProjectUserSearchResponse> result = projectUserService.searchProjectUsersByPrefix(프로젝트_ID, 접두사);
 
             // then
-            assertThat(검색_결과_목록).hasSize(2)
+            assertThat(result).hasSize(2)
                     .extracting("userId", "nickname")
                     .containsExactlyInAnyOrder(
                             tuple(검색_결과_1.userId(), 검색_결과_1.nickname()),
