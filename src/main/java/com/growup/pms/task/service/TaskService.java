@@ -47,7 +47,9 @@ public class TaskService {
 
         Task savedTask = taskRepository.save(command.toEntity(status));
 
-        addAssignees(savedTask, command.assigneeIds());
+        if (!command.assigneeIds().isEmpty()) {
+            addAssignees(savedTask, command.assigneeIds());
+        }
 
         return TaskDetailResponse.of(savedTask);
     }
@@ -61,9 +63,7 @@ public class TaskService {
     private void addAssignees(Task savedTask, List<Long> assigneeIds) {
         List<TaskUser> assignees = new ArrayList<>();
         List<User> users = userRepository.findAllById(assigneeIds);
-        for (User user: users) {
-            assignees.add(TaskUser.builder().task(savedTask).user(user).build());
-        }
+        users.forEach(user -> assignees.add(TaskUser.builder().task(savedTask).user(user).build()));
         taskUserRepository.saveAll(assignees);
     }
 

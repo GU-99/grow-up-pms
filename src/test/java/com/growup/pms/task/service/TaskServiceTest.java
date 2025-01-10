@@ -103,14 +103,12 @@ class TaskServiceTest {
             Long 예상_일정_ID = 1L;
             Long 예상_프로젝트_ID = 1L;
             Long 예상_상태_ID = 1L;
-            List<Long> 예상_담당자_ID_목록 = Collections.emptyList();
+            List<Long> 예상_담당자_ID_목록 = null;
             Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
-            List<User> 예상_담당자_목록 = Collections.emptyList();
             Task 예상_일정 = 일정은().이다();
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().담당자_ID_목록은(예상_담당자_ID_목록).이다().toCommand();
 
             when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
-            when(userRepository.findAllById(예상_담당자_ID_목록)).thenReturn(예상_담당자_목록);
             when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
             // when
