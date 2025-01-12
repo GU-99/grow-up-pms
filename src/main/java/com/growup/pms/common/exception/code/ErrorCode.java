@@ -56,6 +56,7 @@ public enum ErrorCode {
     UNAUTHORIZED_ROLE_ASSIGNMENT(BAD_REQUEST, "TM_004", "권한이 없는 역할 지정입니다. 적절한 권한을 가진 사용자만 역할을 지정할 수 있습니다."),
     TEAM_NAME_DUPLICATED(BAD_REQUEST, "TM_005", "팀 이름은 중복될 수 없습니다."),
     NEW_HEAD_NOT_IN_TEAM(BAD_REQUEST, "TM_006", "새로운 팀장은 팀의 구성원이어야 합니다."),
+    LEADER_DELEGATION_REQUIRED(BAD_REQUEST, "TM_007", "팀장은 탈퇴 전 다른 팀원에게 팀장 권한을 이양해야 합니다."),
 
     // 프로젝트(Project) - PR
     PROJECT_NOT_FOUND(NOT_FOUND, "PR_001", "해당 프로젝트를 찾을 수 없습니다. 프로젝트 정보를 확인해 주세요."),

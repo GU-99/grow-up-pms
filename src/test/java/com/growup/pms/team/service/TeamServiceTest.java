@@ -237,19 +237,18 @@ class TeamServiceTest {
         }
 
         @Test
-        void 팀장이_탈퇴에_성공한다() {
+        void 팀장이_탈퇴_시에_예외가_발생한다() {
             // given
             Long 팀_ID = 1L;
             Long 사용자_ID = 1L;
             boolean 팀장_여부 = true;
 
             when(teamRepository.isUserTeamLeader(팀_ID, 사용자_ID)).thenReturn(팀장_여부);
-            doNothing().when(teamUserRepository).deleteAllByTeamId(팀_ID);
-            doNothing().when(projectService).deleteAllProjectsForTeam(팀_ID);
 
             // when & then
-            assertThatCode(() -> teamService.leaveTeam(팀_ID, 사용자_ID))
-                    .doesNotThrowAnyException();
+            assertThatThrownBy(() -> teamService.leaveTeam(팀_ID, 사용자_ID))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", ErrorCode.LEADER_DELEGATION_REQUIRED);
         }
     }
 
