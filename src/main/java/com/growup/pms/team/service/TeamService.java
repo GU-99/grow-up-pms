@@ -60,7 +60,7 @@ public class TeamService {
     @Transactional
     public void leaveTeam(Long teamId, Long userId) {
         if (teamRepository.isUserTeamLeader(teamId, userId)) {
-            removeTeam(teamId);
+            throw new BusinessException(ErrorCode.LEADER_DELEGATION_REQUIRED);
         } else {
             teamUserRepository.deleteById(new TeamUserId(teamId, userId));
         }
