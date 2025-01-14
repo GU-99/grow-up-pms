@@ -9,7 +9,7 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
-import com.growup.pms.common.util.NicknameUtil;
+import com.growup.pms.common.util.RandomNicknameGenerator;
 import com.growup.pms.user.domain.Provider;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.domain.UserProfile;
@@ -27,7 +27,6 @@ public class OauthLoginService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
-    private final NicknameUtil nicknameUtil;
 
     @Transactional
     public TokenResponse authenticate(Provider provider, OauthUserLoginCommand command) {
@@ -63,7 +62,7 @@ public class OauthLoginService {
     }
 
     private User joinUser(String email, Provider provider) {
-        String newNickname = nicknameUtil.generateNickname();
+        String newNickname = RandomNicknameGenerator.generateNickname();
 
         User user = User.builder()
                 .provider(provider)
