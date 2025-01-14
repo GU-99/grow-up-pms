@@ -6,4 +6,5 @@ import java.util.List;
 public interface ProjectQueryRepository {
 
     List<ProjectResponse> getProjectsByTeamId(Long teamId);
+    List<Long> getProjectIdsByTeamId(Long teamId);
 }

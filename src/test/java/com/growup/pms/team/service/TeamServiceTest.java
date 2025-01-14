@@ -245,7 +245,7 @@ class TeamServiceTest {
 
             when(teamRepository.isUserTeamLeader(팀_ID, 사용자_ID)).thenReturn(팀장_여부);
             doNothing().when(teamUserRepository).deleteAllByTeamId(팀_ID);
-            doNothing().when(projectService).deleteAllProjectsForTeam(팀_ID);
+            doNothing().when(projectService).deleteAllProjectsInTeam(팀_ID);
 
             // when & then
             assertThatCode(() -> teamService.leaveTeam(팀_ID, 사용자_ID))

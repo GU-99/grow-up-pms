@@ -20,14 +20,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
 
     @Override
     public List<ProjectResponse> getProjectsByTeamId(Long teamId) {
-        List<Long> ids = queryFactory
-                .select(project.id)
-                .from(project)
-                .join(project.team, team)
-                .where(
-                        isTeamId(teamId)
-                )
-                .fetch();
+        List<Long> ids  = getProjectIdsByTeamId(teamId);
 
         if (ids.isEmpty()) {
             return Collections.emptyList();
@@ -47,6 +40,17 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .join(project.team, team)
                 .where(
                         project.id.in(ids)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<Long> getProjectIdsByTeamId(Long teamId) {
+        return queryFactory.select(project.id)
+                .from(project)
+                .join(project.team, team)
+                .where(
+                        isTeamId(teamId)
                 )
                 .fetch();
     }

@@ -49,4 +49,6 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Projec
             WHERE pu.user.id = :userId AND pu.project.id = :projectId
             """)
     void deleteMemberFromProject(@Param("projectId") Long projectId, @Param("userId") Long userId);
+
+    void deleteAllByProjectId(Long projectId);
 }
