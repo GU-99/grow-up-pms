@@ -16,6 +16,7 @@ import com.growup.pms.user.domain.UserProfile;
 import com.growup.pms.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class OauthLoginService {
     private final RefreshTokenService redisRefreshTokenService;
     private final NicknameUtil nicknameUtil;
 
+    @Transactional
     public TokenResponse authenticate(Provider provider, OauthUserLoginCommand command) {
         Oauth2Service oAuth2Service = getOauth2Service(provider);
 
