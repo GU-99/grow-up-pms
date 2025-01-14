@@ -1,11 +1,10 @@
 package com.growup.pms.common.util;
 
 import java.util.concurrent.ThreadLocalRandom;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @Component
 public class NicknameUtil {
 
@@ -20,7 +19,7 @@ public class NicknameUtil {
             "장미", "튤립", "백합", "국화", "진달래", "나팔꽃", "목련", "봉숭아", "제비꽃", "해바라기", "할미꽃",
             "무궁화", "벚꽃", "개나리", "매화", "산수유", "민들레", "메리골드", "라일락", "아이비", "옥잠화", "감나무",
             "살구나무", "포도나무", "수국", "아마란스", "코스모스", "철쭉", "소나무", "느티나무", "자목련",
-            "해바라기", "까마중", "산딸기", "비비추", "봉숭아", "살구나무", "포플러", "등나무", "마가렛"
+            "데이지", "까마중", "산딸기", "비비추", "장미", "튤립", "포플러", "등나무", "마가렛"
     };
 
     public String generateNickname() {
