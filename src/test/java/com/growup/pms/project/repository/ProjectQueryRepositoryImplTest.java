@@ -15,6 +15,7 @@ import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -105,6 +106,37 @@ class ProjectQueryRepositoryImplTest extends RepositoryTestSupport {
 
             // when
             List<ProjectResponse> 실제_결과 = projectQueryRepository.getProjectsByTeamId(잘못된_팀_ID);
+
+            // then
+            assertThat(실제_결과).isEmpty();
+        }
+    }
+
+    @Nested
+    class 팀_프로젝트_ID_목록_조회시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 팀_ID = GU팀.getId();
+
+            // when
+            List<Long> 실제_결과 = projectQueryRepository.getProjectIdsByTeamId(팀_ID);
+
+            // then
+            SoftAssertions.assertSoftly(softly -> {
+                assertThat(실제_결과).hasSize(3);
+                assertThat(실제_결과).containsExactlyInAnyOrder(PMS_프로젝트.getId(), 게시판_프로젝트.getId(), 팀원모집_프로젝트.getId());
+            });
+        }
+
+        @Test
+        void 프로젝트가_없으면_빈_리스트를_반환한다() {
+            // given
+            Long 잘못된_팀_ID = Long.MIN_VALUE;
+
+            // when
+            List<Long> 실제_결과 = projectQueryRepository.getProjectIdsByTeamId(잘못된_팀_ID);
 
             // then
             assertThat(실제_결과).isEmpty();
