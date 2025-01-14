@@ -9,6 +9,7 @@ import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.security.jwt.JwtTokenProvider;
 import com.growup.pms.common.security.jwt.dto.TokenResponse;
+import com.growup.pms.common.util.NicknameUtil;
 import com.growup.pms.user.domain.Provider;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.domain.UserProfile;
@@ -25,6 +26,7 @@ public class OauthLoginService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService redisRefreshTokenService;
+    private final NicknameUtil nicknameUtil;
 
     public TokenResponse authenticate(Provider provider, OauthUserLoginCommand command) {
         Oauth2Service oAuth2Service = getOauth2Service(provider);
@@ -33,9 +35,8 @@ public class OauthLoginService {
         OauthProfile profile = oAuth2Service.requestProfile(provider, accessToken);
 
         String email = profile.getEmail();
-        String nickname = profile.getNickname();
 
-        User user = userRepository.findByEmail(email).orElseGet(() -> joinUser(email, nickname, provider));
+        User user = userRepository.findByEmail(email).orElseGet(() -> joinUser(email, provider));
         SecurityUser securityUser = convertSecurityUser(user);
 
         TokenResponse newToken = jwtTokenProvider.generateToken(securityUser);
@@ -59,13 +60,15 @@ public class OauthLoginService {
                 .build();
     }
 
-    private User joinUser(String email, String nickname, Provider provider) {
+    private User joinUser(String email, Provider provider) {
+        String newNickname = nicknameUtil.generateNickname();
+
         User user = User.builder()
                 .provider(provider)
                 .email(email)
                 .username(email)
                 .profile(UserProfile.builder()
-                        .nickname(nickname)
+                        .nickname(newNickname)
                         .build())
                 .build();
 
