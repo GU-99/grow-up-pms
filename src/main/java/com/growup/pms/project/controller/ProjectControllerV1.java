@@ -68,7 +68,7 @@ public class ProjectControllerV1 {
 
     @PatchMapping("/{projectId}")
     @RequirePermission(PermissionType.PROJECT_UPDATE)
-    public ResponseEntity<Void> editProject(@PathVariable @TeamId Long teamId, @PathVariable @ProjectId Long projectId,
+    public ResponseEntity<Void> editProject(@PathVariable Long teamId, @PathVariable @ProjectId Long projectId,
                                             @Valid @RequestBody ProjectEditRequest request) {
         log.debug("ProjectControllerV1#editProject called.");
 
@@ -79,7 +79,7 @@ public class ProjectControllerV1 {
 
     @DeleteMapping("/{projectId}")
     @RequirePermission(PermissionType.PROJECT_DELETE)
-    public ResponseEntity<Void> deleteProject(@PathVariable @TeamId Long teamId, @PathVariable Long projectId) {
+    public ResponseEntity<Void> deleteProject(@PathVariable Long teamId, @PathVariable @ProjectId Long projectId) {
         log.debug("ProjectControllerV1#deleteProject called.");
 
         projectService.deleteProject(projectId);
