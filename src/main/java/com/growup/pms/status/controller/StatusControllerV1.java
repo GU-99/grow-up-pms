@@ -36,7 +36,7 @@ public class StatusControllerV1 {
     @PostMapping
     @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
     public ResponseEntity<StatusResponse> createStatus(
-            @Positive @PathVariable Long projectId,
+            @Positive @ProjectId @PathVariable Long projectId,
             @Valid @RequestBody StatusCreateRequest request
     ) {
         log.debug("StatusControllerV1#createStatus called.");
