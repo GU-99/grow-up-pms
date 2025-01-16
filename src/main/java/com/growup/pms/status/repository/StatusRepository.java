@@ -15,4 +15,6 @@ public interface StatusRepository extends JpaRepository<Status, Long>, StatusQue
     }
 
     List<Status> findAllByProjectId(Long projectId);
+
+    void deleteAllByProjectId(Long projectId);
 }

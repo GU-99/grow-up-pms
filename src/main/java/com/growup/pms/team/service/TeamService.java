@@ -129,7 +129,7 @@ public class TeamService {
     }
 
     private void removeTeam(Long teamId) {
-        projectService.deleteAllProjectsForTeam(teamId);
+        projectService.deleteAllProjectsInTeam(teamId);
         teamUserRepository.deleteAllByTeamId(teamId);
     }
 

@@ -12,6 +12,8 @@ import com.growup.pms.project.service.dto.ProjectUserCreateCommand;
 import com.growup.pms.role.domain.ProjectRole;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.repository.RoleRepository;
+import com.growup.pms.status.repository.StatusRepository;
+import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.user.domain.User;
@@ -35,6 +37,8 @@ public class ProjectService {
     private final ProjectUserRepository projectUserRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final StatusRepository statusRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional
     public Long createProject(Long teamId, Long projectCreatorId, ProjectCreateCommand command) {
@@ -88,13 +92,14 @@ public class ProjectService {
     public void editProject(Long projectId, ProjectEditCommand command) {
         Project project = projectRepository.findByIdOrThrow(projectId);
 
-        editFieldIfPresent(command.projectName(), (v,t) -> t.editName(v.get()), project);
+        editFieldIfPresent(command.projectName(), (v, t) -> t.editName(v.get()), project);
         editFieldIfPresent(command.content(), (v, t) -> t.editContent(v.get()), project);
         editFieldIfPresent(command.startDate(), (v, t) -> t.editStartDate(v.get()), project);
         editFieldIfPresent(command.endDate(), (v, t) -> t.editEndDate(v.get()), project);
     }
 
-    private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Project> updater, Project project) {
+    private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Project> updater,
+                                        Project project) {
         value.ifPresent(v -> updater.accept(JsonNullable.of(v), project));
     }
 
@@ -117,7 +122,15 @@ public class ProjectService {
         projectUserRepository.delete(projectUser);
     }
 
-    public void deleteAllProjectsForTeam(Long teamId) {
-        throw new UnsupportedOperationException("아직 구현되지 않은 기능입니다.");
+    @Transactional
+    public void deleteAllProjectsInTeam(Long teamId) {
+        List<Long> projectIds = projectRepository.getProjectIdsByTeamId(teamId);
+        projectIds.forEach(projectId -> {
+            statusRepository.findAllByProjectId(projectId)
+                    .forEach(taskRepository::deleteAllByStatus);
+            statusRepository.deleteAllByProjectId(projectId);
+            projectUserRepository.deleteAllByProjectId(projectId);
+        });
+        projectRepository.deleteAllByIdInBatch(projectIds);
     }
 }

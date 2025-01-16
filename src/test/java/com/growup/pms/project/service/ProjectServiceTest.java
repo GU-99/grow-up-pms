@@ -31,6 +31,8 @@ import com.growup.pms.role.domain.ProjectRole;
 import com.growup.pms.role.domain.Role;
 import com.growup.pms.role.domain.RoleType;
 import com.growup.pms.role.repository.RoleRepository;
+import com.growup.pms.status.repository.StatusRepository;
+import com.growup.pms.task.repository.TaskRepository;
 import com.growup.pms.team.domain.Team;
 import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
@@ -65,6 +67,12 @@ class ProjectServiceTest {
 
     @Mock
     RoleRepository roleRepository;
+
+    @Mock
+    StatusRepository statusRepository;
+
+    @Mock
+    TaskRepository taskRepository;
 
     @InjectMocks
     ProjectService projectService;
@@ -280,6 +288,24 @@ class ProjectServiceTest {
             // when & then
             assertThatThrownBy(() -> projectService.leaveProject(팀_ID, 프로젝트_ID, 팀장_ID))
                     .isInstanceOf(UnsupportedOperationException.class);
+        }
+    }
+
+    @Nested
+    class 사용자가_팀내_모든_프로젝트_삭제시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 팀_ID = 1L;
+            List<Long> 프로젝트_ID_리스트 = List.of(1L, 2L, 3L);
+            when(projectRepository.getProjectIdsByTeamId(팀_ID)).thenReturn(프로젝트_ID_리스트);
+
+            // when
+            projectService.deleteAllProjectsInTeam(팀_ID);
+
+            // then
+            verify(projectRepository).deleteAllByIdInBatch(프로젝트_ID_리스트);
         }
     }
 }
