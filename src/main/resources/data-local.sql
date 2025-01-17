@@ -6,7 +6,6 @@ INSERT INTO roles(type, name) VALUES('TEAM', 'MATE');    -- 몜버
 INSERT INTO roles(type, name) VALUES('PROJECT', 'ADMIN');    -- 관리자
 INSERT INTO roles(type, name) VALUES('PROJECT', 'LEADER');   -- 리더
 INSERT INTO roles(type, name) VALUES('PROJECT', 'ASSIGNEE'); -- 수행자
-INSERT INTO roles(type, name) VALUES('PROJECT', 'VIEWER');   -- 이 외(읽기 전용)
 
 -- 사용자 삽입 (테스트 시 사용되는 계정 비밀번호는 test1234!로 모두 동일)
 INSERT INTO users (username, password, email, provider, nickname, bio, image_name, password_change_date, password_failure_count) VALUES
@@ -87,7 +86,7 @@ INSERT INTO project_users (project_id, user_id, role_id, created_at, updated_at,
     -- 버그 트래킹 시스템 (project_id: 5)
     (5, 3, 4, NOW(), NOW(), false),  -- 레너드: ADMIN
     (5, 6, 6, NOW(), NOW(), false),  -- 에드워드: ASSIGNEE
-    (5, 7, 7, NOW(), NOW(), false),  -- 메리: VIEWER
+    (5, 7, 6, NOW(), NOW(), false),  -- 메리: ASSIGNEE
 
     -- 코드 품질 개선 (project_id: 6)
     (6, 3, 4, NOW(), NOW(), false),  -- 레너드: ADMIN
@@ -103,7 +102,7 @@ INSERT INTO project_users (project_id, user_id, role_id, created_at, updated_at,
     -- 신규 서비스 프로토타입 (project_id: 8)
     (8, 4, 4, NOW(), NOW(), false),  -- 샐리: ADMIN
     (8, 5, 6, NOW(), NOW(), false),  -- 제임스: ASSIGNEE
-    (8, 8, 7, NOW(), NOW(), false),  -- 톰: VIEWER
+    (8, 8, 6, NOW(), NOW(), false),  -- 톰: ASSIGNEE
 
     -- 환생컴퍼니의 프로젝트들
     -- 레거시 시스템 현대화 (project_id: 9)
@@ -114,77 +113,71 @@ INSERT INTO project_users (project_id, user_id, role_id, created_at, updated_at,
     -- 마이크로서비스 전환 (project_id: 10)
     (10, 5, 4, NOW(), NOW(), false), -- 제임스: ADMIN
     (10, 3, 6, NOW(), NOW(), false), -- 레너드: ASSIGNEE
-    (10, 8, 7, NOW(), NOW(), false); -- 톰: VIEWER
+    (10, 8, 6, NOW(), NOW(), false); -- 톰: ASSIGNEE
 
 -- 권한 삽입
-INSERT INTO permissions (name) VALUES ('TEAM_DELETE');
-INSERT INTO permissions (name) VALUES ('TEAM_UPDATE');
+INSERT INTO permissions (name) VALUES ('TEAM_DELETE_TEAM');
+INSERT INTO permissions (name) VALUES ('TEAM_UPDATE_TEAM');
 INSERT INTO permissions (name) VALUES ('TEAM_KICK_MEMBER');
-INSERT INTO permissions (name) VALUES ('TEAM_MEMBER_ROLE_UPDATE');
+INSERT INTO permissions (name) VALUES ('TEAM_UPDATE_MEMBER_ROLE');
 INSERT INTO permissions (name) VALUES ('TEAM_INVITE_MEMBER');
+INSERT INTO permissions (name) VALUES ('TEAM_READ_PROJECT');
 
-INSERT INTO permissions (name) VALUES ('PROJECT_STATUS_READ');
-INSERT INTO permissions (name) VALUES ('PROJECT_STATUS_WRITE');
-INSERT INTO permissions (name) VALUES ('PROJECT_STATUS_UPDATE');
-INSERT INTO permissions (name) VALUES ('PROJECT_STATUS_DELETE');
+INSERT INTO permissions (name) VALUES ('PROJECT_CREATE_STATUS');
+INSERT INTO permissions (name) VALUES ('PROJECT_UPDATE_STATUS');
+INSERT INTO permissions (name) VALUES ('PROJECT_DELETE_STATUS');
 
-INSERT INTO permissions (name) VALUES ('PROJECT_TASK_READ');
-INSERT INTO permissions (name) VALUES ('PROJECT_TASK_WRITE');
-INSERT INTO permissions (name) VALUES ('PROJECT_TASK_UPDATE');
-INSERT INTO permissions (name) VALUES ('PROJECT_TASK_DELETE');
+INSERT INTO permissions (name) VALUES ('PROJECT_CREATE_TASK');
+INSERT INTO permissions (name) VALUES ('PROJECT_UPDATE_TASK');
+INSERT INTO permissions (name) VALUES ('PROJECT_DELETE_TASK');
 
-INSERT INTO permissions (name) VALUES ('TEAM_PROJECT_CREATE');
-INSERT INTO permissions (name) VALUES ('PROJECT_UPDATE');
-INSERT INTO permissions (name) VALUES ('PROJECT_DELETE');
+INSERT INTO permissions (name) VALUES ('TEAM_CREATE_PROJECT');
+INSERT INTO permissions (name) VALUES ('PROJECT_UPDATE_PROJECT');
+INSERT INTO permissions (name) VALUES ('PROJECT_DELETE_PROJECT');
 
 INSERT INTO permissions (name) VALUES ('PROJECT_KICK_MEMBER');
-INSERT INTO permissions (name) VALUES ('PROJECT_MEMBER_ROLE_UPDATE');
+INSERT INTO permissions (name) VALUES ('PROJECT_UPDATE_MEMBER_ROLE');
 INSERT INTO permissions (name) VALUES ('PROJECT_INVITE_MEMBER');
 
 -- TEAM_HEAD 역할에 대한 권한 설정
-INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 1); -- TEAM_DELETE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 2); -- TEAM_UPDATE
+INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 1); -- TEAM_DELETE_TEAM
+INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 2); -- TEAM_UPDATE_TEAM
 INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 3); -- TEAM_KICK_MEMBER
-INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 4); -- TEAM_MEMBER_ROLE_UPDATE
+INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 4); -- TEAM_UPDATE_MEMBER_ROLE
 INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 5); -- TEAM_INVITE_MEMBER
-INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 14); -- TEAM_PROJECT_CREATE
+INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 6); -- TEAM_READ_PROJECT
+INSERT INTO role_permissions (role_id, permission_id) VALUES (1, 13); -- TEAM_CREATE_PROJECT
 
 -- TEAM_LEADER 역할에 대한 권한 설정
 INSERT INTO role_permissions (role_id, permission_id) VALUES (2, 3); -- TEAM_KICK_MEMBER
-INSERT INTO role_permissions (role_id, permission_id) VALUES (2, 14); -- TEAM_PROJECT_CREATE
+INSERT INTO role_permissions (role_id, permission_id) VALUES (2, 6); -- TEAM_READ_PROJECT
+INSERT INTO role_permissions (role_id, permission_id) VALUES (2, 13); -- TEAM_CREATE_PROJECT
+
+-- TEAM_MATE 역할에 대한 권한 설정
+INSERT INTO role_permissions (role_id, permission_id) VALUES (3, 6); -- TEAM_READ_PROJECT
 
 -- PROJECT_ADMIN 역할에 대한 권한 설정
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 6); -- PROJECT_STATUS_READ
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 7); -- PROJECT_STATUS_WRITE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 8); -- PROJECT_STATUS_UPDATE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 9); -- PROJECT_STATUS_DELETE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 10); -- PROJECT_TASK_READ
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 11); -- PROJECT_TASK_WRITE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 12); -- PROJECT_TASK_UPDATE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 13); -- PROJECT_TASK_DELETE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 15); -- PROJECT_UPDATE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 16); -- PROJECT_DELETE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 17); -- PROJECT_KICK_MEMBER
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 18); -- PROJECT_MEMBER_ROLE_UPDATE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 19); -- PROJECT_INVITE_MEMBER
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 7); -- PROJECT_CREATE_STATUS
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 8); -- PROJECT_UPDATE_STATUS
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 9); -- PROJECT_DELETE_STATUS
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 10); -- PROJECT_CREATE_TASK
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 11); -- PROJECT_UPDATE_TASK
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 12); -- PROJECT_DELETE_TASK
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 14); -- PROJECT_UPDATE_PROJECT
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 15); -- PROJECT_DELETE_PROJECT
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 16); -- PROJECT_KICK_MEMBER
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 17); -- PROJECT_UPDATE_MEMBER_ROLE
+INSERT INTO role_permissions (role_id, permission_id) VALUES (4, 18); -- PROJECT_INVITE_MEMBER
 
 -- PROJECT_LEADER 역할에 대한 권한 설정
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 6); -- PROJECT_STATUS_READ
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 7); -- PROJECT_STATUS_WRITE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 8); -- PROJECT_STATUS_UPDATE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 9); -- PROJECT_STATUS_DELETE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 10); -- PROJECT_TASK_READ
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 11); -- PROJECT_TASK_WRITE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 12); -- PROJECT_TASK_UPDATE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 13); -- PROJECT_TASK_DELETE
+INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 7); -- PROJECT_CREATE_STATUS
+INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 8); -- PROJECT_UPDATE_STATUS
+INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 9); -- PROJECT_DELETE_STATUS
+INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 10); -- PROJECT_CREATE_TASK
+INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 11); -- PROJECT_UPDATE_TASK
+INSERT INTO role_permissions (role_id, permission_id) VALUES (5, 12); -- PROJECT_DELETE_TASK
 
 -- PROJECT_ASSIGNEE 역할에 대한 권한 설정
-INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 6); -- PROJECT_STATUS_READ
-INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 10); -- PROJECT_TASK_READ
-INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 11); -- PROJECT_TASK_WRITE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 12); -- PROJECT_TASK_UPDATE
-INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 13); -- PROJECT_TASK_DELETE
-
--- PROJECT_VIEWER 역할에 대한 권한 설정
-INSERT INTO role_permissions (role_id, permission_id) VALUES (7, 6); -- PROJECT_STATUS_READ
-INSERT INTO role_permissions (role_id, permission_id) VALUES (7, 10); -- PROJECT_TASK_READ
+INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 10); -- PROJECT_CREATE_TASK
+INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 11); -- PROJECT_UPDATE_TASK
+INSERT INTO role_permissions (role_id, permission_id) VALUES (6, 12); -- PROJECT_DELETE_TASK
