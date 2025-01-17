@@ -1,6 +1,6 @@
 package com.growup.pms.role.domain;
 
-public enum ProjectPermission {
+public enum ProjectPermission implements BasePermission {
     CREATE_STATUS,
     CREATE_TASK,
     UPDATE_PROJECT,
@@ -11,5 +11,17 @@ public enum ProjectPermission {
     DELETE_STATUS,
     DELETE_TASK,
     KICK_MEMBER,
-    INVITE_MEMBER,
+    INVITE_MEMBER;
+
+    private static final String PERMISSION_PREFIX = "PROJECT_";
+
+    @Override
+    public String getName() {
+        return name();
+    }
+
+    @Override
+    public String getPrefix() {
+        return PERMISSION_PREFIX;
+    }
 }
