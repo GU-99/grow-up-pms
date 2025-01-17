@@ -54,6 +54,16 @@ public class FileControllerV1 {
         return ResponseEntity.ok(profileImageService.download(fileName));
     }
 
+    /**
+     * Uploads an attachment to a specific task within a project.
+     *
+     * @param projectId The ID of the project containing the task. Must be a positive number.
+     * @param taskId The ID of the task to which the attachment will be added. Must be a positive number.
+     * @param file The file to be uploaded. Must be an image, document, or archive file.
+     * @return A ResponseEntity with an OK status upon successful file upload.
+     * @throws ValidationException If the file does not meet the specified type constraints.
+     * @throws AccessDeniedException If the user lacks permission to update the task.
+     */
     @PostMapping("/project/{projectId}/task/{taskId}/upload")
     @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> uploadTaskAttachment(
@@ -65,6 +75,15 @@ public class FileControllerV1 {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Downloads a task attachment file for a specific task within a project.
+     *
+     * @param projectId The unique identifier of the project containing the task
+     * @param taskId The unique identifier of the task associated with the attachment
+     * @param fileName The name of the file to be downloaded
+     * @return A ResponseEntity containing the file's byte content if the file is valid, or a not found response
+     * @throws IllegalArgumentException if the task ID or file name is invalid
+     */
     @GetMapping("/file/project/{projectId}/task/{taskId}/{fileName}")
     public ResponseEntity<byte[]> downloadTaskAttachment(
             @Positive @PathVariable Long projectId,
@@ -77,6 +96,14 @@ public class FileControllerV1 {
         return ResponseEntity.ok(taskAttachmentService.download(taskId, fileName));
     }
 
+    /**
+     * Deletes a specific task attachment from a task within a project.
+     *
+     * @param projectId The unique identifier of the project containing the task
+     * @param taskId The unique identifier of the task from which the attachment will be deleted
+     * @param taskAttachmentId The unique identifier of the task attachment to be deleted
+     * @return A ResponseEntity with no content, indicating successful deletion
+     */
     @DeleteMapping("/project/{projectId}/task/{taskId}/file/{taskAttachmentId}")
     public ResponseEntity<Void> deleteTaskAttachment(
             @Positive @PathVariable Long projectId,

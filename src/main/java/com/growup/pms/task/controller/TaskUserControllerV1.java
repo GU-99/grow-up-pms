@@ -30,6 +30,14 @@ public class TaskUserControllerV1 {
 
     private final TaskUserService taskUserService;
 
+    /**
+     * Creates a new task assignee for a specific task within a project.
+     *
+     * @param projectId The ID of the project containing the task. Must be a positive number.
+     * @param taskId The ID of the task to which the user will be assigned. Must be a positive number.
+     * @param request The request containing the user ID to be assigned to the task. Must be valid.
+     * @return A ResponseEntity with an empty body and 200 OK status upon successful task user creation.
+     */
     @PostMapping
     @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> createTaskUser(
@@ -43,6 +51,14 @@ public class TaskUserControllerV1 {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Retrieves a list of assignees for a specific task within a project.
+     *
+     * @param projectId The unique identifier of the project containing the task. Must be a positive number.
+     * @param taskId The unique identifier of the task for which assignees are being retrieved. Must be a positive number.
+     * @return A ResponseEntity containing a list of TaskUserResponse objects representing the task's assignees.
+     * @throws ConstraintViolationException If the project or task ID is not a positive number.
+     */
     @GetMapping
     @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<List<TaskUserResponse>> getAssignees(
@@ -55,6 +71,15 @@ public class TaskUserControllerV1 {
         return ResponseEntity.ok().body(responses);
     }
 
+    /**
+     * Deletes a specific assignee from a task within a project.
+     *
+     * @param projectId The ID of the project containing the task, must be a positive number
+     * @param taskId The ID of the task from which the assignee will be removed, must be a positive number
+     * @param assigneeId The ID of the assignee to be deleted, must be a positive number
+     * @return A ResponseEntity with no content (204 No Content) upon successful deletion
+     * @throws ConstraintViolationException if any of the input IDs are not positive
+     */
     @DeleteMapping("/{assigneeId}")
     @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> deleteTaskUser(

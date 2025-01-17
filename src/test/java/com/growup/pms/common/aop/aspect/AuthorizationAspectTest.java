@@ -65,6 +65,14 @@ class AuthorizationAspectTest {
     @Nested
     class 팀_권한을_체크시 {
 
+        /**
+         * Tests the successful team permission check scenario.
+         *
+         * This test verifies that the authorization aspect correctly checks team permissions
+         * when a valid team ID is provided and the user has the required permissions.
+         *
+         * @throws Exception if any unexpected error occurs during permission checking
+         */
         @Test
         void 성공한다() {
             try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
@@ -86,6 +94,18 @@ class AuthorizationAspectTest {
             }
         }
 
+        /**
+         * Tests the scenario where a team ID is not found, and the project ID is used to retrieve the associated team.
+         *
+         * This test verifies that when a team ID is not directly available, the authorization aspect
+         * can successfully retrieve the team ID from an associated project. It checks the following flow:
+         * 1. No direct team ID is found in the method parameters
+         * 2. A project ID is successfully retrieved from the method parameters
+         * 3. The associated team is fetched using the project ID
+         * 4. Permission check is performed using the retrieved team ID
+         *
+         * @throws Exception if any unexpected error occurs during the permission check
+         */
         @Test
         void 팀_ID를_찾지_못하면_프로젝트_ID_에서_가져온다() {
             try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
@@ -112,6 +132,15 @@ class AuthorizationAspectTest {
             }
         }
 
+        /**
+         * 팀 ID와 프로젝트 ID가 모두 없을 경우 예외를 발생시키는 테스트 메서드.
+         *
+         * 이 테스트는 AOP 유틸리티 클래스에서 팀 또는 프로젝트 ID를 찾을 수 없는 상황을 검증한다.
+         * AopUtil의 findFirstAnnotatedParameterOfType 메서드가 빈 Optional을 반환할 때,
+         * checkTeamPermission 메서드가 적절한 예외를 던지는지 확인한다.
+         *
+         * @throws IllegalStateException 팀 ID나 프로젝트 ID를 가진 파라미터를 찾을 수 없을 경우
+         */
         @Test
         void 팀_ID와_프로젝트_ID_모두_없으면_예외가_발생한다() {
             try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
@@ -129,6 +158,14 @@ class AuthorizationAspectTest {
     @Nested
     class 프로젝트_권한을_체크시 {
 
+        /**
+         * Tests the successful project permission check for a user.
+         *
+         * This test verifies that when a user has the required project permission,
+         * the authorization aspect allows the operation to proceed without throwing an exception.
+         *
+         * @throws Exception if any unexpected error occurs during the permission check
+         */
         @Test
         void 성공한다() {
             try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
@@ -151,12 +188,24 @@ class AuthorizationAspectTest {
         }
     }
 
+    /**
+     * Creates a mock {@code RequireTeamPermission} annotation with specified team permissions.
+     *
+     * @param permissions Variable number of team permissions to be set on the mock annotation
+     * @return A mocked {@code RequireTeamPermission} annotation configured with the given permissions
+     */
     private RequireTeamPermission 필요한_팀_권한이(TeamPermission... permissions) {
         RequireTeamPermission annotation = mock(RequireTeamPermission.class);
         when(annotation.value()).thenReturn(permissions);
         return annotation;
     }
 
+    /**
+     * Creates a mock {@code RequireProjectPermission} annotation with specified project permissions.
+     *
+     * @param permissions Variable number of {@code ProjectPermission} enum values to be set on the mock annotation
+     * @return A mocked {@code RequireProjectPermission} annotation configured with the given permissions
+     */
     private RequireProjectPermission 필요한_프로젝트_권한이(ProjectPermission... permissions) {
         RequireProjectPermission annotation = mock(RequireProjectPermission.class);
         when(annotation.value()).thenReturn(permissions);

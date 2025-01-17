@@ -80,14 +80,38 @@ public class ProjectService {
         return command.toEntity(project, user, role);
     }
 
+    /**
+     * Retrieves a list of projects associated with a specific team.
+     *
+     * @param teamId The unique identifier of the team for which projects are to be fetched
+     * @return A list of project responses containing details of projects belonging to the specified team
+     */
     public List<ProjectResponse> getProjects(Long teamId) {
         return projectRepository.getProjectsByTeamId(teamId);
     }
 
+    /**
+     * Retrieves the team associated with a specific project.
+     *
+     * @param projectId The unique identifier of the project
+     * @return The team associated with the specified project
+     * @throws EntityNotFoundException if no project is found with the given projectId
+     */
     public Team getAssociatedTeamForProject(Long projectId) {
         return projectRepository.findByIdOrThrow(projectId).getTeam();
     }
 
+    /**
+     * Edits an existing project's details based on the provided edit command.
+     *
+     * @param projectId The unique identifier of the project to be edited
+     * @param command A command object containing the project details to update
+     * @throws EntityNotFoundException if no project is found with the given projectId
+     *
+     * This method allows partial updates to a project's attributes. Only fields present 
+     * in the command will be modified, while other fields remain unchanged. The method 
+     * supports updating project name, content, start date, and end date.
+     */
     @Transactional
     public void editProject(Long projectId, ProjectEditCommand command) {
         Project project = projectRepository.findByIdOrThrow(projectId);

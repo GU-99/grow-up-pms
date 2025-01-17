@@ -8,6 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
+    /**
+     * Checks if a user is the creator (team leader) of a specific team.
+     *
+     * @param teamId the unique identifier of the team to check
+     * @param userId the unique identifier of the user to verify as team leader
+     * @return true if the user is the creator of the team, false otherwise
+     */
     @Query("""
         SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END
         FROM Team t

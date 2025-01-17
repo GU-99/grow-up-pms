@@ -15,11 +15,21 @@ public enum ProjectPermission implements BasePermission {
 
     private static final String PERMISSION_PREFIX = "PROJECT_";
 
+    /**
+     * Returns the name of the current project permission enum constant.
+     *
+     * @return A string representing the name of the project permission
+     */
     @Override
     public String getName() {
         return name();
     }
 
+    /**
+     * Returns the prefix for project-related permissions.
+     *
+     * @return A static string prefix "PROJECT_" used to categorize project permissions.
+     */
     @Override
     public String getPrefix() {
         return PERMISSION_PREFIX;

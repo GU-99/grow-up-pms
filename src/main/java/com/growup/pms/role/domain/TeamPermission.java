@@ -11,11 +11,21 @@ public enum TeamPermission implements BasePermission {
 
     private static final String PERMISSION_PREFIX = "TEAM_";
 
+    /**
+     * Returns the name of the current team permission enum constant.
+     *
+     * @return A string representing the name of the enum constant
+     */
     @Override
     public String getName() {
         return name();
     }
 
+    /**
+     * Returns the prefix for team-related permissions.
+     *
+     * @return A static string prefix "TEAM_" used to identify team permission constants.
+     */
     @Override
     public String getPrefix() {
         return PERMISSION_PREFIX;

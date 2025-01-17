@@ -62,16 +62,15 @@ public class AuthorizationAspect {
     private final PermissionService permissionService;
 
     /**
-     * 팀 관련 권한을 검사하는 어드바이스입니다.
-     * {@link RequireTeamPermission} 애노테이션이 붙은 메서드 실행 전에 호출됩니다.
+     * Checks team-related permissions before method execution.
      *
-     * <p>메서드 파라미터에서 {@link TeamId} 애노테이션이 붙은 팀 ID를 찾아 권한을 검사합니다.
-     * 만약 팀 ID를 찾을 수 없는 경우, {@link ProjectId} 애노테이션이 붙은 프로젝트 ID를 통해
-     * 연관된 팀을 찾아 권한을 검사합니다.</p>
+     * This advice is invoked for methods annotated with {@link RequireTeamPermission}.
+     * It retrieves the team ID from method parameters, either directly via {@link TeamId} annotation
+     * or indirectly through a {@link ProjectId} annotation, and validates the current user's permissions.
      *
-     * @param joinPoint 현재 실행 중인 메서드의 조인 포인트
-     * @param requireTeamPermission 요구되는 팀 권한 정보를 담고 있는 애노테이션
-     * @throws BusinessException 사용자가 필요한 권한이 없는 경우
+     * @param joinPoint The join point representing the method being executed
+     * @param requireTeamPermission The annotation specifying the required team permissions
+     * @throws BusinessException if the current user lacks the necessary team permissions
      */
     @Before(value = "@annotation(requireTeamPermission)", argNames = "joinPoint,requireTeamPermission")
     public void checkTeamPermission(JoinPoint joinPoint, RequireTeamPermission requireTeamPermission) {
@@ -81,16 +80,16 @@ public class AuthorizationAspect {
     }
 
     /**
-     * 프로젝트 관련 권한을 검사하는 어드바이스입니다.
-     * {@link RequireProjectPermission} 애노테이션이 붙은 메서드 실행 전에 호출됩니다.
+     * Checks project-related permissions before method execution.
      *
-     * <p>메서드 파라미터에서 {@link ProjectId} 애노테이션이 붙은 프로젝트 ID를 찾아
-     * 현재 사용자가 해당 프로젝트에 대해 요구되는 권한을 가지고 있는지 검사합니다.</p>
+     * This advice is invoked before methods annotated with {@link RequireProjectPermission}.
+     * It validates whether the current user has the required permissions for a specific project
+     * by finding the project ID from method parameters and performing a permission check.
      *
-     * @param joinPoint 현재 실행 중인 메서드의 조인 포인트
-     * @param requireProjectPermission 요구되는 프로젝트 권한 정보를 담고 있는 애노테이션
-     * @throws BusinessException 사용자가 필요한 권한이 없는 경우
-     * @throws IllegalStateException ProjectId 애노테이션이 붙은 Long 타입 파라미터를 찾을 수 없는 경우
+     * @param joinPoint The join point representing the method being executed
+     * @param requireProjectPermission Annotation specifying the required project permissions
+     * @throws BusinessException If the user lacks the necessary project permissions
+     * @throws IllegalStateException If no parameter with {@link ProjectId} annotation of type Long is found
      */
     @Before(value = "@annotation(requireProjectPermission)", argNames = "joinPoint,requireProjectPermission")
     public void checkProjectPermission(JoinPoint joinPoint, RequireProjectPermission requireProjectPermission) {
@@ -100,17 +99,17 @@ public class AuthorizationAspect {
     }
 
     /**
-     * 주어진 조인 포인트에서 팀 ID를 찾는 헬퍼 메서드입니다.
-     * 
-     * <p>다음 순서로 팀 ID를 찾습니다:</p>
+     * Finds the team ID from the given join point.
+     *
+     * <p>Searches for the team ID in the following order:</p>
      * <ol>
-     *   <li>{@link TeamId} 애노테이션이 붙은 Long 타입 파라미터 검색</li>
-     *   <li>없는 경우, {@link ProjectId} 애노테이션이 붙은 프로젝트 ID를 통해 연관된 팀 ID 조회</li>
+     *   <li>Searches for a Long parameter annotated with {@link TeamId}</li>
+     *   <li>If not found, retrieves the associated team ID using a {@link ProjectId} annotated project ID</li>
      * </ol>
      *
-     * @param joinPoint 현재 실행 중인 메서드의 조인 포인트
-     * @return 찾아낸 팀 ID
-     * @throws IllegalStateException TeamId 또는 ProjectId 애노테이션이 붙은 Long 타입 파라미터를 찾을 수 없는 경우
+     * @param joinPoint The join point of the currently executing method
+     * @return The found team ID
+     * @throws IllegalStateException If no Long parameter with TeamId or ProjectId annotation can be found
      */
     private Long findTeamId(JoinPoint joinPoint) {
         Optional<Long> teamId = AopUtil.findFirstAnnotatedParameterOfType(joinPoint, TeamId.class, Long.class);

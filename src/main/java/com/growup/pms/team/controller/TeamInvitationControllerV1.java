@@ -24,6 +24,14 @@ public class TeamInvitationControllerV1 {
 
     private final TeamInvitationService teamInvitationService;
 
+    /**
+     * Sends an invitation to join a team.
+     *
+     * @param teamId The unique identifier of the team to which a member is being invited. Must be a positive number.
+     * @param request The details of the team invitation to be created. Must be a valid {@link TeamInvitationCreateRequest}.
+     * @return A {@link ResponseEntity} with HTTP 200 OK status upon successful invitation creation.
+     * @throws ConstraintViolationException if the team ID is not positive or the request is invalid.
+     */
     @PostMapping
     @RequireTeamPermission(TeamPermission.INVITE_MEMBER)
     public ResponseEntity<Void> invite(
@@ -34,6 +42,13 @@ public class TeamInvitationControllerV1 {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Accepts a team invitation for the current user.
+     *
+     * @param user The currently authenticated user making the invitation acceptance request
+     * @param teamId The unique identifier of the team for which the invitation is being accepted
+     * @return A ResponseEntity with an HTTP 200 OK status upon successful invitation acceptance
+     */
     @PostMapping("/accept")
     public ResponseEntity<Void> accept(
             @CurrentUser SecurityUser user,
@@ -43,6 +58,13 @@ public class TeamInvitationControllerV1 {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Declines a team invitation for the current user.
+     *
+     * @param user    The current authenticated user making the invitation decline request
+     * @param teamId  The unique identifier of the team for which the invitation is being declined
+     * @return        A ResponseEntity with HTTP 200 OK status upon successful invitation decline
+     */
     @PostMapping("/decline")
     public ResponseEntity<Void> decline(
             @CurrentUser SecurityUser user,

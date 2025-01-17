@@ -35,6 +35,13 @@ public class TeamControllerV1 {
 
     private final TeamService teamService;
 
+    /**
+     * Creates a new team for the authenticated user.
+     *
+     * @param user The currently authenticated user, automatically injected by the @CurrentUser annotation
+     * @param request The team creation request containing team details, validated by @Valid annotation
+     * @return ResponseEntity with a 201 Created status and the URI of the newly created team
+     */
     @PostMapping
     public ResponseEntity<Void> createTeam(
             @CurrentUser SecurityUser user,
@@ -51,6 +58,17 @@ public class TeamControllerV1 {
                 .body(teamService.getTeam(teamId));
     }
 
+    /**
+     * Updates an existing team with the provided details.
+     *
+     * @param teamId The unique identifier of the team to be updated. Must be a positive number.
+     * @param request The request containing the team update details, validated for correctness.
+     * @return A ResponseEntity with no content, indicating a successful team update.
+     *
+     * @throws ConstraintViolationException If the teamId is not positive or the request is invalid.
+     * @throws TeamNotFoundException If no team exists with the given teamId.
+     * @throws UnauthorizedAccessException If the user lacks permission to update the team.
+     */
     @PatchMapping("/{teamId}")
     @RequireTeamPermission(TeamPermission.UPDATE_TEAM)
     public ResponseEntity<Void> updateTeam(

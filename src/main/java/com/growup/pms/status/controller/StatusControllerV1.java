@@ -35,6 +35,18 @@ public class StatusControllerV1 {
 
     private final StatusService statusService;
 
+    /**
+     * Creates a new status for a specific project.
+     *
+     * @param projectId The unique identifier of the project where the status will be created.
+     * @param request The request containing details for creating a new status.
+     * @return A ResponseEntity containing the created status details with a 201 Created status.
+     *
+     * @throws ConstraintViolationException If the input validation fails.
+     *
+     * @see StatusCreateRequest
+     * @see StatusResponse
+     */
     @PostMapping
     @RequireProjectPermission(ProjectPermission.CREATE_STATUS)
     public ResponseEntity<StatusResponse> createStatus(
@@ -53,6 +65,13 @@ public class StatusControllerV1 {
     }
 
 
+    /**
+     * Retrieves all statuses for a specific project.
+     *
+     * @param projectId The unique identifier of the project to fetch statuses for. Must be a positive number.
+     * @return A ResponseEntity containing a list of StatusResponse objects representing the project's statuses.
+     * @throws ConstraintViolationException if the projectId is not a positive number
+     */
     @GetMapping
     @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<List<StatusResponse>> getStatuses(@Positive @PathVariable @ProjectId Long projectId) {
@@ -65,6 +84,16 @@ public class StatusControllerV1 {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Updates an existing status within a project.
+     *
+     * @param projectId The ID of the project containing the status to be edited
+     * @param statusId The unique identifier of the status to be modified
+     * @param request The request containing details for updating the status
+     * @return A ResponseEntity with no content, indicating a successful status update
+     *
+     * @throws ConstraintViolationException if the input parameters fail validation
+     */
     @PatchMapping("/{statusId}")
     @RequireProjectPermission(ProjectPermission.UPDATE_STATUS)
     public ResponseEntity<Void> editStatus(
@@ -82,6 +111,15 @@ public class StatusControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Updates the order of statuses for a specific project.
+     *
+     * @param projectId The unique identifier of the project whose status order is being modified
+     * @param request A valid request containing the new order of statuses
+     * @return A 204 No Content response indicating successful status order update
+     *
+     * @throws ConstraintViolationException if the request validation fails
+     */
     @PatchMapping("/order")
     @RequireProjectPermission(ProjectPermission.UPDATE_STATUS)
     public ResponseEntity<Void> editStatusOrder(
@@ -97,6 +135,14 @@ public class StatusControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Deletes a specific status within a project.
+     *
+     * @param projectId The unique identifier of the project containing the status to be deleted
+     * @param statusId The unique identifier of the status to be deleted
+     * @return A ResponseEntity with no content (204 No Content) indicating successful deletion
+     * @throws ConstraintViolationException If the project or status ID is invalid or negative
+     */
     @DeleteMapping("/{statusId}")
     @RequireProjectPermission(ProjectPermission.DELETE_STATUS)
     public ResponseEntity<Void> deleteStatus(

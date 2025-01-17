@@ -37,6 +37,14 @@ public class TaskControllerV1 {
 
     private final TaskService taskService;
 
+    /**
+     * Creates a new task for a specific project.
+     *
+     * @param projectId The unique identifier of the project where the task will be created
+     * @param request The task creation request containing task details
+     * @return A ResponseEntity containing the created task details with a 201 Created status
+     * @throws ConstraintViolationException If the input validation fails
+     */
     @PostMapping
     @RequireProjectPermission(ProjectPermission.UPDATE_STATUS)
     public ResponseEntity<TaskDetailResponse> createTask(
@@ -57,6 +65,13 @@ public class TaskControllerV1 {
         return ResponseEntity.created(URI.create(uri)).body(response);
     }
 
+    /**
+     * Retrieves all tasks for a specified project in a Kanban board format.
+     *
+     * @param projectId The unique identifier of the project to retrieve tasks from. Must be a positive number.
+     * @return A ResponseEntity containing a list of tasks in Kanban board view, with HTTP 200 (OK) status.
+     * @throws IllegalArgumentException If the project ID is invalid or does not exist.
+     */
     @GetMapping
     @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<List<TaskKanbanResponse>> getTasks(@Positive @PathVariable @ProjectId Long projectId) {
@@ -68,6 +83,14 @@ public class TaskControllerV1 {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves detailed information for a specific task within a project.
+     *
+     * @param projectId The unique identifier of the project containing the task
+     * @param taskId The unique identifier of the task to retrieve
+     * @return A ResponseEntity containing the detailed task information
+     * @throws NotFoundException if the task cannot be found
+     */
     @GetMapping("/{taskId}")
     @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<TaskDetailResponse> getTask(
@@ -84,6 +107,17 @@ public class TaskControllerV1 {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Updates an existing task with the provided details.
+     *
+     * @param projectId The ID of the project containing the task to be edited
+     * @param taskId The unique identifier of the task to be modified
+     * @param request The task edit request containing updated task information
+     * @return A ResponseEntity with no content, indicating successful task update
+     *
+     * @throws NotFoundException if the task or project cannot be found
+     * @throws UnauthorizedException if the user lacks permission to edit the task
+     */
     @PatchMapping("/{taskId}")
     @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> editTask(
@@ -101,6 +135,15 @@ public class TaskControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Updates the order of tasks within a project.
+     *
+     * @param projectId The unique identifier of the project where tasks will be reordered
+     * @param request A request containing the new order of tasks to be applied
+     * @return A response with no content (204 No Content) indicating successful task order modification
+     *
+     * @throws ConstraintViolationException If the project ID or task order request is invalid
+     */
     @PatchMapping("/order")
     @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> editTaskOrder(
@@ -116,6 +159,15 @@ public class TaskControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Deletes a specific task within a project.
+     *
+     * @param projectId The unique identifier of the project containing the task to be deleted
+     * @param taskId The unique identifier of the task to be deleted
+     * @return A ResponseEntity with no content (204 No Content) upon successful deletion
+     * @throws NotFoundException if the task or project cannot be found
+     * @throws UnauthorizedException if the user lacks permission to delete the task
+     */
     @DeleteMapping("/{taskId}")
     @RequireProjectPermission(ProjectPermission.DELETE_TASK)
     public ResponseEntity<Void> deleteTask(
@@ -131,6 +183,14 @@ public class TaskControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Retrieves all attachments for a specific task within a project.
+     *
+     * @param projectId The unique identifier of the project containing the task
+     * @param taskId The unique identifier of the task whose attachments are to be retrieved
+     * @return A ResponseEntity containing a list of task attachments with HTTP 200 OK status
+     * @throws NotFoundException If the task or project cannot be found
+     */
     @GetMapping("/{taskId}/attachment")
     @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<List<TaskAttachmentResponse>> getTaskAttachments(

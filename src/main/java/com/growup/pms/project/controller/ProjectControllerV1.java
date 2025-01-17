@@ -37,6 +37,19 @@ public class ProjectControllerV1 {
 
     private final ProjectService projectService;
 
+    /**
+     * Creates a new project for a specified team.
+     *
+     * @param teamId The unique identifier of the team where the project will be created
+     * @param user The current authenticated user creating the project
+     * @param request The project creation request containing project details
+     * @return ResponseEntity with a 201 Created status and the URI of the newly created project
+     *
+     * @throws PermissionDeniedException If the user lacks permission to create a project in the team
+     * @throws InvalidRequestException If the project creation request is invalid
+     *
+     * @see ProjectService#createProject(Long, Long, ProjectCreateCommand)
+     */
     @PostMapping
     @RequireTeamPermission(TeamPermission.CREATE_PROJECT)
     public ResponseEntity<Void> createProject(
@@ -57,6 +70,12 @@ public class ProjectControllerV1 {
         return ResponseEntity.created(URI.create(uri)).build();
     }
 
+    /**
+     * Retrieves a list of projects for a specific team.
+     *
+     * @param teamId The unique identifier of the team whose projects are to be retrieved. Must be a positive number.
+     * @return A ResponseEntity containing a list of ProjectResponse objects representing the team's projects
+     */
     @GetMapping
     public ResponseEntity<List<ProjectResponse>> getProjects(@Positive @PathVariable Long teamId) {
         log.debug("ProjectControllerV1#getProjects called.");
@@ -67,6 +86,16 @@ public class ProjectControllerV1 {
         return ResponseEntity.ok(responses);
     }
 
+    /**
+     * Updates an existing project with the provided details.
+     *
+     * @param teamId The ID of the team to which the project belongs
+     * @param projectId The unique identifier of the project to be edited
+     * @param request The project edit request containing updated project information
+     * @return A ResponseEntity with no content, indicating a successful update
+     * @throws NotFoundException if the project does not exist
+     * @throws UnauthorizedException if the user lacks permission to update the project
+     */
     @PatchMapping("/{projectId}")
     @RequireProjectPermission(ProjectPermission.UPDATE_PROJECT)
     public ResponseEntity<Void> editProject(@PathVariable Long teamId, @PathVariable @ProjectId Long projectId,
@@ -78,6 +107,15 @@ public class ProjectControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Deletes a specific project within a team.
+     *
+     * @param teamId     The ID of the team containing the project to be deleted
+     * @param projectId  The unique identifier of the project to delete
+     * @return           A ResponseEntity with no content (204 No Content) indicating successful deletion
+     * @throws ProjectNotFoundException if the specified project does not exist
+     * @throws UnauthorizedAccessException if the user lacks permission to delete the project
+     */
     @DeleteMapping("/{projectId}")
     @RequireProjectPermission(ProjectPermission.DELETE_PROJECT)
     public ResponseEntity<Void> deleteProject(@PathVariable Long teamId, @PathVariable @ProjectId Long projectId) {
@@ -88,6 +126,14 @@ public class ProjectControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Allows a user to leave a specific project within a team.
+     *
+     * @param teamId The ID of the team containing the project
+     * @param projectId The ID of the project to leave
+     * @param user The currently authenticated user attempting to leave the project
+     * @return A 204 No Content response indicating successful project departure
+     */
     @DeleteMapping("/{projectId}/leave")
     public ResponseEntity<Void> leaveProject(
             @Positive @PathVariable Long teamId,

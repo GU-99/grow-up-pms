@@ -30,6 +30,13 @@ public class TeamUserControllerV1 {
 
     private final TeamUserService teamUserService;
 
+    /**
+     * Retrieves all users within a specified team.
+     *
+     * @param teamId The unique identifier of the team, must be a positive long value
+     * @return A ResponseEntity containing a list of team users with HTTP 200 OK status
+     * @throws ConstraintViolationException if the teamId is not a positive value
+     */
     @GetMapping
     public ResponseEntity<List<TeamUserResponse>> getAllTeamUsers(@Positive @PathVariable Long teamId) {
         return ResponseEntity.ok(teamUserService.getAllTeamUsers(teamId));
@@ -44,6 +51,15 @@ public class TeamUserControllerV1 {
         return ResponseEntity.ok(teamUserService.getTeamUsersByNicknameStartingWith(user.getId(), teamId, nickname));
     }
 
+    /**
+     * Removes a specified member from a team.
+     *
+     * @param teamId The unique identifier of the team from which the member will be kicked. Must be a positive long value.
+     * @param targetMemberId The unique identifier of the member to be removed from the team. Must be a positive long value.
+     * @return A ResponseEntity with no content, indicating a successful member removal
+     * @throws NotFoundException If the team or target member does not exist
+     * @throws UnauthorizedException If the current user lacks permission to kick members
+     */
     @DeleteMapping("/{targetMemberId}")
     @RequireTeamPermission(TeamPermission.KICK_MEMBER)
     public ResponseEntity<Void> kickMember(
@@ -54,6 +70,16 @@ public class TeamUserControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Changes the role of a team member.
+     *
+     * @param teamId The ID of the team where the role change is being performed
+     * @param targetMemberId The ID of the member whose role is being updated
+     * @param request Contains the new role name to be assigned to the member
+     * @return A ResponseEntity with an OK status upon successful role update
+     * @throws NotFoundException if the team or member does not exist
+     * @throws UnauthorizedException if the current user lacks permission to update member roles
+     */
     @PutMapping("/{targetMemberId}/role")
     @RequireTeamPermission(TeamPermission.UPDATE_MEMBER_ROLE)
     public ResponseEntity<Void> changeRole(
