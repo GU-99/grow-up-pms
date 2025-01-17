@@ -1,8 +1,10 @@
 package com.growup.pms.task.controller;
 
 import com.growup.pms.common.aop.annotation.ProjectId;
-import com.growup.pms.common.aop.annotation.RequirePermission;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.common.aop.annotation.RequireProjectPermission;
+import com.growup.pms.common.aop.annotation.RequireTeamPermission;
+import com.growup.pms.role.domain.ProjectPermission;
+import com.growup.pms.role.domain.TeamPermission;
 import com.growup.pms.task.controller.dto.request.TaskUserCreateRequest;
 import com.growup.pms.task.controller.dto.response.TaskUserResponse;
 import com.growup.pms.task.service.TaskUserService;
@@ -29,9 +31,9 @@ public class TaskUserControllerV1 {
     private final TaskUserService taskUserService;
 
     @PostMapping
-    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> createTaskUser(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Positive @PathVariable Long taskId,
             @Valid @RequestBody TaskUserCreateRequest request
     ) {
@@ -42,21 +44,21 @@ public class TaskUserControllerV1 {
     }
 
     @GetMapping
-    @RequirePermission(PermissionType.PROJECT_TASK_READ)
+    @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<List<TaskUserResponse>> getAssignees(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Positive @PathVariable Long taskId
     ) {
         log.debug("TaskUserControllerV1#getAssignees called.");
 
-        List <TaskUserResponse> responses = taskUserService.getAssignees(projectId, taskId);
+        List<TaskUserResponse> responses = taskUserService.getAssignees(projectId, taskId);
         return ResponseEntity.ok().body(responses);
     }
 
     @DeleteMapping("/{assigneeId}")
-    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> deleteTaskUser(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Positive @PathVariable Long taskId,
             @Positive @PathVariable Long assigneeId
     ) {

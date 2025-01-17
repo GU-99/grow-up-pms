@@ -4,9 +4,9 @@ import static com.growup.pms.common.constant.RegexConstants.TEAM_NAME_PATTERN;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
-import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.RequireTeamPermission;
 import com.growup.pms.common.aop.annotation.TeamId;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.role.domain.TeamPermission;
 import com.growup.pms.team.controller.dto.request.TeamCreateRequest;
 import com.growup.pms.team.controller.dto.request.TeamHeadUpdateRequest;
 import com.growup.pms.team.controller.dto.request.TeamUpdateRequest;
@@ -20,7 +20,6 @@ import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,11 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/team")
 public class TeamControllerV1 {
+
     private final TeamService teamService;
 
     @PostMapping
     public ResponseEntity<Void> createTeam(
-            @AuthenticationPrincipal SecurityUser user,
+            @CurrentUser SecurityUser user,
             @Valid @RequestBody TeamCreateRequest request
     ) {
         return ResponseEntity.created(URI.create("/api/v1/team/"
@@ -52,7 +52,7 @@ public class TeamControllerV1 {
     }
 
     @PatchMapping("/{teamId}")
-    @RequirePermission(PermissionType.TEAM_UPDATE)
+    @RequireTeamPermission(TeamPermission.UPDATE_TEAM)
     public ResponseEntity<Void> updateTeam(
             @Positive @PathVariable @TeamId Long teamId,
             @Valid @RequestBody TeamUpdateRequest request

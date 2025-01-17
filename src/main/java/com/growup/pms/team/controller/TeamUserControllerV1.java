@@ -2,9 +2,9 @@ package com.growup.pms.team.controller;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
-import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.RequireTeamPermission;
 import com.growup.pms.common.aop.annotation.TeamId;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.role.domain.TeamPermission;
 import com.growup.pms.team.controller.dto.request.RoleUpdateRequest;
 import com.growup.pms.team.controller.dto.response.TeamUserResponse;
 import com.growup.pms.team.controller.dto.response.TeamUserSearchResponse;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/team/{teamId}/user")
 public class TeamUserControllerV1 {
+
     private final TeamUserService teamUserService;
 
     @GetMapping
@@ -44,7 +45,7 @@ public class TeamUserControllerV1 {
     }
 
     @DeleteMapping("/{targetMemberId}")
-    @RequirePermission(PermissionType.TEAM_KICK_MEMBER)
+    @RequireTeamPermission(TeamPermission.KICK_MEMBER)
     public ResponseEntity<Void> kickMember(
             @Positive @PathVariable @TeamId Long teamId,
             @Positive @PathVariable Long targetMemberId
@@ -54,7 +55,7 @@ public class TeamUserControllerV1 {
     }
 
     @PutMapping("/{targetMemberId}/role")
-    @RequirePermission(PermissionType.TEAM_MEMBER_ROLE_UPDATE)
+    @RequireTeamPermission(TeamPermission.UPDATE_MEMBER_ROLE)
     public ResponseEntity<Void> changeRole(
             @Positive @PathVariable @TeamId Long teamId,
             @Positive @PathVariable Long targetMemberId,

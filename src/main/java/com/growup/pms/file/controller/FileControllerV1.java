@@ -3,14 +3,14 @@ package com.growup.pms.file.controller;
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.aop.annotation.ProjectId;
-import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.RequireProjectPermission;
 import com.growup.pms.common.util.FileNameUtil;
 import com.growup.pms.common.validator.annotation.File;
 import com.growup.pms.file.controller.dto.response.ProfileImageUpdateResponse;
 import com.growup.pms.file.domain.FileType;
 import com.growup.pms.file.service.ProfileImageService;
 import com.growup.pms.file.service.TaskAttachmentService;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.role.domain.ProjectPermission;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class FileControllerV1 {
 
     private final ProfileImageService profileImageService;
@@ -55,9 +55,9 @@ public class FileControllerV1 {
     }
 
     @PostMapping("/project/{projectId}/task/{taskId}/upload")
-    @RequirePermission(PermissionType.PROJECT_TASK_WRITE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> uploadTaskAttachment(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Positive @PathVariable Long taskId,
             @Valid @File(types = {FileType.IMAGE, FileType.DOCUMENT, FileType.ARCHIVE}) @RequestPart(name = "file") MultipartFile file
     ) {
@@ -67,7 +67,7 @@ public class FileControllerV1 {
 
     @GetMapping("/file/project/{projectId}/task/{taskId}/{fileName}")
     public ResponseEntity<byte[]> downloadTaskAttachment(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long projectId,
             @Positive @PathVariable Long taskId,
             @PathVariable String fileName
     ) {
@@ -79,7 +79,7 @@ public class FileControllerV1 {
 
     @DeleteMapping("/project/{projectId}/task/{taskId}/file/{taskAttachmentId}")
     public ResponseEntity<Void> deleteTaskAttachment(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long projectId,
             @Positive @PathVariable Long taskId,
             @Positive @PathVariable Long taskAttachmentId
     ) {

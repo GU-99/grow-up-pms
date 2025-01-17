@@ -3,13 +3,15 @@ package com.growup.pms.project.controller;
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.CurrentUser;
 import com.growup.pms.common.aop.annotation.ProjectId;
-import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.RequireProjectPermission;
+import com.growup.pms.common.aop.annotation.RequireTeamPermission;
 import com.growup.pms.common.aop.annotation.TeamId;
 import com.growup.pms.project.controller.dto.request.ProjectCreateRequest;
 import com.growup.pms.project.controller.dto.request.ProjectEditRequest;
 import com.growup.pms.project.controller.dto.response.ProjectResponse;
 import com.growup.pms.project.service.ProjectService;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.role.domain.ProjectPermission;
+import com.growup.pms.role.domain.TeamPermission;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.net.URI;
@@ -17,7 +19,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,10 +38,10 @@ public class ProjectControllerV1 {
     private final ProjectService projectService;
 
     @PostMapping
-    @RequirePermission(PermissionType.TEAM_PROJECT_CREATE)
+    @RequireTeamPermission(TeamPermission.CREATE_PROJECT)
     public ResponseEntity<Void> createProject(
-            @Positive @TeamId @PathVariable Long teamId,
-            @AuthenticationPrincipal SecurityUser user,
+            @Positive @PathVariable @TeamId Long teamId,
+            @CurrentUser SecurityUser user,
             @Valid @RequestBody ProjectCreateRequest request) {
         log.debug("ProjectControllerV1#createProject called.");
         log.debug("프로젝트 생성을 위한 팀 ID={}", teamId);
@@ -57,7 +58,7 @@ public class ProjectControllerV1 {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getProjects(@Positive @TeamId @PathVariable Long teamId) {
+    public ResponseEntity<List<ProjectResponse>> getProjects(@Positive @PathVariable Long teamId) {
         log.debug("ProjectControllerV1#getProjects called.");
         log.debug("프로젝트 목록을 조회하려는 팀 ID={}", teamId);
 
@@ -67,7 +68,7 @@ public class ProjectControllerV1 {
     }
 
     @PatchMapping("/{projectId}")
-    @RequirePermission(PermissionType.PROJECT_UPDATE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_PROJECT)
     public ResponseEntity<Void> editProject(@PathVariable Long teamId, @PathVariable @ProjectId Long projectId,
                                             @Valid @RequestBody ProjectEditRequest request) {
         log.debug("ProjectControllerV1#editProject called.");
@@ -78,7 +79,7 @@ public class ProjectControllerV1 {
     }
 
     @DeleteMapping("/{projectId}")
-    @RequirePermission(PermissionType.PROJECT_DELETE)
+    @RequireProjectPermission(ProjectPermission.DELETE_PROJECT)
     public ResponseEntity<Void> deleteProject(@PathVariable Long teamId, @PathVariable @ProjectId Long projectId) {
         log.debug("ProjectControllerV1#deleteProject called.");
 
@@ -89,8 +90,8 @@ public class ProjectControllerV1 {
 
     @DeleteMapping("/{projectId}/leave")
     public ResponseEntity<Void> leaveProject(
-            @Positive @TeamId @PathVariable Long teamId,
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long teamId,
+            @Positive @PathVariable Long projectId,
             @CurrentUser SecurityUser user) {
         projectService.leaveProject(teamId, projectId, user.getId());
         return ResponseEntity.noContent().build();
