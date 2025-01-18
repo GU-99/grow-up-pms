@@ -1,13 +1,13 @@
 package com.growup.pms.project.controller;
 
 import com.growup.pms.common.aop.annotation.ProjectId;
-import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.RequireProjectPermission;
 import com.growup.pms.project.controller.dto.request.ProjectRoleEditRequest;
 import com.growup.pms.project.controller.dto.request.ProjectUserCreateRequest;
 import com.growup.pms.project.controller.dto.response.ProjectUserResponse;
 import com.growup.pms.project.controller.dto.response.ProjectUserSearchResponse;
 import com.growup.pms.project.service.ProjectUserService;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.role.domain.ProjectPermission;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
@@ -33,8 +33,8 @@ public class ProjectUserControllerV1 {
     private final ProjectUserService projectUserService;
 
     @PostMapping
-    @RequirePermission(PermissionType.PROJECT_INVITE_MEMBER)
-    public ResponseEntity<Void> createProjectUser(@Positive @ProjectId @PathVariable Long projectId,
+    @RequireProjectPermission(ProjectPermission.INVITE_MEMBER)
+    public ResponseEntity<Void> createProjectUser(@Positive @PathVariable @ProjectId Long projectId,
                                                   @Valid @RequestBody ProjectUserCreateRequest request) {
         log.debug("ProjectUserControllerV1#createProjectUser called.");
         log.debug("프로젝트원 초대를 위한 projectId: {}", projectId);
@@ -46,7 +46,7 @@ public class ProjectUserControllerV1 {
 
     @GetMapping
     public ResponseEntity<List<ProjectUserResponse>> getProjectUsers(
-            @Positive @ProjectId @PathVariable Long projectId) {
+            @Positive @PathVariable Long projectId) {
         log.debug("ProjectUserControllerV1#getProjectUsers called.");
         log.debug("프로젝트원을 조회할 projectId: {}", projectId);
         List<ProjectUserResponse> responses = projectUserService.getProjectUsers(projectId);
@@ -56,7 +56,7 @@ public class ProjectUserControllerV1 {
 
     @GetMapping("/search")
     public ResponseEntity<List<ProjectUserSearchResponse>> searchProjectUsersByPrefix(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable Long projectId,
             @RequestParam(required = false, defaultValue = "", name = "nickname") String prefix
     ) {
         log.debug("ProjectUserControllerV1#searchProjectUsers called.");
@@ -68,7 +68,7 @@ public class ProjectUserControllerV1 {
     }
 
     @PatchMapping("/{targetUserId}/role")
-    @RequirePermission(PermissionType.PROJECT_MEMBER_ROLE_UPDATE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_MEMBER_ROLE)
     public ResponseEntity<Void> changeRole(
             @Positive @PathVariable @ProjectId Long projectId,
             @Positive @PathVariable Long targetUserId,
@@ -79,8 +79,8 @@ public class ProjectUserControllerV1 {
     }
 
     @DeleteMapping("/{userId}")
-    @RequirePermission(PermissionType.PROJECT_KICK_MEMBER)
-    public ResponseEntity<Void> kickProjectUser(@Positive @ProjectId @PathVariable Long projectId,
+    @RequireProjectPermission(ProjectPermission.KICK_MEMBER)
+    public ResponseEntity<Void> kickProjectUser(@Positive @PathVariable @ProjectId Long projectId,
                                                 @Positive @PathVariable Long userId) {
         log.debug("ProjectUserControllerV1#kickProjectUser called.");
         log.debug("프로젝트원 탈퇴를 위한 projectId: {}", projectId);

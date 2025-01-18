@@ -88,6 +88,10 @@ public class ProjectService {
         return projectRepository.getProjectsByTeamId(teamId);
     }
 
+    public Team getAssociatedTeamForProject(Long projectId) {
+        return projectRepository.findByIdOrThrow(projectId).getTeam();
+    }
+
     @Transactional
     public void editProject(Long projectId, ProjectEditCommand command) {
         Project project = projectRepository.findByIdOrThrow(projectId);

@@ -1,28 +1,29 @@
 package com.growup.pms.common.aop.aspect;
 
 import static com.growup.pms.test.fixture.auth.builder.SecurityUserTestBuilder.인증된_사용자는;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static com.growup.pms.test.fixture.team.builder.TeamTestBuilder.팀은;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import com.growup.pms.auth.controller.dto.SecurityUser;
 import com.growup.pms.common.aop.annotation.ProjectId;
-import com.growup.pms.common.aop.annotation.RequirePermission;
+import com.growup.pms.common.aop.annotation.RequireProjectPermission;
+import com.growup.pms.common.aop.annotation.RequireTeamPermission;
 import com.growup.pms.common.aop.annotation.TeamId;
-import com.growup.pms.common.exception.code.ErrorCode;
-import com.growup.pms.common.exception.exceptions.BusinessException;
 import com.growup.pms.common.util.AopUtil;
-import com.growup.pms.project.repository.ProjectUserRepository;
-import com.growup.pms.role.domain.Permission;
-import com.growup.pms.role.domain.PermissionType;
-import com.growup.pms.team.repository.TeamUserRepository;
+import com.growup.pms.project.service.ProjectService;
+import com.growup.pms.role.domain.ProjectPermission;
+import com.growup.pms.role.domain.TeamPermission;
+import com.growup.pms.role.service.PermissionService;
+import com.growup.pms.team.domain.Team;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 import org.aspectj.lang.JoinPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -40,11 +41,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class AuthorizationAspectTest {
-    @Mock
-    TeamUserRepository teamUserRepository;
 
     @Mock
-    ProjectUserRepository projectUserRepository;
+    ProjectService projectService;
+
+    @Mock
+    PermissionService permissionService;
 
     @Mock
     SecurityContext securityContext;
@@ -62,103 +64,101 @@ class AuthorizationAspectTest {
 
     @Nested
     class 팀_권한을_체크시 {
+
         @Test
         void 성공한다() {
             try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
                 // given
                 Long 팀_ID = 1L;
                 Long 사용자_ID = 1L;
-                SecurityUser 인증된_유저 = 인증된_사용자는().식별자가(사용자_ID).이다();
-                List<Permission> 부여된_권한 = List.of(new Permission(PermissionType.TEAM_DELETE.name()));
-                RequirePermission 권한_애노테이션 = 필요한_권한이(PermissionType.TEAM_DELETE);
+                SecurityUser 인증된_사용자 = 인증된_사용자는().식별자가(사용자_ID).이다();
+                RequireTeamPermission 권한_애노테이션 = 필요한_팀_권한이(TeamPermission.DELETE_TEAM);
 
                 when(securityContext.getAuthentication()).thenReturn(authentication);
-                when(authentication.getPrincipal()).thenReturn(인증된_유저);
-                when(teamUserRepository.getPermissionsForTeamUser(팀_ID, 사용자_ID)).thenReturn(부여된_권한);
+                when(authentication.getPrincipal()).thenReturn(인증된_사용자);
+                doNothing().when(permissionService).checkTeamPermission(eq(사용자_ID), eq(팀_ID), anyList());
 
-                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), eq(TeamId.class), eq(Long.class))).thenReturn(팀_ID);
+                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), eq(TeamId.class), eq(Long.class)))
+                        .thenReturn(Optional.of(팀_ID));
 
                 // when & then
-                assertThatCode(() -> authorizationAspect.checkTeamPermission(mock(JoinPoint.class), 권한_애노테이션))
-                        .doesNotThrowAnyException();
+                authorizationAspect.checkTeamPermission(mock(JoinPoint.class), 권한_애노테이션);
             }
         }
 
         @Test
-        void 필요한_권한이_없으면_예외가_발생한다() {
-            // given
+        void 팀_ID를_찾지_못하면_프로젝트_ID_에서_가져온다() {
             try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
-                Long 팀_ID = 1L;
+                // given
+                Long 팀_ID = 2L;
+                Long 프로젝트_ID = 1L;
                 Long 사용자_ID = 1L;
-                SecurityUser 인증된_유저 = 인증된_사용자는().식별자가(사용자_ID).이다();
-                List<Permission> 부여된_권한 = Collections.emptyList();
-                RequirePermission 권한_애노테이션 = 필요한_권한이(PermissionType.TEAM_DELETE);
+                Team 연관된_팀 = 팀은().식별자가(팀_ID).이다();
+                SecurityUser 인증된_사용자 = 인증된_사용자는().식별자가(사용자_ID).이다();
+                RequireTeamPermission 권한_애노테이션 = 필요한_팀_권한이(TeamPermission.DELETE_TEAM);
 
                 when(securityContext.getAuthentication()).thenReturn(authentication);
-                when(authentication.getPrincipal()).thenReturn(인증된_유저);
-                when(teamUserRepository.getPermissionsForTeamUser(팀_ID, 사용자_ID)).thenReturn(부여된_권한);
+                when(authentication.getPrincipal()).thenReturn(인증된_사용자);
+                when(projectService.getAssociatedTeamForProject(프로젝트_ID)).thenReturn(연관된_팀);
+                doNothing().when(permissionService).checkTeamPermission(eq(사용자_ID), eq(팀_ID), anyList());
 
-                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), eq(TeamId.class), eq(Long.class))).thenReturn(팀_ID);
+                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), eq(TeamId.class), eq(Long.class)))
+                        .thenReturn(Optional.empty());
+                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), eq(ProjectId.class), eq(Long.class)))
+                        .thenReturn(Optional.of(프로젝트_ID));
 
                 // when & then
-                assertThatThrownBy(() -> authorizationAspect.checkTeamPermission(mock(JoinPoint.class), 권한_애노테이션))
-                        .isInstanceOf(BusinessException.class)
-                        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
+                authorizationAspect.checkTeamPermission(mock(JoinPoint.class), 권한_애노테이션);
+            }
+        }
+
+        @Test
+        void 팀_ID와_프로젝트_ID_모두_없으면_예외가_발생한다() {
+            try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
+                // given
+                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), any(), any())).thenReturn(Optional.empty());
+
+                // when & then
+                assertThatThrownBy(() -> authorizationAspect.checkTeamPermission(mock(JoinPoint.class), mock(RequireTeamPermission.class)))
+                        .isInstanceOf(IllegalStateException.class)
+                        .hasMessage("'TeamId' 혹은 'ProjectId' 애노테이션이 붙은 'Long' 타입의 파라미터를 찾을 수 없습니다.");
             }
         }
     }
 
     @Nested
     class 프로젝트_권한을_체크시 {
+
         @Test
         void 성공한다() {
             try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
                 // given
                 Long 프로젝트_ID = 1L;
                 Long 사용자_ID = 1L;
-                SecurityUser 인증된_유저 = 인증된_사용자는().식별자가(사용자_ID).이다();
-                List<Permission> 부여된_권한 = List.of(new Permission(PermissionType.PROJECT_STATUS_WRITE.name()));
-                RequirePermission 권한_애노테이션 = 필요한_권한이(PermissionType.PROJECT_STATUS_WRITE);
+                SecurityUser 인증된_사용자 = 인증된_사용자는().식별자가(사용자_ID).이다();
+                RequireProjectPermission 권한_애노테이션 = 필요한_프로젝트_권한이(ProjectPermission.UPDATE_STATUS);
 
                 when(securityContext.getAuthentication()).thenReturn(authentication);
-                when(authentication.getPrincipal()).thenReturn(인증된_유저);
-                when(projectUserRepository.getPermissionsForProjectUser(프로젝트_ID, 사용자_ID)).thenReturn(부여된_권한);
+                when(authentication.getPrincipal()).thenReturn(인증된_사용자);
+                doNothing().when(permissionService).checkProjectPermission(eq(사용자_ID), eq(프로젝트_ID), anyList());
 
-                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), eq(ProjectId.class), eq(Long.class))).thenReturn(프로젝트_ID);
-
-                // when & then
-                assertThatCode(() -> authorizationAspect.checkProjectPermission(mock(JoinPoint.class), 권한_애노테이션))
-                        .doesNotThrowAnyException();
-            }
-        }
-
-        @Test
-        void 필요한_권한이_없으면_예외가_발생한다() {
-            try (MockedStatic<AopUtil> 헬퍼_클래스 = mockStatic(AopUtil.class)) {
-                // given
-                Long 프로젝트_ID = 1L;
-                Long 사용자_ID = 1L;
-                SecurityUser 인증된_유저 = 인증된_사용자는().식별자가(사용자_ID).이다();
-                List<Permission> 부여된_권한 = Collections.emptyList();
-                RequirePermission 권한_애노테이션 = 필요한_권한이(PermissionType.PROJECT_STATUS_WRITE);
-
-                when(securityContext.getAuthentication()).thenReturn(authentication);
-                when(authentication.getPrincipal()).thenReturn(인증된_유저);
-                when(projectUserRepository.getPermissionsForProjectUser(프로젝트_ID, 사용자_ID)).thenReturn(부여된_권한);
-
-                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfType(any(), eq(ProjectId.class), eq(Long.class)))
+                헬퍼_클래스.when(() -> AopUtil.findFirstAnnotatedParameterOfTypeOrThrow(any(), eq(ProjectId.class), eq(Long.class)))
                         .thenReturn(프로젝트_ID);
 
                 // when & then
-                assertThatThrownBy(() -> authorizationAspect.checkProjectPermission(mock(JoinPoint.class), 권한_애노테이션))
-                        .isInstanceOf(BusinessException.class)
-                        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ACCESS_DENIED);
+                authorizationAspect.checkProjectPermission(mock(JoinPoint.class), 권한_애노테이션);
             }
         }
     }
 
-    private RequirePermission 필요한_권한이(PermissionType... permissions) {
-        RequirePermission annotation = mock(RequirePermission.class);
+    private RequireTeamPermission 필요한_팀_권한이(TeamPermission... permissions) {
+        RequireTeamPermission annotation = mock(RequireTeamPermission.class);
+        when(annotation.value()).thenReturn(permissions);
+        return annotation;
+    }
+
+    private RequireProjectPermission 필요한_프로젝트_권한이(ProjectPermission... permissions) {
+        RequireProjectPermission annotation = mock(RequireProjectPermission.class);
         when(annotation.value()).thenReturn(permissions);
         return annotation;
     }

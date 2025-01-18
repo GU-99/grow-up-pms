@@ -1,8 +1,10 @@
 package com.growup.pms.task.controller;
 
 import com.growup.pms.common.aop.annotation.ProjectId;
-import com.growup.pms.common.aop.annotation.RequirePermission;
-import com.growup.pms.role.domain.PermissionType;
+import com.growup.pms.common.aop.annotation.RequireProjectPermission;
+import com.growup.pms.common.aop.annotation.RequireTeamPermission;
+import com.growup.pms.role.domain.ProjectPermission;
+import com.growup.pms.role.domain.TeamPermission;
 import com.growup.pms.task.controller.dto.request.TaskCreateRequest;
 import com.growup.pms.task.controller.dto.request.TaskEditRequest;
 import com.growup.pms.task.controller.dto.request.TaskOrderListEditRequest;
@@ -36,9 +38,9 @@ public class TaskControllerV1 {
     private final TaskService taskService;
 
     @PostMapping
-    @RequirePermission(PermissionType.PROJECT_STATUS_WRITE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_STATUS)
     public ResponseEntity<TaskDetailResponse> createTask(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Valid @RequestBody TaskCreateRequest request
     ) {
         log.debug("TaskControllerV1#createTask called.");
@@ -56,8 +58,8 @@ public class TaskControllerV1 {
     }
 
     @GetMapping
-    @RequirePermission(PermissionType.PROJECT_TASK_READ)
-    public ResponseEntity<List<TaskKanbanResponse>> getTasks(@Positive @ProjectId @PathVariable Long projectId) {
+    @RequireTeamPermission(TeamPermission.READ_PROJECT)
+    public ResponseEntity<List<TaskKanbanResponse>> getTasks(@Positive @PathVariable @ProjectId Long projectId) {
         log.debug("TaskControllerV1#getTasks called.");
         log.debug("일정 전체 조회를 위한 projectId={}", projectId);
 
@@ -67,9 +69,9 @@ public class TaskControllerV1 {
     }
 
     @GetMapping("/{taskId}")
-    @RequirePermission(PermissionType.PROJECT_TASK_READ)
+    @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<TaskDetailResponse> getTask(
-            @Positive@ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @PathVariable Long taskId
     ) {
         log.debug("TaskControllerV1#getTask called.");
@@ -83,9 +85,9 @@ public class TaskControllerV1 {
     }
 
     @PatchMapping("/{taskId}")
-    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> editTask(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Positive @PathVariable Long taskId,
             @Valid @RequestBody TaskEditRequest request
     ) {
@@ -100,9 +102,9 @@ public class TaskControllerV1 {
     }
 
     @PatchMapping("/order")
-    @RequirePermission(PermissionType.PROJECT_TASK_UPDATE)
+    @RequireProjectPermission(ProjectPermission.UPDATE_TASK)
     public ResponseEntity<Void> editTaskOrder(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Valid @RequestBody TaskOrderListEditRequest request
     ) {
         log.debug("TaskControllerV1#editTaskOrder called.");
@@ -115,9 +117,9 @@ public class TaskControllerV1 {
     }
 
     @DeleteMapping("/{taskId}")
-    @RequirePermission(PermissionType.PROJECT_TASK_DELETE)
+    @RequireProjectPermission(ProjectPermission.DELETE_TASK)
     public ResponseEntity<Void> deleteTask(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @Positive @PathVariable Long taskId
     ) {
         log.debug("TaskControllerV1#deleteTask called.");
@@ -130,9 +132,9 @@ public class TaskControllerV1 {
     }
 
     @GetMapping("/{taskId}/attachment")
-    @RequirePermission(PermissionType.PROJECT_TASK_READ)
+    @RequireTeamPermission(TeamPermission.READ_PROJECT)
     public ResponseEntity<List<TaskAttachmentResponse>> getTaskAttachments(
-            @Positive @ProjectId @PathVariable Long projectId,
+            @Positive @PathVariable @ProjectId Long projectId,
             @PathVariable Long taskId
     ) {
         log.debug("TaskControllerV1#getTaskAttachments called.");
