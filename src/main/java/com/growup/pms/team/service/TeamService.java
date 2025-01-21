@@ -98,6 +98,12 @@ public class TeamService {
         return new TeamNameCheckResponse(!teamRepository.existsByName(teamName));
     }
 
+    @Transactional
+    public void deleteTeam(Long teamId) {
+        projectService.deleteAllProjectsInTeam(teamId);
+        teamUserRepository.deleteAllByTeamId(teamId);
+    }
+
     private void inviteAllUsersToTeam(Team newTeam, List<TeamCoworkerCommand> coworkers) {
         Map<String, Role> roles = roleRepository.findByType(RoleType.TEAM).stream()
                 .collect(Collectors.toMap(
@@ -126,11 +132,6 @@ public class TeamService {
                     .build());
         }
         teamUserRepository.saveAll(invitedUsers);
-    }
-
-    private void removeTeam(Long teamId) {
-        projectService.deleteAllProjectsInTeam(teamId);
-        teamUserRepository.deleteAllByTeamId(teamId);
     }
 
     private void validateTeamCreation(Long creatorId, TeamCreateCommand command) {
