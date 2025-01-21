@@ -374,6 +374,7 @@ class TeamServiceTest {
             // then
             verify(projectService).deleteAllProjectsInTeam(팀_ID);
             verify(teamUserRepository).deleteAllByTeamId(팀_ID);
+            verify(teamRepository).deleteById(팀_ID);
         }
     }
 }

@@ -102,6 +102,7 @@ public class TeamService {
     public void deleteTeam(Long teamId) {
         projectService.deleteAllProjectsInTeam(teamId);
         teamUserRepository.deleteAllByTeamId(teamId);
+        teamRepository.deleteById(teamId);
     }
 
     private void inviteAllUsersToTeam(Team newTeam, List<TeamCoworkerCommand> coworkers) {
