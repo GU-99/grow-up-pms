@@ -41,79 +41,68 @@ INSERT INTO team_users (team_id, user_id, role_id, is_pending_approval) VALUES
     (4, 5, 3, false);   -- 제임스는 아이디어불쇼의 MATE
 
 -- 프로젝트 삽입
-INSERT INTO projects (team_id, name, content, start_date, end_date, created_at, updated_at, is_deleted) VALUES
-    -- 야근코딩단의 프로젝트들
-    (1, '야근 관리 시스템', '야근 시간을 효율적으로 관리하고 기록하는 시스템 개발', '2024-01-01', '2024-03-31', NOW(), NOW(), false),
-    (1, '코드 리팩토링 마라톤', '레거시 코드를 현대화하는 대규모 리팩토링 프로젝트', '2024-02-15', '2024-06-30', NOW(), NOW(), false),
+INSERT INTO projects (team_id, name, content, start_date, end_date, created_at, updated_at, is_deleted) VALUES                                                                                                            -- 야근코딩단의 프로젝트들
+    (1, '야근관리앱', '야근 시간을 효율적으로 관리하고 기록하는 시스템 개발', '2024-01-01', '2024-03-31', NOW(), NOW(), false),
+    (1, '코드정리', '레거시 코드를 현대화하는 대규모 리팩토링 프로젝트', '2024-02-15', '2024-06-30', NOW(), NOW(), false),
 
     -- 클라우드구름이의 프로젝트들
-    (2, '멀티 클라우드 마이그레이션', '기존 시스템을 멀티 클라우드 환경으로 이전', '2024-01-15', '2024-07-31', NOW(), NOW(), false),
-    (2, '클라우드 비용 최적화', '클라우드 리소스 사용 효율화 및 비용 절감 프로젝트', '2024-03-01', '2024-05-31', NOW(), NOW(), false),
+    (2, '클라우드이전', '기존 시스템을 멀티 클라우드 환경으로 이전', '2024-01-15', '2024-07-31', NOW(), NOW(), false),
+    (2, '비용절감', '클라우드 리소스 사용 효율화 및 비용 절감 프로젝트', '2024-03-01', '2024-05-31', NOW(), NOW(), false),
 
     -- 님아코드바다의 프로젝트들
-    (3, '버그 트래킹 시스템', '실시간 버그 모니터링 및 추적 시스템 개발', '2024-02-01', '2024-04-30', NOW(), NOW(), false),
-    (3, '코드 품질 개선', '정적 분석 도구를 활용한 코드 품질 향상 프로젝트', '2024-04-01', '2024-08-31', NOW(), NOW(), false),
+    (3, '버그체커', '실시간 버그 모니터링 및 추적 시스템 개발', '2024-02-01', '2024-04-30', NOW(), NOW(), false),
+    (3, '코드개선', '정적 분석 도구를 활용한 코드 품질 향상 프로젝트', '2024-04-01', '2024-08-31', NOW(), NOW(), false),
 
     -- 아이디어불쇼의 프로젝트들
-    (4, '혁신적 UI/UX 개선', '사용자 경험을 혁신적으로 개선하는 프로젝트', '2024-01-20', '2024-05-31', NOW(), NOW(), false),
-    (4, '신규 서비스 프로토타입', '창의적인 신규 서비스 개발 및 프로토타이핑', '2024-03-15', '2024-06-30', NOW(), NOW(), false),
+    (4, 'UI개선', '사용자 경험을 혁신적으로 개선하는 프로젝트', '2024-01-20', '2024-05-31', NOW(), NOW(), false),
+    (4, '신규서비스', '창의적인 신규 서비스 개발 및 프로토타이핑', '2024-03-15', '2024-06-30', NOW(), NOW(), false),
 
     -- 환생컴퍼니의 프로젝트들
-    (5, '레거시 시스템 현대화', '노후화된 시스템의 전면 개편 프로젝트', '2024-02-01', '2024-07-31', NOW(), NOW(), false),
-    (5, '마이크로서비스 전환', '모놀리식 아키텍처를 마이크로서비스로 전환', '2024-04-01', '2024-09-30', NOW(), NOW(), false);
+    (5, '시스템개편', '노후화된 시스템의 전면 개편 프로젝트', '2024-02-01', '2024-07-31', NOW(), NOW(), false),
+    (5, 'MSA전환', '모놀리식 아키텍처를 마이크로서비스로 전환', '2024-04-01', '2024-09-30', NOW(), NOW(), false);
 
 -- 프로젝트 사용자 삽입
 INSERT INTO project_users (project_id, user_id, role_id, created_at, updated_at, is_deleted) VALUES
     ---- 야근코딩단의 프로젝트들
-    -- 야근 관리 시스템 (project_id: 1)
+    -- 야근관리앱 (project_id: 1)
     (1, 1, 4, NOW(), NOW(), false),  -- 브라운: ADMIN
     (1, 2, 5, NOW(), NOW(), false),  -- 코니: LEADER
 
-    -- 코드 리팩토링 마라톤 (project_id: 2)
+    -- 코드정리 (project_id: 2)
     (2, 1, 4, NOW(), NOW(), false),  -- 브라운: ADMIN
     (2, 2, 6, NOW(), NOW(), false),  -- 코니: ASSIGNEE
 
     ---- 클라우드구름이의 프로젝트들
-    -- 멀티 클라우드 마이그레이션 (project_id: 3)
+    -- 클라우드이전 (project_id: 3)
     (3, 2, 4, NOW(), NOW(), false),  -- 코니: ADMIN
-    (3, 4, 6, NOW(), NOW(), false),  -- 샐리: ASSIGNEE
 
-    -- 클라우드 비용 최적화 (project_id: 4)
+    -- 비용절감 (project_id: 4)
     (4, 2, 4, NOW(), NOW(), false),  -- 코니: ADMIN
-    (4, 4, 5, NOW(), NOW(), false),  -- 샐리: LEADER
 
     -- 님아코드바다의 프로젝트들
-    -- 버그 트래킹 시스템 (project_id: 5)
+    -- 버그체커 (project_id: 5)
     (5, 3, 4, NOW(), NOW(), false),  -- 레너드: ADMIN
-    (5, 6, 6, NOW(), NOW(), false),  -- 에드워드: ASSIGNEE
-    (5, 7, 6, NOW(), NOW(), false),  -- 메리: ASSIGNEE
 
-    -- 코드 품질 개선 (project_id: 6)
+    -- 코드개선 (project_id: 6)
     (6, 3, 4, NOW(), NOW(), false),  -- 레너드: ADMIN
-    (6, 6, 5, NOW(), NOW(), false),  -- 에드워드: LEADER
-    (6, 8, 6, NOW(), NOW(), false),  -- 톰: ASSIGNEE
 
     -- 아이디어불쇼의 프로젝트들
-    -- 혁신적 UI/UX 개선 (project_id: 7)
+    -- UI개선 (project_id: 7)
     (7, 4, 4, NOW(), NOW(), false),  -- 샐리: ADMIN
     (7, 5, 5, NOW(), NOW(), false),  -- 제임스: LEADER
-    (7, 7, 6, NOW(), NOW(), false),  -- 메리: ASSIGNEE
 
-    -- 신규 서비스 프로토타입 (project_id: 8)
+    -- 신규서비스 (project_id: 8)
     (8, 4, 4, NOW(), NOW(), false),  -- 샐리: ADMIN
     (8, 5, 6, NOW(), NOW(), false),  -- 제임스: ASSIGNEE
-    (8, 8, 6, NOW(), NOW(), false),  -- 톰: ASSIGNEE
 
     -- 환생컴퍼니의 프로젝트들
-    -- 레거시 시스템 현대화 (project_id: 9)
+    -- 시스템개편 (project_id: 9)
     (9, 5, 4, NOW(), NOW(), false),  -- 제임스: ADMIN
     (9, 3, 5, NOW(), NOW(), false),  -- 레너드: LEADER
-    (9, 1, 6, NOW(), NOW(), false),  -- 브라운: ASSIGNEE
 
-    -- 마이크로서비스 전환 (project_id: 10)
+    -- MSA 전환 (project_id: 10)
     (10, 5, 4, NOW(), NOW(), false), -- 제임스: ADMIN
     (10, 3, 6, NOW(), NOW(), false), -- 레너드: ASSIGNEE
-    (10, 8, 6, NOW(), NOW(), false); -- 톰: ASSIGNEE
 
 -- 권한 삽입
 INSERT INTO permissions (name) VALUES ('TEAM_DELETE_TEAM');
