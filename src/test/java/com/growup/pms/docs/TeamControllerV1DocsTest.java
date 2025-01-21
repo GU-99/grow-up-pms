@@ -217,7 +217,7 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .summary("팀 삭제")
                                 .description("팀을 삭제하고, 연관된 프로젝트들을 논리적으로 삭제하며, 팀 사용자 정보도 함께 삭제합니다.")
                                 .pathParameters(
-                                        parameterWithName("teamId").description("팀 식별자")
+                                        parameterWithName("teamId").type(SimpleType.INTEGER).description("팀 식별자")
                                 )
                                 .build()
                 )));
