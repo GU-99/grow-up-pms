@@ -215,7 +215,7 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                         ResourceSnippetParameters.builder()
                                 .tag(TAG)
                                 .summary("팀 삭제")
-                                .description("팀과 연관된 프로젝트들을 논리적으로 삭제합니다.")
+                                .description("팀을 삭제하고, 연관된 프로젝트들을 논리적으로 삭제하며, 팀 사용자 정보도 함께 삭제합니다.")
                                 .pathParameters(
                                         parameterWithName("teamId").description("팀 식별자")
                                 )
