@@ -6,6 +6,7 @@ import com.growup.pms.team.controller.dto.response.TeamUserSearchResponse;
 import java.util.List;
 
 public interface QueryDslTeamUserRepository {
+
     List<Permission> getPermissionsForTeamUser(Long teamId, Long userId);
 
     List<TeamUserResponse> getAllTeamUsers(Long teamId);

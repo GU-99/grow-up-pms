@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -196,5 +197,29 @@ class TeamControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .pathParameters(parameterWithName("id").type(SimpleType.INTEGER).description("팀 ID"))
                                 .requestFields(
                                         fieldWithPath("userId").type(JsonFieldType.NUMBER).description("새로운 팀장 ID")).build())));
+    }
+
+    @Test
+    void 팀_삭제_API_문서를_생성한다() throws Exception {
+        // given
+        Long 팀_식별자 = 1L;
+
+        // when
+        doNothing().when(teamService).deleteTeam(팀_식별자);
+
+        // then
+        mockMvc.perform(delete("/api/v1/team/{teamId}", 팀_식별자)
+                        .header(org.springframework.http.HttpHeaders.AUTHORIZATION, "Bearer 액세스 토큰"))
+                .andExpect(status().isNoContent())
+                .andDo(docs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag(TAG)
+                                .summary("팀 삭제")
+                                .description("팀을 삭제하고, 연관된 프로젝트들을 논리적으로 삭제하며, 팀 사용자 정보도 함께 삭제합니다.")
+                                .pathParameters(
+                                        parameterWithName("teamId").type(SimpleType.INTEGER).description("팀 식별자")
+                                )
+                                .build()
+                )));
     }
 }

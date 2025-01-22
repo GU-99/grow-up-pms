@@ -33,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class TeamInvitationServiceTest {
+
     @Mock
     UserRepository userRepository;
 

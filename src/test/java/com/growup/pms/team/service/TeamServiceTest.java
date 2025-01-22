@@ -359,4 +359,22 @@ class TeamServiceTest {
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NEW_HEAD_NOT_IN_TEAM);
         }
     }
+
+    @Nested
+    class 팀_삭제_시에 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 팀_ID = 1L;
+
+            // when
+            teamService.deleteTeam(팀_ID);
+
+            // then
+            verify(projectService).deleteAllProjectsInTeam(팀_ID);
+            verify(teamUserRepository).deleteAllByTeamId(팀_ID);
+            verify(teamRepository).deleteById(팀_ID);
+        }
+    }
 }
