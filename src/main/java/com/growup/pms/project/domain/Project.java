@@ -44,7 +44,6 @@ public class Project extends BaseEntity {
     @Column(nullable = false)
     private LocalDate startDate;
 
-    @Column(nullable = false)
     private LocalDate endDate;
 
     @Builder

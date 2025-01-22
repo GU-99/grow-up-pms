@@ -44,6 +44,7 @@ public class Task extends BaseEntity {
     @Column(nullable = false)
     private Short sortOrder;
 
+    @Column(nullable = false)
     private LocalDate startDate;
 
     private LocalDate endDate;
