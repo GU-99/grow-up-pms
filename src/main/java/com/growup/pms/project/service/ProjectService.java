@@ -1,5 +1,6 @@
 package com.growup.pms.project.service;
 
+import com.growup.pms.common.util.DateRangeValidator;
 import com.growup.pms.project.controller.dto.response.ProjectResponse;
 import com.growup.pms.project.domain.Project;
 import com.growup.pms.project.domain.ProjectUser;
@@ -43,6 +44,8 @@ public class ProjectService {
     @Transactional
     public Long createProject(Long teamId, Long projectCreatorId, ProjectCreateCommand command) {
         Team team = teamRepository.findByIdOrThrow(teamId);
+
+        DateRangeValidator.validateDateRange(command.startDate(), command.endDate());
         Project savedProject = projectRepository.save(command.toEntity(team));
 
         addProjectAdmin(projectCreatorId, team, savedProject);
@@ -96,10 +99,12 @@ public class ProjectService {
     public void editProject(Long projectId, ProjectEditCommand command) {
         Project project = projectRepository.findByIdOrThrow(projectId);
 
-        editFieldIfPresent(command.projectName(), (v, t) -> t.editName(v.get()), project);
-        editFieldIfPresent(command.content(), (v, t) -> t.editContent(v.get()), project);
-        editFieldIfPresent(command.startDate(), (v, t) -> t.editStartDate(v.get()), project);
-        editFieldIfPresent(command.endDate(), (v, t) -> t.editEndDate(v.get()), project);
+        editFieldIfPresent(command.projectName(), (v, p) -> p.editName(v.get()), project);
+        editFieldIfPresent(command.content(), (v, p) -> p.editContent(v.get()), project);
+        editFieldIfPresent(command.startDate(), (v, p) -> p.editStartDate(v.get()), project);
+        editFieldIfPresent(command.endDate(), (v, p) -> p.editEndDate(v.get()), project);
+
+        DateRangeValidator.validateDateRange(project.getStartDate(), project.getEndDate());
     }
 
     private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Project> updater,

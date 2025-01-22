@@ -2,6 +2,7 @@ package com.growup.pms.task.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.common.util.DateRangeValidator;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskAttachmentResponse;
@@ -44,6 +45,7 @@ public class TaskService {
         Status status = statusRepository.findByIdOrThrow(command.statusId());
 
         isValidProject(projectId, status.getProject().getId());
+        DateRangeValidator.validateDateRange(command.startDate(), command.endDate());
 
         Task savedTask = taskRepository.save(command.toEntity(status));
 
@@ -92,6 +94,8 @@ public class TaskService {
         editFieldIfPresent(command.content(), (v, t) -> t.editContent(v.get()), task);
         editFieldIfPresent(command.startDate(), (v, t) -> t.editStartDate(v.get()), task);
         editFieldIfPresent(command.endDate(), (v, t) -> t.editEndDate(v.get()), task);
+
+        DateRangeValidator.validateDateRange(task.getStartDate(), task.getEndDate());
     }
 
     @Transactional
