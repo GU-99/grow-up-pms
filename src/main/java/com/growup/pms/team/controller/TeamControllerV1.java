@@ -87,7 +87,7 @@ public class TeamControllerV1 {
 
     @DeleteMapping("/{teamId}")
     @RequireTeamPermission(TeamPermission.DELETE_TEAM)
-    public ResponseEntity<Void> deleteTeam(@Positive @PathVariable Long teamId) {
+    public ResponseEntity<Void> deleteTeam(@Positive @PathVariable @TeamId Long teamId) {
         teamService.deleteTeam(teamId);
         return ResponseEntity.noContent().build();
     }

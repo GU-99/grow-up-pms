@@ -13,3 +13,6 @@ exclude:
       - build.gradle
       - settings.gradle
   - name: CheckDependencyLicenses
+  - name: NullableProblems
+  - name: DefaultAnnotationParam
+  - name: LoggingSimilarMessage
