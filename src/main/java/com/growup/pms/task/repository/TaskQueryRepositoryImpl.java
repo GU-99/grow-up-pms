@@ -47,8 +47,8 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                         task.name,
                         task.content,
                         task.sortOrder,
-                        task.startDate,
-                        task.endDate
+                        task.period.startDate,
+                        task.period.endDate
                 ))
                 .from(task)
                 .join(task.status, status)

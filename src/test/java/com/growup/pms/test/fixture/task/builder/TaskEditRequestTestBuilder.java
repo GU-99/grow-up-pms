@@ -15,8 +15,8 @@ public class TaskEditRequestTestBuilder {
     private Long statusId = 1L;
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
-    private JsonNullable<LocalDate> startDate = JsonNullable.of(LocalDate.of(2023, 1, 1));
-    private JsonNullable<LocalDate> endDate = JsonNullable.of(LocalDate.of(2023, 12, 31));
+    private JsonNullable<LocalDate> startDate = JsonNullable.of(LocalDate.now());
+    private JsonNullable<LocalDate> endDate = JsonNullable.of(LocalDate.now().plusMonths(1));
 
     public static TaskEditRequestTestBuilder 일정_수정_요청은() {
         return new TaskEditRequestTestBuilder();

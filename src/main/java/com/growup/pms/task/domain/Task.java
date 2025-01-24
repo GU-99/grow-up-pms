@@ -1,8 +1,10 @@
 package com.growup.pms.task.domain;
 
 import com.growup.pms.common.BaseEntity;
+import com.growup.pms.common.Period;
 import com.growup.pms.status.domain.Status;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -44,10 +46,8 @@ public class Task extends BaseEntity {
     @Column(nullable = false)
     private Short sortOrder;
 
-    @Column(nullable = false)
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+    @Embedded
+    private Period period;
 
     @Builder
     public Task(Status status, String name, String content, Short sortOrder, LocalDate startDate,
@@ -56,8 +56,7 @@ public class Task extends BaseEntity {
         this.name = name;
         this.content = content;
         this.sortOrder = sortOrder;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.period = Period.builder().startDate(startDate).endDate(endDate).build();
     }
 
     // Business Logics //
@@ -78,10 +77,10 @@ public class Task extends BaseEntity {
     }
 
     public void editStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+        period.editStartDate(startDate);
     }
 
     public void editEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+        period.editEndDate(endDate);
     }
 }

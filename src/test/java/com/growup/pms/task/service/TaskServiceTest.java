@@ -142,10 +142,6 @@ class TaskServiceTest {
             Long 예상_프로젝트_ID = 1L;
             Long 예상_상태_ID = 1L;
             Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
-            Task 예상_일정 = 일정은()
-                    .시작일자는(LocalDate.now())
-                    .종료일자는(LocalDate.now().minusDays(1))
-                    .이다();
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은()
                     .시작일자는(LocalDate.now())
                     .종료일자는(LocalDate.now().minusDays(1))
@@ -156,7 +152,7 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
     }
 
@@ -296,8 +292,8 @@ class TaskServiceTest {
                 softly.assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
                 softly.assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
                 softly.assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
-                softly.assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
-                softly.assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
+                softly.assertThat(기존_일정.getPeriod().getStartDate()).isEqualTo(변경할_시작일자);
+                softly.assertThat(기존_일정.getPeriod().getEndDate()).isEqualTo(변경할_종료일자);
             });
         }
 
@@ -343,8 +339,8 @@ class TaskServiceTest {
             Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
             String 변경할_일정_이름 = "변경할 이름 입니다!";
             String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
-            LocalDate 변경할_시작일자 = LocalDate.of(2023, 3, 1);
-            LocalDate 변경할_종료일자 = LocalDate.of(2023, 1, 1);
+            LocalDate 변경할_시작일자 = LocalDate.now().plusDays(1);
+            LocalDate 변경할_종료일자 = LocalDate.now();
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
                     .상태_식별자는(변경할_상태_ID)
                     .일정이름은(변경할_일정_이름)
@@ -359,14 +355,14 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
 
         @Test
         void 새로운_종료일자가_기존_시작일자보다_빠르면_예외가_발생한다() {
             // given
             Long 기존_일정_ID = 1L;
-            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).시작일자는(LocalDate.now()).이다();
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
             Long 변경할_상태_ID = 2L;
             Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
             String 변경할_일정_이름 = "변경할 이름 입니다!";
@@ -386,7 +382,7 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
 
         @Test
@@ -398,7 +394,7 @@ class TaskServiceTest {
             Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
             String 변경할_일정_이름 = "변경할 이름 입니다!";
             String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
-            LocalDate 변경할_시작일자 = LocalDate.of(2024, 1, 1);
+            LocalDate 변경할_시작일자 = LocalDate.MAX;
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
                     .상태_식별자는(변경할_상태_ID)
                     .일정이름은(변경할_일정_이름)
@@ -413,7 +409,7 @@ class TaskServiceTest {
             // when & then
             assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
     }
 

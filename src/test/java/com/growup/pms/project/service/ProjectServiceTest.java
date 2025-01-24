@@ -172,7 +172,7 @@ class ProjectServiceTest {
             // when & then
             assertThatThrownBy(() -> projectService.createProject(예상_팀_ID, 예상_생성자_ID, 예상_프로젝트_생성_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
     }
 
@@ -229,8 +229,8 @@ class ProjectServiceTest {
             SoftAssertions.assertSoftly(softly -> {
                 softly.assertThat(기존_프로젝트.getName()).isEqualTo(예상_프로젝트_수정_요청.projectName().get());
                 softly.assertThat(기존_프로젝트.getContent()).isEqualTo(예상_프로젝트_수정_요청.content().get());
-                softly.assertThat(기존_프로젝트.getStartDate()).isEqualTo(예상_프로젝트_수정_요청.startDate().get());
-                softly.assertThat(기존_프로젝트.getEndDate()).isEqualTo(예상_프로젝트_수정_요청.endDate().get());
+                softly.assertThat(기존_프로젝트.getPeriod().getStartDate()).isEqualTo(예상_프로젝트_수정_요청.startDate().get());
+                softly.assertThat(기존_프로젝트.getPeriod().getEndDate()).isEqualTo(예상_프로젝트_수정_요청.endDate().get());
             });
         }
 
@@ -264,7 +264,7 @@ class ProjectServiceTest {
             // when & then
             assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
 
         @Test
@@ -284,7 +284,7 @@ class ProjectServiceTest {
             // when & then
             assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
     }
 

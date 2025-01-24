@@ -1,8 +1,10 @@
 package com.growup.pms.project.domain;
 
 import com.growup.pms.common.BaseEntity;
+import com.growup.pms.common.Period;
 import com.growup.pms.team.domain.Team;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -41,18 +43,15 @@ public class Project extends BaseEntity {
 
     private String content;
 
-    @Column(nullable = false)
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+    @Embedded
+    private Period period;
 
     @Builder
     public Project(Team team, String name, String content, LocalDate startDate, LocalDate endDate) {
         this.team = team;
         this.name = name;
         this.content = content;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.period = Period.builder().startDate(startDate).endDate(endDate).build();
     }
 
     // Business Logics //
@@ -65,10 +64,10 @@ public class Project extends BaseEntity {
     }
 
     public void editStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+        period.editStartDate(startDate);
     }
 
     public void editEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+        period.editEndDate(endDate);
     }
 }
