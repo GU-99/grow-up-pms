@@ -14,7 +14,7 @@ public record UserResponse(
         Provider provider,
         String nickname,
         String bio,
-        String profileImageName,
+        String fileName,
         List<String> links
 ) {
 
@@ -26,7 +26,7 @@ public record UserResponse(
                 .provider(user.getProvider())
                 .nickname(user.getProfile().getNickname())
                 .bio(user.getProfile().getBio())
-                .profileImageName(user.getProfile().getImageName())
+                .fileName(user.getProfile().getImageName())
                 .links(user.getLinks().stream().map(UserLink::getLink).toList())
                 .build();
     }

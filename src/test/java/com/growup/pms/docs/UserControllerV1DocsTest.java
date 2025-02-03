@@ -89,7 +89,7 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("provider").type(JsonFieldType.STRING).description("인증 프로바이더"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("profileImageName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
+                                        fieldWithPath("fileName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
                                         fieldWithPath("links").type(JsonFieldType.ARRAY).description("링크 목록"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .build())));
@@ -151,7 +151,7 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                         fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("profileImageName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
+                                        fieldWithPath("fileName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
                                         fieldWithPath("links").type(JsonFieldType.ARRAY).description("사용자 링크"),
                                         fieldWithPath("verificationCode").type(JsonFieldType.STRING).description("인증코드"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
@@ -338,12 +338,12 @@ class UserControllerV1DocsTest extends ControllerSliceTestSupport {
                                 .requestFields(
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("profileImageName").type(JsonFieldType.STRING).description("프로필 이미지"))
+                                        fieldWithPath("fileName").type(JsonFieldType.STRING).description("프로필 이미지"))
                                 .requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))
                                 .responseFields(
                                         fieldWithPath("userId").type(JsonFieldType.NUMBER).description("사용자 아이디"),
                                         fieldWithPath("bio").type(JsonFieldType.STRING).description("자기소개"),
-                                        fieldWithPath("profileImageName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
+                                        fieldWithPath("fileName").type(JsonFieldType.STRING).description("프로필 이미지 이름"),
                                         fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("links").type(JsonFieldType.NULL).description("링크"))
                                 .responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(MediaType.APPLICATION_JSON_VALUE))

@@ -13,7 +13,7 @@ public record UserCreateCommand(
         String email,
         String nickname,
         String bio,
-        String profileImageName,
+        String fileName,
         List<String> links,
         String verificationCode
 ) {
@@ -26,7 +26,7 @@ public record UserCreateCommand(
                 .profile(UserProfile.builder()
                         .nickname(nickname)
                         .bio(bio)
-                        .imageName(profileImageName)
+                        .imageName(fileName)
                         .build())
                 .build();
         user.addLinks(links);

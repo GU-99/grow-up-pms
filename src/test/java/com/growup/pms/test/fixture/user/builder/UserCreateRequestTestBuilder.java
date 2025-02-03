@@ -16,7 +16,7 @@ public class UserCreateRequestTestBuilder {
     private String email = "brown@example.com";
     private String nickname = "브라운";
     private String bio = "안녕하세요, 브라운입니다!";
-    private String profileImageName = "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png";
+    private String fileName = "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png";
     private List<String> links = List.of("http://example.com");
     private String verificationCode = "123456";
 
@@ -59,7 +59,7 @@ public class UserCreateRequestTestBuilder {
     }
 
     public UserCreateRequestTestBuilder 프로필_이미지_이름이(String 프로필_이미지_이름) {
-        this.profileImageName = 프로필_이미지_이름;
+        this.fileName = 프로필_이미지_이름;
         return this;
     }
 
@@ -80,7 +80,7 @@ public class UserCreateRequestTestBuilder {
                 .email(email)
                 .nickname(nickname)
                 .bio(bio)
-                .profileImageName(profileImageName)
+                .fileName(fileName)
                 .links(links)
                 .verificationCode(verificationCode)
                 .build();
