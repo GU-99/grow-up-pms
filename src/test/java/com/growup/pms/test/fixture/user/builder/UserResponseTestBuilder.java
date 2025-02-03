@@ -17,7 +17,7 @@ public class UserResponseTestBuilder {
     private Provider provider = Provider.LOCAL;
     private String nickname = "브라운";
     private String bio = "안녕하세요, 브라운입니다!";
-    private String profileImageName = "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png";
+    private String fileName = "728f3af8-4080-45b1-8b3c-d25e5e073dc7.png";
     private List<String> links = List.of("https://github.com/growup");
 
     public static UserResponseTestBuilder 사용자_조회_응답은() {
@@ -55,7 +55,7 @@ public class UserResponseTestBuilder {
     }
 
     public UserResponseTestBuilder 프로필_이미지_이름이(String 프로필_이미지_이름) {
-        this.profileImageName = 프로필_이미지_이름;
+        this.fileName = 프로필_이미지_이름;
         return this;
     }
 
@@ -72,7 +72,7 @@ public class UserResponseTestBuilder {
                 .provider(provider)
                 .nickname(nickname)
                 .bio(bio)
-                .profileImageName(profileImageName)
+                .fileName(fileName)
                 .links(links)
                 .build();
     }

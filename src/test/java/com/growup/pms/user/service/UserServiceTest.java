@@ -237,7 +237,7 @@ class UserServiceTest {
             assertSoftly(softly -> {
                 softly.assertThat(변경된_유저_정보.links()).hasSize(0);
                 softly.assertThat(변경된_유저_정보)
-                        .extracting("userId", "nickname", "profileImageName", "bio", "links")
+                        .extracting("userId", "nickname", "fileName", "bio", "links")
                         .contains(기존_사용자_아이디, 변경할_닉네임, 변경할_자기소개, 변경할_프로필_이미지_이름, Collections.emptyList());
             });
         }
