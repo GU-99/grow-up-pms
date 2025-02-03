@@ -36,7 +36,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests with Gradle
-        run: ./gradlew test --no-daemon
+        run: ./gradlew test --no-daemon -x openapi3
         env:
           JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
 
