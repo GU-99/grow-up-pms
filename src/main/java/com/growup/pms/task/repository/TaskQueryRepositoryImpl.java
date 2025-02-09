@@ -1,5 +1,6 @@
 package com.growup.pms.task.repository;
 
+import static com.growup.pms.project.domain.QProject.project;
 import static com.growup.pms.status.domain.QStatus.status;
 import static com.growup.pms.task.domain.QTask.task;
 
@@ -7,6 +8,7 @@ import com.growup.pms.task.controller.dto.response.TaskResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +59,30 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                 )
                 .orderBy(task.sortOrder.asc())
                 .fetch();
+    }
+
+    public LocalDate getEarliestStartDateInProject(Long projectId) {
+        return queryFactory.select(task.period.startDate)
+                .from(task)
+                .join(task.status, status)
+                .join(task.status.project, project)
+                .where(
+                        project.id.eq(projectId)
+                )
+                .orderBy(task.period.startDate.asc())
+                .fetchFirst();
+    }
+
+    public LocalDate getLatestEndDateInProject(Long projectId) {
+        return queryFactory.select(task.period.endDate)
+                .from(task)
+                .join(task.status, status)
+                .join(task.status.project, project)
+                .where(
+                        project.id.eq(projectId)
+                )
+                .orderBy(task.period.endDate.desc())
+                .fetchFirst();
     }
 
     private BooleanExpression isStatusId(Long statusId) {
