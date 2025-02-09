@@ -286,6 +286,39 @@ class ProjectServiceTest {
                     .isInstanceOf(BusinessException.class)
                     .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
         }
+        // 프로젝트 시작 일자가 프로젝트 일정의 첫번째 시작 일자보다 느리면 예외가 발생한다
+
+        @Test
+        void 프로젝트_시작일자가_기존_프로젝트_일정의_첫번째_시작일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            LocalDate 프로젝트_일정의_시작일자 = LocalDate.MIN;
+            Project 기존_프로젝트 = 프로젝트는().이다();
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은().이다().toCommand();
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(taskRepository.getEarliestStartDateInProject(기존_프로젝트_ID)).thenReturn(프로젝트_일정의_시작일자);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
+
+        @Test
+        void 프로젝트_종료일자가_기존_프로젝트_일정의_첫번째_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            LocalDate 프로젝트_일정의_종료일자 = LocalDate.MAX;
+            Project 기존_프로젝트 = 프로젝트는().이다();
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은().이다().toCommand();
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(taskRepository.getLatestEndDateInProject(기존_프로젝트_ID)).thenReturn(프로젝트_일정의_종료일자);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
     }
 
     @Nested
