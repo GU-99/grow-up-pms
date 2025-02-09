@@ -67,7 +67,8 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                 .join(task.status, status)
                 .join(task.status.project, project)
                 .where(
-                        project.id.eq(projectId)
+                        project.id.eq(projectId),
+                        task.period.startDate.isNotNull()
                 )
                 .orderBy(task.period.startDate.asc())
                 .fetchFirst();
@@ -79,7 +80,8 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                 .join(task.status, status)
                 .join(task.status.project, project)
                 .where(
-                        project.id.eq(projectId)
+                        project.id.eq(projectId),
+                        task.period.endDate.isNotNull()
                 )
                 .orderBy(task.period.endDate.desc())
                 .fetchFirst();

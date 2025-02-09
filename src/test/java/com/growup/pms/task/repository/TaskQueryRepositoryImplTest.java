@@ -76,7 +76,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .설명이("프로젝트 관리 서비스를 개발하는 프로젝트.  상태가 있습니다.")
                         .팀이(GU팀)
                         .시작일이(LocalDate.of(2024, 1, 1))
-                        .종료일이(LocalDate.of(2024, 12, 31))
+                        .종료일이(LocalDate.of(2024, 12, 31).plusYears(1))
                         .이다()
         );
 
@@ -133,8 +133,8 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .이름은("PMS 프로젝트의 환경설정을 진행함")
                         .내용은("- build.gradle 의존성 추가 <br> - Config 클래스 추가")
                         .정렬순서는((short) 1)
-                        .시작일자는(LocalDate.parse("2023-01-01"))
-                        .종료일자는(LocalDate.parse("2023-01-15"))
+                        .시작일자는(LocalDate.parse("2024-01-01"))
+                        .종료일자는(LocalDate.parse("2024-01-15"))
                         .이다()
         );
 
@@ -144,8 +144,8 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .이름은("PMS 프로젝트의 등록 기능 구현을 진행함")
                         .내용은("- ProjectRepository 구현 <br> - ProjectService 클래스 내부 구현")
                         .정렬순서는((short) 2)
-                        .시작일자는(LocalDate.parse("2023-01-16"))
-                        .종료일자는(LocalDate.parse("2023-01-31"))
+                        .시작일자는(LocalDate.parse("2024-01-16"))
+                        .종료일자는(LocalDate.parse("2024-01-31"))
                         .이다()
         );
         PMS_조회기능 = taskRepository.save(
@@ -154,7 +154,7 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
                         .이름은("PMS 프로젝트의 조회 기능 구현을 진행함")
                         .내용은("- 조회 레포지토리 구현 <br> - 조회 쿼리 구현 및 테스트 작성")
                         .정렬순서는((short) 1)
-                        .시작일자는(LocalDate.parse("2023-02-01"))
+                        .시작일자는(LocalDate.parse("2025-02-01"))
                         .종료일자는(null)
                         .이다()
         );
@@ -267,13 +267,13 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
     }
 
     @Nested
-    class 프로젝트에서_종료일자가_가장_빠른_일정_조회_시 {
+    class 프로젝트에서_종료일자가_가장_느린_일정_조회_시 {
 
         @Test
         void 성공한다() {
             // given
             Long 프로젝트_ID = PMS_프로젝트.getId();
-            LocalDate 예상_결과 = PMS_환경설정.getPeriod().getEndDate();
+            LocalDate 예상_결과 = PMS_등록기능.getPeriod().getEndDate();
 
             // when
             LocalDate 실제_결과 = taskQueryRepository.getLatestEndDateInProject(프로젝트_ID);
