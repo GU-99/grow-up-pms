@@ -248,4 +248,38 @@ class TaskQueryRepositoryImplTest extends RepositoryTestSupport {
             });
         }
     }
+
+    @Nested
+    class 프로젝트에서_시작일자가_가장_빠른_일정_조회_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 프로젝트_ID = PMS_프로젝트.getId();
+            LocalDate 예상_결과 = PMS_환경설정.getPeriod().getStartDate();
+
+            // when
+            LocalDate 실제_결과 = taskQueryRepository.getEarliestStartDateInProject(프로젝트_ID);
+
+            // then
+            assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+    }
+
+    @Nested
+    class 프로젝트에서_종료일자가_가장_빠른_일정_조회_시 {
+
+        @Test
+        void 성공한다() {
+            // given
+            Long 프로젝트_ID = PMS_프로젝트.getId();
+            LocalDate 예상_결과 = PMS_환경설정.getPeriod().getEndDate();
+
+            // when
+            LocalDate 실제_결과 = taskQueryRepository.getLatestEndDateInProject(프로젝트_ID);
+
+            // then
+            assertThat(실제_결과).isEqualTo(예상_결과);
+        }
+    }
 }
