@@ -301,7 +301,7 @@ class ProjectServiceTest {
             // when & then
             assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
         }
 
         @Test
@@ -317,7 +317,7 @@ class ProjectServiceTest {
             // when & then
             assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
         }
     }
 

@@ -18,7 +18,7 @@ public final class PeriodValidator {
      */
     public static void validateProjectStartBeforeAllTaskStart(LocalDate projectStartDate, LocalDate taskStartDate) {
         if (projectStartDate != null && taskStartDate != null && taskStartDate.isBefore(projectStartDate)) {
-            throw new BusinessException(ErrorCode.INVALID_PERIOD);
+            throw new BusinessException(ErrorCode.TASK_PERIOD_OUT_OF_RANGE);
         }
     }
 
@@ -31,7 +31,7 @@ public final class PeriodValidator {
      */
     public static void validateProjectEndAfterAllTaskEnd(LocalDate projectEndDate, LocalDate taskEndDate) {
         if (projectEndDate != null && taskEndDate != null && taskEndDate.isAfter(projectEndDate)) {
-            throw new BusinessException(ErrorCode.INVALID_PERIOD);
+            throw new BusinessException(ErrorCode.TASK_PERIOD_OUT_OF_RANGE);
         }
     }
 }

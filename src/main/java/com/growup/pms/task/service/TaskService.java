@@ -2,6 +2,9 @@ package com.growup.pms.task.service;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.common.util.PeriodValidator;
+import com.growup.pms.project.domain.Project;
+import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskAttachmentResponse;
@@ -18,6 +21,7 @@ import com.growup.pms.task.service.dto.TaskEditCommand;
 import com.growup.pms.task.service.dto.TaskOrderEditCommand;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -34,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
     private final StatusRepository statusRepository;
     private final UserRepository userRepository;
     private final TaskUserRepository taskUserRepository;
@@ -41,9 +46,12 @@ public class TaskService {
 
     @Transactional
     public TaskDetailResponse createTask(Long projectId, TaskCreateCommand command) {
+        Project project = projectRepository.findByIdOrThrow(projectId);
         Status status = statusRepository.findByIdOrThrow(command.statusId());
 
-        isValidProject(projectId, status.getProject().getId());
+        isValidProject(projectId, project.getId());
+        PeriodValidator.validateProjectStartBeforeAllTaskStart(project.getPeriod().getStartDate(), command.startDate());
+        PeriodValidator.validateProjectEndAfterAllTaskEnd(project.getPeriod().getEndDate(), command.endDate());
 
         Task savedTask = taskRepository.save(command.toEntity(status));
 
@@ -84,14 +92,17 @@ public class TaskService {
     }
 
     @Transactional
-    public void editTask(Long taskId, TaskEditCommand command) {
+    public void editTask(Long projectId, Long taskId, TaskEditCommand command) {
         Task task = taskRepository.findByIdOrThrow(taskId);
+        Project project = projectRepository.findByIdOrThrow(projectId);
 
         editFieldIfPresent(command.statusId(), this::changeStatus, task);
         editFieldIfPresent(command.taskName(), (v, t) -> t.editName(v.get()), task);
         editFieldIfPresent(command.content(), (v, t) -> t.editContent(v.get()), task);
-        editFieldIfPresent(command.startDate(), (v, t) -> t.editStartDate(v.get()), task);
-        editFieldIfPresent(command.endDate(), (v, t) -> t.editEndDate(v.get()), task);
+        editStartDateIfPresent(command.startDate(), (v, t) -> t.editStartDate(v.get()), task,
+                project.getPeriod().getStartDate());
+        editEndDateIfPresent(command.endDate(), (v, t) -> t.editEndDate(v.get()), task,
+                project.getPeriod().getEndDate());
     }
 
     @Transactional
@@ -118,6 +129,24 @@ public class TaskService {
 
     private <T> void editFieldIfPresent(JsonNullable<T> value, BiConsumer<JsonNullable<T>, Task> updater, Task task) {
         value.ifPresent(v -> updater.accept(JsonNullable.of(v), task));
+    }
+
+    private void editStartDateIfPresent(JsonNullable<LocalDate> startDate,
+                                        BiConsumer<JsonNullable<LocalDate>, Task> updater, Task task,
+                                        LocalDate projectStartDate) {
+        startDate.ifPresent(v -> {
+            PeriodValidator.validateProjectStartBeforeAllTaskStart(projectStartDate, startDate.get());
+            updater.accept(JsonNullable.of(v), task);
+        });
+    }
+
+    private void editEndDateIfPresent(JsonNullable<LocalDate> endDate,
+                                      BiConsumer<JsonNullable<LocalDate>, Task> updater, Task task,
+                                      LocalDate projectEndDate) {
+        endDate.ifPresent(v -> {
+            PeriodValidator.validateProjectEndAfterAllTaskEnd(projectEndDate, endDate.get());
+            updater.accept(JsonNullable.of(v), task);
+        });
     }
 
     private void changeStatus(JsonNullable<Long> statusId, Task task) {

@@ -96,7 +96,7 @@ public class TaskControllerV1 {
         log.debug("일정 변경을 위한 taskId={}", taskId);
         log.debug("일정 변경을 위한 TaskEditRequest={}", request);
 
-        taskService.editTask(taskId, request.toCommand());
+        taskService.editTask(projectId, taskId, request.toCommand());
 
         return ResponseEntity.noContent().build();
     }
