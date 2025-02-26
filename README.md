@@ -24,6 +24,9 @@
   </tr>
 </table>
 
+## 📊 ERD
+![sGWX6mh](https://github.com/user-attachments/assets/6eef530f-46ed-4ffe-8f85-f80dca05553c)
+
 ## 🏗️ Architecture
 ![server-architecture drawio](https://github.com/user-attachments/assets/12ce054a-8570-4f4e-822c-b04b70d876f2)
 
