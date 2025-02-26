@@ -11,16 +11,16 @@
     <th>📅 캘린더</th>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/df88788c-c609-4dc6-b301-04cb4327776b" width="500"></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/fd17216d-33cd-4247-b190-c0e792c20f9b" width="500"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/df88788c-c609-4dc6-b301-04cb4327776b"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/fd17216d-33cd-4247-b190-c0e792c20f9b"></td>
   </tr>
   <tr>
     <th>🛠️ 프로젝트 생성</th>
     <th>📝 회원가입</th>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/5b2452d4-8d3f-4ff7-8e13-756dd213c578" width="500"></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/50f7ef1e-fc90-4805-9a0f-1f29756a968e" width="500"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/5b2452d4-8d3f-4ff7-8e13-756dd213c578"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/50f7ef1e-fc90-4805-9a0f-1f29756a968e"></td>
   </tr>
 </table>
 
