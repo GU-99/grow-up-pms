@@ -38,7 +38,7 @@
 | Backend | Backend | Backend |
 |:------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|
 | <img src="https://avatars.githubusercontent.com/u/118791679?v=4" width=100px alt="JinHoLee"/> | <img src="https://avatars.githubusercontent.com/u/8318212?v=4" width=100px alt="su6net"/> | <img src="https://avatars.githubusercontent.com/u/74171272?v=4" width=100px alt="longBright"/> | 
-|                          [JinHoLee](https://github.com/wlshooo) |                          [destitutor](https://github.com/su6net)                           |                          [longBright](https://github.com/longBright) |
+|                          [JinHoLee](https://github.com/wlshooo) |                          [thornscript](https://github.com/thornscript)                           |                          [longBright](https://github.com/longBright) |
 
 ## 📚 Technical Documentation
 - [테스트 데이터 빌더를 통해 최소한의 노력으로 테스트 객체 커스텀하기](https://github.com/GU-99/grow-up-pms/wiki/%ED%85%8C%EC%8A%A4%ED%8A%B8-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B9%8C%EB%8D%94%EB%A5%BC-%ED%86%B5%ED%95%B4-%EC%B5%9C%EC%86%8C%ED%95%9C%EC%9D%98-%EB%85%B8%EB%A0%A5%EC%9C%BC%EB%A1%9C-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EA%B0%9D%EC%B2%B4-%EC%BB%A4%EC%8A%A4%ED%85%80%ED%95%98%EA%B8%B0)
