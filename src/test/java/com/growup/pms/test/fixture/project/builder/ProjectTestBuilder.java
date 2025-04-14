@@ -19,8 +19,8 @@ public class ProjectTestBuilder {
     private Team team = 팀은().이다();
     private String name = "GU-PMS 프로젝트";
     private String content = "프로젝트 관리 서비스 개발 프로젝트";
-    private LocalDate startDate = LocalDate.of(2024, 1, 1);
-    private LocalDate endDate = LocalDate.of(2024, 12, 31);
+    private LocalDate startDate = LocalDate.now();
+    private LocalDate endDate = LocalDate.now().plusYears(1);
 
     public static ProjectTestBuilder 프로젝트는() {
         return new ProjectTestBuilder();

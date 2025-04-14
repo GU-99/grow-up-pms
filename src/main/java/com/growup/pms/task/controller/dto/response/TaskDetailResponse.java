@@ -41,8 +41,8 @@ public class TaskDetailResponse {
                 .taskName(task.getName())
                 .content(task.getContent())
                 .sortOrder(task.getSortOrder())
-                .startDate(formatDateOrNull(task.getStartDate()))
-                .endDate(formatDateOrNull(task.getEndDate()))
+                .startDate(formatDateOrNull(task.getPeriod().getStartDate()))
+                .endDate(formatDateOrNull(task.getPeriod().getEndDate()))
                 .build();
     }
 

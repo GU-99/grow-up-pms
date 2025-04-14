@@ -17,8 +17,8 @@ public class TaskCreateRequestTestBuilder {
     private String taskName = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
-    private LocalDate startDate = LocalDate.of(2023, 1, 1);
-    private LocalDate endDate = LocalDate.of(2023, 12, 31);
+    private LocalDate startDate = LocalDate.now();
+    private LocalDate endDate = LocalDate.now().plusDays(1);
 
     public static TaskCreateRequestTestBuilder 일정_생성_요청은() {
         return new TaskCreateRequestTestBuilder();

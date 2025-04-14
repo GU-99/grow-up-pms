@@ -252,7 +252,7 @@ public class TaskControllerV1DocsTest extends ControllerSliceTestSupport {
         TaskEditRequest 일정_변경_요청 = TaskEditRequestTestBuilder.일정_수정_요청은().이다();
 
         // when
-        doNothing().when(taskService).editTask(anyLong(), any(TaskEditCommand.class));
+        doNothing().when(taskService).editTask(anyLong(), anyLong(), any(TaskEditCommand.class));
 
         // then
         mockMvc.perform(patch("/api/v1/project/{projectId}/task/{taskId}", 예상_프로젝트_식별자, 예상_일정_식별자)

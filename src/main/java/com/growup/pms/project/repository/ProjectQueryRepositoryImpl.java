@@ -31,8 +31,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.id,
                         project.name,
                         project.content,
-                        project.startDate,
-                        project.endDate,
+                        project.period.startDate,
+                        project.period.endDate,
                         project.createdAt,
                         project.updatedAt
                 ))

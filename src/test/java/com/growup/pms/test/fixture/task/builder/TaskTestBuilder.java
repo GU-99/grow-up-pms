@@ -19,8 +19,8 @@ public class TaskTestBuilder {
     private String name = "환경설정 마치기";
     private String content = "# GU-PMS 에 필요한 환경 설정은 다음과 같습니다. <br> ## 목차 <br> ### 1. JPA 의존성 주입";
     private Short sortOrder = 1;
-    private LocalDate startDate = LocalDate.parse("2023-01-01");
-    private LocalDate endDate = LocalDate.parse("2023-12-31");
+    private LocalDate startDate = LocalDate.now();
+    private LocalDate endDate = LocalDate.now().plusDays(2);
 
     public static TaskTestBuilder 일정은() {
         return new TaskTestBuilder();

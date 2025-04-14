@@ -31,7 +31,6 @@ public class ProjectCreateRequest {
     private LocalDate startDate;
 
     @JsonFormat(pattern = LOCAL_DATE_PATTERN)
-    @NotNull
     private LocalDate endDate;
 
     private List<ProjectUserCreateRequest> coworkers;

@@ -1,5 +1,6 @@
 package com.growup.pms.task.service;
 
+import static com.growup.pms.test.fixture.project.builder.ProjectTestBuilder.프로젝트는;
 import static com.growup.pms.test.fixture.status.builder.StatusTestBuilder.상태는;
 import static com.growup.pms.test.fixture.task.builder.TaskAttachmentResponseTestBuilder.첨부파일_조회_응답은;
 import static com.growup.pms.test.fixture.task.builder.TaskCreateRequestTestBuilder.일정_생성_요청은;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.when;
 
 import com.growup.pms.common.exception.code.ErrorCode;
 import com.growup.pms.common.exception.exceptions.BusinessException;
+import com.growup.pms.project.domain.Project;
+import com.growup.pms.project.repository.ProjectRepository;
 import com.growup.pms.status.domain.Status;
 import com.growup.pms.status.repository.StatusRepository;
 import com.growup.pms.task.controller.dto.response.TaskAttachmentResponse;
@@ -48,6 +51,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
@@ -56,6 +60,9 @@ class TaskServiceTest {
 
     @Mock
     TaskRepository taskRepository;
+
+    @Mock
+    ProjectRepository projectRepository;
 
     @Mock
     StatusRepository statusRepository;
@@ -80,6 +87,7 @@ class TaskServiceTest {
             // given
             Long 예상_일정_ID = 1L;
             Long 예상_프로젝트_ID = 1L;
+            Project 예상_프로젝트 = 프로젝트는().이다();
             Long 예상_상태_ID = 1L;
             List<Long> 예상_담당자_ID_목록 = List.of(1L, 2L, 3L);
             Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
@@ -87,6 +95,7 @@ class TaskServiceTest {
             Task 예상_일정 = 일정은().이다();
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().이다().toCommand();
 
+            when(projectRepository.findByIdOrThrow(예상_프로젝트_ID)).thenReturn(예상_프로젝트);
             when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
             when(userRepository.findAllById(예상_담당자_ID_목록)).thenReturn(예상_담당자_목록);
             when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
@@ -102,12 +111,14 @@ class TaskServiceTest {
         void 담당자가_없어도_성공한다() {
             Long 예상_일정_ID = 1L;
             Long 예상_프로젝트_ID = 1L;
+            Project 예상_프로젝트 = 프로젝트는().이다();
             Long 예상_상태_ID = 1L;
             List<Long> 예상_담당자_ID_목록 = null;
             Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
             Task 예상_일정 = 일정은().이다();
             TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은().담당자_ID_목록은(예상_담당자_ID_목록).이다().toCommand();
 
+            when(projectRepository.findByIdOrThrow(예상_프로젝트_ID)).thenReturn(예상_프로젝트);
             when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
             when(taskRepository.save(any(Task.class))).thenReturn(예상_일정);
 
@@ -133,6 +144,67 @@ class TaskServiceTest {
             assertThatThrownBy(() -> taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasMessage("해당 프로젝트 상태를 찾을 수 없습니다. 유효한 상태를 선택해 주세요.");
+        }
+
+        @Test
+        void 시작일자가_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 예상_프로젝트_ID = 1L;
+            Project 예상_프로젝트 = 프로젝트는().이다();
+            Long 예상_상태_ID = 1L;
+            Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은()
+                    .시작일자는(LocalDate.now())
+                    .종료일자는(LocalDate.now().minusDays(1))
+                    .이다().toCommand();
+
+            when(projectRepository.findByIdOrThrow(예상_프로젝트_ID)).thenReturn(예상_프로젝트);
+            when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
+
+        @Test
+        void 등록하려는_일정의_시작일자가_프로젝트의_시작일자보다_빠르면_예외가_발생한다() {
+            // given
+            Long 예상_프로젝트_ID = 1L;
+            Project 예상_프로젝트 = 프로젝트는().이다();
+            Long 예상_상태_ID = 1L;
+            Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은()
+                    .시작일자는(LocalDate.MIN)
+                    .종료일자는(LocalDate.now().minusDays(1))
+                    .이다().toCommand();
+            when(projectRepository.findByIdOrThrow(예상_프로젝트_ID)).thenReturn(예상_프로젝트);
+            when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
+        }
+
+        @Test
+        void 등록하려는_일정의_종료일자가_프로젝트의_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 예상_프로젝트_ID = 1L;
+            Project 예상_프로젝트 = 프로젝트는().이다();
+            Long 예상_상태_ID = 1L;
+            Status 예상_상태 = 상태는().식별자가(예상_상태_ID).이다();
+            TaskCreateCommand 예상_일정_생성_요청 = 일정_생성_요청은()
+                    .시작일자는(LocalDate.now())
+                    .종료일자는(LocalDate.MAX)
+                    .이다().toCommand();
+            when(projectRepository.findByIdOrThrow(예상_프로젝트_ID)).thenReturn(예상_프로젝트);
+            when(statusRepository.findByIdOrThrow(예상_상태_ID)).thenReturn(예상_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.createTask(예상_프로젝트_ID, 예상_일정_생성_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
         }
     }
 
@@ -245,41 +317,45 @@ class TaskServiceTest {
         @Test
         void 성공한다() {
             // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().식별자가(기존_프로젝트_ID).이다();
             Long 기존_일정_ID = 1L;
             Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
             Long 변경할_상태_ID = 2L;
             Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
             String 변경할_일정_이름 = "변경할 이름 입니다!";
             String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
-            LocalDate 변경할_시작일자 = LocalDate.of(2023, 1, 1);
-            LocalDate 변경할_종료일자 = LocalDate.of(2023, 3, 1);
+            LocalDate 변경할_시작일자 = LocalDate.now();
+            LocalDate 변경할_종료일자 = LocalDate.now().plusDays(1);
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
                     .상태_식별자는(변경할_상태_ID)
                     .일정이름은(변경할_일정_이름)
                     .본문내용은(변경할_내용)
-                    .시작일자는(변경할_시작일자)
-                    .종료일자는(변경할_종료일자)
+                    .시작일자는(JsonNullable.of(변경할_시작일자))
+                    .종료일자는(JsonNullable.of(변경할_종료일자))
                     .이다().toCommand();
 
             when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
             when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
 
             // when
-            taskService.editTask(기존_일정_ID, 일정_변경_요청);
+            taskService.editTask(기존_프로젝트_ID, 기존_일정_ID, 일정_변경_요청);
 
             // then
             assertSoftly(softly -> {
                 softly.assertThat(기존_일정.getStatus().getId()).isEqualTo(변경할_상태_ID);
                 softly.assertThat(기존_일정.getName()).isEqualTo(변경할_일정_이름);
                 softly.assertThat(기존_일정.getContent()).isEqualTo(변경할_내용);
-                softly.assertThat(기존_일정.getStartDate()).isEqualTo(변경할_시작일자);
-                softly.assertThat(기존_일정.getEndDate()).isEqualTo(변경할_종료일자);
+                softly.assertThat(기존_일정.getPeriod().getStartDate()).isEqualTo(변경할_시작일자);
+                softly.assertThat(기존_일정.getPeriod().getEndDate()).isEqualTo(변경할_종료일자);
             });
         }
 
         @Test
         void 일정이_존재하지_않으면_예외가_발생한다() {
             // given
+            Long 기존_프로젝트_ID = 1L;
             Long 잘못된_일정_ID = 1L;
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().이다().toCommand();
 
@@ -287,27 +363,199 @@ class TaskServiceTest {
                     .when(taskRepository).findByIdOrThrow(잘못된_일정_ID);
 
             // when & then
-            assertThatThrownBy(() -> taskService.editTask(잘못된_일정_ID, 일정_변경_요청))
+            assertThatThrownBy(() -> taskService.editTask(기존_프로젝트_ID, 잘못된_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.TASK_NOT_FOUND);
         }
 
         @Test
+        void 프로젝트가_존재하지_않으면_예외가_발생한다() {
+            // given
+            Long 잘못된_프로젝트_ID = 1L;
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            TaskEditCommand 일정_수정_요청 = 일정_수정_요청은().이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            doThrow(new BusinessException(ErrorCode.PROJECT_NOT_FOUND))
+                    .when(projectRepository).findByIdOrThrow(잘못된_프로젝트_ID);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(잘못된_프로젝트_ID, 기존_일정_ID, 일정_수정_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.PROJECT_NOT_FOUND.getMessage());
+        }
+
+        @Test
         void 변경하려는_상태가_존재하지_않으면_예외가_발생한다() {
             // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().식별자가(기존_프로젝트_ID).이다();
             Long 기존_일정_ID = 1L;
             Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
             Long 잘못된_상태_ID = 2L;
             TaskEditCommand 일정_변경_요청 = 일정_수정_요청은().상태_식별자는(잘못된_상태_ID).이다().toCommand();
 
             when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
             doThrow(new BusinessException(ErrorCode.STATUS_NOT_FOUND))
                     .when(statusRepository).findByIdOrThrow(잘못된_상태_ID);
 
             // when & then
-            assertThatThrownBy(() -> taskService.editTask(기존_일정_ID, 일정_변경_요청))
+            assertThatThrownBy(() -> taskService.editTask(기존_프로젝트_ID, 기존_일정_ID, 일정_변경_요청))
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("errorCode", ErrorCode.STATUS_NOT_FOUND);
+        }
+
+        @Test
+        void 시작일자가_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().식별자가(기존_프로젝트_ID).이다();
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            Long 변경할_상태_ID = 2L;
+            Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
+            String 변경할_일정_이름 = "변경할 이름 입니다!";
+            String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
+            LocalDate 변경할_시작일자 = LocalDate.now().plusDays(1);
+            LocalDate 변경할_종료일자 = LocalDate.now();
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
+                    .상태_식별자는(변경할_상태_ID)
+                    .일정이름은(변경할_일정_이름)
+                    .본문내용은(변경할_내용)
+                    .시작일자는(JsonNullable.of(변경할_시작일자))
+                    .종료일자는(JsonNullable.of(변경할_종료일자))
+                    .이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(기존_프로젝트_ID, 기존_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
+
+        @Test
+        void 새로운_종료일자가_기존_시작일자보다_빠르면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().식별자가(기존_프로젝트_ID).이다();
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            Long 변경할_상태_ID = 2L;
+            Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
+            String 변경할_일정_이름 = "변경할 이름 입니다!";
+            String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
+            LocalDate 변경할_종료일자 = LocalDate.of(2023, 1, 1);
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
+                    .상태_식별자는(변경할_상태_ID)
+                    .일정이름은(변경할_일정_이름)
+                    .본문내용은(변경할_내용)
+                    .시작일자는(JsonNullable.undefined())
+                    .종료일자는(JsonNullable.of(변경할_종료일자))
+                    .이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(기존_프로젝트_ID, 기존_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
+
+        @Test
+        void 새로운_시작일자가_기존_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().식별자가(기존_프로젝트_ID).이다();
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).시작일자는(LocalDate.now()).이다();
+            Long 변경할_상태_ID = 2L;
+            Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
+            String 변경할_일정_이름 = "변경할 이름 입니다!";
+            String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
+            LocalDate 변경할_시작일자 = LocalDate.MAX;
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
+                    .상태_식별자는(변경할_상태_ID)
+                    .일정이름은(변경할_일정_이름)
+                    .본문내용은(변경할_내용)
+                    .시작일자는(JsonNullable.of(변경할_시작일자))
+                    .종료일자는(JsonNullable.undefined())
+                    .이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(기존_프로젝트_ID, 기존_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
+
+        @Test
+        void 새로운_시작일자가_프로젝트_기간의_범위내에_없으면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().식별자가(기존_프로젝트_ID).이다();
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).시작일자는(LocalDate.now()).이다();
+            Long 변경할_상태_ID = 2L;
+            Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
+            String 변경할_일정_이름 = "변경할 이름 입니다!";
+            String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
+            LocalDate 변경할_시작일자 = 기존_프로젝트.getPeriod().getStartDate().minusDays(1);
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
+                    .상태_식별자는(변경할_상태_ID)
+                    .일정이름은(변경할_일정_이름)
+                    .본문내용은(변경할_내용)
+                    .시작일자는(JsonNullable.of(변경할_시작일자))
+                    .종료일자는(JsonNullable.undefined())
+                    .이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(기존_프로젝트_ID, 기존_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
+        }
+
+        @Test
+        void 새로운_종료일자가_프로젝트_기간의_범위내에_없으면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는().식별자가(기존_프로젝트_ID).이다();
+            Long 기존_일정_ID = 1L;
+            Task 기존_일정 = 일정은().식별자는(기존_일정_ID).이다();
+            Long 변경할_상태_ID = 2L;
+            Status 변경할_상태 = 상태는().식별자가(변경할_상태_ID).이다();
+            String 변경할_일정_이름 = "변경할 이름 입니다!";
+            String 변경할_내용 = "변경할 내용!!!!!!!!!!#@#%^#$^&*%(^*&(^%$#231382304-2315982ㅅ89asdfjlaiejvlsakc";
+            LocalDate 변경할_종료일자 = 기존_프로젝트.getPeriod().getEndDate().plusDays(1);
+            TaskEditCommand 일정_변경_요청 = 일정_수정_요청은()
+                    .상태_식별자는(변경할_상태_ID)
+                    .일정이름은(변경할_일정_이름)
+                    .본문내용은(변경할_내용)
+                    .시작일자는(JsonNullable.undefined())
+                    .종료일자는(JsonNullable.of(변경할_종료일자))
+                    .이다().toCommand();
+
+            when(taskRepository.findByIdOrThrow(기존_일정_ID)).thenReturn(기존_일정);
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(statusRepository.findByIdOrThrow(변경할_상태_ID)).thenReturn(변경할_상태);
+
+            // when & then
+            assertThatThrownBy(() -> taskService.editTask(기존_프로젝트_ID, 기존_일정_ID, 일정_변경_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
         }
     }
 

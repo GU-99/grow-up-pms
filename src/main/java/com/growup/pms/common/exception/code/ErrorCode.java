@@ -39,6 +39,8 @@ public enum ErrorCode {
 
     // 검증 실패/데이터 포맷 오류(Data Format) - DF
     INVALID_DATA_FORMAT(BAD_REQUEST, "DF_001", "입력한 데이터 형식이 올바르지 않습니다. 입력 형식을 확인해 주세요."),
+    INVALID_PERIOD(BAD_REQUEST, "DF_002", "입력한 기간 범위가 올바르지 않습니다. 시작 일자는 종료 일자보다 빨라야 합니다."),
+    TASK_PERIOD_OUT_OF_RANGE(BAD_REQUEST, "DF_003", "입력한 기간 범위가 올바르지 않습니다. 프로젝트 일정의 기간은 프로젝트 기간 내에 있어야 합니다."),
 
     // 스토리지(Storage) - ST
     FILE_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "ST_001", "파일 업로드에 실패했습니다."),

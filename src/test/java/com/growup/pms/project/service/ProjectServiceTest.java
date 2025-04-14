@@ -38,6 +38,7 @@ import com.growup.pms.team.repository.TeamRepository;
 import com.growup.pms.test.annotation.AutoKoreanDisplayName;
 import com.growup.pms.user.domain.User;
 import com.growup.pms.user.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
@@ -47,6 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @AutoKoreanDisplayName
 @SuppressWarnings("NonAsciiCharacters")
@@ -146,6 +148,32 @@ class ProjectServiceTest {
                     .isInstanceOf(BusinessException.class)
                     .hasMessage("해당 사용자를 찾을 수 없습니다. 입력 정보를 확인해 주세요.");
         }
+
+        @Test
+        void 시작일자가_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 예상_프로젝트_ID = 1L;
+            Long 예상_팀_ID = 1L;
+            Long 예상_생성자_ID = 1L;
+            String 예상_역할_이름 = ProjectRole.ADMIN.getRoleName();
+            List<ProjectUserCreateRequest> 예상_초대할_팀원들 = List.of(프로젝트_유저_생성_요청은().이다());
+            ProjectCreateCommand 예상_프로젝트_생성_요청 = 프로젝트_생성_요청은()
+                    .초대할_팀원들은(예상_초대할_팀원들)
+                    .시작일자는(LocalDate.now())
+                    .종료일자는(LocalDate.now().minusDays(1))
+                    .이다().toCommand();
+            Role 예상_역할 = 역할은().타입이(RoleType.PROJECT).이름이(예상_역할_이름).이다();
+            User 예상_생성자 = 사용자는().이다();
+            Team 예상_팀 = 팀은().이다();
+            Project 예상_프로젝트 = 프로젝트는().이다();
+
+            when(teamRepository.findByIdOrThrow(예상_팀_ID)).thenReturn(예상_팀);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.createProject(예상_팀_ID, 예상_생성자_ID, 예상_프로젝트_생성_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
     }
 
     @Nested
@@ -201,8 +229,8 @@ class ProjectServiceTest {
             SoftAssertions.assertSoftly(softly -> {
                 softly.assertThat(기존_프로젝트.getName()).isEqualTo(예상_프로젝트_수정_요청.projectName().get());
                 softly.assertThat(기존_프로젝트.getContent()).isEqualTo(예상_프로젝트_수정_요청.content().get());
-                softly.assertThat(기존_프로젝트.getStartDate()).isEqualTo(예상_프로젝트_수정_요청.startDate().get());
-                softly.assertThat(기존_프로젝트.getEndDate()).isEqualTo(예상_프로젝트_수정_요청.endDate().get());
+                softly.assertThat(기존_프로젝트.getPeriod().getStartDate()).isEqualTo(예상_프로젝트_수정_요청.startDate().get());
+                softly.assertThat(기존_프로젝트.getPeriod().getEndDate()).isEqualTo(예상_프로젝트_수정_요청.endDate().get());
             });
         }
 
@@ -217,6 +245,79 @@ class ProjectServiceTest {
             // when & then
             assertThatThrownBy(() -> projectService.editProject(잘못된_프로젝트_ID, 예상_프로젝트_수정_요청))
                     .isInstanceOf(BusinessException.class);
+        }
+
+        @Test
+        void 새로운_시작일자가_기존_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는()
+                    .시작일이(LocalDate.now())
+                    .종료일이(LocalDate.now().plusDays(1))
+                    .이다();
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은()
+                    .시작일자는(JsonNullable.undefined())
+                    .종료일자는(JsonNullable.of(LocalDate.now().minusDays(1)))
+                    .이다().toCommand();
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
+
+        @Test
+        void 새로운_종료일자가_기존_시작일자보다_빠르면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            Project 기존_프로젝트 = 프로젝트는()
+                    .시작일이(LocalDate.now())
+                    .종료일이(LocalDate.now().plusDays(1))
+                    .이다();
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은()
+                    .시작일자는(JsonNullable.of(LocalDate.now().plusDays(3)))
+                    .종료일자는(JsonNullable.undefined())
+                    .이다().toCommand();
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.INVALID_PERIOD.getMessage());
+        }
+        // 프로젝트 시작 일자가 프로젝트 일정의 첫번째 시작 일자보다 느리면 예외가 발생한다
+
+        @Test
+        void 프로젝트_시작일자가_기존_프로젝트_일정의_첫번째_시작일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            LocalDate 프로젝트_일정의_시작일자 = LocalDate.MIN;
+            Project 기존_프로젝트 = 프로젝트는().이다();
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은().이다().toCommand();
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(taskRepository.getEarliestStartDateInProject(기존_프로젝트_ID)).thenReturn(프로젝트_일정의_시작일자);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
+        }
+
+        @Test
+        void 프로젝트_종료일자가_기존_프로젝트_일정의_첫번째_종료일자보다_느리면_예외가_발생한다() {
+            // given
+            Long 기존_프로젝트_ID = 1L;
+            LocalDate 프로젝트_일정의_종료일자 = LocalDate.MAX;
+            Project 기존_프로젝트 = 프로젝트는().이다();
+            ProjectEditCommand 예상_프로젝트_수정_요청 = 프로젝트_수정_요청은().이다().toCommand();
+            when(projectRepository.findByIdOrThrow(기존_프로젝트_ID)).thenReturn(기존_프로젝트);
+            when(taskRepository.getLatestEndDateInProject(기존_프로젝트_ID)).thenReturn(프로젝트_일정의_종료일자);
+
+            // when & then
+            assertThatThrownBy(() -> projectService.editProject(기존_프로젝트_ID, 예상_프로젝트_수정_요청))
+                    .isInstanceOf(BusinessException.class)
+                    .hasMessage(ErrorCode.TASK_PERIOD_OUT_OF_RANGE.getMessage());
         }
     }
 
